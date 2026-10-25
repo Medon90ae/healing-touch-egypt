@@ -676,7 +676,54 @@
     .clinical-comparison-table tbody tr:nth-child(even) { background: #F9FAFB; }
     .clinical-comparison-table tbody tr:hover { background: #F0FDF4; }
 
-    /* صندوق الهاشتاجات (R7) */
+    /* صندوق الهاشتاجات وأزرار المشاركة لمنصات التواصل (R7) */
+    .quick-social-share-bar {
+      background: #F0FDF4;
+      border: 1px solid #A7F3D0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 16px 0 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .q-share-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--teal-deep);
+    }
+    .q-share-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .share-btn {
+      border: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.83rem;
+      cursor: pointer;
+      color: #fff;
+      transition: transform 0.15s, opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .share-btn:hover { transform: translateY(-2px); opacity: 0.92; }
+    .share-fb { background: #1877F2; }
+    .share-wa { background: #16A34A; }
+    .share-ig { background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF); }
+    .share-tt { background: #111827; }
+    .share-tg { background: #0088CC; }
+    .share-x { background: #0F172A; }
+    .share-copy-all { background: var(--teal-deep); }
+    .share-copy-tags { background: #0D9488; }
+
     .hashtags-discovery-box {
       background: #F9FAFB;
       border: 1px solid var(--border-soft);
@@ -997,7 +1044,7 @@
     let currentPendingContext = { topic: "استشارة عامة", channel: "whatsapp", directWaUrl: "" };
 
     function buildDynamicWaUrl(topicText) {
-      const msg = "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج أستفسر مجاناً عن: " + topicText;
+      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج استشارة مجانية عن: " + topicText;
       return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
     }
 
@@ -1184,7 +1231,7 @@
         if (pName) {
           url += encodeURIComponent(" (الاسم: " + pName + ")");
         }
-        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح محادثة الواتساب مع الدكتورة...");
+        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح الاستشارة المجانية عبر واتساب...");
         setTimeout(() => { window.open(url, '_blank'); }, 400);
       } else {
         showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح إنستجرام...");
@@ -1192,11 +1239,11 @@
       }
     }
 
-    /* نسخ الهاشتاجات السريرية (R7) */
+    /* نسخ الهاشتاجات السريرية ومشاركتها عبر منصات التواصل (R7) */
     function copyHashtagsToClipboard(contentStr, btnEl) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(contentStr).then(() => {
-          showToast("📋 تم نسخ الرابط والهاشتاجات الطبية بنجاح للحافظة!");
+          showToast("📋 تم نسخ النص والرابط والهاشتاجات بنجاح للحافظة!");
           if (btnEl) {
             const orig = btnEl.innerText;
             btnEl.innerText = "✅ تم النسخ بنجاح!";
@@ -1207,6 +1254,36 @@
         });
       } else {
         showToast("يرجى نسخ النص يدوياً.");
+      }
+    }
+
+    function shareToSocialPlatform(platform, pageUrl, title, fullPostWithTags) {
+      const payload = fullPostWithTags || (title + "\n" + pageUrl);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(payload).catch(() => {});
+      }
+
+      if (platform === 'facebook') {
+        showToast("📋 تم نسخ البوست والهاشتاجات تلقائياً! الصقها الآن في فيسبوك...");
+        const fbUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl) + "&quote=" + encodeURIComponent(payload);
+        setTimeout(() => { window.open(fbUrl, '_blank'); }, 350);
+      } else if (platform === 'whatsapp') {
+        showToast("💬 جاري فتح واتساب لمشاركة الدليل مع الهاشتاجات...");
+        const waShareUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(payload);
+        setTimeout(() => { window.open(waShareUrl, '_blank'); }, 300);
+      } else if (platform === 'instagram') {
+        showToast("📋 تم نسخ البوست + الرابط + كل الهاشتاجات! الصقه الآن في إنستجرام...");
+        setTimeout(() => { window.open("https://www.instagram.com/", '_blank'); }, 450);
+      } else if (platform === 'tiktok') {
+        showToast("📋 تم نسخ الوصف + الرابط + كل الهاشتاجات! الصقه الآن في تيك توك...");
+        setTimeout(() => { window.open("https://www.tiktok.com/upload", '_blank'); }, 450);
+      } else if (platform === 'telegram') {
+        const tgUrl = "https://t.me/share/url?url=" + encodeURIComponent(pageUrl) + "&text=" + encodeURIComponent(payload);
+        setTimeout(() => { window.open(tgUrl, '_blank'); }, 300);
+      } else if (platform === 'x') {
+        const shortText = title + "\n" + (payload.split("\n").pop() || "").slice(0, 140);
+        const xUrl = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(pageUrl) + "&text=" + encodeURIComponent(shortText);
+        setTimeout(() => { window.open(xUrl, '_blank'); }, 300);
       }
     }
 
@@ -1231,7 +1308,7 @@
 
 <div class="live-rep-topbar">
   <span class="pulse-dot"></span>
-  <strong>متاح الآن مجاناً:</strong> تحدث مباشرة مع الدكتورة وممثلي الرعاية الطبية للإجابة على أسئلتك قبل أي قرار — <span>🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
+  <strong>متاح الآن مجاناً:</strong> تواصل مباشرة للحصول على استشارة مجانية مع أخصائية العناية بالتعافي للإجابة على أسئلتك قبل أي قرار — <span>🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
 </div>
 
 <header class="clinical-header">
@@ -1243,7 +1320,7 @@
       <a href="../index.html#guided-triage">🧭 مُوجِّه الحالات</a>
       <a href="../index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
       <a href="../index.html#products-section">🛡️ المستلزمات المعتمدة</a>
-      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9." data-topic="استشارة طبية مجانية عامة" class="nav-cta-chat">💬 تحدث مجاناً مع الدكتورة</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9." data-topic="استشارة مجانية عامة" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
     </nav>
   </div>
 </header>
@@ -1262,6 +1339,22 @@
 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.8rem; line-height:1.4;">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray</h1>
 
+    
+    <div class="quick-social-share-bar">
+      <span class="q-share-label">📤 شارك على منصات التواصل (مع الهاشتاجات تلقائياً):</span>
+      <div class="q-share-buttons">
+        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">📘 فيسبوك</button>
+        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">💬 واتساب</button>
+        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">📸 إنستجرام</button>
+        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">🎵 تيك توك</button>
+        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">✈️ تيليجرام</button>
+        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">🐦 إكس</button>
+        <button type="button" class="share-btn share-copy-all" onclick="copyHashtagsToClipboard('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار', this)">📋 نسخ البوست + الهاشتاجات</button>
+        <button type="button" class="share-btn share-copy-tags" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار', this)">#️⃣ نسخ الهاشتاجات فقط</button>
+      </div>
+    </div>
+    
+
     <div class="takeaways-box">
       <h3>⏱️ الخلاصة السريرية السريعة (في 30 ثانية):</h3>
       <ul>
@@ -1273,7 +1366,7 @@
 
     <p>بعد الخضوع للجراحة، تبدأ مرحلة إعادة تشكيل الأنسجة (Remodeling Phase) والتي تستمر من عدة أسابيع إلى عدة أشهر. في هذه المرحلة الحساسة، تكون الخلايا الليفية شديدة الحساسية لفقدان الرطوبة والاحتكاك الخارجي، مما قد يدفعها لإفراز كولاجين كثيف وغير منتظم يؤدي إلى تشكل ندبات متضخمة أو كلويد بارز. هنا تبرز الأهمية الطبية القصوى لاستخدام بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray).</p>
 <p>تعتمد الفلسفة السريرية الحديثة لعام 2026 على العزل الإيجابي والترطيب الميكانيكي المنتظم. أثبتت الدراسات المقارنة في مجلات الجراحة التجميلية الدولية أن توفير حاجز متوازن يقلل من تدفق الدم الزائد إلى موقع الجرح، مما يخمد الاحمرار ويهدئ الحكة العصبية المزعجة ويمنع ارتفاع حواف الجلد عن السطح الطبيعي.</p>
-<p>الاستخدام الطبي المنظم لـ بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray) يمنح المريض فرصة استثنائية لحماية نتيجة جراحته دون اللجوء لجلسات الليزر المكلفة لاحقاً. التحدث مع الدكتورة المختصة عبر الاستشارة المجانية يتيح لكِ تحديد التوقيت المثالي للبدء وفق نوع الخياطة الجراحية وطبيعة جرحكِ الخاصة.</p>
+<p>الاستخدام الطبي المنظم لـ بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray) يمنح المريض فرصة استثنائية لحماية نتيجة جراحته دون اللجوء لجلسات الليزر المكلفة لاحقاً. الحصول على استشارة مجانية مع المختصة عبر الاستشارة المجانية يتيح لكِ تحديد التوقيت المثالي للبدء وفق نوع الخياطة الجراحية وطبيعة جرحكِ الخاصة.</p>
 
     
     <div class="svg-timeline-wrapper">
@@ -1372,20 +1465,20 @@
         
     </div>
 
-    <!-- بطاقة التحويل للمحادثة المجانية مع الدكتورة وتفعيل كود العرض (R3) -->
+    <!-- بطاقة التحويل للاستشارة المجانية وتفعيل كود العرض (R3) -->
     <div class="triage-result-panel" style="margin: 32px 0;">
       <div class="triage-result-header">
-        <span class="triage-badge">👩‍⚕️ استشارة سريرية مجانية 100% بدون أي التزام بالشراء</span>
+        <span class="triage-badge">💬 استشارة مجانية متخصصة 100% بدون أي التزام بالشراء</span>
         <span style="font-weight:800; color:#065F46;">🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
       </div>
       <h3>هل لديكِ سؤال يخص مرحلة جرحكِ أو تريدين التأكد من المقاس والتوقيت المناسب؟</h3>
-      <p>تحدثي الآن مجاناً مع الدكتورة الاستشارية وممثلي الرعاية الطبية؛ ستجيبكِ الدكتورة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع</strong> بكود <strong>HT10</strong>.</p>
+      <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع</strong> بكود <strong>HT10</strong>.</p>
       <div class="triage-actions">
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." data-topic="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray" class="btn-free-chat">
-          💬 تحدثي مجاناً الآن مع الدكتورة على واتساب (01155803307)
+        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." data-topic="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray" class="btn-free-chat">
+          💬 احصلي على استشارة مجانية الآن عبر واتساب (01155803307)
         </a>
         <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">
-          📸 اسألي الدكتورة عبر إنستجرام
+          📸 استشارة مجانية عبر إنستجرام
         </button>
       </div>
     </div>
@@ -1393,12 +1486,27 @@
     
     <div class="hashtags-discovery-box">
       <div class="hashtags-header">
-        <h4>📢 مشاركة المقال والهاشتاجات الطبية المصرية (25-30 هاشتاج عالي النية):</h4>
-        <button class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار', this)">
-          📋 نسخ الرابط والهاشتاجات بضغطة واحدة
-        </button>
+        <h4>📢 مشاركة على منصات التواصل والهاشتاجات المستهدفة (29 هاشتاج للعملاء المحتملين):</h4>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار', this)">
+            📋 نسخ البوست + الرابط + كل الهاشتاجات
+          </button>
+          <button type="button" class="btn-copy-hashtags" style="background:#059669;" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار', this)">
+            #️⃣ نسخ الهاشتاجات فقط
+          </button>
+        </div>
       </div>
-      <p class="hashtags-subtext">هاشتاجات مستهدفة للمرضى ومجتمعات التعافي في مصر عبر إنستجرام، فيسبوك وتيك توك:</p>
+      <p class="hashtags-subtext">اضغط على أي منصة بالأسفل وسيتم <strong>نسخ النص والرابط والهاشتاجات تلقائياً</strong> وفتح المنصة للمشاركة الفورية:</p>
+
+      <div class="q-share-buttons" style="margin-bottom:18px;">
+        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">📘 مشاركة على فيسبوك</button>
+        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">💬 مشاركة في واتساب</button>
+        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">📸 نسخ ومشاركة إنستجرام</button>
+        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">🎵 نسخ ومشاركة تيك توك</button>
+        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">✈️ مشاركة في تيليجرام</button>
+        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/smith-nephew-opsite-spray-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تكميم_المعدة_مصر #جراحات_السمنة_مصر #عمليات_المناظير #تكميم_مصر #قص_معدة #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #الندبات_المتضخمة #التئام_الجروح #العناية_بعد_العملية #اثار_الخياطة #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بخاخ_اوبسايت #بخاخ_الجروح_الشفاف #بخاخ_المنظار')">🐦 مشاركة على إكس (X)</button>
+      </div>
+
       <div class="hashtags-categories-grid">
         <div class="hashtag-category-group">
           <strong>🏥 التخصص والجراحة:</strong>
@@ -1451,7 +1559,7 @@
           </div>
           <div class="art-card-actions">
             <a href="bupy-silicone-scar-sheet-clinical-mechanism.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1466,7 +1574,7 @@
           </div>
           <div class="art-card-actions">
             <a href="bupy-silicone-scar-sheet-usage-protocol-mistakes.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1481,7 +1589,7 @@
           </div>
           <div class="art-card-actions">
             <a href="bupy-silicone-scar-sheet-patient-faq-comparisons.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1496,7 +1604,7 @@
           </div>
           <div class="art-card-actions">
             <a href="3m-micropore-tan-tape-1533-0-clinical-mechanism.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1511,7 +1619,7 @@
           </div>
           <div class="art-card-actions">
             <a href="3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1526,7 +1634,7 @@
           </div>
           <div class="art-card-actions">
             <a href="3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
           </div>
         </div>
         
@@ -1541,7 +1649,7 @@
         <div class="modal-badge-top">🎉 تم تفعيل الميزة الحصرية بنجاح لحالتك</div>
         <h3 class="modal-title">كود العرض المعتمد: <span class="promo-code-highlight">HT10</span></h3>
         <p class="modal-desc">
-          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة سريرية مجانية مع الدكتورة</strong>.
+          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة مجانية مع أخصائية العناية بالتعافي</strong>.
         </p>
 
         <div class="modal-benefits-grid">
@@ -1554,8 +1662,8 @@
             <div><strong>معاينة وفحص قبل الدفع</strong><small>تأكد من المنتج والكود بنفسك</small></div>
           </div>
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">👩‍⚕️</span>
-            <div><strong>استشارة طبية مجانية</strong><small>رد مباشر من الدكتورة المختصة</small></div>
+            <span class="m-benefit-icon">💬</span>
+            <div><strong>استشارة مجانية متخصصة</strong><small>رد مباشر من أخصائية العناية بالتعافي</small></div>
           </div>
         </div>
 
@@ -1568,13 +1676,13 @@
 
         <div class="modal-action-buttons">
           <button id="modal-proceed-wa-btn" class="modal-btn-wa" onclick="executeProceedToConsultation('whatsapp')">
-            💬 متابعة المحادثة المجانية عبر واتساب الآن
+            💬 متابعة الاستشارة المجانية عبر واتساب الآن
           </button>
           <button id="modal-proceed-ig-btn" class="modal-btn-ig" onclick="executeProceedToConsultation('instagram')">
-            📸 الاستفسار عبر شات إنستجرام
+            📸 استشارة مجانية عبر شات إنستجرام
           </button>
         </div>
-        <p class="modal-fine-print">🔒 بياناتك في سرية طبية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
+        <p class="modal-fine-print">🔒 بياناتك في سرية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
       </div>
     </div>
     
@@ -1583,15 +1691,15 @@
   <div class="sticky-inner">
     <div class="sticky-text">
       <span class="pulse-dot"></span>
-      <span>لديك سؤال عن حالتك؟ تحدث مجاناً مع الدكتورة وممثلي الرعاية</span>
+      <span>لديك سؤال عن حالتك؟ احصل على استشارة مجانية مع أخصائية العناية بالتعافي</span>
       <span class="hide-mobile" style="color:#A7F3D0;">(شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع بكود HT10)</span>
     </div>
     <div class="sticky-btns">
-      <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="sticky-wa-btn">
-        💬 اسأل مجاناً عبر واتساب (01155803307)
+      <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="sticky-wa-btn">
+        💬 استشارة مجانية عبر واتساب (01155803307)
       </button>
       <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">
-        📸 اسأل عبر إنستجرام
+        📸 استشارة عبر إنستجرام
       </button>
     </div>
   </div>
@@ -1603,7 +1711,7 @@
     <p style="font-size:1.15rem; font-weight:800; color:#fff; margin-top:0;">🌿 هيلينج تاتش مصر (Healing Touch Egypt 2026)</p>
     <p>المنصة التوعوية والاستشارية المعتمدة لرعاية ما بعد العمليات الجراحية والتجميلية في مصر. مهمتنا إرشادك علمياً والإجابة على أسئلتك مجاناً مع ضمان حق فحص ومعاينة المنتج الأصلي قبل الدفع.</p>
     <p style="margin-top:16px;">
-      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B7%D8%A8%D9%8A%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D9%88%D8%AA%D8%B1." data-topic="استفسار طبي من الفوتر">💬 محادثة مجانية على واتساب (01155803307)</a> |
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B7%D8%A8%D9%8A%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D9%88%D8%AA%D8%B1." data-topic="استفسار طبي من الفوتر">💬 محادثة مجانية على واتساب (01155803307)</a> |
       <a href="https://www.instagram.com/tapistorefamily2026/" target="_blank" rel="noopener">📸 حساب إنستجرام</a> |
       <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener">📘 صفحتنا على فيسبوك</a>
     </p>

@@ -18,7 +18,7 @@
     }
   },
   "doctor_contact": {
-    "doctor_name": "دكتورة استشارية التعافي الجراحي",
+    "doctor_name": "أخصائية الاستشارات والعناية بالتعافي",
     "whatsapp_phone": "201155803307",
     "whatsapp_display": "01155803307",
     "instagram_username": "tapistorefamily2026",
@@ -26,7 +26,7 @@
     "supplier_brand": "TAPI STORE TEAM"
   },
   "whatsapp_message_templates": {
-    "product_inquiry": "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج أستفسر مجاناً عن: {item_name}.",
-    "article_consultation": "أهلاً دكتورة، قرأت الدليل السريري حول ({article_title}) في موقع هيلينج تاتش، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، وعندي استفسار عن حالتي ومحتاج البروتوكول المناسب."
+    "product_inquiry": "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج استشارة مجانية عن: {item_name}.",
+    "article_consultation": "أهلاً بكِ، قرأت الدليل الطبي حول ({article_title}) في موقع هيلينج تاتش، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، وعندي استفسار عن حالتي ومحتاج استشارة مجانية للبروتوكول المناسب."
   }
 }

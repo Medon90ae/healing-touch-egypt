@@ -54,6 +54,12 @@ FORBIDDEN_AUDIT_TERMS = [
     "أسلوب المقارنة الصادمة",
     "كسر المعتقدات الخاطئة",
     "تحويل القلق إلى خطوة",
+    "اسأل الدكتورة",
+    "اسألي الدكتورة",
+    "مع الدكتورة",
+    "أهلاً دكتورة",
+    "الدكتورة",
+    "طبيبة مختصة",
 ]
 
 FORBIDDEN_REPLACEMENTS = {
@@ -72,6 +78,28 @@ FORBIDDEN_REPLACEMENTS = {
     "أسلوب المقارنة الصادمة": "المقارنة السريرية الدقيقة",
     "كسر المعتقدات الخاطئة": "تصحيح المفاهيم الطبية الشائعة",
     "تحويل القلق إلى خطوة": "الخطوات العملية للتعافي الآمن",
+    "اسأل الدكتورة مجاناً": "احصل على استشارة مجانية",
+    "اسألي الدكتورة مجاناً": "احصلي على استشارة مجانية",
+    "اسأل الدكتورة": "احصل على استشارة مجانية",
+    "اسألي الدكتورة": "احصلي على استشارة مجانية",
+    "استشيري الدكتورة مجاناً": "احصلي على استشارة مجانية",
+    "استشارة الدكتورة مجاناً": "الاستشارة المجانية مع المختصة",
+    "استشارة الدكتورة": "الاستشارة المجانية",
+    "تحدث مجاناً الآن مع الدكتورة": "احصل على استشارة مجانية الآن",
+    "تحدثي مجاناً الآن مع الدكتورة": "احصلي على استشارة مجانية الآن",
+    "تحدث مجاناً مع الدكتورة": "احصل على استشارة مجانية",
+    "تحدثي مجاناً مع الدكتورة": "احصلي على استشارة مجانية",
+    "تحدث مباشرة مع الدكتورة": "احصل على استشارة مجانية مباشرة مع المختصة",
+    "التحدث مع الدكتورة المختصة": "الحصول على استشارة مجانية مع المختصة",
+    "التحدث المباشر مع الدكتورة": "التواصل المباشر للحصول على استشارة مجانية",
+    "مع الدكتورة الاستشارية": "في الاستشارة المجانية مع المختصة",
+    "مع الدكتورة المختصة": "مع أخصائية العناية بالتعافي",
+    "مع الدكتورة": "في الاستشارة المجانية",
+    "أهلاً دكتورة": "أهلاً بكِ",
+    "الدكتورة المختصة": "أخصائية العناية بالتعافي",
+    "الدكتورة الاستشارية": "أخصائية الاستشارات والعناية",
+    "الدكتورة": "أخصائية العناية بالتعافي",
+    "طبيبة مختصة": "أخصائية متخصصة في العناية بالتعافي",
 }
 
 DEFAULT_PROMO_CONFIG = {
@@ -87,7 +115,7 @@ DEFAULT_PROMO_CONFIG = {
         }
     },
     "doctor_contact": {
-        "doctor_name": "دكتورة استشارية التعافي الجراحي",
+        "doctor_name": "أخصائية الاستشارات والعناية بالتعافي",
         "whatsapp_phone": "201155803307",
         "whatsapp_display": "01155803307",
         "instagram_username": "tapistorefamily2026",
@@ -95,8 +123,8 @@ DEFAULT_PROMO_CONFIG = {
         "supplier_brand": "TAPI STORE TEAM",
     },
     "whatsapp_message_templates": {
-        "product_inquiry": "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج أستفسر مجاناً عن حالتي وعن: {item_name}.",
-        "article_consultation": "أهلاً دكتورة، قرأت الدليل الطبي حول ({article_title}) في موقع هيلينج تاتش، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، ومحتاج أستفسر مجاناً عن حالتي والبروتوكول المناسب.",
+        "product_inquiry": "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج استشارة مجانية عن حالتي وعن: {item_name}.",
+        "article_consultation": "أهلاً بكِ، قرأت الدليل الطبي حول ({article_title}) في موقع هيلينج تاتش، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، ومحتاج استشارة مجانية عن حالتي والبروتوكول المناسب.",
     },
 }
 
@@ -594,23 +622,69 @@ def build_comparison_table_html(table_data: dict) -> str:
     """
 
 
-def build_hashtags_box_html(hashtags_dict: dict, page_url: str, title: str) -> str:
-    """بناء صندوق الهاشتاجات السريرية المصرية مع خاصية النسخ بضغطة واحدة (R7)."""
+def build_quick_share_bar_html(hashtags_dict: dict, page_url: str, title: str) -> str:
+    """شريط مشاركة سريع لمنصات التواصل مع الهاشتاجات يوضع أعلى المقال أو المنتج."""
     flat_tags = get_all_hashtags_flat(hashtags_dict)
     all_tags_str = " ".join(flat_tags)
     clean_title = sanitize_arabic_copy(title)
-    copy_payload = f"{clean_title}\n{page_url}\n\n{all_tags_str}"
+    full_post = f"{clean_title}\n🔗 الدليل الكامل والاستشارة المجانية:\n{page_url}\n\n{all_tags_str}"
+    safe_post = full_post.replace('"', '&quot;').replace("'", "&#39;").replace("\n", "\\n")
+    safe_tags = all_tags_str.replace('"', '&quot;').replace("'", "&#39;")
+    safe_url = page_url.replace("'", "&#39;")
+    safe_title = clean_title.replace('"', '&quot;').replace("'", "&#39;")
+
+    return f"""
+    <div class="quick-social-share-bar">
+      <span class="q-share-label">📤 شارك على منصات التواصل (مع الهاشتاجات تلقائياً):</span>
+      <div class="q-share-buttons">
+        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', '{safe_url}', '{safe_title}', '{safe_post}')">📘 فيسبوك</button>
+        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', '{safe_url}', '{safe_title}', '{safe_post}')">💬 واتساب</button>
+        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', '{safe_url}', '{safe_title}', '{safe_post}')">📸 إنستجرام</button>
+        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', '{safe_url}', '{safe_title}', '{safe_post}')">🎵 تيك توك</button>
+        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', '{safe_url}', '{safe_title}', '{safe_post}')">✈️ تيليجرام</button>
+        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', '{safe_url}', '{safe_title}', '{safe_post}')">🐦 إكس</button>
+        <button type="button" class="share-btn share-copy-all" onclick="copyHashtagsToClipboard('{safe_post}', this)">📋 نسخ البوست + الهاشتاجات</button>
+        <button type="button" class="share-btn share-copy-tags" onclick="copyHashtagsToClipboard('{safe_tags}', this)">#️⃣ نسخ الهاشتاجات فقط</button>
+      </div>
+    </div>
+    """
+
+
+def build_hashtags_box_html(hashtags_dict: dict, page_url: str, title: str) -> str:
+    """بناء صندوق المشاركة لمنصات التواصل والهاشتاجات المصرية مع خاصية النسخ والمشاركة بضغطة واحدة (R7)."""
+    flat_tags = get_all_hashtags_flat(hashtags_dict)
+    all_tags_str = " ".join(flat_tags)
+    clean_title = sanitize_arabic_copy(title)
+    copy_payload = f"{clean_title}\n🔗 رابط الدليل والاستشارة المجانية:\n{page_url}\n\n{all_tags_str}"
     safe_payload = copy_payload.replace('"', '&quot;').replace("'", "&#39;").replace("\n", "\\n")
+    safe_tags_only = all_tags_str.replace('"', '&quot;').replace("'", "&#39;")
+    safe_url = page_url.replace("'", "&#39;")
+    safe_title = clean_title.replace('"', '&quot;').replace("'", "&#39;")
 
     return f"""
     <div class="hashtags-discovery-box">
       <div class="hashtags-header">
-        <h4>📢 مشاركة المقال والهاشتاجات الطبية المصرية (25-30 هاشتاج عالي النية):</h4>
-        <button class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('{safe_payload}', this)">
-          📋 نسخ الرابط والهاشتاجات بضغطة واحدة
-        </button>
+        <h4>📢 مشاركة على منصات التواصل والهاشتاجات المستهدفة ({len(flat_tags)} هاشتاج للعملاء المحتملين):</h4>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('{safe_payload}', this)">
+            📋 نسخ البوست + الرابط + كل الهاشتاجات
+          </button>
+          <button type="button" class="btn-copy-hashtags" style="background:#059669;" onclick="copyHashtagsToClipboard('{safe_tags_only}', this)">
+            #️⃣ نسخ الهاشتاجات فقط
+          </button>
+        </div>
       </div>
-      <p class="hashtags-subtext">هاشتاجات مستهدفة للمرضى ومجتمعات التعافي في مصر عبر إنستجرام، فيسبوك وتيك توك:</p>
+      <p class="hashtags-subtext">اضغط على أي منصة بالأسفل وسيتم <strong>نسخ النص والرابط والهاشتاجات تلقائياً</strong> وفتح المنصة للمشاركة الفورية:</p>
+
+      <div class="q-share-buttons" style="margin-bottom:18px;">
+        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', '{safe_url}', '{safe_title}', '{safe_payload}')">📘 مشاركة على فيسبوك</button>
+        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', '{safe_url}', '{safe_title}', '{safe_payload}')">💬 مشاركة في واتساب</button>
+        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', '{safe_url}', '{safe_title}', '{safe_payload}')">📸 نسخ ومشاركة إنستجرام</button>
+        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', '{safe_url}', '{safe_title}', '{safe_payload}')">🎵 نسخ ومشاركة تيك توك</button>
+        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', '{safe_url}', '{safe_title}', '{safe_payload}')">✈️ مشاركة في تيليجرام</button>
+        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', '{safe_url}', '{safe_title}', '{safe_payload}')">🐦 مشاركة على إكس (X)</button>
+      </div>
+
       <div class="hashtags-categories-grid">
         <div class="hashtag-category-group">
           <strong>🏥 التخصص والجراحة:</strong>
@@ -637,7 +711,7 @@ def build_hashtags_box_html(hashtags_dict: dict, page_url: str, title: str) -> s
 # نافذة العرض المصغرة ونظام تتبع الليدز (R3 Micro-Popup & Lead Tracker)
 # -----------------------------------------------------------------------------
 def build_promo_modal_html(cfg: dict) -> str:
-    """نافذة micro-popup drawer عند النقر على استشارة الدكتورة (R3)."""
+    """نافذة micro-popup drawer عند النقر على الاستشارة المجانية (R3)."""
     offer = get_active_offer_details(cfg)
     return f"""
     <!-- Micro-Popup Drawer لتفعيل كود العرض وتتبع النقرات (R3) -->
@@ -647,7 +721,7 @@ def build_promo_modal_html(cfg: dict) -> str:
         <div class="modal-badge-top">🎉 تم تفعيل الميزة الحصرية بنجاح لحالتك</div>
         <h3 class="modal-title">كود العرض المعتمد: <span class="promo-code-highlight">{offer["code"]}</span></h3>
         <p class="modal-desc">
-          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة سريرية مجانية مع الدكتورة</strong>.
+          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة مجانية مع أخصائية العناية بالتعافي</strong>.
         </p>
 
         <div class="modal-benefits-grid">
@@ -660,8 +734,8 @@ def build_promo_modal_html(cfg: dict) -> str:
             <div><strong>معاينة وفحص قبل الدفع</strong><small>تأكد من المنتج والكود بنفسك</small></div>
           </div>
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">👩‍⚕️</span>
-            <div><strong>استشارة طبية مجانية</strong><small>رد مباشر من الدكتورة المختصة</small></div>
+            <span class="m-benefit-icon">💬</span>
+            <div><strong>استشارة مجانية متخصصة</strong><small>رد مباشر من أخصائية العناية بالتعافي</small></div>
           </div>
         </div>
 
@@ -674,13 +748,13 @@ def build_promo_modal_html(cfg: dict) -> str:
 
         <div class="modal-action-buttons">
           <button id="modal-proceed-wa-btn" class="modal-btn-wa" onclick="executeProceedToConsultation('whatsapp')">
-            💬 متابعة المحادثة المجانية عبر واتساب الآن
+            💬 متابعة الاستشارة المجانية عبر واتساب الآن
           </button>
           <button id="modal-proceed-ig-btn" class="modal-btn-ig" onclick="executeProceedToConsultation('instagram')">
-            📸 الاستفسار عبر شات إنستجرام
+            📸 استشارة مجانية عبر شات إنستجرام
           </button>
         </div>
-        <p class="modal-fine-print">🔒 بياناتك في سرية طبية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
+        <p class="modal-fine-print">🔒 بياناتك في سرية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
       </div>
     </div>
     """
@@ -1350,7 +1424,54 @@ def get_shared_css() -> str:
     .clinical-comparison-table tbody tr:nth-child(even) { background: #F9FAFB; }
     .clinical-comparison-table tbody tr:hover { background: #F0FDF4; }
 
-    /* صندوق الهاشتاجات (R7) */
+    /* صندوق الهاشتاجات وأزرار المشاركة لمنصات التواصل (R7) */
+    .quick-social-share-bar {
+      background: #F0FDF4;
+      border: 1px solid #A7F3D0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 16px 0 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .q-share-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--teal-deep);
+    }
+    .q-share-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .share-btn {
+      border: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.83rem;
+      cursor: pointer;
+      color: #fff;
+      transition: transform 0.15s, opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .share-btn:hover { transform: translateY(-2px); opacity: 0.92; }
+    .share-fb { background: #1877F2; }
+    .share-wa { background: #16A34A; }
+    .share-ig { background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF); }
+    .share-tt { background: #111827; }
+    .share-tg { background: #0088CC; }
+    .share-x { background: #0F172A; }
+    .share-copy-all { background: var(--teal-deep); }
+    .share-copy-tags { background: #0D9488; }
+
     .hashtags-discovery-box {
       background: #F9FAFB;
       border: 1px solid var(--border-soft);
@@ -1705,7 +1826,7 @@ def get_shared_js(cfg: dict) -> str:
     let currentPendingContext = {{ topic: "استشارة عامة", channel: "whatsapp", directWaUrl: "" }};
 
     function buildDynamicWaUrl(topicText) {{
-      const msg = "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج أستفسر مجاناً عن: " + topicText;
+      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج استشارة مجانية عن: " + topicText;
       return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
     }}
 
@@ -1892,7 +2013,7 @@ def get_shared_js(cfg: dict) -> str:
         if (pName) {{
           url += encodeURIComponent(" (الاسم: " + pName + ")");
         }}
-        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح محادثة الواتساب مع الدكتورة...");
+        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح الاستشارة المجانية عبر واتساب...");
         setTimeout(() => {{ window.open(url, '_blank'); }}, 400);
       }} else {{
         showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح إنستجرام...");
@@ -1900,11 +2021,11 @@ def get_shared_js(cfg: dict) -> str:
       }}
     }}
 
-    /* نسخ الهاشتاجات السريرية (R7) */
+    /* نسخ الهاشتاجات السريرية ومشاركتها عبر منصات التواصل (R7) */
     function copyHashtagsToClipboard(contentStr, btnEl) {{
       if (navigator.clipboard && navigator.clipboard.writeText) {{
         navigator.clipboard.writeText(contentStr).then(() => {{
-          showToast("📋 تم نسخ الرابط والهاشتاجات الطبية بنجاح للحافظة!");
+          showToast("📋 تم نسخ النص والرابط والهاشتاجات بنجاح للحافظة!");
           if (btnEl) {{
             const orig = btnEl.innerText;
             btnEl.innerText = "✅ تم النسخ بنجاح!";
@@ -1915,6 +2036,36 @@ def get_shared_js(cfg: dict) -> str:
         }});
       }} else {{
         showToast("يرجى نسخ النص يدوياً.");
+      }}
+    }}
+
+    function shareToSocialPlatform(platform, pageUrl, title, fullPostWithTags) {{
+      const payload = fullPostWithTags || (title + "\\n" + pageUrl);
+      if (navigator.clipboard && navigator.clipboard.writeText) {{
+        navigator.clipboard.writeText(payload).catch(() => {{}});
+      }}
+
+      if (platform === 'facebook') {{
+        showToast("📋 تم نسخ البوست والهاشتاجات تلقائياً! الصقها الآن في فيسبوك...");
+        const fbUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl) + "&quote=" + encodeURIComponent(payload);
+        setTimeout(() => {{ window.open(fbUrl, '_blank'); }}, 350);
+      }} else if (platform === 'whatsapp') {{
+        showToast("💬 جاري فتح واتساب لمشاركة الدليل مع الهاشتاجات...");
+        const waShareUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(payload);
+        setTimeout(() => {{ window.open(waShareUrl, '_blank'); }}, 300);
+      }} else if (platform === 'instagram') {{
+        showToast("📋 تم نسخ البوست + الرابط + كل الهاشتاجات! الصقه الآن في إنستجرام...");
+        setTimeout(() => {{ window.open("https://www.instagram.com/", '_blank'); }}, 450);
+      }} else if (platform === 'tiktok') {{
+        showToast("📋 تم نسخ الوصف + الرابط + كل الهاشتاجات! الصقه الآن في تيك توك...");
+        setTimeout(() => {{ window.open("https://www.tiktok.com/upload", '_blank'); }}, 450);
+      }} else if (platform === 'telegram') {{
+        const tgUrl = "https://t.me/share/url?url=" + encodeURIComponent(pageUrl) + "&text=" + encodeURIComponent(payload);
+        setTimeout(() => {{ window.open(tgUrl, '_blank'); }}, 300);
+      }} else if (platform === 'x') {{
+        const shortText = title + "\\n" + (payload.split("\\n").pop() || "").slice(0, 140);
+        const xUrl = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(pageUrl) + "&text=" + encodeURIComponent(shortText);
+        setTimeout(() => {{ window.open(xUrl, '_blank'); }}, 300);
       }}
     }}
 
@@ -1938,11 +2089,11 @@ def get_shared_js(cfg: dict) -> str:
 def render_top_and_header(cfg: dict, is_subpage: bool = False, depth: int = 1) -> str:
     prefix = "../" if is_subpage else ""
     offer = get_active_offer_details(cfg)
-    wa_general = build_whatsapp_link(cfg, "استشارة طبية مجانية عامة", is_article=False)
+    wa_general = build_whatsapp_link(cfg, "استشارة مجانية عامة", is_article=False)
     return f"""
 <div class="live-rep-topbar">
   <span class="pulse-dot"></span>
-  <strong>متاح الآن مجاناً:</strong> تحدث مباشرة مع الدكتورة وممثلي الرعاية الطبية للإجابة على أسئلتك قبل أي قرار — <span>{offer["offer_badge"]}</span>
+  <strong>متاح الآن مجاناً:</strong> تواصل مباشرة للحصول على استشارة مجانية مع أخصائية العناية بالتعافي للإجابة على أسئلتك قبل أي قرار — <span>{offer["offer_badge"]}</span>
 </div>
 
 <header class="clinical-header">
@@ -1954,7 +2105,7 @@ def render_top_and_header(cfg: dict, is_subpage: bool = False, depth: int = 1) -
       <a href="{prefix}index.html#guided-triage">🧭 مُوجِّه الحالات</a>
       <a href="{prefix}index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
       <a href="{prefix}index.html#products-section">🛡️ المستلزمات المعتمدة</a>
-      <a href="{wa_general}" data-topic="استشارة طبية مجانية عامة" class="nav-cta-chat">💬 تحدث مجاناً مع الدكتورة</a>
+      <a href="{wa_general}" data-topic="استشارة مجانية عامة" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
     </nav>
   </div>
 </header>
@@ -1970,15 +2121,15 @@ def render_sticky_bottom_bar(cfg: dict, context_topic: str) -> str:
   <div class="sticky-inner">
     <div class="sticky-text">
       <span class="pulse-dot"></span>
-      <span>لديك سؤال عن حالتك؟ تحدث مجاناً مع الدكتورة وممثلي الرعاية</span>
+      <span>لديك سؤال عن حالتك؟ احصل على استشارة مجانية مع أخصائية العناية بالتعافي</span>
       <span class="hide-mobile" style="color:#A7F3D0;">({offer["offer_title"]} بكود {offer["code"]})</span>
     </div>
     <div class="sticky-btns">
       <button onclick="openPromoDrawer('{clean_topic}', 'whatsapp', '{wa_url}')" class="sticky-wa-btn">
-        💬 اسأل مجاناً عبر واتساب ({offer["whatsapp_display"]})
+        💬 استشارة مجانية عبر واتساب ({offer["whatsapp_display"]})
       </button>
       <button onclick="openPromoDrawer('{clean_topic}', 'instagram', '{offer['instagram_url']}')" class="sticky-ig-btn">
-        📸 اسأل عبر إنستجرام
+        📸 استشارة عبر إنستجرام
       </button>
     </div>
   </div>
@@ -2106,6 +2257,10 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
     jsonld_str = json.dumps(jsonld_schemas, ensure_ascii=False)
 
     wa_consult_link = build_whatsapp_link(cfg, f"استفسار عن {prod['short_title']}", is_article=False)
+    prod_url = f"{SITE_BASE_URL}/products/{slug}.html"
+    prod_hashtags = generate_article_hashtags(prod, "product")
+    prod_quick_share_html = build_quick_share_bar_html(prod_hashtags, prod_url, clean_name)
+    prod_hashtags_box_html = build_hashtags_box_html(prod_hashtags, prod_url, clean_name)
 
     page_html = f"""<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -2148,15 +2303,17 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.85rem;">{clean_name}</h1>
     <div class="product-card-price">{prod.get("price_display", "")}</div>
 
+    {prod_quick_share_html}
+
     <p style="font-size:1.05rem; line-height:1.8; color:#1F2937;">{clean_summary}</p>
 
     <!-- أزرار الاستشارة المباشرة -->
     <div class="triage-actions" style="margin: 22px 0;">
       <a href="{wa_consult_link}" data-topic="استفسار عن {prod['short_title']}" class="btn-free-chat">
-        💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
+        💬 استشارة مجانية: هل يناسب حالتي؟
       </a>
       <button onclick="openPromoDrawer('استفسار عن {prod['short_title']}', 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
-        📸 استفسار عبر إنستجرام
+        📸 استشارة مجانية عبر إنستجرام
       </button>
     </div>
 
@@ -2198,6 +2355,8 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
     <div class="faq-accordion-box">
       {faq_html}
     </div>
+
+    {prod_hashtags_box_html}
   </div>
 </div>
 
@@ -2265,8 +2424,9 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
         </a>
         """
 
-    # صندوق الهاشتاجات المصرية عالية النية (R7)
+    # صندوق الهاشتاجات المصرية عالية النية وشريط المشاركة السريع (R7)
     article_url = f"{SITE_BASE_URL}/articles/{art['slug']}.html"
+    quick_share_bar_html = build_quick_share_bar_html(art["hashtags"], article_url, clean_title)
     hashtags_box_html = build_hashtags_box_html(art["hashtags"], article_url, clean_title)
 
     # مقالات مقترحة أخرى في الموسوعة
@@ -2376,6 +2536,8 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.8rem; line-height:1.4;">{clean_title}</h1>
 
+    {quick_share_bar_html}
+
     <div class="takeaways-box">
       <h3>⏱️ الخلاصة السريرية السريعة (في 30 ثانية):</h3>
       <ul>
@@ -2397,20 +2559,20 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
       {parent_banner_html}
     </div>
 
-    <!-- بطاقة التحويل للمحادثة المجانية مع الدكتورة وتفعيل كود العرض (R3) -->
+    <!-- بطاقة التحويل للاستشارة المجانية وتفعيل كود العرض (R3) -->
     <div class="triage-result-panel" style="margin: 32px 0;">
       <div class="triage-result-header">
-        <span class="triage-badge">👩‍⚕️ استشارة سريرية مجانية 100% بدون أي التزام بالشراء</span>
+        <span class="triage-badge">💬 استشارة مجانية متخصصة 100% بدون أي التزام بالشراء</span>
         <span style="font-weight:800; color:#065F46;">{offer["offer_badge"]}</span>
       </div>
       <h3>هل لديكِ سؤال يخص مرحلة جرحكِ أو تريدين التأكد من المقاس والتوقيت المناسب؟</h3>
-      <p>تحدثي الآن مجاناً مع الدكتورة الاستشارية وممثلي الرعاية الطبية؛ ستجيبكِ الدكتورة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>{offer["offer_title"]}</strong> بكود <strong>{offer["code"]}</strong>.</p>
+      <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>{offer["offer_title"]}</strong> بكود <strong>{offer["code"]}</strong>.</p>
       <div class="triage-actions">
         <a href="{wa_article_link}" data-topic="{clean_title}" class="btn-free-chat">
-          💬 تحدثي مجاناً الآن مع الدكتورة على واتساب ({offer["whatsapp_display"]})
+          💬 احصلي على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
         </a>
         <button onclick="openPromoDrawer('{clean_title}', 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
-          📸 اسألي الدكتورة عبر إنستجرام
+          📸 استشارة مجانية عبر إنستجرام
         </button>
       </div>
     </div>
@@ -2455,6 +2617,9 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
     articles_cards_html = []
     for art in all_articles:
         wa_art = build_whatsapp_link(cfg, art["title"], is_article=True)
+        art_url = f"{SITE_BASE_URL}/articles/{art['slug']}.html"
+        art_tags_str = " ".join(get_all_hashtags_flat(art["hashtags"]))
+        art_share_payload = f"{art['title']}\\n🔗 الدليل والاستشارة المجانية:\\n{art_url}\\n\\n{art_tags_str}".replace('"', '&quot;').replace("'", "&#39;")
         articles_cards_html.append(f"""
     <div class="article-card" data-category="{art.get('category', 'c-section')}">
       <div>
@@ -2468,6 +2633,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       <div class="art-card-actions">
         <a href="articles/{art['slug']}.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
         <button onclick="openPromoDrawer('{art['title']}', 'whatsapp', '{wa_art}')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+        <button type="button" onclick="copyHashtagsToClipboard('{art_share_payload}', this)" class="btn-read-guide" style="background:#EEF2FF; color:#3730A3; border-color:#C7D2FE;" title="نسخ عنوان المقال والرابط والـ 29 هاشتاجاً للمشاركة">📤 نسخ بالهاشتاجات</button>
       </div>
     </div>
         """)
@@ -2477,6 +2643,9 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
     products_cards_html = []
     for prod in all_products:
         wa_prod = build_whatsapp_link(cfg, f"استفسار عن {prod['short_title']}", is_article=False)
+        prod_url = f"{SITE_BASE_URL}/products/{prod['slug']}.html"
+        prod_tags_str = " ".join(get_all_hashtags_flat(generate_article_hashtags(prod, "product")))
+        prod_share_payload = f"{prod['name_ar']}\\n🔗 المواصفات والاستشارة المجانية:\\n{prod_url}\\n\\n{prod_tags_str}".replace('"', '&quot;').replace("'", "&#39;")
         products_cards_html.append(f"""
     <div class="product-summary-card">
       <div>
@@ -2490,6 +2659,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
         <a href="products/{prod['slug']}.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
         <button onclick="openPromoDrawer('استفسار عن {prod['short_title']}', 'whatsapp', '{wa_prod}')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+        <button type="button" onclick="copyHashtagsToClipboard('{prod_share_payload}', this)" class="btn-read-guide" style="background:#EEF2FF; color:#3730A3; border-color:#C7D2FE; width:100%; margin-top:4px;">📤 نسخ المنتج والرابط بالهاشتاجات</button>
       </div>
     </div>
         """)
@@ -2557,10 +2727,10 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
 
   <!-- المحطة 1: مُوجِّه الحالات الجراحية التفاعلي -->
   <section id="guided-triage" class="hero-guided-box">
-    <div class="trust-pill-top">🛡️ إرشاد طبي موثق بـ 12 دراسة سريرية من PubMed وNCBI و3M</div>
-    <h1>لا تخمّن طريقة العناية بجرحك بعد العملية..<br>دعنا نرشدك علمياً ونصل بك للدكتورة المختصة مجاناً</h1>
+    <div class="trust-pill-top">🛡️ إرشاد علمي موثق بـ 12 دراسة سريرية من PubMed وNCBI و3M</div>
+    <h1>لا تخمّن طريقة العناية بجرحك بعد العملية..<br>دعنا نرشدك علمياً ونوفر لك استشارة مجانية متخصصة</h1>
     <p class="hero-subtitle">
-      أكثر من 80% من المرضى يشترون مستلزمات غير مناسبة لمرحلة جرحهم. اختر نوع عمليتك بالأسفل في ثانية واحدة لتظهر لك الخطة الطبية الموثقة، وتحدث <strong>مجاناً 100%</strong> مع ممثلينا الطبيين للإجابة على أسئلتك.
+      أكثر من 80% من المرضى يشترون مستلزمات غير مناسبة لمرحلة جرحهم. اختر نوع عمليتك بالأسفل في ثانية واحدة لتظهر لك الخطة العلمية الموثقة، واحصل على <strong>استشارة مجانية 100%</strong> مع أخصائية العناية بالتعافي للإجابة على أسئلتك.
     </p>
 
     <span class="triage-step-label">👇 الخطوة الأولى: اضغط على نوع العملية الجراحية التي أجريتها أو تستعد لها:</span>
@@ -2591,7 +2761,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       </button>
     </div>
 
-    <!-- بطاقة التوصية الفورية والتحويل للمحادثة المجانية -->
+    <!-- بطاقة التوصية الفورية والتحويل للاستشارة المجانية -->
     <div id="triage-result-panel" class="triage-result-panel">
       <div class="triage-result-header">
         <span id="triage-badge-text" class="triage-badge">بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)</span>
@@ -2603,26 +2773,26 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       </p>
       <div class="triage-actions">
         <a id="triage-wa-btn" href="{default_wa_triage}" data-topic="استفسار سريري لحالة ولادة قيصرية / شد بطن" class="btn-free-chat">
-          💬 تحدث مجاناً الآن مع الدكتورة للاستفسار عن حالتك ({offer["whatsapp_display"]})
+          💬 احصل على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
         </a>
         <button onclick="openPromoDrawer(document.getElementById('triage-title-text').innerText, 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
-          📸 اسأل الدكتورة مجاناً على إنستجرام
+          📸 استشارة مجانية عبر إنستجرام
         </button>
       </div>
     </div>
   </section>
 
-  <!-- المحطة 2: لماذا يتحدث المرضى مع ممثلينا الطبيين قبل الشراء؟ -->
+  <!-- المحطة 2: لماذا يطلب المرضى استشارتنا المجانية قبل الشراء؟ -->
   <section class="journey-steps-grid">
     <div class="step-card">
-      <span class="step-num">الخطوة الأولى — استشارة سريرية مجانية</span>
-      <h4>اسأل الدكتورة بدون أي التزام</h4>
-      <p>أرسل سؤالك أو نوع عمليتك على واتساب وسترد عليك طبيبة مختصة لتوضيح ما يناسب مرحلة التئام جرحك مجاناً.</p>
+      <span class="step-num">الخطوة الأولى — استشارة مجانية متخصصة</span>
+      <h4>استشارة مجانية بدون أي التزام</h4>
+      <p>أرسل سؤالك أو نوع عمليتك على واتساب وسترد عليك أخصائية متخصصة في العناية بالتعافي لتوضيح ما يناسب مرحلة التئام جرحك مجاناً.</p>
     </div>
     <div class="step-card">
       <span class="step-num">الخطوة الثانية — دقة المقاس والبروتوكول</span>
       <h4>تجنب شراء منتج خاطئ</h4>
-      <p>تساعدك الدكتورة في اختيار مقاس دعامة الأنف أو ضمادة Tegaderm أو توقيت البدء في شيت السيليكون بدقة سريرية.</p>
+      <p>تساعدك المختصة في اختيار مقاس دعامة الأنف أو ضمادة Tegaderm أو توقيت البدء في شيت السيليكون بدقة علمية.</p>
     </div>
     <div class="step-card">
       <span class="step-num">الخطوة الثالثة — أمان مالي 100%</span>
@@ -2634,7 +2804,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
   <!-- المحطة 3: المستلزمات الطبية المعتمدة (ربطها بصفحات المنتجات المستقلة R6) -->
   <section id="products-section" style="margin-top: 50px;">
     <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا (5 منتجات رئيسية)</h2>
-    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات السريرية الكاملة أو استشارة الدكتورة مع تفعيل كود <strong>{offer["code"]}</strong> ({offer["offer_title"]}):</p>
+    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات الكاملة أو طلب استشارة مجانية مع تفعيل كود <strong>{offer["code"]}</strong> ({offer["offer_title"]}):</p>
     <div class="products-cards-grid">
       {products_grid_html}
     </div>
