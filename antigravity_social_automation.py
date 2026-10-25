@@ -789,8 +789,11 @@ def export_notebooklm_master_source() -> str:
         "   - توجيهات بصرية دقيقة (Visual Cue) لما يجب أن يظهر على الشاشة.",
         "   - نص الفويس أوفر (Voiceover Script) الجاهز للإلقاء أو التوليد الصوتي.",
         "",
-        "4. **توجيه تصميم الكارت الإبداعي (Creative Visual Brief):**",
-        "   - وصف دقيق للصورة المثالية التي يجب تصميمها أو اختيارها (الألوان الطبية، المشهد، النص الرئيسي البارز).",
+        "4. **توجيه تصميم الكارت الإبداعي (Creative Visual Brief) وبرومبت الصورة:**",
+        "   - **برومبت مولدات الصور (Midjourney / Canva / DALL-E) باللغة الإنجليزية:**",
+        "     `Clean, minimalist medical healthcare flat-lay photography, premium medical grade silicone scar sheet and 3M breathable surgical tape, soothing aesthetic, clinical teal and soft pastel background, professional studio lighting, 8k resolution, no text, realistic dermatology product display.`",
+        "   - **النص العربي البارز المطلوب كتابته على التصميم (Typography):**",
+        "     العنوان الطبي للحالة + شريط سفلي: `استشارة مجانية عبر واتساب | كود الخصم: HT10 | معاينة قبل الدفع`.",
         "=" * 60,
         "\n## 📦 أولاً: قائمة المنتجات الطبية المعتمدة ومواصفاتها وأسعارها الحية المسحوبة من الشيت:",
     ]
