@@ -1,19 +1,20 @@
 {
   "active_promo_code": "HT10",
+  "tracking_endpoint": "https://script.google.com/macros/s/AKfycbz_healing_touch_lead_tracker/exec",
   "promo_codes": {
     "HT10": {
       "code": "HT10",
       "offer_title": "شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع",
       "offer_badge": "🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)",
       "discount_type": "free_shipping_inspection",
-      "description": "شحن مجاني لجميع محافظات مصر + فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل دفع أي مليم."
+      "description": "شحن مجاني لجميع محافظات ومراكز مصر + فتح ومعاينة الشحنة والتأكد من الكود الأصلي للمنتج قبل دفع أي مليم للمندوب."
     },
     "HTVIP": {
       "code": "HTVIP",
       "offer_title": "خصم 50 ج.م إضافي + معاينة قبل الدفع",
       "offer_badge": "🔥 كود VIP: HTVIP (خصم 50 ج.م + معاينة)",
       "discount_type": "cash_discount",
-      "description": "خصم نقدي فوري 50 ج.م على إجمالي الطلب مع حق المعاينة."
+      "description": "خصم نقدي فوري 50 ج.م على إجمالي الطلب مع حق المعاينة المباشرة قبل الاستلام."
     }
   },
   "doctor_contact": {
@@ -25,7 +26,7 @@
     "supplier_brand": "TAPI STORE TEAM"
   },
   "whatsapp_message_templates": {
-    "product_inquiry": "أهلاً دكتورة، أنا جاي من موقع Healing Touch ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج أطلب واستفسر عن: {item_name}.",
-    "article_consultation": "أهلاً دكتورة، قرأت مقالكم الطبي عن ({article_title}) في موقع Healing Touch، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، وعندي استفسار عن حالتي ومحتاج الباكدج المناسب."
+    "product_inquiry": "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض ({promo_code}) الخاص بـ ({offer_title})، ومحتاج أستفسر مجاناً عن: {item_name}.",
+    "article_consultation": "أهلاً دكتورة، قرأت الدليل السريري حول ({article_title}) في موقع هيلينج تاتش، ومعايا كود العرض ({promo_code}) لـ ({offer_title})، وعندي استفسار عن حالتي ومحتاج البروتوكول المناسب."
   }
 }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://medon90ae.github.io/healing-touch-egypt/sitemap.xml

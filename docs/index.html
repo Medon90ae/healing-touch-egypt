@@ -6,134 +6,150 @@
   <title>هيلينج تاتش مصر | Healing Touch Egypt - استشارة التعافي ما بعد الجراحة والموسوعة الطبية</title>
   <meta name="description" content="تحدث مجاناً مع الدكتورة وممثلي الرعاية الطبية في هيلينج تاتش مصر لاختيار بروتوكول التعافي الموثق بعد الولادة القيصرية، تجميل الأنف، التكميم، والتثدي مع شحن مجاني ومعاينة بكود HT10.">
   <link rel="canonical" href="https://medon90ae.github.io/healing-touch-egypt/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="هيلينج تاتش مصر | استشارة التعافي ما بعد الجراحة">
+  <meta property="og:description" content="دليل سريري واستشارات مجانية لتعافي جروح القيصرية، تجميل الأنف، المناظير والغدة الدرقية مع كود HT10 للشحن المجاني والمعاينة قبل الدفع.">
+  <meta property="og:url" content="https://medon90ae.github.io/healing-touch-egypt/">
+  <meta property="og:site_name" content="هيلينج تاتش مصر">
+  <meta property="og:locale" content="ar_EG">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="هيلينج تاتش مصر">
+  <meta name="twitter:description" content="استشارة التعافي والموسوعة الطبية لتعافي ما بعد الجراحة في مصر.">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-
     :root {
-      --bg-ivory: #FAF9F5;
-      --bg-soft: #F2F5F4;
-      --surface: #FFFFFF;
       --teal-deep: #0D4A4D;
-      --teal-mid: #146368;
-      --teal-light: #E6F2F2;
-      --emerald-cta: #10B981;
-      --emerald-hover: #059669;
+      --teal-mid: #145E63;
+      --teal-light: #E6F4F1;
+      --emerald-cta: #059669;
+      --emerald-hover: #047857;
+      --bg-cream: #F8FAF9;
+      --bg-soft: #F0F4F3;
+      --bg-ivory: #FCFDFD;
+      --text-main: #1F2937;
+      --text-muted: #4B5563;
+      --border-soft: #E5E7EB;
+      --border-accent: #6EE7B7;
+      --surface: #FFFFFF;
       --amber-soft: #FEF3C7;
       --amber-text: #92400E;
-      --text-main: #182226;
-      --text-muted: #5A6B70;
-      --border-soft: #E3E8E7;
-      --radius-lg: 20px;
+      --radius-sm: 8px;
       --radius-md: 14px;
-      --shadow-calm: 0 8px 30px rgba(13, 74, 77, 0.06);
-      --shadow-hover: 0 14px 38px rgba(13, 74, 77, 0.12);
+      --radius-lg: 20px;
+      --shadow-calm: 0 4px 20px rgba(13, 74, 77, 0.06);
+      --shadow-hover: 0 10px 30px rgba(13, 74, 77, 0.12);
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      padding-bottom: 92px; /* مساحة للشريط العائم السفلي */
-      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-      background-color: var(--bg-ivory);
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+      background-color: var(--bg-cream);
       color: var(--text-main);
-      line-height: 1.8;
+      line-height: 1.7;
       direction: rtl;
       text-align: right;
     }
 
-    /* شريط الطمأنة العلوي الحي (Human Presence Top Bar) */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* الشريط التنبيهي العلوي */
     .live-rep-topbar {
-      background: var(--teal-deep);
-      color: #fff;
-      padding: 10px 16px;
-      font-size: 0.92rem;
+      background: linear-gradient(90deg, #0D4A4D 0%, #065F46 100%);
+      color: #E6F4F1;
       text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 9px 16px;
+      font-size: 0.88rem;
+      font-weight: 600;
     }
     .pulse-dot {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       background-color: #34D399;
       border-radius: 50%;
       margin-left: 8px;
-      box-shadow: 0 0 0 rgba(52, 211, 153, 0.7);
-      animation: pulseGreen 1.8s infinite;
+      animation: pulseAnim 1.8s infinite;
+      vertical-align: middle;
     }
-    @keyframes pulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    @keyframes pulseAnim {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { transform: scale(1.15); box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
     }
 
-    /* الهيدر السريري الهادئ */
-    header.clinical-header {
-      background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-ivory) 100%);
-      padding: 28px 20px 18px 20px;
+    /* الهيدر السريري الموحد */
+    .clinical-header {
+      background: var(--surface);
       border-bottom: 1px solid var(--border-soft);
+      position: sticky;
+      top: 0;
+      z-index: 9980;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     }
     .nav-container {
       max-width: 1140px;
       margin: 0 auto;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
     .brand-logo {
-      font-size: 1.55rem;
+      font-size: 1.35rem;
       font-weight: 900;
       color: var(--teal-deep);
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .nav-links {
       display: flex;
-      gap: 12px;
       align-items: center;
+      gap: 18px;
       flex-wrap: wrap;
     }
     .nav-links a {
-      color: var(--teal-deep);
+      color: var(--text-main);
       text-decoration: none;
+      font-size: 0.94rem;
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 8px 14px;
-      border-radius: 30px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--emerald-cta); }
+    .nav-cta-chat {
+      background: var(--emerald-cta);
+      color: #fff !important;
+      padding: 8px 18px;
+      border-radius: 20px;
+      text-decoration: none;
       transition: background 0.2s;
     }
-    .nav-links a:hover { background: var(--teal-light); }
-    .nav-cta-chat {
-      background: var(--emerald-cta) !important;
-      color: #fff !important;
-      padding: 9px 20px !important;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-    }
+    .nav-cta-chat:hover { background: var(--emerald-hover); }
 
-    .container { max-width: 1140px; margin: 0 auto; padding: 25px 20px; }
-
-    /* المحطة 1 و 2: Hero + المُوجِّه التفاعلي (Ro.co & Silagen Guided Triage) */
+    /* صندوق البطل التفاعلي (Interactive Guided Triage) */
     .hero-guided-box {
       background: var(--surface);
       border-radius: var(--radius-lg);
-      padding: 38px 32px;
+      padding: 38px 30px;
+      margin: 30px 0 25px 0;
       box-shadow: var(--shadow-calm);
       border: 1px solid var(--border-soft);
       text-align: center;
-      margin-bottom: 35px;
-      position: relative;
-      overflow: hidden;
     }
     .trust-pill-top {
       display: inline-block;
       background: var(--teal-light);
       color: var(--teal-deep);
-      font-weight: 800;
       font-size: 0.88rem;
+      font-weight: 800;
       padding: 6px 18px;
       border-radius: 30px;
       margin-bottom: 14px;
@@ -153,7 +169,7 @@
       margin: 0 auto 28px auto;
     }
 
-    /* أزرار اختيار نوع العملية (Anatomy / Surgery Selector) */
+    /* أزرار اختيار نوع العملية الجراحية */
     .triage-step-label {
       font-weight: 800;
       color: var(--teal-deep);
@@ -191,7 +207,7 @@
     .surgery-btn .s-title { font-weight: 800; color: var(--teal-deep); font-size: 1.02rem; }
     .surgery-btn .s-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.4; }
 
-    /* بطاقة النتيجة الفورية للمُوجِّه التفاعلي */
+    /* بطاقة النتيجة الفورية للمُوجِّه */
     .triage-result-panel {
       background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
       border: 2px solid #6EE7B7;
@@ -277,7 +293,7 @@
     }
     .btn-ig-chat:hover { background: var(--teal-light); }
 
-    /* المحطة 3: رحلة التعافي الزمنية وأختام الثقة */
+    /* الخطوات السريرية للتعافي */
     .journey-steps-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -304,7 +320,7 @@
     .step-card h4 { margin: 0 0 8px 0; color: var(--teal-deep); font-size: 1.12rem; }
     .step-card p { margin: 0; color: var(--text-muted); font-size: 0.93rem; }
 
-    /* المحطة 4: الموسوعة الطبية الحية ذات النمو الأسي (Exponential Articles Hub) */
+    /* الموسوعة الطبية الكاملة ومكتبة المقالات */
     .hub-header-box {
       background: var(--surface);
       border: 1px solid var(--border-soft);
@@ -370,7 +386,7 @@
       align-items: center;
       flex-wrap: wrap;
       flex: 1;
-      max-width: 420px;
+      max-width: 440px;
     }
     .live-search-input {
       flex: 1;
@@ -395,13 +411,12 @@
       cursor: pointer;
     }
 
-    /* شبكة عرض جميع المقالات في وقت واحد */
+    /* شبكة بطاقات المقالات */
     .articles-bento-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
       gap: 20px;
     }
-    /* وضع الفهرس المدمج السريع عندما تزيد المقالات أسياً */
     .articles-bento-grid.compact-mode {
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 12px;
@@ -490,40 +505,56 @@
       font-weight: 800;
       font-size: 0.88rem;
       transition: background 0.2s;
+      cursor: pointer;
     }
     .btn-ask-doc-mini:hover { background: #D1FAE5; }
 
-    /* بطاقات المنتجات الاستشارية المبسطة */
-    .solutions-grid {
+    /* بطاقات المنتجات المعتمدة */
+    .products-cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 18px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
     }
-    .solution-card {
+    .product-summary-card {
       background: var(--surface);
       border: 1px solid var(--border-soft);
       border-radius: var(--radius-md);
-      padding: 22px;
+      padding: 24px;
       box-shadow: var(--shadow-calm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: all 0.2s ease;
     }
-    .solution-card h3 { color: var(--teal-deep); font-size: 1.12rem; margin-top: 0; }
-    .solution-price {
+    .product-summary-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: #6EE7B7;
+    }
+    .product-card-badge {
       display: inline-block;
+      background: #ECFDF5;
+      color: #065F46;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .product-card-price {
       background: var(--amber-soft);
       color: var(--amber-text);
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 8px;
       font-size: 0.88rem;
-      margin: 8px 0 12px 0;
+      display: inline-block;
+      margin: 10px 0;
     }
 
-    /* صفحة المقال الفردي */
-    .article-full-box {
+    /* صفحة المقال الفردي وصفحة المنتج */
+    .article-full-box, .product-profile-box {
       background: var(--surface);
       border-radius: var(--radius-lg);
       padding: 36px 32px;
@@ -543,6 +574,162 @@
     .takeaways-box ul { margin: 0; padding-right: 20px; }
     .takeaways-box li { margin-bottom: 8px; font-weight: 600; }
 
+    /* صندوق السلسلة المترابطة (Cluster Sibling Box - R6) */
+    .sibling-cluster-box {
+      background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+      border: 1px solid #BAE6FD;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 28px 0;
+    }
+    .sibling-cluster-box h4 {
+      margin: 0 0 12px 0;
+      color: #0369A1;
+      font-size: 1.15rem;
+    }
+    .sibling-links-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .sibling-link-item {
+      background: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #E0F2FE;
+      text-decoration: none;
+      color: var(--teal-deep);
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: block;
+      transition: all 0.2s ease;
+    }
+    .sibling-link-item:hover {
+      border-color: #0284C7;
+      background: #F0FDF4;
+      transform: translateX(-4px);
+    }
+    .parent-product-link-banner {
+      background: #0D4A4D;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      font-weight: 800;
+      font-size: 0.94rem;
+    }
+    .parent-product-link-banner:hover { background: #145E63; }
+
+    /* المخطط الزمني SVG (R2) */
+    .svg-timeline-wrapper {
+      background: #FAFAF9;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 22px 24px;
+      margin: 28px 0;
+    }
+    .timeline-title {
+      margin: 0 0 16px 0;
+      color: var(--teal-deep);
+      font-size: 1.12rem;
+    }
+    .timeline-svg-container { width: 100%; overflow-x: auto; }
+
+    /* الجداول السريرية المقارنة (R2) */
+    .comparison-table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 28px 0;
+      box-shadow: var(--shadow-calm);
+    }
+    .comparison-title {
+      margin: 0 0 16px 0;
+      color: var(--teal-deep);
+      font-size: 1.15rem;
+    }
+    .table-responsive { width: 100%; overflow-x: auto; }
+    .clinical-comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: right;
+    }
+    .clinical-comparison-table th {
+      background: var(--teal-deep);
+      color: #fff;
+      padding: 12px 14px;
+      font-weight: 800;
+      border: 1px solid var(--teal-mid);
+    }
+    .clinical-comparison-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--border-soft);
+      vertical-align: middle;
+    }
+    .clinical-comparison-table tbody tr:nth-child(even) { background: #F9FAFB; }
+    .clinical-comparison-table tbody tr:hover { background: #F0FDF4; }
+
+    /* صندوق الهاشتاجات (R7) */
+    .hashtags-discovery-box {
+      background: #F9FAFB;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 22px 24px;
+      margin: 28px 0;
+    }
+    .hashtags-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .hashtags-header h4 { margin: 0; color: var(--teal-deep); font-size: 1.08rem; }
+    .hashtags-subtext { margin: 0 0 14px 0; color: var(--text-muted); font-size: 0.88rem; }
+    .btn-copy-hashtags {
+      background: var(--teal-deep);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-copy-hashtags:hover { background: var(--teal-mid); }
+    .hashtags-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .hashtag-category-group strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-pill {
+      background: #E5E7EB;
+      color: #1F2937;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    /* المراجع الطبية المعتمدة */
     .refs-container {
       background: var(--bg-soft);
       border: 1px solid var(--border-soft);
@@ -554,7 +741,38 @@
     .refs-container li { margin-bottom: 10px; font-size: 0.9rem; }
     .refs-container a { color: var(--teal-deep); font-weight: 700; }
 
-    /* الشريط السفلي العائم للمحادثة المجانية (Sticky Thumb-Friendly Bar) */
+    /* تفاصيل صفحة المنتج (Product Page Specs & Guidelines) */
+    .product-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .spec-item {
+      background: #F9FAFB;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .spec-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 700; }
+    .spec-value { font-size: 0.95rem; color: var(--teal-deep); font-weight: 800; margin-top: 4px; }
+
+    .clinical-bullet-list { margin: 10px 0; padding-right: 22px; }
+    .clinical-bullet-list li { margin-bottom: 8px; font-weight: 600; }
+
+    /* الأكورديون للأسئلة الشائعة */
+    .faq-accordion-box { margin: 24px 0; }
+    .faq-item {
+      background: #F9FAFB;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 16px 20px;
+    }
+    .faq-question { font-weight: 800; color: var(--teal-deep); font-size: 1.02rem; margin: 0 0 6px 0; }
+    .faq-answer { color: #374151; font-size: 0.94rem; margin: 0; }
+
+    /* الشريط السفلي العائم (Sticky Consult Bar) */
     .sticky-consult-bar {
       position: fixed;
       bottom: 0;
@@ -594,6 +812,9 @@
       font-weight: 800;
       font-size: 0.92rem;
       white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
     }
     .sticky-ig-btn {
       background: rgba(255,255,255,0.15);
@@ -608,6 +829,130 @@
       white-space: nowrap;
     }
 
+    /* Micro-Popup Drawer Styles (R3) */
+    .promo-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(5px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .promo-drawer-content {
+      background: #FFFFFF;
+      border-radius: 22px;
+      max-width: 540px;
+      width: 100%;
+      padding: 30px 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      position: relative;
+      text-align: right;
+      border-top: 6px solid var(--emerald-cta);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      background: #F3F4F6;
+      border: none;
+      font-size: 1.4rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #4B5563;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-badge-top {
+      display: inline-block;
+      background: #ECFDF5;
+      color: #065F46;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .modal-title { margin: 0 0 10px 0; color: var(--teal-deep); font-size: 1.35rem; }
+    .promo-code-highlight {
+      background: #FEF3C7;
+      color: #B45309;
+      padding: 2px 10px;
+      border-radius: 8px;
+      border: 1px dashed #D97706;
+      font-weight: 900;
+    }
+    .modal-desc { margin: 0 0 18px 0; font-size: 0.95rem; color: #374151; }
+    .modal-benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #F9FAFB;
+      padding: 14px;
+      border-radius: 12px;
+    }
+    .m-benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.92rem;
+    }
+    .m-benefit-icon { font-size: 1.3rem; }
+    .m-benefit-item small { display: block; color: #6B7280; font-size: 0.8rem; }
+    .quick-lead-form { margin-bottom: 20px; }
+    .modal-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+    }
+    .modal-input:focus { border-color: var(--teal-deep); }
+    .modal-action-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn-wa {
+      background: var(--emerald-cta);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+      transition: background 0.2s;
+    }
+    .modal-btn-wa:hover { background: var(--emerald-hover); }
+    .modal-btn-ig {
+      background: #fff;
+      color: var(--teal-deep);
+      border: 2px solid var(--teal-deep);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-btn-ig:hover { background: var(--teal-light); }
+    .modal-fine-print { font-size: 0.76rem; color: #9CA3AF; text-align: center; margin: 12px 0 0 0; }
+
     .toast-notification {
       position: fixed;
       bottom: 85px;
@@ -617,9 +962,10 @@
       padding: 14px 22px;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-      z-index: 9999;
+      z-index: 999999;
       font-weight: 700;
       display: none;
+      animation: fadeIn 0.2s ease;
     }
 
     footer {
@@ -636,17 +982,21 @@
       .hero-guided-box h1 { font-size: 1.55rem; }
       .sticky-text span.hide-mobile { display: none; }
       .sticky-inner { justify-content: center; }
+      .article-full-box, .product-profile-box { padding: 24px 18px; }
     }
-</style>
+    </style>
   <script>
-    const TRIAGE_DATA = {"c-section": {"badge": "بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)", "title": "خطة التعافي الآمن لجرح القيصرية وشد البطن:", "desc": "في أول أسبوعين: حمايتك من التهاب الجرح أثناء الشاور تتطلب عزل الماء 100% بضمادة الفيلم الشفاف (3M Tegaderm +Pad). وبعد التئام السطح وفك الغرز: وضع رول شيت السيليكون الطبي (BUPY 3m) يمنع بروز الكلويد ويوفر عليكِ آلاف الجنيهات في جلسات الليزر والمراهم.", "wa_topic": "استشارة مجانية لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)"}, "rhinoplasty": {"badge": "بروتوكول ما بعد تجميل الأنف (د. عمرو عادل & MDPI 2026)", "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:", "desc": "تورم الأرنبة بعد فك الجبيرة طبيعي نتيجة السوائل اللمفاوية؛ الحل السريري هو الضغط اللطيف ببلاستر 3M Micropore البيج الأصلي (كود 1533-0) مع ارتداء دعامة السيليكون الطبية (Nostril Retainer) بمقاسك الصحيح لضمان تساوي الفتحتين بنسبة 94%.", "wa_topic": "استشارة مجانية لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)"}, "bariatric": {"badge": "بروتوكول جراحات التكميم والمناظير (Smith & Nephew)", "title": "حماية فتحات المنظار الـ 5 من العرق والماء والاحتكاك:", "desc": "بدلاً من وضع 5 ضمادات تسقط مع الحركة والعرق، يعمل بخاخ الغشاء الشفاف (Opsite Spray) كجلد ثانٍ يعزل الماء والبكتيريا فوراً ويمنع احتكاك المشد أو الملابس بالغرز.", "wa_topic": "استشارة مجانية لحالة تكميم / منظار (بخاخ الجروح الشفاف Opsite)"}, "thyroid-gynecomastia": {"badge": "بروتوكول جراحات الغدة الدرقية والتثدي (NCBI Clinical)", "title": "إخفاء خط الرقبة والصدر ومنع الحكة العصبية والكلويد:", "desc": "مناطق الرقبة والصدر دائمة الحركة مما يحفز الكولاجين الزائد والحكة؛ استخدام شيت السيليكون الطبي (BUPY) ليلاً مع حماية الجرح من الشمس ببلاستر 3M البيج نهاراً يمنحك تسطيحاً وتفتيحاً مثاليين.", "wa_topic": "استشارة مجانية لحالة جرح الغدة الدرقية / التثدي (شيت السيليكون وبخاخ Opsite)"}};
+    const TRIAGE_DATA = {"c-section": {"badge": "بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)", "title": "خطة التعافي لجرح القيصرية وشد البطن:", "desc": "في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.", "wa_topic": "استفسار سريري لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)"}, "rhinoplasty": {"badge": "بروتوكول ما بعد تجميل الأنف (د. عمرو عادل & MDPI 2026)", "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:", "desc": "تورم الأرنبة بعد فك الجبيرة يعالج بالضغط المتوازن ببلاستر 3M Micropore البيج الأصلي (1533-0) مع ارتداء دعامة السيليكون (Nostril Retainer) بالمقاس الصحيح للحفاظ على تماثل الفتحتين بنسبة 94%.", "wa_topic": "استفسار سريري لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)"}, "bariatric": {"badge": "بروتوكول جراحات التكميم والمناظير (Smith & Nephew)", "title": "حماية فتحات المنظار الـ 5 من العرق والماء والاحتكاك:", "desc": "بدلاً من وضع 5 ضمادات تسقط مع الحركة والتعرق، يعمل بخاخ الغشاء الشفاف (Opsite Spray) كجلد ثانٍ يعزل الماء والبكتيريا فوراً ويمنع احتكاك المشد أو الملابس بالغرز.", "wa_topic": "استفسار سريري لحالة تكميم / منظار (بخاخ الجروح الشفاف Opsite)"}, "thyroid-gynecomastia": {"badge": "بروتوكول جراحات الغدة الدرقية والتثدي (NCBI Clinical)", "title": "إخفاء خط الرقبة والصدر ومنع الحكة والكلويد:", "desc": "مناطق الرقبة والصدر دائمة الحركة مما يحفز التليف والحكة؛ استخدام شيت السيليكون الطبي (BUPY) ليلاً مع حماية الجرح من الشمس ببلاستر 3M البيج نهاراً يمنحك تسطيحاً وتفتيحاً متميزين.", "wa_topic": "استفسار سريري لحالة جرح الغدة الدرقية / التثدي (شيت السيليكون وبخاخ Opsite)"}};
     const PROMO_CODE = "HT10";
     const OFFER_TITLE = "شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع";
     const WA_PHONE = "201155803307";
     const IG_URL = "https://www.instagram.com/tapistorefamily2026/";
+    const TRACKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbz_healing_touch_lead_tracker/exec";
+
+    let currentPendingContext = { topic: "استشارة عامة", channel: "whatsapp", directWaUrl: "" };
 
     function buildDynamicWaUrl(topicText) {
-      const msg = "أهلاً دكتورة، أنا في موقع Healing Touch ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج أتحدث معكم مجاناً بخصوص: " + topicText;
+      const msg = "أهلاً دكتورة، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج أستفسر مجاناً عن: " + topicText;
       return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
     }
 
@@ -663,11 +1013,13 @@
         document.getElementById('triage-title-text').innerText = info.title;
         document.getElementById('triage-desc-text').innerText = info.desc;
         const waBtn = document.getElementById('triage-wa-btn');
-        waBtn.href = buildDynamicWaUrl(info.wa_topic);
+        if (waBtn) {
+          waBtn.setAttribute('data-topic', info.wa_topic);
+          waBtn.href = buildDynamicWaUrl(info.wa_topic);
+        }
         panel.style.display = 'block';
       }
 
-      // فلترة مكتبة المقالات تلقائياً لتعرض مقالات هذه الجراحة أيضاً مع إمكانية عرض الكل
       filterArticlesByCategory(catKey, null, false);
     }
 
@@ -701,7 +1053,8 @@
       const counterEl = document.getElementById('visible-articles-count');
       if (counterEl) counterEl.innerText = visibleCount;
       if (scrollToHub) {
-        document.getElementById('knowledge-hub-section').scrollIntoView({ behavior: 'smooth' });
+        const hubEl = document.getElementById('knowledge-hub-section');
+        if (hubEl) hubEl.scrollIntoView({ behavior: 'smooth' });
       }
     }
 
@@ -736,20 +1089,141 @@
       setTimeout(() => { t.style.display = 'none'; }, 4000);
     }
 
-    function copyPromoAndOpenInstagram(code, topicTitle, igUrl) {
-      const textToCopy = "أهلاً دكتورة، أنا في موقع Healing Touch ومعايا كود العرض (" + code + ") ومحتاج أستفسر مجاناً عن: " + topicTitle;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          showToast("✅ تم نسخ سؤالك وكود العرض (" + code + ")! جاري فتح شات الدكتورة على إنستجرام...");
-          setTimeout(() => { window.open(igUrl, '_blank'); }, 1100);
-        }).catch(() => {
-          window.open(igUrl, '_blank');
-        });
-      } else {
-        window.open(igUrl, '_blank');
+    /* تسجيل وتتبع الليدز محلياً وعبر Webhook (R3) */
+    function logConsultationLead(channel, contextTopic, patientName, patientPhone) {
+      const leadEvent = {
+        timestamp: new Date().toISOString(),
+        page_title: document.title,
+        page_url: window.location.href,
+        context_topic: contextTopic || "استشارة عامة",
+        channel: channel,
+        promo_code: PROMO_CODE,
+        patient_name: patientName || "زائر هيلينج تاتش",
+        patient_phone: patientPhone || ""
+      };
+
+      try {
+        const stored = JSON.parse(localStorage.getItem('healing_touch_leads_log') || '[]');
+        stored.push(leadEvent);
+        localStorage.setItem('healing_touch_leads_log', JSON.stringify(stored));
+      } catch (e) {
+        console.warn('localStorage lead log error:', e);
+      }
+
+      // إرسال Webhook / Beacon بشكل غير متزامن وغير معطل
+      if (TRACKING_ENDPOINT && TRACKING_ENDPOINT.startsWith('http')) {
+        try {
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(TRACKING_ENDPOINT, JSON.stringify(leadEvent));
+          } else {
+            fetch(TRACKING_ENDPOINT, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(leadEvent)
+            }).catch(() => {});
+          }
+        } catch (err) {}
       }
     }
-</script>
+
+    window.getLeadLog = function() {
+      try {
+        return JSON.parse(localStorage.getItem('healing_touch_leads_log') || '[]');
+      } catch (e) {
+        return [];
+      }
+    };
+
+    /* تفعيل الـ Micro-Popup Drawer (R3) */
+    function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
+      currentPendingContext = {
+        topic: contextTopic || document.title,
+        channel: preferredChannel || 'whatsapp',
+        directWaUrl: directWaUrl || buildDynamicWaUrl(contextTopic || document.title)
+      };
+
+      // نسخ كود الخصم تلقائياً للحافظة
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(PROMO_CODE).catch(() => {});
+      }
+
+      const modal = document.getElementById('promo-lead-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+      } else {
+        // إذا لم يكن المودال موجوداً في الصفحة ننتقل مباشرة للواتساب
+        logConsultationLead(preferredChannel, contextTopic, '', '');
+        window.open(currentPendingContext.directWaUrl, '_blank');
+      }
+    }
+
+    function closePromoModal() {
+      const modal = document.getElementById('promo-lead-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function handleModalBackdropClick(event) {
+      if (event.target.id === 'promo-lead-modal') {
+        closePromoModal();
+      }
+    }
+
+    function executeProceedToConsultation(targetChannel) {
+      const nameInput = document.getElementById('lead-patient-name');
+      const phoneInput = document.getElementById('lead-patient-phone');
+      const pName = nameInput ? nameInput.value.trim() : '';
+      const pPhone = phoneInput ? phoneInput.value.trim() : '';
+
+      logConsultationLead(targetChannel, currentPendingContext.topic, pName, pPhone);
+      closePromoModal();
+
+      if (targetChannel === 'whatsapp') {
+        let url = currentPendingContext.directWaUrl || buildDynamicWaUrl(currentPendingContext.topic);
+        if (pName) {
+          url += encodeURIComponent(" (الاسم: " + pName + ")");
+        }
+        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح محادثة الواتساب مع الدكتورة...");
+        setTimeout(() => { window.open(url, '_blank'); }, 400);
+      } else {
+        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح إنستجرام...");
+        setTimeout(() => { window.open(IG_URL, '_blank'); }, 400);
+      }
+    }
+
+    /* نسخ الهاشتاجات السريرية (R7) */
+    function copyHashtagsToClipboard(contentStr, btnEl) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(contentStr).then(() => {
+          showToast("📋 تم نسخ الرابط والهاشتاجات الطبية بنجاح للحافظة!");
+          if (btnEl) {
+            const orig = btnEl.innerText;
+            btnEl.innerText = "✅ تم النسخ بنجاح!";
+            setTimeout(() => { btnEl.innerText = orig; }, 2500);
+          }
+        }).catch(() => {
+          showToast("تم تحديد النص للنسخ.");
+        });
+      } else {
+        showToast("يرجى نسخ النص يدوياً.");
+      }
+    }
+
+    /* تفويض اعتراض النقرات لفتح الـ Micro-Popup تلقائياً */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const topic = this.getAttribute('data-topic') || this.getAttribute('title') || document.title;
+          const directUrl = this.href;
+          openPromoDrawer(topic, 'whatsapp', directUrl);
+        });
+      });
+    });
+    </script>
+  <script type="application/ld+json">
+  [{"@context": "https://schema.org", "@type": "MedicalBusiness", "name": "Healing Touch Egypt - هيلينج تاتش مصر", "url": "https://medon90ae.github.io/healing-touch-egypt", "logo": "https://medon90ae.github.io/healing-touch-egypt/logo.png", "telephone": "+201155803307", "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressLocality": "Cairo"}, "description": "المنصة الاستشارية والتوعوية الأولى في مصر لرعاية ما بعد العمليات الجراحية والتجميلية."}, {"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "هيلينج تاتش مصر | الاستشارات والموسوعة السريرية لتعافي ما بعد الجراحة", "description": "تحدثي مجاناً مع الدكتورة لاختيار بروتوكول التعافي الموثق بعد الولادة القيصرية، تجميل الأنف، التكميم، والتثدي مع شحن مجاني ومعاينة بكود HT10.", "datePublished": "2026-10-25", "dateModified": "2026-10-25"}]
+  </script>
 </head>
 <body>
 
@@ -766,9 +1240,9 @@
     </a>
     <nav class="nav-links">
       <a href="index.html#guided-triage">🧭 مُوجِّه الحالات</a>
-      <a href="index.html#knowledge-hub-section">📚 الموسوعة الطبية الكاملة</a>
-      <a href="index.html#solutions-section">🛡️ الحلول المعتمدة</a>
-      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9." target="_blank" rel="noopener" class="nav-cta-chat">💬 تحدث مجاناً مع الدكتورة الآن</a>
+      <a href="index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
+      <a href="index.html#products-section">🛡️ المستلزمات المعتمدة</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9." data-topic="استشارة طبية مجانية عامة" class="nav-cta-chat">💬 تحدث مجاناً مع الدكتورة</a>
     </nav>
   </div>
 </header>
@@ -776,7 +1250,7 @@
 
 <div class="container">
 
-  <!-- المحطة 1 و 2: مُوجِّه الحالات الجراحية التفاعلي (Ro.co & Silagen 2026 UX) -->
+  <!-- المحطة 1: مُوجِّه الحالات الجراحية التفاعلي -->
   <section id="guided-triage" class="hero-guided-box">
     <div class="trust-pill-top">🛡️ إرشاد طبي موثق بـ 12 دراسة سريرية من PubMed وNCBI و3M</div>
     <h1>لا تخمّن طريقة العناية بجرحك بعد العملية..<br>دعنا نرشدك علمياً ونصل بك للدكتورة المختصة مجاناً</h1>
@@ -784,7 +1258,7 @@
       أكثر من 80% من المرضى يشترون مستلزمات غير مناسبة لمرحلة جرحهم. اختر نوع عمليتك بالأسفل في ثانية واحدة لتظهر لك الخطة الطبية الموثقة، وتحدث <strong>مجاناً 100%</strong> مع ممثلينا الطبيين للإجابة على أسئلتك.
     </p>
 
-    <span class="triage-step-label">👇 الخطوة 1: اضغط على نوع العملية الجراحية التي أجريتها أو تستعد لها:</span>
+    <span class="triage-step-label">👇 الخطوة الأولى: اضغط على نوع العملية الجراحية التي أجريتها أو تستعد لها:</span>
 
     <div class="surgery-selector-grid">
       <button class="surgery-btn active" onclick="selectSurgeryTriage('c-section', this)">
@@ -818,56 +1292,144 @@
         <span id="triage-badge-text" class="triage-badge">بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)</span>
         <span style="font-weight:800; color:#065F46;">🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
       </div>
-      <h3 id="triage-title-text">خطة التعافي الآمن لجرح القيصرية وشد البطن:</h3>
+      <h3 id="triage-title-text">خطة التعافي لجرح القيصرية وشد البطن:</h3>
       <p id="triage-desc-text">
-        في أول أسبوعين: حمايتك من التهاب الجرح أثناء الشاور تتطلب عزل الماء 100% بضمادة الفيلم الشفاف (3M Tegaderm +Pad). وبعد التئام السطح وفك الغرز: وضع رول شيت السيليكون الطبي (BUPY 3m) يمنع بروز الكلويد ويوفر عليكِ آلاف الجنيهات في جلسات الليزر والمراهم.
+        في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.
       </p>
       <div class="triage-actions">
-        <a id="triage-wa-btn" href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D8%AD%D8%A7%D9%84%D8%A9%20%D9%88%D9%84%D8%A7%D8%AF%D8%A9%20%D9%82%D9%8A%D8%B5%D8%B1%D9%8A%D8%A9%20/%20%D8%B4%D8%AF%20%D8%A8%D8%B7%D9%86%20%28%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D9%88%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%29." target="_blank" rel="noopener" class="btn-free-chat">
+        <a id="triage-wa-btn" href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%84%D8%AD%D8%A7%D9%84%D8%A9%20%D9%88%D9%84%D8%A7%D8%AF%D8%A9%20%D9%82%D9%8A%D8%B5%D8%B1%D9%8A%D8%A9%20/%20%D8%B4%D8%AF%20%D8%A8%D8%B7%D9%86%20%28%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D9%88%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%29." data-topic="استفسار سريري لحالة ولادة قيصرية / شد بطن" class="btn-free-chat">
           💬 تحدث مجاناً الآن مع الدكتورة للاستفسار عن حالتك (01155803307)
         </a>
-        <button onclick="copyPromoAndOpenInstagram('HT10', document.getElementById('triage-title-text').innerText, 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">
+        <button onclick="openPromoDrawer(document.getElementById('triage-title-text').innerText, 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">
           📸 اسأل الدكتورة مجاناً على إنستجرام
         </button>
       </div>
     </div>
   </section>
 
-  <!-- المحطة 3: لماذا يتحدث المرضى مع ممثلينا الطبيين قبل الشراء؟ -->
+  <!-- المحطة 2: لماذا يتحدث المرضى مع ممثلينا الطبيين قبل الشراء؟ -->
   <section class="journey-steps-grid">
     <div class="step-card">
-      <span class="step-num">الخطوة 1 — طمأنة طبية مجانية</span>
+      <span class="step-num">الخطوة الأولى — استشارة سريرية مجانية</span>
       <h4>اسأل الدكتورة بدون أي التزام</h4>
       <p>أرسل سؤالك أو نوع عمليتك على واتساب وسترد عليك طبيبة مختصة لتوضيح ما يناسب مرحلة التئام جرحك مجاناً.</p>
     </div>
     <div class="step-card">
-      <span class="step-num">الخطوة 2 — دقة المقاس والبروتوكول</span>
+      <span class="step-num">الخطوة الثانية — دقة المقاس والبروتوكول</span>
       <h4>تجنب شراء منتج خاطئ</h4>
       <p>تساعدك الدكتورة في اختيار مقاس دعامة الأنف أو ضمادة Tegaderm أو توقيت البدء في شيت السيليكون بدقة سريرية.</p>
     </div>
     <div class="step-card">
-      <span class="step-num">الخطوة 3 — أمان مالي 100%</span>
+      <span class="step-num">الخطوة الثالثة — أمان مالي 100%</span>
       <h4>شحن مجاني + معاينة قبل الدفع</h4>
       <p>إذا قررت الطلب، يمنحك كود <strong>HT10</strong> شحناً مجانياً وحق فتح الشحنة والتأكد من الكود الأصلي بنفسك قبل الدفع.</p>
     </div>
   </section>
 
-  <!-- المحطة 4: الموسوعة الطبية الحية ذات النمو الأسي (جميع المقالات معروضة معاً) -->
-  <section id="knowledge-hub-section">
+  <!-- المحطة 3: المستلزمات الطبية المعتمدة (ربطها بصفحات المنتجات المستقلة R6) -->
+  <section id="products-section" style="margin-top: 50px;">
+    <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا (5 منتجات رئيسية)</h2>
+    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات السريرية الكاملة أو استشارة الدكتورة مع تفعيل كود <strong>HT10</strong> (شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع):</p>
+    <div class="products-cards-grid">
+      
+    <div class="product-summary-card">
+      <div>
+        <span class="product-card-badge">المعيار الذهبي لتسطيح الندبات</span>
+        <h3 style="color:var(--teal-deep); margin:6px 0 8px 0; font-size:1.15rem;">
+          <a href="products/bupy-silicone-scar-sheet.html" style="color:inherit; text-decoration:none;">شيت سيليكون بوبي الطبي لعلاج ووقاية الندبات (BUPY Silicone Scar Sheets 4cm x 3m)</a>
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">رول سيليكون طبي نقي فائق المرونة معتمد دولياً للوقاية من ندبات الكلويد والتضخم الجراحي بعد الولادة القيصرية، شد البطن، استئصال الغدة الدرقية، وجراحات التثدي. يمنح ضغطاً ميكانيكياً متوازناً وترطيباً عميقاً للطبقة القرنية.</p>
+        <div class="product-card-price">750 ج.م للرول الكامل 3 أمتار (أو 320 ج.م للمتر المقصوص)</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <a href="products/bupy-silicone-scar-sheet.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
+        <button onclick="openPromoDrawer('استفسار عن رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY.')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="product-summary-card">
+      <div>
+        <span class="product-card-badge">الأصلي لتصريف تورم الأنف وتثبيت الغضاريف</span>
+        <h3 style="color:var(--teal-deep); margin:6px 0 8px 0; font-size:1.15rem;">
+          <a href="products/3m-micropore-tan-tape-1533-0.html" style="color:inherit; text-decoration:none;">شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)</a>
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">الشريط الورقي الجراحي المسامي الأصلي من شركة 3M العالمية باللون البيج اللحمي (كود 1533-0 / عرض 1.25 سم). معتمد سريرياً لتطبيق الضغط المتوازن لتصريف السوائل اللمفاوية وتورم أرنبة الأنف بعد فك الجبيرة وحماية الندبات الحساسة من أشعة الشمس.</p>
+        <div class="product-card-price">175 ج.م للبكرة (أو 3 بكرات بـ 450 ج.م)</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <a href="products/3m-micropore-tan-tape-1533-0.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
+        <button onclick="openPromoDrawer('استفسار عن بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore.')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="product-summary-card">
+      <div>
+        <span class="product-card-badge">شاور آمن 100% وعزل بكتيري متكامل</span>
+        <h3 style="color:var(--teal-deep); margin:6px 0 8px 0; font-size:1.15rem;">
+          <a href="products/3m-tegaderm-plus-pad.html" style="color:inherit; text-decoration:none;">ضمادة تيجاديرم الشفافة المقاومة للماء مع وسادة امتصاص (3M Tegaderm +Pad)</a>
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">ضمادة فيلمية جراحية شفافة معقمة ومقاومة للماء بنسبة 100% مزودة بوسادة مركزية عالية الامتصاص وغير لاصقة بالجرح. توفر حاجزاً فيزيائياً منيعاً ضد الماء، البكتيريا، والفيروسات، مما يسمح للمريض بالاستحمام الآمن دون أي خطر على الغرز الجراحية.</p>
+        <div class="product-card-price">باكدج 5 إلى 10 ضمادات: 220 – 390 ج.م</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <a href="products/3m-tegaderm-plus-pad.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
+        <button onclick="openPromoDrawer('استفسار عن ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad.')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="product-summary-card">
+      <div>
+        <span class="product-card-badge">جلد ثانٍ شفاف يعزل فتحات المناظير في ثوانٍ</span>
+        <h3 style="color:var(--teal-deep); margin:6px 0 8px 0; font-size:1.15rem;">
+          <a href="products/smith-nephew-opsite-spray.html" style="color:inherit; text-decoration:none;">بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)</a>
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">بخاخ غشاء طبي شفاف وسريع الجفاف من شركة Smith & Nephew العالمية. يرش مباشرة على الجروح السطحية وفتحات المناظير ليجف خلال ثوانٍ مشكلاً طبقة بوليمرية رقيقة ومرنة تعمل كجلد ثانٍ مقاوم للماء والبكتيريا ويحمي من احتكاك المشدات والملابس.</p>
+        <div class="product-card-price">750 ج.م للعبوة الأصلية</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <a href="products/smith-nephew-opsite-spray.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
+        <button onclick="openPromoDrawer('استفسار عن بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray.')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="product-summary-card">
+      <div>
+        <span class="product-card-badge">تماثل فتحتي الأنف بنسبة 94% وفق دراسات MDPI</span>
+        <h3 style="color:var(--teal-deep); margin:6px 0 8px 0; font-size:1.15rem;">
+          <a href="products/silicone-nostril-retainer.html" style="color:inherit; text-decoration:none;">دعامات الأنف السيليكونية الطبية المتطورة (Silicone Nostril Retainer)</a>
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">دعامات سيليكونية طبية فائقة النعومة والمرونة مصممة تشريحياً للحفاظ على تماثل واستدارة فتحتي الأنف بعد جراحات تجميل الأنف وإصلاح الشفة الأرنبية. تقاوم قوى الانكماش الندبي الداخلي وتمنع ضيق الصمام التنفسي مع توفير ممر تنفسي مجوف ومريح.</p>
+        <div class="product-card-price">450 ج.م (أو باكدج الأنف الكامل مع شريط 3M بـ 680 ج.م)</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <a href="products/silicone-nostril-retainer.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
+        <button onclick="openPromoDrawer('استفسار عن دعامة فتحات الأنف السيليكون الطبية Nostril Retainer', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AF%D8%B9%D8%A7%D9%85%D8%A9%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9%20Nostril%20Retainer.')" class="btn-ask-doc-mini" style="flex:1;">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+    </div>
+  </section>
+
+  <!-- المحطة 4: الموسوعة الطبية الحية (عرض كافة المقالات الـ 15+ في وقت واحد مع الفلترة والبحث) -->
+  <section id="knowledge-hub-section" style="margin-top: 55px;">
     <div class="hub-header-box">
       <div class="hub-top-row">
         <div>
-          <h2 class="hub-title">📚 الموسوعة الطبية الكاملة لتعافي ما بعد الجراحة (تتحدث يومياً)</h2>
+          <h2 class="hub-title">📚 الموسوعة الطبية الشاملة لتعافي ما بعد الجراحة</h2>
           <p style="margin:4px 0 0 0; color:var(--text-muted); font-size:0.95rem;">
-            جميع أدلتنا ومقالاتنا العلمية معروضة أمامك في نفس الوقت وموثقة بأبحاث PubMed وNCBI — اختر تخصص جراحتك أو ابحث بكلمة واحدة:
+            جميع أدلتنا السريرية معروضة أمامك في نفس الوقت وموثقة بأبحاث PubMed وNCBI — ابحث أو اختر التخصص:
           </p>
         </div>
-        <span class="hub-counter-badge">إجمالي الأدلة المعروضة: <strong id="visible-articles-count">5</strong> مقال طبي</span>
+        <span class="hub-counter-badge">إجمالي الأدلة المعروضة: <strong id="visible-articles-count">15</strong> مقال طبي</span>
       </div>
 
       <div class="hub-controls-row">
         <div class="filter-pills">
-          <button class="filter-pill active" data-cat="all" onclick="filterArticlesByCategory('all', this)">الكل (5)</button>
+          <button class="filter-pill active" data-cat="all" onclick="filterArticlesByCategory('all', this)">الكل (15)</button>
           <button class="filter-pill" data-cat="c-section" onclick="filterArticlesByCategory('c-section', this)">🤱 القيصرية وشد البطن</button>
           <button class="filter-pill" data-cat="rhinoplasty" onclick="filterArticlesByCategory('rhinoplasty', this)">👃 تجميل الأنف</button>
           <button class="filter-pill" data-cat="bariatric" onclick="filterArticlesByCategory('bariatric', this)">🩺 التكميم والمناظير</button>
@@ -888,14 +1450,46 @@
       <div>
         <div class="art-meta-top">
           <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-          <span class="art-Evidence-tag">✅ 10 مراجع PubMed</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        <h3><a href="articles/c-section-scar-recovery-guide-2026.html">الدليل الطبي الشامل لعلاج آثار الولادة القيصرية وإخفاء الندبات في 2026</a></h3>
-        <p class="art-hook-text">كيف تحمين جرح الولادة القيصرية من التلوث أثناء أول استحمام وتمنعين تكون الندبة البارزة (الكلويد) بدون تكاليف الليزر الباهظة؟ خطوات سريرية موثقة بـ 10 دراسات طبية.</p>
+        <h3><a href="articles/bupy-silicone-scar-sheet-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY</a></h3>
+        <p class="art-hook-text">كيف تعمل الآلية الحيوية لـ شيت سيليكون بوبي الطبي لعلاج ووقاية الندبات (BUPY Silicone Scar Sheets 4cm x 3m) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.</p>
       </div>
       <div class="art-card-actions">
-        <a href="articles/c-section-scar-recovery-guide-2026.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D8%A2%D8%AB%D8%A7%D8%B1%20%D8%A7%D9%84%D9%88%D9%84%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D9%82%D9%8A%D8%B5%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D9%81%D9%8A%202026%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="btn-ask-doc-mini">💬 اسأل الدكتورة مجاناً</a>
+        <a href="articles/bupy-silicone-scar-sheet-clinical-mechanism.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="c-section">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/bupy-silicone-scar-sheet-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY</a></h3>
+        <p class="art-hook-text">الدليل العملي خطوة بخطوة للاستخدام الصحيح لـ شيت سيليكون بوبي الطبي لعلاج ووقاية الندبات (BUPY Silicone Scar Sheets 4cm x 3m): جدول الارتداء، طريقة الغسيل، وتجنب 5 أخطاء تؤخر التعافي.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/bupy-silicone-scar-sheet-usage-protocol-mistakes.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="c-section">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/bupy-silicone-scar-sheet-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY</a></h3>
+        <p class="art-hook-text">إجابات سريرية وافية على كافة أسئلة المرضى حول شيت سيليكون بوبي الطبي لعلاج ووقاية الندبات (BUPY Silicone Scar Sheets 4cm x 3m)، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/bupy-silicone-scar-sheet-patient-faq-comparisons.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
       </div>
     </div>
         
@@ -904,14 +1498,94 @@
       <div>
         <div class="art-meta-top">
           <span class="art-cat-tag">تجميل الأنف</span>
-          <span class="art-Evidence-tag">✅ 10 مراجع PubMed</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        <h3><a href="articles/rhinoplasty-taping-edema-secrets.html">متى يمكن الاستغناء عن لصقات الأنف بعد التجميل؟ أسرار التعافي السريع وتثبيت الغضاريف</a></h3>
-        <p class="art-hook-text">كل ما تحتاج معرفته عن بلاستر 3M Micropore البيج الأصلي (1533-0) ودوره في تقليل تورم أرنبة الأنف وسماكة الجلد بعد فك الجبيرة الجراحية وفق دراسات 2026.</p>
+        <h3><a href="articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore</a></h3>
+        <p class="art-hook-text">كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.</p>
       </div>
       <div class="art-card-actions">
-        <a href="articles/rhinoplasty-taping-edema-secrets.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D9%85%D8%AA%D9%89%20%D9%8A%D9%85%D9%83%D9%86%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%BA%D9%86%D8%A7%D8%A1%20%D8%B9%D9%86%20%D9%84%D8%B5%D9%82%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84%D8%9F%20%D8%A3%D8%B3%D8%B1%D8%A7%D8%B1%20%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%20%D9%88%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D8%BA%D8%B6%D8%A7%D8%B1%D9%8A%D9%81%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="btn-ask-doc-mini">💬 اسأل الدكتورة مجاناً</a>
+        <a href="articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="rhinoplasty">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">تجميل الأنف</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore</a></h3>
+        <p class="art-hook-text">الدليل العملي خطوة بخطوة للاستخدام الصحيح لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0): جدول الارتداء، طريقة الغسيل، وتجنب 5 أخطاء تؤخر التعافي.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="rhinoplasty">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">تجميل الأنف</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore</a></h3>
+        <p class="art-hook-text">إجابات سريرية وافية على كافة أسئلة المرضى حول شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="c-section">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/3m-tegaderm-plus-pad-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
+        <p class="art-hook-text">كيف تعمل الآلية الحيوية لـ ضمادة تيجاديرم الشفافة المقاومة للماء مع وسادة امتصاص (3M Tegaderm +Pad) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/3m-tegaderm-plus-pad-clinical-mechanism.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="c-section">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/3m-tegaderm-plus-pad-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
+        <p class="art-hook-text">الدليل العملي خطوة بخطوة للاستخدام الصحيح لـ ضمادة تيجاديرم الشفافة المقاومة للماء مع وسادة امتصاص (3M Tegaderm +Pad): جدول الارتداء، طريقة الغسيل، وتجنب 5 أخطاء تؤخر التعافي.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/3m-tegaderm-plus-pad-usage-protocol-mistakes.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="c-section">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/3m-tegaderm-plus-pad-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
+        <p class="art-hook-text">إجابات سريرية وافية على كافة أسئلة المرضى حول ضمادة تيجاديرم الشفافة المقاومة للماء مع وسادة امتصاص (3M Tegaderm +Pad)، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/3m-tegaderm-plus-pad-patient-faq-comparisons.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
       </div>
     </div>
         
@@ -920,30 +1594,46 @@
       <div>
         <div class="art-meta-top">
           <span class="art-cat-tag">التكميم والمناظير</span>
-          <span class="art-Evidence-tag">✅ 10 مراجع PubMed</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        <h3><a href="articles/bariatric-laparoscopic-wound-care.html">كيف تتجنبين التهاب جروح عمليات التكميم والمناظير؟ خطوات طبية موثقة لعزل الجرح والاستحمام</a></h3>
-        <p class="art-hook-text">الدليل العملي لمرضى التكميم وجراحات السمنة والمرارة: كيف تحمي فتحات المناظير الصغيرة من العرق والماء واحتكاك الملابس وتمنع تصبغاتها الداكنة.</p>
+        <h3><a href="articles/smith-nephew-opsite-spray-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray</a></h3>
+        <p class="art-hook-text">كيف تعمل الآلية الحيوية لـ بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.</p>
       </div>
       <div class="art-card-actions">
-        <a href="articles/bariatric-laparoscopic-wound-care.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D9%83%D9%8A%D9%81%20%D8%AA%D8%AA%D8%AC%D9%86%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%AA%D9%87%D8%A7%D8%A8%20%D8%AC%D8%B1%D9%88%D8%AD%20%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D9%83%D9%85%D9%8A%D9%85%20%D9%88%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B8%D9%8A%D8%B1%D8%9F%20%D8%AE%D8%B7%D9%88%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D9%88%D8%AB%D9%82%D8%A9%20%D9%84%D8%B9%D8%B2%D9%84%20%D8%A7%D9%84%D8%AC%D8%B1%D8%AD%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="btn-ask-doc-mini">💬 اسأل الدكتورة مجاناً</a>
+        <a href="articles/smith-nephew-opsite-spray-clinical-mechanism.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
       </div>
     </div>
         
 
-    <div class="article-card" data-category="thyroid-gynecomastia">
+    <div class="article-card" data-category="bariatric">
       <div>
         <div class="art-meta-top">
-          <span class="art-cat-tag">التثدي والغدة الدرقية</span>
-          <span class="art-Evidence-tag">✅ 10 مراجع PubMed</span>
+          <span class="art-cat-tag">التكميم والمناظير</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        <h3><a href="articles/gynecomastia-thyroid-scar-solutions.html">الحل النهائي لآثار جراحات التثدي والغدة الدرقية: وداعاً للكلويد وخطوط العمليات البارزة</a></h3>
-        <p class="art-hook-text">جروح الرقبة الحساسة وجراحات التثدي عند الرجال: بروتوكول تسطيح وتفتيح الندبات بواسطة السيليكون الطبي المعتمد سريرياً لمنع الحكة والاحمرار.</p>
+        <h3><a href="articles/smith-nephew-opsite-spray-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بخاخ الجروح الشفاف العازل للماء Opsite Spray</a></h3>
+        <p class="art-hook-text">الدليل العملي خطوة بخطوة للاستخدام الصحيح لـ بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray): جدول الارتداء، طريقة الغسيل، وتجنب 5 أخطاء تؤخر التعافي.</p>
       </div>
       <div class="art-card-actions">
-        <a href="articles/gynecomastia-thyroid-scar-solutions.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D8%A7%D9%84%D8%AD%D9%84%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%20%D9%84%D8%A2%D8%AB%D8%A7%D8%B1%20%D8%AC%D8%B1%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AB%D8%AF%D9%8A%20%D9%88%D8%A7%D9%84%D8%BA%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AF%D8%B1%D9%82%D9%8A%D8%A9%3A%20%D9%88%D8%AF%D8%A7%D8%B9%D8%A7%D9%8B%20%D9%84%D9%84%D9%83%D9%84%D9%88%D9%8A%D8%AF%20%D9%88%D8%AE%D8%B7%D9%88%D8%B7%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A8%D8%A7%D8%B1%D8%B2%D8%A9%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="btn-ask-doc-mini">💬 اسأل الدكتورة مجاناً</a>
+        <a href="articles/smith-nephew-opsite-spray-usage-protocol-mistakes.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
+        
+
+    <div class="article-card" data-category="bariatric">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">التكميم والمناظير</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/smith-nephew-opsite-spray-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بخاخ الجروح الشفاف العازل للماء Opsite Spray</a></h3>
+        <p class="art-hook-text">إجابات سريرية وافية على كافة أسئلة المرضى حول بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/smith-nephew-opsite-spray-patient-faq-comparisons.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
       </div>
     </div>
         
@@ -952,100 +1642,99 @@
       <div>
         <div class="art-meta-top">
           <span class="art-cat-tag">تجميل الأنف</span>
-          <span class="art-Evidence-tag">✅ 10 مراجع PubMed</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        <h3><a href="articles/nostril-retainer-symmetry-rhinoplasty.html">دليلك الطبي الشامل لتماثل فتحات الأنف بعد عمليات التجميل: كيف تحمين غضاريف الأنف في 2026؟</a></h3>
-        <p class="art-hook-text">أحدث ما نشرته دورية MDPI Medicina في يوليو 2026 حول استخدام دعامات السيليكون لمنع ضيق الصمام التنفسي وضمان تماثل فتحات الأنف هندسياً بعد التجميل.</p>
+        <h3><a href="articles/silicone-nostril-retainer-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة دعامة فتحات الأنف السيليكون الطبية Nostril Retainer</a></h3>
+        <p class="art-hook-text">كيف تعمل الآلية الحيوية لـ دعامات الأنف السيليكونية الطبية المتطورة (Silicone Nostril Retainer) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.</p>
       </div>
       <div class="art-card-actions">
-        <a href="articles/nostril-retainer-symmetry-rhinoplasty.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84%20%D9%84%D8%AA%D9%85%D8%A7%D8%AB%D9%84%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A8%D8%B9%D8%AF%20%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84%3A%20%D9%83%D9%8A%D9%81%20%D8%AA%D8%AD%D9%85%D9%8A%D9%86%20%D8%BA%D8%B6%D8%A7%D8%B1%D9%8A%D9%81%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D9%81%D9%8A%202026%D8%9F%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="btn-ask-doc-mini">💬 اسأل الدكتورة مجاناً</a>
+        <a href="articles/silicone-nostril-retainer-clinical-mechanism.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة دعامة فتحات الأنف السيليكون الطبية Nostril Retainer', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%AF%D8%B9%D8%A7%D9%85%D8%A9%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9%20Nostril%20Retainer%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
       </div>
     </div>
         
+
+    <div class="article-card" data-category="rhinoplasty">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">تجميل الأنف</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
+        </div>
+        <h3><a href="articles/silicone-nostril-retainer-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ دعامة فتحات الأنف السيليكون الطبية Nostril Retainer</a></h3>
+        <p class="art-hook-text">الدليل العملي خطوة بخطوة للاستخدام الصحيح لـ دعامات الأنف السيليكونية الطبية المتطورة (Silicone Nostril Retainer): جدول الارتداء، طريقة الغسيل، وتجنب 5 أخطاء تؤخر التعافي.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/silicone-nostril-retainer-usage-protocol-mistakes.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ دعامة فتحات الأنف السيليكون الطبية Nostril Retainer', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%AF%D8%B9%D8%A7%D9%85%D8%A9%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9%20Nostril%20Retainer%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
     </div>
-  </section>
-
-  <!-- المحطة 5: المستلزمات الطبية المعتمدة (للاستفسار المباشر مع الدكتورة) -->
-  <section id="solutions-section" style="margin-top: 50px;">
-    <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا</h2>
-    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم للتحدث مجاناً مع الدكتورة والتأكد من ملاءمته لجرحك مع تفعيل كود <strong>HT10</strong> (شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع):</p>
-    <div class="solutions-grid">
-      
-        <div class="solution-card">
-          <div>
-            <h3>رول شيت السيليكون الطبي للندبات BUPY (4 سم × 3 متر)</h3>
-            <p style="color:var(--text-muted); font-size:0.93rem; margin:0 0 8px 0;">خط الدفاع الأول سريرياً لتسطيح وإخفاء ندبات القيصرية، شد البطن، التثدي، والغدة الدرقية. رول كامل 3 أمتار قابل للغسيل وإعادة الاستخدام لـ 4 أشهر.</p>
-            <div class="solution-price">750 ج.م للرول الكامل (أو 320 ج.م للمتر المقصوص)</div>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%D8%B9%D9%86%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20BUPY%20%D9%88%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%D9%87%20%D9%84%D8%AC%D8%B1%D8%AD%D9%8A." target="_blank" rel="noopener" class="btn-free-chat" style="width:100%; font-size:0.93rem; padding:11px 16px;">
-              💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
-            </a>
-          </div>
-        </div>
         
 
-        <div class="solution-card">
-          <div>
-            <h3>بلاستر الأنف الطبي البيج الأصلي 3M Micropore (1533-0)</h3>
-            <p style="color:var(--text-muted); font-size:0.93rem; margin:0 0 8px 0;">الشريط الورقي المسامي الأصلي الموصى به لتصريف تورم أرنبة الأنف وتثبيت الغضاريف بعد فك الجبيرة بدون حساسية.</p>
-            <div class="solution-price">175 ج.م للبكرة (أو 3 بكرات بـ 450 ج.م)</div>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%D8%B9%D9%86%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%203M%20Micropore%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A." target="_blank" rel="noopener" class="btn-free-chat" style="width:100%; font-size:0.93rem; padding:11px 16px;">
-              💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
-            </a>
-          </div>
+    <div class="article-card" data-category="rhinoplasty">
+      <div>
+        <div class="art-meta-top">
+          <span class="art-cat-tag">تجميل الأنف</span>
+          <span class="art-Evidence-tag">✅ 11 مراجع PubMed</span>
         </div>
-        
-
-        <div class="solution-card">
-          <div>
-            <h3>ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</h3>
-            <p style="color:var(--text-muted); font-size:0.93rem; margin:0 0 8px 0;">فيلم طبي شفاف يعزل جرح القيصرية أو الجراحة عن الماء والبكتيريا بنسبة 100% بوسادة غير لاصقة بالغرز لشاور آمن من اليوم الثاني.</p>
-            <div class="solution-price">باكدج 5 إلى 10 ضمادات: 220 – 390 ج.م</div>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%D8%B9%D9%86%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20Tegaderm%20%2BPad%20%D9%88%D9%85%D9%82%D8%A7%D8%B3%D9%87%D8%A7%20%D9%84%D8%AC%D8%B1%D8%AD%D9%8A." target="_blank" rel="noopener" class="btn-free-chat" style="width:100%; font-size:0.93rem; padding:11px 16px;">
-              💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
-            </a>
-          </div>
-        </div>
-        
-
-        <div class="solution-card">
-          <div>
-            <h3>بخاخ الجروح العازل للماء Opsite Spray (Smith & Nephew)</h3>
-            <p style="color:var(--text-muted); font-size:0.93rem; margin:0 0 8px 0;">غشاء شفاف مرن يجف في ثوانٍ لحماية فتحات مناظير التكميم والمرارة والغرز التجميلية من الماء واحتكاك الملابس.</p>
-            <div class="solution-price">750 ج.م للعبوة الأصلية</div>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%D8%B9%D9%86%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20Opsite%20Spray." target="_blank" rel="noopener" class="btn-free-chat" style="width:100%; font-size:0.93rem; padding:11px 16px;">
-              💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
-            </a>
-          </div>
-        </div>
-        
-
-        <div class="solution-card">
-          <div>
-            <h3>دعامة فتحات الأنف السيليكون الطبية Nostril Retainer</h3>
-            <p style="color:var(--text-muted); font-size:0.93rem; margin:0 0 8px 0;">سيليكون طبي مرن يحافظ على تماثل وتساوي فتحتي الأنف ويمنع الانكماش الغضروفي بعد عمليات تجميل الأنف.</p>
-            <div class="solution-price">450 ج.م (أو باكدج الأنف الكامل بـ 680 ج.م)</div>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B3%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8%20%D9%84%D8%AF%D8%B9%D8%A7%D9%85%D8%A9%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20Nostril%20Retainer." target="_blank" rel="noopener" class="btn-free-chat" style="width:100%; font-size:0.93rem; padding:11px 16px;">
-              💬 اسأل الدكتورة مجاناً هل يناسب حالتي؟
-            </a>
-          </div>
-        </div>
+        <h3><a href="articles/silicone-nostril-retainer-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج دعامة فتحات الأنف السيليكون الطبية Nostril Retainer</a></h3>
+        <p class="art-hook-text">إجابات سريرية وافية على كافة أسئلة المرضى حول دعامات الأنف السيليكونية الطبية المتطورة (Silicone Nostril Retainer)، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.</p>
+      </div>
+      <div class="art-card-actions">
+        <a href="articles/silicone-nostril-retainer-patient-faq-comparisons.html" class="btn-read-guide">📖 اقرأ الدليل العلمي</a>
+        <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج دعامة فتحات الأنف السيليكون الطبية Nostril Retainer', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%AF%D8%B9%D8%A7%D9%85%D8%A9%20%D9%81%D8%AA%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9%20Nostril%20Retainer%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+      </div>
+    </div>
         
     </div>
   </section>
 
 </div>
 
+
+    <!-- Micro-Popup Drawer لتفعيل كود العرض وتتبع النقرات (R3) -->
+    <div id="promo-lead-modal" class="promo-modal-backdrop" style="display:none;" onclick="handleModalBackdropClick(event)">
+      <div class="promo-drawer-content" onclick="event.stopPropagation()">
+        <button class="modal-close-btn" onclick="closePromoModal()" aria-label="إغلاق">&times;</button>
+        <div class="modal-badge-top">🎉 تم تفعيل الميزة الحصرية بنجاح لحالتك</div>
+        <h3 class="modal-title">كود العرض المعتمد: <span class="promo-code-highlight">HT10</span></h3>
+        <p class="modal-desc">
+          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة سريرية مجانية مع الدكتورة</strong>.
+        </p>
+
+        <div class="modal-benefits-grid">
+          <div class="m-benefit-item">
+            <span class="m-benefit-icon">🚚</span>
+            <div><strong>شحن مجاني 100%</strong><small>لكل مدن ومراكز مصر</small></div>
+          </div>
+          <div class="m-benefit-item">
+            <span class="m-benefit-icon">🔍</span>
+            <div><strong>معاينة وفحص قبل الدفع</strong><small>تأكد من المنتج والكود بنفسك</small></div>
+          </div>
+          <div class="m-benefit-item">
+            <span class="m-benefit-icon">👩‍⚕️</span>
+            <div><strong>استشارة طبية مجانية</strong><small>رد مباشر من الدكتورة المختصة</small></div>
+          </div>
+        </div>
+
+        <div class="quick-lead-form">
+          <label for="lead-patient-name" style="font-size:0.85rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block;">الاسم أو اللقب (اختياري لتسهيل التواصل):</label>
+          <input type="text" id="lead-patient-name" class="modal-input" placeholder="مثال: أم يوسف / مروان...">
+          <label for="lead-patient-phone" style="font-size:0.85rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:8px;">رقم الموبايل / واتساب (اختياري لتثبيت حجز الخصم):</label>
+          <input type="tel" id="lead-patient-phone" class="modal-input" placeholder="01xxxxxxxxx">
+        </div>
+
+        <div class="modal-action-buttons">
+          <button id="modal-proceed-wa-btn" class="modal-btn-wa" onclick="executeProceedToConsultation('whatsapp')">
+            💬 متابعة المحادثة المجانية عبر واتساب الآن
+          </button>
+          <button id="modal-proceed-ig-btn" class="modal-btn-ig" onclick="executeProceedToConsultation('instagram')">
+            📸 الاستفسار عبر شات إنستجرام
+          </button>
+        </div>
+        <p class="modal-fine-print">🔒 بياناتك في سرية طبية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
+      </div>
+    </div>
+    
 
 <div class="sticky-consult-bar">
   <div class="sticky-inner">
@@ -1055,8 +1744,12 @@
       <span class="hide-mobile" style="color:#A7F3D0;">(شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع بكود HT10)</span>
     </div>
     <div class="sticky-btns">
-      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="sticky-wa-btn">💬 اسأل مجاناً عبر واتساب (01155803307)</a>
-      <button onclick="copyPromoAndOpenInstagram('HT10', 'استشارة طبية مجانية من الصفحة الرئيسية', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">📸 اسأل عبر إنستجرام</button>
+      <button onclick="openPromoDrawer('استشارة طبية مجانية من الصفحة الرئيسية', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="sticky-wa-btn">
+        💬 اسأل مجاناً عبر واتساب (01155803307)
+      </button>
+      <button onclick="openPromoDrawer('استشارة طبية مجانية من الصفحة الرئيسية', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">
+        📸 اسأل عبر إنستجرام
+      </button>
     </div>
   </div>
 </div>
@@ -1065,12 +1758,13 @@
 <footer>
   <div style="max-width:900px; margin:0 auto;">
     <p style="font-size:1.15rem; font-weight:800; color:#fff; margin-top:0;">🌿 هيلينج تاتش مصر (Healing Touch Egypt 2026)</p>
-    <p>المنصة التوعوية والاستشارية الأولى لرعاية ما بعد العمليات الجراحية والتجميلية في مصر. مهمتنا إرشادك علمياً والإجابة على أسئلتك مجاناً مع ضمان معاينة الكود الأصلي لأي منتج قبل الدفع.</p>
+    <p>المنصة التوعوية والاستشارية المعتمدة لرعاية ما بعد العمليات الجراحية والتجميلية في مصر. مهمتنا إرشادك علمياً والإجابة على أسئلتك مجاناً مع ضمان حق فحص ومعاينة المنتج الأصلي قبل الدفع.</p>
     <p style="margin-top:16px;">
-      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B7%D8%A8%D9%8A%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A." target="_blank" rel="noopener">💬 محادثة مجانية على واتساب (01155803307)</a> |
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D9%85%D8%AC%D8%A7%D9%86%D8%A7%D9%8B%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B7%D8%A8%D9%8A%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D9%88%D8%AA%D8%B1." data-topic="استفسار طبي من الفوتر">💬 محادثة مجانية على واتساب (01155803307)</a> |
       <a href="https://www.instagram.com/tapistorefamily2026/" target="_blank" rel="noopener">📸 حساب إنستجرام</a> |
       <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener">📘 صفحتنا على فيسبوك</a>
     </p>
+    <p style="font-size:0.82rem; color:#A7F3D0; margin-top:20px;">جميع الحقوق محفوظة © 2026 هيلينج تاتش مصر | الاستشارات مجانية للمرضى</p>
   </div>
 </footer>
 
