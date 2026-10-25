@@ -761,18 +761,24 @@ def export_notebooklm_master_source() -> str:
         except Exception:
             pass
 
+    # تاريخ ووقت دقيق لكل ضغطة على رقم 4
+    now = datetime.now()
+    timestamp_str = now.strftime("%Y-%m-%d_%H-%M-%S")
+    date_display = now.strftime("%Y-%m-%d %I:%M %p")
+
     md_lines = [
         "# 🌿 الدليل السريري وحزمة المحتوى اليومي الشاملة لمشروع هيلينج تاتش مصر",
-        f"**تاريخ التحديث اللحظي:** {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        f"**تاريخ ووقت التوليد اللحظي:** {date_display}",
         "**المشروع:** منصة استشارات طبية متخصصة ومستلزمات التعافي بعد العمليات الجراحية وعلاج الندبات في مصر.",
         "**العرض المعتمد:** كود الخصم الحصري `HT10` (شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع).",
         "**رابط الاستشارة المجانية عبر واتساب:** `01155803307` | رابط الحجز: `https://medon90ae.github.io/healing-touch-egypt/wa.html`",
         "\n" + "=" * 60,
-        "## 🎯 البرومبت الهندسي الموحد المطلوب تنفيذه فوراً داخل Google NotebookLM:",
+        "## 🎯 البرومبت الهندسي الموحد المخصص لأدوات Google NotebookLM الحصرية:",
         "=" * 60,
-        "بصفتك كبير الاستشاريين وصانع المحتوى الطبي الرقمي في (هيلينج تاتش مصر)، وبالاعتماد حصراً ودقة تامة على المصادر والأسعار والترندات الصاعدة الواردة في هذا الملف:",
+        "بصفتك كبير الاستشاريين وخبير الإخراج البصري والمحتوى الطبي الرقمي في (هيلينج تاتش مصر)، وبالاعتماد حصراً على المصادر والأسعار المرفقة:",
         "",
-        "المطلوب فوراً توليد حزمة المحتوى التالية للحالة الجراحية المحددة:",
+        "المطلوب استخراج وتوليد حزمة المحتوى التالية باستخدام أدوات Google NotebookLM فقط وبأعلى درجات الواقعية الطبية:",
+        "",
         "1. **بوست فيسبوك وإنستجرام طويل ومؤثر (Clinical Storytelling):**",
         "   - يبدأ بسؤال حقيقي ومقلق من أسئلة ترندات بحث جوجل مصر المذكورة بالأسفل.",
         "   - يشرح فيزياء التعافي ومراحل التئام الجرح بلهجة مصرية طبية راقية ومطمئنة وبدون أي ابتذال تسويقي.",
@@ -789,11 +795,12 @@ def export_notebooklm_master_source() -> str:
         "   - توجيهات بصرية دقيقة (Visual Cue) لما يجب أن يظهر على الشاشة.",
         "   - نص الفويس أوفر (Voiceover Script) الجاهز للإلقاء أو التوليد الصوتي.",
         "",
-        "4. **توجيه تصميم الكارت الإبداعي (Creative Visual Brief) وبرومبت الصورة:**",
-        "   - **برومبت مولدات الصور (Midjourney / Canva / DALL-E) باللغة الإنجليزية:**",
-        "     `Clean, minimalist medical healthcare flat-lay photography, premium medical grade silicone scar sheet and 3M breathable surgical tape, soothing aesthetic, clinical teal and soft pastel background, professional studio lighting, 8k resolution, no text, realistic dermatology product display.`",
-        "   - **النص العربي البارز المطلوب كتابته على التصميم (Typography):**",
-        "     العنوان الطبي للحالة + شريط سفلي: `استشارة مجانية عبر واتساب | كود الخصم: HT10 | معاينة قبل الدفع`.",
+        "4. **خبير اختيار أسلوب الصورة الواقعي وتوجيه أدوات الاستوديو (Realistic Visual Direction):**",
+        "   - بصفتك خبيراً، حدد الأسلوب البصري الأكثر واقعية وملاءمة للحالة (Clinical Realism / Macro Dermatology / Sterile Studio Flat-lay):",
+        "     * زاوية الكاميرا والإضاءة الطبية الباردة الناعمة.",
+        "     * ظهور المنتجات الأصلية (3M / BUPY / Opsite) بهيئتها الطبية الحقيقية دون أي تشويه أو مبالغة.",
+        "     * ألوان بيئة التعافي (Teal طبي #008080، أبيض معقم، ووردي هادئ لحالات الأمهات).",
+        "     * النص العربي البارز المطلوب كتابته على التصميم مع شريط الخصم HT10 والاستشارة المجانية.",
         "=" * 60,
         "\n## 📦 أولاً: قائمة المنتجات الطبية المعتمدة ومواصفاتها وأسعارها الحية المسحوبة من الشيت:",
     ]
@@ -829,18 +836,19 @@ def export_notebooklm_master_source() -> str:
     )
 
     today_str = datetime.now().strftime("%Y-%m-%d")
-    archive_file = NOTEBOOK_ARCHIVE_DIR / f"Healing_Touch_Brief_{today_str}.md"
+    timestamp_filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    archive_file = NOTEBOOK_ARCHIVE_DIR / f"Healing_Touch_Brief_{timestamp_filename}.md"
     archive_file.write_text("\n".join(md_lines), encoding="utf-8")
 
-    out_file = NOTEBOOKLM_DIR / f"Healing_Touch_Brief_{today_str}.md"
+    out_file = NOTEBOOKLM_DIR / f"Healing_Touch_Brief_{timestamp_filename}.md"
     out_file.write_text("\n".join(md_lines), encoding="utf-8")
 
     # تحديث الملف الرئيسي الثابت أيضاً لمن يفضل الاستبدال
     master_file = NOTEBOOKLM_DIR / "Healing_Touch_NotebookLM_Source.md"
     master_file.write_text("\n".join(md_lines), encoding="utf-8")
 
-    print(f"[+] 🧠 تم إنشاء ملف المصدر المؤرخ بنجاح: {out_file.name}")
-    print(f"[+] 📁 تم حفظ نسخة في أرشيف الترندات اليومي: {archive_file}")
+    print(f"[+] 🧠 تم إنشاء ملف المصدر المؤرخ بالوقت بنجاح: {out_file.name}")
+    print(f"[+] 📁 تم حفظ نسخة في أرشيف الترندات الزمني: {archive_file}")
     return str(out_file)
 
 
