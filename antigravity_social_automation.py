@@ -601,25 +601,30 @@ def generate_branded_card(case_info: dict, raw_img_path: str) -> dict:
     }
     key_tip = tips_map.get(cat, tips_map["general"])
 
+    date_str = datetime.now().strftime("%Y-%m-%d")
     raw_path = Path(raw_img_path).resolve()
     b64_data = base64.b64encode(raw_path.read_bytes()).decode("ascii")
     bg_uri = f"data:image/jpeg;base64,{b64_data}"
-    slug = f"branded_{cat}_{raw_path.stem}"
-    square_png = BRANDED_DIR / f"{slug}_square.png"
-    story_png = BRANDED_DIR / f"{slug}_story.png"
+    
+    # أسماء واضحة وصريحة تحدد التاريخ والمنصة ونوع المحتوى
+    square_png = BRANDED_DIR / f"{date_str}_[فيسبوك_وإنستجرام_بوست]_{cat}.png"
+    story_png = BRANDED_DIR / f"{date_str}_[إنستجرام_ستوري]_{cat}.png"
 
     print(f"[*] 🎨 جاري تصميم بوست أوتو-كانفا للموضوع: {title}...")
     asyncio.run(_render_image_playwright(build_card_html(title, badge, key_tip, bg_uri, "square"), square_png, 1080, 1080))
     asyncio.run(_render_image_playwright(build_card_html(title, badge, key_tip, bg_uri, "story"), story_png, 1080, 1920))
-    print(f"[+] ✅ تم حفظ بطاقات السوشيال ميديا: {square_png.name} & {story_png.name}")
+    print(f"[+] ✅ تم حفظ بطاقات السوشيال ميديا الواضحة:\n   • {square_png.name}\n   • {story_png.name}")
 
     return {"square_path": str(square_png), "story_path": str(story_png), "title": title, "badge": badge, "key_tip": key_tip}
 
 
 def generate_tiktok_reel_video(story_card_path: str, duration_sec: int = 8) -> str:
-    """تحويل البطاقة الطولية إلى فيديو MP4 مع دمج تلقائي لصوت البودكاست من NotebookLM إن وجد."""
+    """تحويل البطاقة الطولية إلى فيديو MP4 مع دمج تلقائي لصوت البودكاست وتسمية واضحة للمنصة والتاريخ."""
+    date_str = datetime.now().strftime("%Y-%m-%d")
     in_path = Path(story_card_path).resolve()
-    out_mp4 = BRANDED_DIR / f"{in_path.stem}_reel.mp4"
+    # استخراج اسم الحالة مثل c-section أو rhinoplasty
+    cat_tag = in_path.stem.split("]_")[-1] if "]_" in in_path.stem else "case"
+    out_mp4 = BRANDED_DIR / f"{date_str}_[فيديو_تيكتوك_وريلز]_{cat_tag}.mp4"
 
     # البحث عن أحدث ملف صوتي من NotebookLM في مجلد audio_inputs
     audio_files = sorted(
