@@ -1,0 +1,10 @@
+.env
+.venv/
+.agents/
+__pycache__/
+chrome_automation_profile/
+antigravity_browser_profile/
+media_assets/downloaded_cases/
+media_assets/branded_designs/
+media_assets/generated_reels/
+*.pyc
