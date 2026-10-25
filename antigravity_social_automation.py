@@ -928,6 +928,136 @@ def publish_facebook_graph_api(post_data: dict, image_path_or_url: str = "") -> 
     return False, ""
 
 
+# =============================================================================
+# 🤖 القسم السادس: النشر التلقائي على Reddit API + مدونة جوجل Blogger
+# =============================================================================
+REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "uHHEj4680_jmB1rrt6yTXw")
+REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "_xfBnP9uNQMDhEUaOwC2ap_sJfIqHw")
+REDDIT_USERNAME = os.getenv("REDDIT_USERNAME", "Dull-Nectarine4963")
+REDDIT_REFRESH_TOKEN = os.getenv("REDDIT_REFRESH_TOKEN", "")
+BLOGGER_SECRET_EMAIL = os.getenv("BLOGGER_SECRET_EMAIL", "medon90ae.healing-touch-egypt@blogger.com")
+APPS_SCRIPT_WEBHOOK = "https://script.google.com/macros/s/AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr/exec"
+
+
+def authorize_reddit_permanent_token():
+    """فتح نافذة تفويض Reddit بنقرة واحدة واستقبال مفتاح النشر الدائم تلقائياً على localhost:8000."""
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    auth_code_holder = {"code": None}
+
+    class OAuthHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            if "code" in qs:
+                auth_code_holder["code"] = qs["code"][0]
+                self.send_response(200)
+                self.send_header("Content-type", "text/html; charset=utf-8")
+                self.end_headers()
+                self.wfile.write("<html><body style='font-family:sans-serif;text-align:center;padding:50px;'><h2>✅ تم ربط حساب Reddit بنجاح! يمكنك إغلاق هذه النافذة الآن.</h2></body></html>".encode("utf-8"))
+            else:
+                self.send_response(400)
+                self.end_headers()
+        def log_message(self, format, *args):
+            return
+
+    auth_url = (
+        f"https://www.reddit.com/api/v1/authorize?client_id={REDDIT_CLIENT_ID}"
+        f"&response_type=code&state=healingtouch&redirect_uri=http://localhost:8000"
+        f"&duration=permanent&scope=submit+identity+read"
+    )
+    print("[*] 🌐 جاري فتح صفحة الموافقة في متصفحك لربط حساب Reddit الدائم...")
+    open_url_in_default_browser(auth_url)
+
+    server = HTTPServer(("localhost", 8000), OAuthHandler)
+    server.timeout = 120
+    print("[*] ⏳ في انتظار ضغطك على زر 'Allow' في المتصفح...")
+    server.handle_request()
+
+    code = auth_code_holder.get("code")
+    if not code:
+        print("[!] لم يتم استلام كود التفويض.")
+        return ""
+
+    token_res = requests.post(
+        "https://www.reddit.com/api/v1/access_token",
+        auth=(REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET),
+        data={"grant_type": "authorization_code", "code": code, "redirect_uri": "http://localhost:8000"},
+        headers={"User-Agent": f"windows:healing_touch:v1.0 (by /u/{REDDIT_USERNAME})"},
+        timeout=20,
+    ).json()
+
+    refresh_token = token_res.get("refresh_token", "")
+    if refresh_token:
+        set_key(str(ENV_PATH), "REDDIT_REFRESH_TOKEN", refresh_token)
+        print(f"[+] 🎉 تم حفظ مفتاح Reddit الدائم بنجاح في .env!")
+        return refresh_token
+    print(f"[!] خطأ في استخراج توكن Reddit: {token_res}")
+    return ""
+
+
+def publish_to_reddit_api(title: str, body_text: str) -> tuple[bool, str]:
+    """النشر التلقائي المباشر على حساب Reddit عبر الـ API الرسمي."""
+    refresh_tok = os.getenv("REDDIT_REFRESH_TOKEN", "") or REDDIT_REFRESH_TOKEN
+    if not refresh_tok:
+        print("[i] حساب Reddit جاهز للربط: شغّل خيار ربط Reddit مرة واحدة لتفعيل النشر التلقائي.")
+        return False, ""
+
+    try:
+        user_agent = f"windows:healing_touch:v1.0 (by /u/{REDDIT_USERNAME})"
+        tok_res = requests.post(
+            "https://www.reddit.com/api/v1/access_token",
+            auth=(REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET),
+            data={"grant_type": "refresh_token", "refresh_token": refresh_tok},
+            headers={"User-Agent": user_agent},
+            timeout=20,
+        ).json()
+        access_token = tok_res.get("access_token")
+        if not access_token:
+            return False, ""
+
+        submit_res = requests.post(
+            "https://oauth.reddit.com/api/submit",
+            headers={"Authorization": f"bearer {access_token}", "User-Agent": user_agent},
+            data={
+                "sr": f"u_{REDDIT_USERNAME}",
+                "kind": "self",
+                "title": title,
+                "text": body_text,
+                "api_type": "json",
+            },
+            timeout=25,
+        ).json()
+        post_url = submit_res.get("json", {}).get("data", {}).get("url", "")
+        if post_url:
+            print(f"[+] 🤖 تم النشر تلقائياً على Reddit بنجاح! الرابط: {post_url}")
+            return True, post_url
+    except Exception as e:
+        print(f"[!] تنبيه نشر Reddit: {e}")
+    return False, ""
+
+
+def publish_to_blogger_webhook(blogger_post: dict) -> bool:
+    """إرسال المقال تلقائياً إلى الإيميل السري لمدونة بلوجر عبر جسر Google Apps Script."""
+    try:
+        res = requests.post(
+            APPS_SCRIPT_WEBHOOK,
+            json={
+                "action": "publish_blogger",
+                "to_email": BLOGGER_SECRET_EMAIL,
+                "subject": blogger_post["title"],
+                "html_body": blogger_post["html_content"],
+            },
+            timeout=15,
+        )
+        if res.status_code == 200:
+            print(f"[+] 📝 تم النشر تلقائياً على مدونة جوجل (Blogger) عبر البريد السري ({BLOGGER_SECRET_EMAIL})!")
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def open_tabs_in_default_windows_browser(fb_post_url: str, problems_df: pd.DataFrame, open_groups_radar: bool = True):
     if fb_post_url:
         print(f"\n[🔗 فيسبوك] فتح رابط البوست المنشور على صفحتك:\n    {fb_post_url}")
@@ -997,6 +1127,18 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     generate_blogger_atom_xml([blogger_post])
     notebook_file = export_notebooklm_master_source()
 
+    # تجهيز مجلد الوسائط ونسخ نص البوست للحافظة لسهولة الرفع اليدوي لـ TikTok / Instagram
+    copy_to_windows_clipboard(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
+    print(f"\n📋 [تم نسخ كابشن إنستجرام وتيك توك كاملاً في الحافظة Clipboard جاهز للصق Ctrl+V]")
+
+    # فتح مجلد التصميمات والفيديو تلقائياً في Windows Explorer
+    try:
+        branded_dir = str(BASE_DIR / "media_assets" / "branded_designs")
+        os.startfile(branded_dir)
+        print(f"📂 [تم فتح مجلد التصميمات والفيديوهات تلقائياً]: {branded_dir}")
+    except Exception as e:
+        print(f"[!] تنبيه فتح المجلد: {e}")
+
     post_data = {
         "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
         "caption": tmpl["story_text"],
@@ -1023,6 +1165,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         return True, ""
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
+    publish_to_blogger_webhook(blogger_post)
+    publish_to_reddit_api(tmpl["title"], f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
     return ok, permalink
@@ -1032,7 +1176,7 @@ def main():
     parser = argparse.ArgumentParser(description="المحرك الموحد لمشروع هيلينج تاتش مصر")
     parser.add_argument(
         "--mode",
-        choices=["all", "auto-daily", "publish", "dry-run", "groups", "notebooklm", "open-latest"],
+        choices=["all", "auto-daily", "publish", "dry-run", "groups", "notebooklm", "open-latest", "auth-reddit"],
         default="all",
         help="وضع التشغيل الموحد",
     )
@@ -1045,6 +1189,10 @@ def main():
         for tab in [PROBLEMS_TAB_NAME, GROUPS_TAB_NAME, CONTENT_TAB_NAME]:
             df = fetch_sheet_tab(tab)
             print(f"✅ التبويب '{tab}': {len(df)} صف")
+        return
+
+    if args.mode == "auth-reddit":
+        authorize_reddit_permanent_token()
         return
 
     if args.mode == "notebooklm":
