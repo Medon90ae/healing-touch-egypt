@@ -1204,20 +1204,32 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     generate_blogger_atom_xml([blogger_post])
     notebook_file = export_notebooklm_master_source()
 
-    # فحص مجلد الاستقبال اليدوي manual_inbox إن وضع المستخدم به تصميماً أو نصاً مخصصاً من NotebookLM
+    # فحص مجلد الاستقبال الموحد manual_inbox إن وضع المستخدم به أي مخرج من NotebookLM (نص، صوت، فيديو، صورة)
+    # 1. فحص الصوتيات الجديدة ونقلها أوتوماتيكياً لمجلد الصوت لدمجها فوراً
+    for aud_f in list(MANUAL_INBOX_DIR.glob("*.m4a")) + list(MANUAL_INBOX_DIR.glob("*.mp3")) + list(MANUAL_INBOX_DIR.glob("*.wav")):
+        dest_aud = NOTEBOOK_AUDIO_DIR / aud_f.name
+        if not dest_aud.exists():
+            shutil.copy2(str(aud_f), str(dest_aud))
+            print(f"[+] 🎙️ تم التقاط ونقل ملف صوتي من manual_inbox إلى audio_inputs ({aud_f.name})!")
+
+    # 2. فحص النصوص والمستندات (txt, md)
     txt_files = sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
     if txt_files:
-        custom_text = txt_files[0].read_text(encoding="utf-8").strip()
+        # استبعاد ملف الباكدج الكامل المجمع إن وجد والتركيز على بوست اليوم
+        chosen_txt = next((f for f in txt_files if "notebooklm_exported_pack" not in f.name), txt_files[0])
+        custom_text = chosen_txt.read_text(encoding="utf-8").strip()
         if custom_text:
-            print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ من manual_inbox ({txt_files[0].name})!")
+            print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ من manual_inbox ({chosen_txt.name})!")
             tmpl["story_text"] = custom_text
 
+    # 3. فحص الصور والتصاميم (jpg, png)
     img_files = sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
     if img_files:
         square_img_path = str(img_files[0])
         story_img_path = str(img_files[0])
         print(f"[+] 🎨 تم اكتشاف واعتماد تصميم يدوي راقٍ من manual_inbox ({Path(square_img_path).name})!")
 
+    # 4. فحص الفيديوهات المباشرة (mp4)
     vid_files = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
     if vid_files:
         video_path = str(vid_files[0])
