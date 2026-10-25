@@ -90,42 +90,58 @@ DEFAULT_SURGICAL_KEYWORDS = [
 ]
 
 # =============================================================================
-# 📸 القسم الأول: محرك الصور السريرية الذكي (Pexels & Pixabay) مع منع التكرار
+# 📸 القسم الأول: محرك الصور السريرية الذكي (Pexels & Pixabay) مع فلتر الأمان الطبي
 # =============================================================================
+import base64
+
 CATEGORY_SEARCH_QUERIES = {
     "c-section": [
-        "cesarean recovery mother",
-        "post surgery wound care bandage",
-        "doctor examining patient scar",
-        "hospital maternity recovery",
-        "silicone scar care",
+        "mother holding newborn baby hospital bed",
+        "female doctor consulting patient clinic",
+        "medical wound dressing bandage first aid",
+        "pediatrician mother baby hospital",
+        "pharmacist medical care consultation",
     ],
     "rhinoplasty": [
-        "rhinoplasty nose bandage surgery",
-        "nasal surgery recovery patient",
-        "nose taping cosmetic surgery",
-        "plastic surgery clinic consultation",
-        "face bandage medical tape",
+        "plastic surgeon doctor consulting female patient",
+        "medical adhesive tape bandage first aid",
+        "dermatologist examining face skin clinic",
+        "cosmetic clinic doctor consultation",
+        "facial skincare clinic examination",
     ],
     "bariatric": [
-        "laparoscopic surgery abdomen",
-        "surgical wound dressing clinic",
-        "patient abdominal recovery",
-        "doctor examining wound dressing",
+        "surgeon doctor consulting patient hospital",
+        "medical spray bottle first aid pharmacy",
+        "hospital patient recovery bed doctor",
+        "nutritionist doctor consultation clinic",
     ],
     "thyroid": [
-        "neck examination doctor patient",
-        "thyroid surgery scar recovery",
-        "dermatology skin care consultation",
-        "plastic surgeon examining neck",
+        "doctor examining patient neck clinic",
+        "endocrinologist medical consultation hospital",
+        "dermatology clinic skin care doctor",
+        "medical bandage tape pharmacy",
     ],
     "general": [
-        "wound care bandage clinical",
-        "doctor patient consultation clinic",
-        "medical adhesive tape skin",
-        "post surgery recovery hospital",
+        "doctor patient consultation medical clinic",
+        "medical adhesive tape bandage first aid",
+        "female doctor hospital clinic",
+        "pharmacist healthcare consultation",
     ],
 }
+
+FORBIDDEN_IMAGE_KEYWORDS = [
+    "nude", "naked", "bikini", "underwear", "lingerie", "bra", "topless",
+    "sexy", "do not download", "sensual", "erotic", "boudoir", "tattoo",
+    "kiss", "beach", "swimsuit", "cleavage", "intimate"
+]
+
+
+def is_safe_clinical_image(alt_or_tags: str) -> bool:
+    """فلتر صارم لاستبعاد أي صور غير محتشمة أو غير طبية لا تناسب المجتمع المصري."""
+    t = (alt_or_tags or "").lower()
+    if any(bad in t for bad in FORBIDDEN_IMAGE_KEYWORDS):
+        return False
+    return True
 
 
 def load_used_images() -> set:
@@ -168,7 +184,7 @@ def search_pexels_photo(query: str, exclude_ids: set = None) -> dict:
         url = f"https://api.pexels.com/v1/search?query={urllib.parse.quote(query)}&per_page=15&page={page_num}&orientation=landscape"
         res = requests.get(url, headers={"Authorization": PEXELS_API_KEY}, timeout=12)
         if res.status_code == 200:
-            photos = res.json().get("photos", [])
+            photos = [p for p in res.json().get("photos", []) if is_safe_clinical_image(p.get("alt", ""))]
             fresh = [p for p in photos if str(p.get("id")) not in exclude_ids]
             candidates = fresh if fresh else photos
             if candidates:
@@ -192,10 +208,10 @@ def search_pixabay_photo(query: str, exclude_ids: set = None) -> dict:
     exclude_ids = exclude_ids or set()
     try:
         page_num = random.randint(1, 2)
-        url = f"https://pixabay.com/api/?key={PIXABAY_API_KEY}&q={urllib.parse.quote(query)}&image_type=photo&per_page=15&page={page_num}&orientation=horizontal"
+        url = f"https://pixabay.com/api/?key={PIXABAY_API_KEY}&q={urllib.parse.quote(query)}&image_type=photo&safesearch=true&category=health&per_page=15&page={page_num}&orientation=horizontal"
         res = requests.get(url, timeout=12)
         if res.status_code == 200:
-            hits = res.json().get("hits", [])
+            hits = [h for h in res.json().get("hits", []) if is_safe_clinical_image(h.get("tags", ""))]
             fresh = [h for h in hits if str(h.get("id")) not in exclude_ids]
             candidates = fresh if fresh else hits
             if candidates:
@@ -480,11 +496,11 @@ def build_card_html(title: str, category_badge: str, key_tip: str, bg_image_uri:
     }}
     .bg-img {{
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: cover; filter: brightness(0.68) contrast(1.1);
+      object-fit: cover; filter: brightness(0.85) contrast(1.08);
     }}
     .gradient-overlay {{
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(180deg, rgba(6,78,59,0.92) 0%, rgba(6,78,59,0.4) 35%, rgba(15,23,42,0.75) 65%, rgba(6,78,59,0.96) 100%);
+      background: linear-gradient(180deg, rgba(6,78,59,0.82) 0%, rgba(6,78,59,0.20) 35%, rgba(15,23,42,0.58) 68%, rgba(6,78,59,0.92) 100%);
     }}
     .card-content {{
       position: relative; z-index: 10; width: 100%; height: 100%;
@@ -584,7 +600,8 @@ def generate_branded_card(case_info: dict, raw_img_path: str) -> dict:
     key_tip = tips_map.get(cat, tips_map["general"])
 
     raw_path = Path(raw_img_path).resolve()
-    bg_uri = raw_path.as_uri()
+    b64_data = base64.b64encode(raw_path.read_bytes()).decode("ascii")
+    bg_uri = f"data:image/jpeg;base64,{b64_data}"
     slug = f"branded_{cat}_{raw_path.stem}"
     square_png = BRANDED_DIR / f"{slug}_square.png"
     story_png = BRANDED_DIR / f"{slug}_story.png"
