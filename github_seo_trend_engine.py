@@ -104,7 +104,7 @@ FORBIDDEN_REPLACEMENTS = {
 
 DEFAULT_PROMO_CONFIG = {
     "active_promo_code": "HT10",
-    "tracking_endpoint": "https://script.google.com/macros/s/AKfycbz_healing_touch_lead_tracker/exec",
+    "tracking_endpoint": "https://script.google.com/macros/s/AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr/exec",
     "promo_codes": {
         "HT10": {
             "code": "HT10",
