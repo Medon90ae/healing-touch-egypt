@@ -934,6 +934,39 @@ def publish_facebook_graph_api(post_data: dict, image_path_or_url: str = "") -> 
     return False, ""
 
 
+# بيانات إنستجرام الرسمية للنشر المباشر
+IG_USER_ID = os.getenv("IG_USER_ID", "17841412512402415")
+INSTAGRAM_ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN", "IGAAT1F8BF5HBBZAGE1RXlsX3JiNENqUFNfMVVRVGpkSXBQalNLell2UXFjZAGhucUJyb3dxeHhHbF9DNXJQekdNVUlUUGVLQmdreW95OGZAwYW8zaVhSNVB1OFhycjJqdkl4UTdneExPZA2FGTUtpaHZAKSUQ1TVF3Tk5tMnRjVGgzUQZDZD")
+
+
+def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
+    """نشر تلقائي للبوست على حساب Instagram Business المرتبط."""
+    if not INSTAGRAM_ACCESS_TOKEN or not IG_USER_ID:
+        return False
+    try:
+        # إذا كانت الصورة محلية نستخدم رابط استضافة الموقع أو المنشور
+        media_url = image_url if image_url.startswith("http") else "https://medon90ae.github.io/healing-touch-egypt/assets/og-image.jpg"
+        print(f"[Instagram API] جاري النشر على حساب إنستجرام ({IG_USER_ID})...")
+        create_res = requests.post(
+            f"https://graph.instagram.com/v21.0/{IG_USER_ID}/media",
+            data={"image_url": media_url, "caption": caption, "access_token": INSTAGRAM_ACCESS_TOKEN},
+            timeout=30,
+        ).json()
+        if "id" in create_res:
+            creation_id = create_res["id"]
+            publish_res = requests.post(
+                f"https://graph.instagram.com/v21.0/{IG_USER_ID}/media_publish",
+                data={"creation_id": creation_id, "access_token": INSTAGRAM_ACCESS_TOKEN},
+                timeout=30,
+            ).json()
+            if "id" in publish_res:
+                print(f"[+] 📸 تم النشر تلقائياً على إنستجرام بنجاح! ID: {publish_res['id']}")
+                return True
+    except Exception as e:
+        print(f"[!] تنبيه نشر إنستجرام: {e}")
+    return False
+
+
 # =============================================================================
 # 🤖 القسم السادس: النشر التلقائي على Reddit API + مدونة جوجل Blogger
 # =============================================================================
@@ -1174,6 +1207,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         return True, ""
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
+    publish_instagram_graph_api(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
     publish_to_blogger_webhook(blogger_post)
     publish_to_reddit_api(tmpl["title"], f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
     if ok:
