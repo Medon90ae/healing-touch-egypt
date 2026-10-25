@@ -6,13 +6,15 @@
   <title>الدليل الطبي الشامل لعلاج آثار الولادة القيصرية وإخفاء الندبات في 2026 | هيلينج تاتش مصر</title>
   <meta name="description" content="كيف تحمين جرح الولادة القيصرية من التلوث أثناء أول استحمام وتمنعين تكون الندبة البارزة (الكلويد) بدون تكاليف الليزر الباهظة؟ خطوات سريرية موثقة بـ 10 دراسات طبية.">
   <meta name="keywords" content="جرح القيصرية، كلويد البطن، لصقات السيليكون للندبات، الاستحمام بعد القيصرية">
-  <link rel="canonical" href="https://medon90ae.github.io/healing_touch/articles/c-section-scar-recovery-guide-2026.html">
   <style>
     :root {
       --primary: #0F4C5C;
       --primary-dark: #0A323D;
       --accent: #E36414;
       --accent-hover: #C85A17;
+      --wa-green: #25D366;
+      --wa-green-dark: #1EBE5D;
+      --ig-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
       --bg: #F8FAFC;
       --card-bg: #FFFFFF;
       --text: #1E293B;
@@ -38,24 +40,36 @@
     }
     .header-inner { max-width: 1100px; margin: 0 auto; }
     .brand-title { font-size: 2.1rem; font-weight: 800; margin-bottom: 10px; }
-    .brand-tagline { font-size: 1.1rem; opacity: 0.95; max-width: 850px; margin: 0 auto 20px auto; }
-    .social-links-bar { margin-top: 15px; }
+    .brand-tagline { font-size: 1.05rem; opacity: 0.95; max-width: 850px; margin: 0 auto 15px auto; }
+    .promo-top-bar {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      font-weight: 800;
+      padding: 8px 20px;
+      border-radius: 30px;
+      margin: 10px 0 15px 0;
+      border: 2px dashed #F59E0B;
+      font-size: 1rem;
+    }
+    .social-links-bar { margin-top: 10px; }
     .btn-social {
       display: inline-block;
       margin: 6px 8px;
       padding: 10px 22px;
       border-radius: 30px;
-      background: #ffffff;
-      color: var(--primary);
       font-weight: 700;
       text-decoration: none;
       font-size: 0.95rem;
       box-shadow: 0 3px 10px rgba(0,0,0,0.15);
       transition: all 0.2s ease;
+      cursor: pointer;
     }
-    .btn-social:hover { transform: translateY(-2px); background: #f1f5f9; }
-    .btn-social.btn-fb { background: var(--accent); color: #fff; }
-    .btn-social.btn-fb:hover { background: var(--accent-hover); }
+    .btn-social:hover { transform: translateY(-2px); }
+    .btn-social.btn-wa { background: var(--wa-green); color: #fff; }
+    .btn-social.btn-wa:hover { background: var(--wa-green-dark); }
+    .btn-social.btn-ig { background: #fff; color: #bc1888; border: 2px solid #bc1888; }
+    .btn-social.btn-ig:hover { background: #fdf2f8; }
     .container { max-width: 1120px; margin: 0 auto; padding: 35px 20px; }
     .section-title {
       font-size: 1.65rem;
@@ -74,6 +88,9 @@
       border: 1px solid var(--border);
       border-top: 5px solid var(--primary);
       transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .card:hover { transform: translateY(-4px); }
     .card h3 { margin-top: 0; color: var(--primary); font-size: 1.25rem; }
@@ -84,24 +101,38 @@
       font-weight: 800;
       padding: 6px 14px;
       border-radius: 8px;
-      margin: 12px 0;
+      margin: 10px 0;
       font-size: 0.95rem;
     }
+    .promo-highlight {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    .cta-btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
     .cta-btn {
       display: block;
       text-align: center;
-      background: var(--primary);
-      color: #ffffff;
-      padding: 12px 18px;
+      padding: 12px 16px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 700;
-      margin-top: 15px;
-      transition: background 0.2s;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
     }
-    .cta-btn:hover { background: var(--primary-dark); }
-    .cta-btn.accent { background: var(--accent); }
-    .cta-btn.accent:hover { background: var(--accent-hover); }
+    .cta-btn.wa-primary { background: var(--wa-green); color: #ffffff; }
+    .cta-btn.wa-primary:hover { background: var(--wa-green-dark); }
+    .cta-btn.ig-secondary { background: #ffffff; color: #c13584; border: 2px solid #c13584; }
+    .cta-btn.ig-secondary:hover { background: #fdf2f8; }
+    .cta-btn.read-more { background: var(--primary); color: #fff; }
+    .cta-btn.read-more:hover { background: var(--primary-dark); }
     .article-box {
       background: #fff;
       border-radius: 14px;
@@ -148,6 +179,21 @@
       font-size: 0.88rem;
       font-weight: 700;
     }
+    /* نافذة الإشعار السريع عند نسخ الكود */
+    .toast-notification {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #065F46;
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 9999;
+      font-weight: 700;
+      display: none;
+      direction: rtl;
+    }
     footer {
       background: #0F172A;
       color: #CBD5E1;
@@ -160,6 +206,34 @@
     .footer-links a { color: #38BDF8; text-decoration: none; margin: 0 10px; font-weight: 600; }
     .footer-links a:hover { text-decoration: underline; }
 </style>
+  <script>
+    function showToast(msg) {
+      let t = document.getElementById('toast-msg');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast-msg';
+        t.className = 'toast-notification';
+        document.body.appendChild(t);
+      }
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+    }
+
+    function copyPromoAndOpenInstagram(code, offerTitle, igUrl) {
+      const textToCopy = "أهلاً دكتورة، أنا من طرف موقع Healing Touch ومعايا كود العرض (" + code + ") الخاص بـ (" + offerTitle + ") وعندي استفسار عن المنتجات.";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          showToast("✅ تم نسخ كود العرض (" + code + ") ورسالة الاستفسار! جاري فتح إنستجرام للصقها للدكتورة...");
+          setTimeout(() => { window.open(igUrl, '_blank'); }, 1200);
+        }).catch(() => {
+          window.open(igUrl, '_blank');
+        });
+      } else {
+        window.open(igUrl, '_blank');
+      }
+    }
+</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -172,7 +246,7 @@
     "publisher": {
       "@type": "Organization",
       "name": "Healing Touch Egypt",
-      "url": "https://www.facebook.com/61596009772486"
+      "url": "https://wa.me/201155803307"
     }
   }
   </script>
@@ -185,11 +259,13 @@
     <div class="brand-title">
       <a href="../index.html" style="color:#fff; text-decoration:none;">🌿 هيلينج تاتش مصر | Healing Touch Egypt</a>
     </div>
-    <p class="brand-tagline">المركز المتخصص الأول في مصر لمستلزمات التعافي الطبي ورعاية الجروح والندبات بعد العمليات الجراحية، الولادة القيصرية، وتجميل الأنف — منتجات أصلية 100% مع ضمان فتح الشحنة والمعاينة قبل الدفع</p>
+    <p class="brand-tagline">المركز المتخصص الأول في مصر لمستلزمات التعافي الطبي ورعاية الجروح والندبات بعد العمليات الجراحية، الولادة القيصرية، وتجميل الأنف — استشارة طبية متخصصة مع الدكتورة مع حق فتح الشحنة والمعاينة قبل الدفع</p>
+    <div class="promo-top-bar">
+      <span>🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
+    </div>
     <div class="social-links-bar">
-      <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener" class="btn-social btn-fb">💬 فيسبوك هيلينج تاتش (61596009772486)</a>
-      <a href="https://www.instagram.com/mohamedahmedalahmady/" target="_blank" rel="noopener" class="btn-social btn-ig">📸 إنستجرام</a>
-      <a href="https://www.tiktok.com/@mohamed.alahmady53" target="_blank" rel="noopener" class="btn-social btn-tt">🎵 تيك توك</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D8%A7%D9%85." target="_blank" rel="noopener" class="btn-social btn-wa">💬 تواصل مع الدكتورة على واتساب (01155803307)</a>
+      <a href="javascript:void(0)" onclick="copyPromoAndOpenInstagram('HT10', 'شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-social btn-ig">📸 شات الدكتورة على إنستجرام</a>
     </div>
   </div>
 </header>
@@ -206,16 +282,28 @@
 
     <div class="callout-box">
       <strong>المنتج والباكدج المربوط سريرياً بهذا المقال:</strong> رول شيت السيليكون للندبات BUPY + ضمادات الاستحمام 3M Tegaderm<br>
-      <em>(متوفر للشحن الفوري لجميع محافظات مصر مع فتح الشحنة والتأكد من الكود الأصلي قبل الدفع).</em>
+      <em>(متوفر للشحن الفوري لجميع المحافظات مع ميزة <strong>شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع</strong> باستخدام كود <strong>HT10</strong>).</em>
     </div>
 
     <p>تعتبر الولادة القيصرية من أكثر العمليات الجراحية شيوعاً في مصر، ولكن الهاجس الأكبر لدى كل أم بعد الخروج من المستشفى يدور حول نقطتين حاسمتين: متى وكيف يمكن الاستحمام دون تعريض الجرح للبلل والالتهاب؟ وكيف يمكن منع تحول خط الجرح إلى ندبة حمراء سميكة وبارزة (Keloid) تشوه مظهر البطن؟</p>
 <p><strong>معضلة الاستحمام في الأيام الأولى:</strong> توصي الأبحاث الطبية الجراحية بعدم تعريض غرز القيصرية للماء الجاري أو الصابون خلال أول 10 إلى 14 يوماً. استخدام الشاش أو البلاستر العادي يؤدي لامتصاص الرطوبة واحتجاز البكتيريا. الحل الطبي المعتمد سريرياً هو استخدام <em>ضمادات 3M Tegaderm +Pad</em> المقاومة للماء، والتي توفر حاجزاً فيلمياً شفافاً يمنع نفاذ الميكروبات والماء بنسبة 100% مع السماح للبشرة بالتنفس وتبخير العرق، مما يتيح للأم الاستحمام بأمان تام منذ اليوم الثاني.</p>
 <p><strong>لماذا يفشل مرهم السيليكون ويتفوق رول الشيت الطبي BUPY؟</strong> أثبتت الدراسات المقارنة المنشورة في NCBI وPubMed أن مراهم الجل السائل تمسحها الملابس الداخلية ولا توفر ضغطاً مستمراً. في المقابل، فإن <em>رول شيت السيليكون BUPY (مقاس 4 سم × 3 متر)</em> يوفر ترطيباً عميقاً مع ضغط ميكانيكي متواصل يمنع تكاثر الكولاجين العشوائي ويفرد الندبة تماماً.</p>
-<p><strong>المعادلة الاقتصادية لعام 2026 (Cost-Comparison Anchoring):</strong> جلسات ليزر الفراكشنال أو حقن الكورتيزون لعلاج الكلويد تتكلف ما بين 6,000 إلى 15,000 جنيه مصري في العيادات التجميلية، بينما أنبوبة مرهم السيليكون الصغيرة (30 جم) تباع بـ 1,150 ج.م وتكفي أسبوعين فقط! رول BUPY الطبي بطول 3 أمتار كاملة يكفي لقص شرائح تغطي جرح القيصرية لـ 4 أشهر كاملة مع إمكانية الغسيل وإعادة الاستخدام بسعر 750 ج.م فقط (أو 320 ج.م للمتر الواحد)، مما يجعله الخيار الأكثر أماناً واقتصادية.</p>
+<p><strong>المعادلة الاقتصادية لعام 2026 (Cost-Comparison Anchoring):</strong> جلسات ليزر الفراكشنال أو حقن الكورتيزون لعلاج الكلويد تتكلف ما بين 6,000 إلى 15,000 جنيه مصري في العيادات التجميلية، بينما أنبوبة مرهم السيليكون الصغيرة (30 جم) تباع بـ 1,150 ج.م وتكفي أسبوعين فقط! رول BUPY الطبي بطول 3 أمتار كاملة يكفي لقص شرائح تغطي جرح القيصرية لـ 4 أشهر كاملة مع إمكانية الغسيل وإعادة الاستخدام بسعر 750 ج.م فقط (أو 320 ج.م للمتر الواحد)، ومع كود الخصم الحصري HT10 ستحصلين على شحن مجاني تماماً ومعاينة الشحنة قبل الاستلام.</p>
 
-    <div style="text-align:center; margin: 35px 0;">
-      <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener" class="cta-btn accent" style="display:inline-block; font-size:1.1rem; padding:14px 30px;">💬 اطلب مستلزمات هذا المقال الآن عبر رسائل صفحة فيسبوك الرسمية</a>
+    <!-- صندوق الاستشارة المباشرة مع الدكتورة والبرومو كود -->
+    <div style="background:#FFFBEB; border:2px dashed #F59E0B; border-radius:12px; padding:25px; margin:35px 0; text-align:center;">
+      <h3 style="color:#92400E; margin-top:0;">👩‍⚕️ استشيري الدكتورة المتخصصة واطلبي الباكدج الآن</h3>
+      <p style="margin-bottom:15px; font-weight:600; color:#78350F;">
+        وفري تكلفة الشحن واحصلي على <strong>شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع</strong> عند استخدام كود العرض: <span style="background:#FEF3C7; padding:4px 10px; border-radius:6px; color:#B45309; font-weight:800;">HT10</span>
+      </p>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D9%85%D9%82%D8%A7%D9%84%D9%83%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%B9%D9%86%20%28%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D8%A2%D8%AB%D8%A7%D8%B1%20%D8%A7%D9%84%D9%88%D9%84%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D9%82%D9%8A%D8%B5%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D9%81%D9%8A%202026%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." target="_blank" rel="noopener" class="cta-btn wa-primary" style="font-size:1.05rem; padding:14px 28px;">
+          💬 اسألي الدكتورة على واتساب (01155803307) بكود HT10
+        </a>
+        <button onclick="copyPromoAndOpenInstagram('HT10', 'الدليل الطبي الشامل لعلاج آثار الولادة القيصرية وإخفاء الندبات في 2026', 'https://www.instagram.com/tapistorefamily2026/')" class="cta-btn ig-secondary" style="font-size:1.05rem; padding:14px 28px;">
+          📸 تواصلي مع الدكتورة على إنستجرام
+        </button>
+      </div>
     </div>
 
     <div class="refs-container">
@@ -236,7 +324,7 @@
   </article>
 
   <div style="margin-top: 30px; text-align:center;">
-    <a href="../index.html" class="cta-btn" style="display:inline-block; max-width:300px;">تصفح باقي المقالات والمنتجات الطبية</a>
+    <a href="../index.html" class="cta-btn read-more" style="display:inline-block; max-width:320px;">تصفح باقي المقالات والمنتجات الطبية</a>
   </div>
 </div>
 
@@ -244,11 +332,10 @@
 <footer>
   <div class="footer-inner">
     <p><strong>© 2026 هيلينج تاتش مصر (Healing Touch Egypt)</strong> — جميع الحقوق محفوظة لعلامتنا التجارية ومحتوانا التوعوي الطبي.</p>
-    <p>خدمة عملاء وشحن سريع لكافة محافظات مصر مع ميزة فتح الشحنة ومعاينة الكود الأصلي للمنتج قبل سداد أي مبلغ.</p>
+    <p>دعم واستشارة طبية عبر الدكتورة المتخصصة (01155803307) مع شحن سريع لكافة محافظات مصر وميزة فتح الشحنة ومعاينة الكود الأصلي قبل الدفع بكود <strong>HT10</strong>.</p>
     <div class="footer-links">
-      <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener">صفحة فيسبوك الرسمية</a> |
-      <a href="https://www.instagram.com/mohamedahmedalahmady/" target="_blank" rel="noopener">حساب إنستجرام</a> |
-      <a href="https://www.tiktok.com/@mohamed.alahmady53" target="_blank" rel="noopener">حساب تيك توك</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%D8%A9%D8%8C%20%D8%A3%D9%86%D8%A7%20%D8%AC%D8%A7%D9%8A%20%D9%85%D9%86%20%D9%85%D9%88%D9%82%D8%B9%20Healing%20Touch%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%3A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D9%88%D8%AA%D8%B1." target="_blank" rel="noopener">واتساب الدكتورة مباشرة</a> |
+      <a href="https://www.instagram.com/tapistorefamily2026/" target="_blank" rel="noopener">إنستجرام المورد والدكتورة</a>
     </div>
   </div>
 </footer>
