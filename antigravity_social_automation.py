@@ -1218,22 +1218,29 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
             shutil.copy2(str(aud_f), str(dest_aud))
             print(f"[+] 🎙️ تم التقاط ونقل ملف صوتي من manual_inbox إلى audio_inputs ({aud_f.name})!")
 
-    # 2. فحص النصوص والمستندات (txt, md)
+    # 2. فحص النصوص والمستندات (txt, md) المخصصة لحالة اليوم فقط
     txt_files = sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
     if txt_files:
-        # استبعاد ملف الباكدج الكامل المجمع إن وجد والتركيز على بوست اليوم
-        chosen_txt = next((f for f in txt_files if "notebooklm_exported_pack" not in f.name), txt_files[0])
-        custom_text = chosen_txt.read_text(encoding="utf-8").strip()
-        if custom_text:
-            print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ من manual_inbox ({chosen_txt.name})!")
-            tmpl["story_text"] = custom_text
+        # البحث عن ملف نصي يتطابق مع الحالة الحالية أو استبعاد الملف المجمع الشامل
+        target_kw = "csection" if tmpl["category"] == "c-section" else ("rhino" if tmpl["category"] == "rhinoplasty" else ("bariatric" if tmpl["category"] == "bariatric" else "thyroid"))
+        matching_txt = next((f for f in txt_files if target_kw in f.name.lower()), None)
+        chosen_txt = matching_txt if matching_txt else next((f for f in txt_files if "notebooklm_exported_pack" not in f.name and "حزمة" not in f.name), None)
+        if chosen_txt:
+            custom_text = chosen_txt.read_text(encoding="utf-8").strip()
+            if custom_text and len(custom_text) > 50:
+                print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ لحالة اليوم من manual_inbox ({chosen_txt.name})!")
+                tmpl["story_text"] = custom_text
 
-    # 3. فحص الصور والتصاميم (jpg, png)
+    # 3. فحص الصور والتصاميم المخصصة من المستخدم (jpg, png)
     img_files = sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
     if img_files:
         square_img_path = str(img_files[0])
         story_img_path = str(img_files[0])
         print(f"[+] 🎨 تم اكتشاف واعتماد تصميم يدوي راقٍ من manual_inbox ({Path(square_img_path).name})!")
+    else:
+        # إذا لم يضع المستخدم صورة يدوية، لا يتم التوليد الآلي العشوائي بل نعتمد الكارت الرسمي الموحد
+        square_img_path = str(BASE_DIR / "docs" / "assets" / "og-image.jpg")
+        story_img_path = square_img_path
 
     # 4. فحص الفيديوهات المباشرة (mp4)
     vid_files = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
