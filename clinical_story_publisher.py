@@ -138,35 +138,129 @@ CLINICAL_STORIES_TEMPLATES = [
 (أو مباشرة عبر واتساب: 01155803307)
 🎁 كود الخصم الحصري (HT10): شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع.""",
         "hashtags": "#استئصال_الغدة_الدرقية #جراحة_الغدة #ندبات_الرقبة #شيت_سيليكون_بوبي #بلاستر_3m_البيج #كود_HT10 #هيلينج_تاتش_مصر #تجميل_الجروح"
+    },
+    {
+        "category": "c-section",
+        "title": "حالة بروز كلويد القيصرية القديم والحكة الشديدة بعد 6 أشهر",
+        "story_text": """كتير من الأمهات بيكلمونا بعد الولادة بست شهور أو سنة:
+"الجرح كان كويس، بس فجأة قلب لونه أحمر داكن وبقى بارز زي الحبل، وفيه حكة ونغزات فظيعة بتخليني مش طايقة الهدوم تلمسه!"
+
+هنا بنشرحلهم إن ده "كلويد نشط" (Active Keloid Scar) أو ندبة متضخمة:
+
+١. ليه الندبة بتهرش وتبرز بعد شهور؟
+ألياف الكولاجين لما بتفقد الرطوبة (Transepidermal Water Loss)، الخلايا بتفتكر إن الجرح لسه مفتوح وبتفضل تنتج كولاجين عشوائي يرتفع فوق مستوى الجلد، والأوعية الدموية الدقيقة بتسبب الاحمرار والحكة.
+
+٢. هل الجراحة تاني هي الحل؟
+استئصال الكلويد جراحياً بدون حماية بيرجع الكلويد أكبر بنسبة 70%!
+
+٣. الحل الطبي السريري المعتمد:
+- استخدام شيت السيليكون الطبي BUPY يومياً من 12 إلى 20 ساعة:
+شيت السيليكون بيعمل ترطيب مستمر للطبقة المتقرنة، ويقلل تدفق الدم الزائد في الندبة فيطفي الاحمرار والحكة فوراً خلال أيام، ومع الاستمرار بيسوي الندبة بالجلد تدريجياً.
+- ميزة رول BUPY (عرض 4 سم في طول 3 متر): اقتصادي جداً، بيكفي علاج 4 إلى 6 شهور لأنه بيتغسل بمية دافية ويتكرر استخدامه.
+
+💡 لو عندك كلويد بارز أو نغزات في جرح قديم وحابة تعرفي خطة العلاج المناسبة:
+تواصلي مع أخصائية العناية بالتعافي لاستشارة مجانية:
+💬 رابط الاستشارة المباشرة وتفعيل الخصم:
+👉 https://medon90ae.github.io/healing-touch-egypt/wa.html?case=c-section&code=HT10
+(أو مباشرة عبر واتساب: 01155803307)
+🎁 كود الخصم الحصري (HT10): شحن مجاني لكافة محافظات مصر + حق فتح ومعاينة الشحنة قبل الدفع.""",
+        "hashtags": "#كلويد_القيصرية #علاج_الكلويد #ندبات_الولادة #شيت_سيليكون_بوبي #حكة_الجرح #كود_HT10 #هيلينج_تاتش_مصر #امهات_مصر"
+    },
+    {
+        "category": "rhinoplasty",
+        "title": "حالة تورم الأنف العريض والجلد السميك وحبوب البلاستر",
+        "story_text": """أصحاب الجلد السميك (Thick Skin) بعد تجميل الأنف بيعانوا من أزمة متكررة:
+"الجلد بيفرز دهون عالية تحت البلاستر العادي، فبيعمل حبوب صديدية وبثور بيضاء، ولما بشيل البلاستر بيكون مؤلم جداً وبيسحب الجلد معاه!"
+
+التعامل مع جلد الأنف بعد الجراحة له تكنيك طبي خاص:
+
+١. مسامية البلاستر هي كلمة السر:
+البلاستر الأبيض التجاري بيكون مشمع ومكتوم، فبيحبس العرق والإفرازات الدهنية تحت الجلد ويسبب التهاب حويصلات الشعر (Folliculitis).
+
+٢. الحل الطبي القياسي لعيادات التجميل:
+- بلاستر 3M Micropore Tan البيج الأصلي (كود 1533-0): مصنوع من ألياف الرايون غير المنسوجة الدقيقة جداً، بيسمح للبشرة بالتنفس 100% ويفرغ الدهون بدون احتباس.
+- صمغه الطبي (Hypoallergenic) لطيف على الأنسجة ولا يترك أثراً لزجاً عند الإزالة.
+
+٣. نصيحة قبل إزالة اللصقة:
+بللي اللصقة بقطنة بمية دافية أو زيت أطفال خفيف وانتظري دقيقتين عشان تنزل بسلاسة بدون أي شد لغضاريف الأنف.
+
+💡 محتاجة مساعدة في مقاس البلاستر الأنسب لأنفك وطريقة اللصق الصحيحة؟
+تواصلي الآن للحصول على استشارة مجانية مع أخصائية التعافي:
+💬 رابط الاستشارة المباشرة وتفعيل الخصم:
+👉 https://medon90ae.github.io/healing-touch-egypt/wa.html?case=rhinoplasty&code=HT10
+(أو مباشرة عبر واتساب: 01155803307)
+🎁 كود الخصم الحصري (HT10): شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع.""",
+        "hashtags": "#تجميل_الانف_اللحمي #تجميل_الانف_مصر #بلاستر_3m_البيج #حبوب_الانف_بعد_العملية #ارنبة_الانف #كود_HT10 #هيلينج_تاتش_مصر"
     }
 ]
 
+HISTORY_FILE = BASE_DIR / "media_assets" / "clinical_posts_history.json"
 
-def publish_clinical_story_post(template_idx: int = 0, dry_run: bool = False):
+
+def load_post_history() -> list:
+    if HISTORY_FILE.exists():
+        try:
+            return json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            return []
+    return []
+
+
+def record_post_history(template_idx: int, title: str):
+    history = load_post_history()
+    history.append({
+        "index": template_idx,
+        "title": title,
+        "timestamp": os.getenv("CURRENT_TIME") or json.dumps(None)
+    })
+    try:
+        HISTORY_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def get_next_template_index(manual_idx: int = None) -> int:
+    """اختيار القالب التالي تلقائياً لمنع تكرار نفس النص في كل تشغيل."""
+    total = len(CLINICAL_STORIES_TEMPLATES)
+    if manual_idx is not None:
+        return manual_idx % total
+
+    history = load_post_history()
+    if not history:
+        return 0
+
+    last_idx = history[-1].get("index", 0)
+    next_idx = (last_idx + 1) % total
+    return next_idx
+
+
+def publish_clinical_story_post(template_idx: int = None, dry_run: bool = False):
     from antigravity_social_automation import publish_facebook_graph_api
 
-    tmpl = CLINICAL_STORIES_TEMPLATES[template_idx % len(CLINICAL_STORIES_TEMPLATES)]
-    print(f"[*] 📖 جاري تجهيز بوست الحالة السريرية: {tmpl['title']}...")
+    chosen_idx = get_next_template_index(template_idx)
+    tmpl = CLINICAL_STORIES_TEMPLATES[chosen_idx]
+    print(f"[*] 📖 [حالة رقم {chosen_idx + 1} من {len(CLINICAL_STORIES_TEMPLATES)}] جاري تجهيز بوست: {tmpl['title']}...")
 
-    # 1. جلب صورة حالة واقعية من Pexels أو Pixabay
+    # 1. جلب صورة حالة واقعية مختلفة وغير مكررة
     photo_info = get_clinical_case_photo(tmpl["title"], tmpl["category"])
     img_path = photo_info.get("local_path", "")
     print(f"[*] 📸 تم اختيار صورة: {img_path} (المصدر: {photo_info.get('source')})")
 
     post_data = {
-        "day": f"دراسة حالة سريرية - {tmpl['title']}",
+        "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
         "caption": tmpl["story_text"],
         "hashtags": tmpl["hashtags"],
         "row_index": -1
     }
 
     if dry_run:
+        record_post_history(chosen_idx, tmpl['title'])
         print("\n" + "=" * 60)
-        print("🔍 معاينة البوست (DRY RUN - لم يتم النشر على فيسبوك):")
+        print(f"🔍 معاينة البوست (DRY RUN - حالة رقم {chosen_idx + 1}):")
         print("=" * 60)
         print(f"العنوان: {tmpl['title']}")
-        print(f"الصورة: {img_path}")
-        print("\nالنص:")
+        print(f"الصورة المختارة: {img_path}")
+        print("\nالنص السريري:")
         print(tmpl['story_text'])
         print("\nالهاشتاجات:")
         print(tmpl['hashtags'])
@@ -176,6 +270,7 @@ def publish_clinical_story_post(template_idx: int = 0, dry_run: bool = False):
     print(f"[*] 🚀 جاري نشر الحالة مع صورة {photo_info.get('source', 'الطبية')} على صفحة فيسبوك...")
     ok, permalink = publish_facebook_graph_api(post_data, img_path)
     if ok:
+        record_post_history(chosen_idx, tmpl['title'])
         print(f"\n🎉 ✅ تم نشر بوست الحالة السريرية بنجاح على فيسبوك!")
         print(f"🔗 رابط المنشور: {permalink}")
     else:
@@ -185,7 +280,7 @@ def publish_clinical_story_post(template_idx: int = 0, dry_run: bool = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="نشر بوست حالة سريرية واقعية")
-    parser.add_argument("--index", type=int, default=0, help="رقم القالب (0 للقيصرية، 1 لتجميل الأنف)")
+    parser.add_argument("--index", type=int, default=None, help="رقم القالب اختيارياً (إذا لم يُحدد ينتقل تلقائياً للحالة التالية)")
     parser.add_argument("--dry-run", action="store_true", help="معاينة البوست دون نشره فعلياً")
     args = parser.parse_args()
     publish_clinical_story_post(args.index, dry_run=args.dry_run)
