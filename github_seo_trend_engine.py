@@ -282,6 +282,55 @@ def load_products_registry() -> list:
     return []
 
 
+def sync_live_prices_from_sheet(products: list) -> list:
+    """سحب وتحديث أحدث أسعار المنتجات مباشرة من Google Sheet حياً في كل عملية بناء (R6 Price Sync)."""
+    try:
+        url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tqx=out:csv&gid=0&_ts={int(time.time())}"
+        res = requests.get(url, timeout=12)
+        if res.status_code == 200 and "<!DOCTYPE html>" not in res.text[:200]:
+            reader = csv.DictReader(io.StringIO(res.text))
+            keywords_map = {
+                "bupy": "bupy-silicone-scar-sheet",
+                "micropore": "3m-micropore-tan-tape-1533-0",
+                "tegaderm": "3m-tegaderm-plus-pad",
+                "opsite": "smith-nephew-opsite-spray",
+                "nostril": "silicone-nostril-retainer",
+                "دعامة": "silicone-nostril-retainer",
+            }
+            price_updates = {}
+            for row in reader:
+                p_col = row.get("المنتج/الباكدج الحل", "") or ""
+                price_col = (row.get("السعر المقترح (ج.م)", "") or "").strip()
+                if not p_col or not price_col:
+                    continue
+                for kw, p_id in keywords_map.items():
+                    if kw.lower() in p_col.lower() and p_id not in price_updates:
+                        price_updates[p_id] = price_col
+
+            updated_count = 0
+            for prod in products:
+                p_id = prod["id"]
+                if p_id in price_updates:
+                    new_price_str = price_updates[p_id]
+                    clean_price = sanitize_arabic_copy(new_price_str)
+                    prod["price_display"] = clean_price
+                    digits = re.findall(r"\d+", clean_price)
+                    if digits:
+                        prod["price_value"] = int(digits[0])
+                    updated_count += 1
+
+            if updated_count > 0:
+                print(f"[+] 💰 تم مزامنة أسعار {updated_count} منتجات طبية حياً من Google Sheet!")
+                try:
+                    data = {"products": products}
+                    PRODUCTS_REGISTRY_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+                except Exception:
+                    pass
+    except Exception as e:
+        print(f"[!] تنبيه أثناء مزامنة الأسعار من Google Sheet: {e} (تم استخدام الأسعار المحفوظة)")
+    return products
+
+
 # -----------------------------------------------------------------------------
 # قاعدة بيانات المقالات السريرية الـ 15 (3 مقالات لكل منتج من المنتجات الخمسة)
 # -----------------------------------------------------------------------------
@@ -3002,7 +3051,8 @@ def build_full_website():
 
     cfg = load_promo_config()
     products = load_products_registry()
-    print(f"[*] تم تحميل {len(products)} منتجات طبية معتمدة من products_registry.json")
+    products = sync_live_prices_from_sheet(products)
+    print(f"[*] تم تحميل وتحديث {len(products)} منتجات طبية معتمدة")
 
     # 1. توليد المقالات الـ 15 الأساسية (3 لكل منتج)
     cluster_articles = get_clinical_cluster_articles(products)
