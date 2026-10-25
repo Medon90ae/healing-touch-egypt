@@ -71,9 +71,10 @@ BRANDED_DIR = MEDIA_DIR / "branded_designs"
 BLOGGER_DIR = MEDIA_DIR / "blogger_posts"
 NOTEBOOKLM_DIR = MEDIA_DIR / "notebooklm_hub"
 NOTEBOOK_AUDIO_DIR = NOTEBOOKLM_DIR / "audio_inputs"
+NOTEBOOK_ARCHIVE_DIR = NOTEBOOKLM_DIR / "daily_sources_archive"
 MANUAL_INBOX_DIR = MEDIA_DIR / "manual_inbox"
 
-for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR, MANUAL_INBOX_DIR):
+for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR, NOTEBOOK_ARCHIVE_DIR, MANUAL_INBOX_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 PUBLISHED_LOG_PATH = BASE_DIR / "published_posts_log.json"
@@ -819,9 +820,19 @@ def export_notebooklm_master_source() -> str:
         '   `استخرج 5 سكربتات فيديو قصيرة (30 ثانية) بأسلوب طبي شيق يبدأ بسؤال شائع من المريض وينتهي بالحل العلمي من منتجات هيلينج تاتش.`'
     )
 
-    out_file = NOTEBOOKLM_DIR / "Healing_Touch_NotebookLM_Source.md"
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    archive_file = NOTEBOOK_ARCHIVE_DIR / f"Healing_Touch_Brief_{today_str}.md"
+    archive_file.write_text("\n".join(md_lines), encoding="utf-8")
+
+    out_file = NOTEBOOKLM_DIR / f"Healing_Touch_Brief_{today_str}.md"
     out_file.write_text("\n".join(md_lines), encoding="utf-8")
-    print(f"[+] 🧠 تم تحديث حزمة Google NotebookLM بنجاح: {out_file}")
+
+    # تحديث الملف الرئيسي الثابت أيضاً لمن يفضل الاستبدال
+    master_file = NOTEBOOKLM_DIR / "Healing_Touch_NotebookLM_Source.md"
+    master_file.write_text("\n".join(md_lines), encoding="utf-8")
+
+    print(f"[+] 🧠 تم إنشاء ملف المصدر المؤرخ بنجاح: {out_file.name}")
+    print(f"[+] 📁 تم حفظ نسخة في أرشيف الترندات اليومي: {archive_file}")
     return str(out_file)
 
 
