@@ -1235,9 +1235,19 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         video_path = str(vid_files[0])
         print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
 
-    # تجهيز مجلد الوسائط ونسخ نص البوست للحافظة لسهولة الرفع لـ TikTok / Instagram
-    copy_to_windows_clipboard(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
-    print(f"\n📋 [تم نسخ كابشن إنستجرام وتيك توك كاملاً في الحافظة Clipboard جاهز للصق Ctrl+V]")
+    # تجهيز ملفات نصوص صريحة ومستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
+    
+    (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(full_caption, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(full_caption, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[نص_منشور_فيسبوك].txt").write_text(full_caption, encoding="utf-8")
+    
+    copy_to_windows_clipboard(full_caption)
+    print(f"\n📄 [تم إنشاء ملفات النصوص المستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs]:")
+    print(f"   • {date_str}_[نص_بوست_وستوري_إنستجرام].txt")
+    print(f"   • {date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt")
+    print(f"   • {date_str}_[نص_منشور_فيسبوك].txt")
 
     # فتح مجلد التصميمات والفيديو تلقائياً في Windows Explorer (يحتوي على بوست إنستجرام المربع، وبطاقة الستوري، وفيديو تيك توك)
     try:
