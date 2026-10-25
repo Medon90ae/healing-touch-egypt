@@ -974,6 +974,7 @@ REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "uHHEj4680_jmB1rrt6yTXw")
 REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "_xfBnP9uNQMDhEUaOwC2ap_sJfIqHw")
 REDDIT_USERNAME = os.getenv("REDDIT_USERNAME", "Dull-Nectarine4963")
 REDDIT_REFRESH_TOKEN = os.getenv("REDDIT_REFRESH_TOKEN", "")
+BLOGGER_BLOG_ID = os.getenv("BLOGGER_BLOG_ID", "6258225961862592152")
 BLOGGER_SECRET_EMAIL = os.getenv("BLOGGER_SECRET_EMAIL", "medon90ae.healing-touch-egypt@blogger.com")
 APPS_SCRIPT_WEBHOOK = "https://script.google.com/macros/s/AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr/exec"
 
