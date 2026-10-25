@@ -1207,7 +1207,22 @@ def main():
         return
 
     if args.mode == "notebooklm":
-        export_notebooklm_master_source()
+        src_path = export_notebooklm_master_source()
+        print("\n" + "=" * 65)
+        print("🧠 [خطوات بسيطة للحصول على البودكاست والفويس أوفر بدون برومبت]:")
+        print("=" * 65)
+        print(f"1. تم تحديث الملف المرجعي الحامل للتعليمات الصارمة:\n   👉 {src_path}")
+        print("2. جاري فتح صفحة Google NotebookLM في متصفحك لرفع الملف أو تحديثه...")
+        open_url_in_default_browser("https://notebooklm.google.com/")
+        print("3. جاري فتح مجلد الحزمة على جهازك لسهولة سحبه إلى المتصفح...")
+        try:
+            os.startfile(str(NOTEBOOKLM_DIR))
+        except Exception:
+            pass
+        print("4. بعد الضغط على 'Generate Audio Overview' في المتصفح وتنزيل الصوت:")
+        print(f"   ضع ملف الصوت الناتج (MP3/WAV) داخل مجلد الصوتيات المخصص:\n   👉 {NOTEBOOK_AUDIO_DIR}")
+        print("   وسيقوم المحرك بدمجه تلقائياً مع فيديو الريلز والتيك توك عند تشغيل النشر (رقم 1 أو 2)!")
+        print("=" * 65)
         return
 
     if args.mode == "groups":
