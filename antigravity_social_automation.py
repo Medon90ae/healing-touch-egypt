@@ -71,8 +71,9 @@ BRANDED_DIR = MEDIA_DIR / "branded_designs"
 BLOGGER_DIR = MEDIA_DIR / "blogger_posts"
 NOTEBOOKLM_DIR = MEDIA_DIR / "notebooklm_hub"
 NOTEBOOK_AUDIO_DIR = NOTEBOOKLM_DIR / "audio_inputs"
+MANUAL_INBOX_DIR = MEDIA_DIR / "manual_inbox"
 
-for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR):
+for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR, MANUAL_INBOX_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 PUBLISHED_LOG_PATH = BASE_DIR / "published_posts_log.json"
@@ -745,7 +746,7 @@ def generate_blogger_atom_xml(posts_list: list) -> str:
 
 
 def export_notebooklm_master_source() -> str:
-    """تجهيز ملف المعرفة الشامل الجاهز للرفع المباشر في Google NotebookLM لتوليد البودكاست والخرائط الذهنية."""
+    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM بدون الحاجة لكتابة برومبت يدوي."""
     registry_path = BASE_DIR / "products_registry.json"
     products_data = []
     if registry_path.exists():
@@ -755,18 +756,37 @@ def export_notebooklm_master_source() -> str:
             pass
 
     md_lines = [
-        "# 🌿 الدليل السريري المرجعي الشامل لمشروع هيلينج تاتش مصر (Healing Touch Egypt)",
-        f"**تاريخ التحديث الآلي:** {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-        "**طبيعة المشروع:** منصة استشارات طبية متخصصة ومستلزمات العناية بالتعافي بعد العمليات الجراحية وعلاج الندبات في مصر.",
-        "**العرض الترويجي الدائم والمعتمد:** كود الخصم `HT10` يمنح المريض (شحن مجاني لكافة محافظات مصر + حق فتح ومعاينة الشحنة قبل الدفع).",
-        "**قناة التواصل الرسمية:** استشارة مجانية مع أخصائية العناية بالتعافي عبر واتساب: `01155803307`.",
-        "\n> [!IMPORTANT]\n> **تعليمات مسبقة ومثبتة لـ Gemini و NotebookLM:**",
-        "> عند توليد أي بودكاست صوتي (Audio Overview) أو مقترح محتوى أو إجابة من هذا الملف:",
-        "> 1. تحدث دائماً باللهجة المصرية الودودة والمهنية، بصفتك الاستشارية الطبية المتخصصة في التعافي بهيلينج تاتش مصر.",
-        "> 2. لا تخترع أسعاراً أو منتجات وهمية؛ التزم حصراً بقائمة الـ 5 منتجات وأسعارها الواردة أدناه والمسحوبة حياً من Google Sheet.",
-        "> 3. اربط الإجابة دائماً بالكلمات البحثية والترندات الصاعدة في بحث جوجل مصر المذكورة بالأسفل لطمأنة المرضى.",
-        "> 4. اختم دائماً بالتوجيه للاستشارة المجانية عبر واتساب وتفعيل كود الخصم الحصري `HT10`.",
-        "\n---\n## 📦 أولاً: قائمة المنتجات الطبية المعتمدة ومواصفاتها وأسعارها الحية المسحوبة من الشيت:",
+        "# 🌿 الدليل السريري وحزمة المحتوى اليومي الشاملة لمشروع هيلينج تاتش مصر",
+        f"**تاريخ التحديث اللحظي:** {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        "**المشروع:** منصة استشارات طبية متخصصة ومستلزمات التعافي بعد العمليات الجراحية وعلاج الندبات في مصر.",
+        "**العرض المعتمد:** كود الخصم الحصري `HT10` (شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع).",
+        "**رابط الاستشارة المجانية عبر واتساب:** `01155803307` | رابط الحجز: `https://medon90ae.github.io/healing-touch-egypt/wa.html`",
+        "\n" + "=" * 60,
+        "## 🎯 البرومبت الهندسي الموحد المطلوب تنفيذه فوراً داخل Google NotebookLM:",
+        "=" * 60,
+        "بصفتك كبير الاستشاريين وصانع المحتوى الطبي الرقمي في (هيلينج تاتش مصر)، وبالاعتماد حصراً ودقة تامة على المصادر والأسعار والترندات الصاعدة الواردة في هذا الملف:",
+        "",
+        "المطلوب فوراً توليد حزمة المحتوى التالية للحالة الجراحية المحددة:",
+        "1. **بوست فيسبوك وإنستجرام طويل ومؤثر (Clinical Storytelling):**",
+        "   - يبدأ بسؤال حقيقي ومقلق من أسئلة ترندات بحث جوجل مصر المذكورة بالأسفل.",
+        "   - يشرح فيزياء التعافي ومراحل التئام الجرح بلهجة مصرية طبية راقية ومطمئنة وبدون أي ابتذال تسويقي.",
+        "   - يذكر الحل الطبي المعتمد والمنتج المناسب بسعره الدقيق المسجل في الملف.",
+        "   - يختم بدعوة واضحة للحصول على (استشارة مجانية مع أخصائية العناية بالتعافي عبر واتساب) وتفعيل كود الخصم الحصري (HT10) الذي يمنح شحناً مجانياً وحق فتح ومعاينة الشحنة قبل الدفع.",
+        "   - إضافة أنسب 10 هاشتاجات مصرية صاعدة من قائمة الترندات.",
+        "",
+        "2. **مقال مدونة جوجل (Google Blogger SEO Article):**",
+        "   - عنوان جذاب متوافق مع معايير السيو (SEO H1).",
+        "   - فقرات منسقة بعناوين فرعية H2 و H3 وجدول مقارنة علمي يبرز آلية عمل سيليكون BUPY أو تيجاديرم أو بخاخ أوبسايت.",
+        "",
+        "3. **سكربت فيديو ريلز وتيك توك قصير (30 - 45 ثانية):**",
+        "   - Hook خطاف في أول 3 ثوانٍ.",
+        "   - توجيهات بصرية دقيقة (Visual Cue) لما يجب أن يظهر على الشاشة.",
+        "   - نص الفويس أوفر (Voiceover Script) الجاهز للإلقاء أو التوليد الصوتي.",
+        "",
+        "4. **توجيه تصميم الكارت الإبداعي (Creative Visual Brief):**",
+        "   - وصف دقيق للصورة المثالية التي يجب تصميمها أو اختيارها (الألوان الطبية، المشهد، النص الرئيسي البارز).",
+        "=" * 60,
+        "\n## 📦 أولاً: قائمة المنتجات الطبية المعتمدة ومواصفاتها وأسعارها الحية المسحوبة من الشيت:",
     ]
 
     for p in products_data:
@@ -1167,6 +1187,25 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     blogger_post = format_clinical_case_for_blogger(tmpl, photo_info)
     generate_blogger_atom_xml([blogger_post])
     notebook_file = export_notebooklm_master_source()
+
+    # فحص مجلد الاستقبال اليدوي manual_inbox إن وضع المستخدم به تصميماً أو نصاً مخصصاً من NotebookLM
+    txt_files = sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
+    if txt_files:
+        custom_text = txt_files[0].read_text(encoding="utf-8").strip()
+        if custom_text:
+            print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ من manual_inbox ({txt_files[0].name})!")
+            tmpl["story_text"] = custom_text
+
+    img_files = sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
+    if img_files:
+        square_img_path = str(img_files[0])
+        story_img_path = str(img_files[0])
+        print(f"[+] 🎨 تم اكتشاف واعتماد تصميم يدوي راقٍ من manual_inbox ({Path(square_img_path).name})!")
+
+    vid_files = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
+    if vid_files:
+        video_path = str(vid_files[0])
+        print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
 
     # تجهيز مجلد الوسائط ونسخ نص البوست للحافظة لسهولة الرفع لـ TikTok / Instagram
     copy_to_windows_clipboard(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
