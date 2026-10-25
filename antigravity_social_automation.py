@@ -1294,19 +1294,25 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         video_path = str(vid_files[0])
         print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
 
-    # تجهيز ملفات نصوص صريحة ومستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs
+    # تجهيز ملفات نصوص صريحة ومستقلة لكل منصة (فيسبوك، إنستجرام، تيك توك، بلوجر، وريديت) بتاريخ اليوم
     date_str = datetime.now().strftime("%Y-%m-%d")
     full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
+    blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n{blogger_post['html_content']}"
+    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n**استشارة مجانية عبر واتساب:** 01155803307\n**كود الخصم:** HT10 (شحن مجاني ومعاينة قبل الدفع)\n\n{tmpl['hashtags']}"
     
     (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(full_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(full_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[نص_منشور_فيسبوك].txt").write_text(full_caption, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[مقال_مدونة_جوجل_Blogger].txt").write_text(blogger_text, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[منشور_ومقال_Reddit].txt").write_text(reddit_text, encoding="utf-8")
     
     copy_to_windows_clipboard(full_caption)
     print(f"\n📄 [تم إنشاء ملفات النصوص المستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs]:")
+    print(f"   • {date_str}_[نص_منشور_فيسبوك].txt")
     print(f"   • {date_str}_[نص_بوست_وستوري_إنستجرام].txt")
     print(f"   • {date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt")
-    print(f"   • {date_str}_[نص_منشور_فيسبوك].txt")
+    print(f"   • {date_str}_[مقال_مدونة_جوجل_Blogger].txt")
+    print(f"   • {date_str}_[منشور_ومقال_Reddit].txt")
 
     # فتح مجلد التصميمات والفيديو تلقائياً في Windows Explorer (يحتوي على بوست إنستجرام المربع، وبطاقة الستوري، وفيديو تيك توك)
     try:
