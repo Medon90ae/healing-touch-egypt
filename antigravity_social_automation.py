@@ -971,35 +971,41 @@ def publish_facebook_graph_api(post_data: dict, image_path_or_url: str = "") -> 
 
 
 # بيانات إنستجرام الرسمية للنشر المباشر
-IG_USER_ID = os.getenv("IG_USER_ID", "17841412512402415")
+IG_USER_ID = os.getenv("IG_USER_ID", "27911522148524499")
 INSTAGRAM_ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN", "IGAAT1F8BF5HBBZAGE1RXlsX3JiNENqUFNfMVVRVGpkSXBQalNLell2UXFjZAGhucUJyb3dxeHhHbF9DNXJQekdNVUlUUGVLQmdreW95OGZAwYW8zaVhSNVB1OFhycjJqdkl4UTdneExPZA2FGTUtpaHZAKSUQ1TVF3Tk5tMnRjVGgzUQZDZD")
 
 
 def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
-    """نشر تلقائي للبوست على حساب Instagram Business المرتبط."""
-    if not INSTAGRAM_ACCESS_TOKEN or not IG_USER_ID:
+    """نشر تلقائي للبوست على حساب Instagram Business المرتبط عبر Meta Graph API."""
+    user_id = os.getenv("IG_USER_ID", IG_USER_ID)
+    token = os.getenv("INSTAGRAM_ACCESS_TOKEN", INSTAGRAM_ACCESS_TOKEN)
+    if not token or not user_id:
         return False
     try:
-        # إذا كانت الصورة محلية نستخدم رابط استضافة الموقع أو المنشور
-        media_url = image_url if image_url.startswith("http") else "https://medon90ae.github.io/healing-touch-egypt/assets/og-image.jpg"
-        print(f"[Instagram API] جاري النشر على حساب إنستجرام ({IG_USER_ID})...")
+        # استخدام رابط صورة عام وموثوق معتمد لدى خوادم إنستجرام
+        media_url = image_url if image_url.startswith("http") else "https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg"
+        print(f"[Instagram API] جاري النشر التلقائي المباشر على إنستجرام (@mohamedahmedalahmady)...")
         create_res = requests.post(
-            f"https://graph.instagram.com/v21.0/{IG_USER_ID}/media",
-            data={"image_url": media_url, "caption": caption, "access_token": INSTAGRAM_ACCESS_TOKEN},
-            timeout=30,
+            f"https://graph.instagram.com/v21.0/{user_id}/media",
+            data={"image_url": media_url, "caption": caption[:2100], "access_token": token},
+            timeout=35,
         ).json()
         if "id" in create_res:
             creation_id = create_res["id"]
             publish_res = requests.post(
-                f"https://graph.instagram.com/v21.0/{IG_USER_ID}/media_publish",
-                data={"creation_id": creation_id, "access_token": INSTAGRAM_ACCESS_TOKEN},
-                timeout=30,
+                f"https://graph.instagram.com/v21.0/{user_id}/media_publish",
+                data={"creation_id": creation_id, "access_token": token},
+                timeout=35,
             ).json()
             if "id" in publish_res:
-                print(f"[+] 📸 تم النشر تلقائياً على إنستجرام بنجاح! ID: {publish_res['id']}")
+                print(f"[+] 📸 تم النشر تلقائياً وحياً على إنستجرام بنجاح! Post ID: {publish_res['id']}")
                 return True
+            else:
+                print(f"[!] خطأ نشر إنستجرام في مرحلة النشر: {publish_res}")
+        else:
+            print(f"[!] خطأ نشر إنستجرام في مرحلة إنشاء الحاوية: {create_res}")
     except Exception as e:
-        print(f"[!] تنبيه نشر إنستجرام: {e}")
+        print(f"[!] استثناء نشر إنستجرام: {e}")
     return False
 
 
