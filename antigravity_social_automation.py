@@ -72,9 +72,10 @@ BLOGGER_DIR = MEDIA_DIR / "blogger_posts"
 NOTEBOOKLM_DIR = MEDIA_DIR / "notebooklm_hub"
 NOTEBOOK_AUDIO_DIR = NOTEBOOKLM_DIR / "audio_inputs"
 NOTEBOOK_ARCHIVE_DIR = NOTEBOOKLM_DIR / "daily_sources_archive"
+NOTEBOOK_PIC_DIR = NOTEBOOKLM_DIR / "pic"
 MANUAL_INBOX_DIR = MEDIA_DIR / "manual_inbox"
 
-for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR, NOTEBOOK_ARCHIVE_DIR, MANUAL_INBOX_DIR):
+for d in (MEDIA_DIR, CASES_DIR, BRANDED_DIR, BLOGGER_DIR, NOTEBOOKLM_DIR, NOTEBOOK_AUDIO_DIR, NOTEBOOK_ARCHIVE_DIR, NOTEBOOK_PIC_DIR, MANUAL_INBOX_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 PUBLISHED_LOG_PATH = BASE_DIR / "published_posts_log.json"
@@ -849,6 +850,25 @@ def export_notebooklm_master_source() -> str:
 
     print(f"[+] 🧠 تم إنشاء ملف المصدر المؤرخ بالوقت بنجاح: {out_file.name}")
     print(f"[+] 📁 تم حفظ نسخة في أرشيف الترندات الزمني: {archive_file}")
+
+    # جلب صور طبية جديدة من Pexels و Pixabay وحفظها في مجلد pic بأسماء المنصات والتاريخ
+    try:
+        print("\n[*] 📸 جاري جلب صور طبية جديدة من Pexels و Pixabay لمجلد pic...")
+        cat_samples = [("c-section", "ولادة قيصرية"), ("rhinoplasty", "تجميل أنف"), ("bariatric", "تكميم سمنة"), ("thyroid", "غدة درقية")]
+        for cat_k, cat_name in cat_samples:
+            photo = get_clinical_case_photo(f"حالة {cat_name}", cat_k)
+            src_img = photo.get("local_path", "")
+            if src_img and os.path.isfile(src_img):
+                src_p = Path(src_img)
+                # نسخ الصورة باسم فيسبوك وإنستجرام وتيك توك مع التاريخ والوقت
+                fb_pic = NOTEBOOK_PIC_DIR / f"{timestamp_filename}_[فيسبوك_وإنستجرام]_{cat_k}_{src_p.name}"
+                story_pic = NOTEBOOK_PIC_DIR / f"{timestamp_filename}_[تيكتوك_وستوري]_{cat_k}_{src_p.name}"
+                shutil.copy2(src_img, fb_pic)
+                shutil.copy2(src_img, story_pic)
+        print(f"[+] 🖼️ تم تنزيل وتنظيم الصور الطبية بنجاح في: {NOTEBOOK_PIC_DIR}")
+    except Exception as e:
+        print(f"[!] تنبيه جلب الصور لمجلد pic: {e}")
+
     return str(out_file)
 
 
@@ -1350,9 +1370,10 @@ def main():
         print(f"1. تم تحديث الملف المرجعي الحامل للتعليمات الصارمة:\n   👉 {src_path}")
         print("2. جاري فتح صفحة Google NotebookLM في متصفحك لرفع الملف أو تحديثه...")
         open_url_in_default_browser("https://notebooklm.google.com/")
-        print("3. جاري فتح مجلد الحزمة على جهازك لسهولة سحبه إلى المتصفح...")
+        print("3. جاري فتح مجلد الحزمة ومجلد الصور الطبية pic على جهازك...")
         try:
             os.startfile(str(NOTEBOOKLM_DIR))
+            os.startfile(str(NOTEBOOK_PIC_DIR))
         except Exception:
             pass
         print("4. بعد الضغط على 'Generate Audio Overview' في المتصفح وتنزيل الصوت:")
