@@ -776,8 +776,17 @@ def export_notebooklm_master_source() -> str:
         md_lines.append(story["story_text"])
         md_lines.append(f"**الهاشتاجات:** {story['hashtags']}\n")
 
+    try:
+        from github_seo_trend_engine import harvest_live_egypt_trends
+        live_map = harvest_live_egypt_trends()
+        md_lines.append("\n---\n## 📈 ثالثاً: مؤشر ترندات واستفسارات المرضى الصاعدة في بحث جوجل مصر (Live Egypt Search Trends):")
+        for cat_k, q_list in live_map.items():
+            md_lines.append(f"- **{cat_k}:** {' ، '.join(q_list[:6])}")
+    except Exception:
+        pass
+
     md_lines.append(
-        "\n---\n## 💡 ثالثاً: أوامر مقترحة (Prompts) للنسخ داخل Google NotebookLM:\n"
+        "\n---\n## 💡 رابعاً: أوامر مقترحة (Prompts) للنسخ داخل Google NotebookLM:\n"
         "1. **لتوليد بودكاست صوتي (Audio Overview):**\n"
         '   `ناقشا باللهجة المصرية الودودة والاحترافية مشاكل الأمهات بعد الولادة القيصرية وحالات تجميل الأنف والتكميم، وكيف تساعدهم منتجات هيلينج تاتش الطبية الأصلية مع كود الخصم HT10 والاستشارة المجانية مع أخصائية التعافي.`\n'
         "2. **لتوليد سكربتات فيديوهات ريلز وتيك توك:**\n"
@@ -948,14 +957,30 @@ def open_tabs_in_default_windows_browser(fb_post_url: str, problems_df: pd.DataF
 
 
 def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = False) -> tuple[bool, str]:
-    """الدورة الموحدة الشاملة: اختيار الحالة + صورة جديدة + تصميم كانفا + فيديو ريلز + بلوجر + NotebookLM + نشر."""
+    """الدورة الموحدة الشاملة: رصد الترند الصاعد + اختيار الحالة + صورة جديدة + تصميم كانفا + فيديو ريلز + بلوجر + NotebookLM + نشر."""
     print("=" * 65)
-    print("🌿 هيلينج تاتش مصر | المحرك الشامل للتصميم والفيديو والنشر")
+    print("🌿 هيلينج تاتش مصر | المحرك الشامل للتصميم والفيديو والترندات والنشر")
     print("=" * 65)
 
     chosen_idx = get_next_template_index(template_idx)
-    tmpl = CLINICAL_STORIES_TEMPLATES[chosen_idx]
+    tmpl = dict(CLINICAL_STORIES_TEMPLATES[chosen_idx])
     print(f"[*] 📖 [حالة رقم {chosen_idx + 1} من {len(CLINICAL_STORIES_TEMPLATES)}]: {tmpl['title']}")
+
+    # 1. سحب الترندات الصاعدة الحية من جوجل مصر وانعكاسها على البوست والهاشتاجات
+    live_trends_list = []
+    try:
+        from github_seo_trend_engine import harvest_live_egypt_trends, convert_query_to_hashtag
+        cat_lookup = "thyroid-gynecomastia" if tmpl["category"] == "thyroid" else tmpl["category"]
+        live_trends_list = harvest_live_egypt_trends().get(cat_lookup, [])
+        if live_trends_list:
+            print(f"[*] 🔥 ترندات جوجل مصر الصاعدة المرصودة لهذه الحالة: {live_trends_list[:4]}")
+            trend_line = f"\n\n📈 من أكثر تساؤلات الحالات الصاعدة في بحث جوجل مصر هذا الأسبوع:\n• " + "\n• ".join(live_trends_list[:3])
+            tmpl["story_text"] = tmpl["story_text"] + trend_line
+            live_tags = " ".join([convert_query_to_hashtag(q) for q in live_trends_list[:4] if len(q.split()) <= 5])
+            if live_tags:
+                tmpl["hashtags"] = f"{tmpl['hashtags']} {live_tags}"
+    except Exception as e:
+        print(f"[!] تنبيه سحب الترندات الحية: {e}")
 
     photo_info = get_clinical_case_photo(tmpl["title"], tmpl["category"])
     raw_img = photo_info.get("local_path", "")
@@ -989,9 +1014,10 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"3. فيديو TikTok & Reels MP4: {video_path}")
         print(f"4. مقال مدونة جوجل (Blogger): {blogger_post['file_path']}")
         print(f"5. حزمة Google NotebookLM: {notebook_file}")
-        print("\nالنص السريري:")
+        print(f"6. سجل الترندات الصاعدة الحية: {BASE_DIR / 'media_assets' / 'live_trends_registry.json'}")
+        print("\nالنص السريري (مدمج بالترندات الصاعدة):")
         print(tmpl["story_text"])
-        print("\nالهاشتاجات:")
+        print("\nالهاشتاجات (مدمجة بهاشتاجات الترند الحي):")
         print(tmpl["hashtags"])
         print("=" * 65)
         return True, ""

@@ -419,14 +419,22 @@ def get_clinical_cluster_articles(products: list) -> list:
                 spec["p3_tpl"].format(name_ar=p["name_ar"], short_title=p["short_title"]),
             ]
 
-            # تجهيز الهاشتاجات السريرية الـ 25-30 (R7)
+            # تجهيز الهاشتاجات السريرية الـ 25-30 + ترندات جوجل الحية (R7)
             hashtags_dict = generate_article_hashtags(p, spec["angle_type"])
+            live_cat_trends = harvest_live_egypt_trends().get(p["category"], [])
+            trends_kw_str = "، ".join(live_cat_trends[:6])
 
             # تجهيز جدول المقارنة السريري (R2)
             comp_table = generate_comparison_table_data(p)
 
-            # الأسئلة الشائعة الخاصة بالمقال
-            faqs = p.get("faq", [])[:3]
+            # الأسئلة الشائعة الخاصة بالمقال + حقن سؤال الترند الصاعد في مصر
+            faqs = list(p.get("faq", [])[:3])
+            if live_cat_trends:
+                top_trend_q = live_cat_trends[0]
+                faqs.append({
+                    "question": f"ما هو الرأي الطبي الصحيح بخصوص ({top_trend_q})؟",
+                    "answer": f"يُعد استفسار ({top_trend_q}) من أكثر ما يبحث عنه المرضى في مصر حالياً؛ ويؤكد البروتوكول السريري أن استخدام {p['name_ar']} الأصلي بالطريقة الصحيحة مع الاستشارة المجانية مع أخصائية العناية بالتعافي يضمن أفضل نتائج التئام وأمان تام."
+                })
 
             articles.append({
                 "id": art_id,
@@ -439,7 +447,7 @@ def get_clinical_cluster_articles(products: list) -> list:
                 "category_label": p["category_label"],
                 "angle_type": spec["angle_type"],
                 "title": title,
-                "keywords": f"{p['name_ar']}، علاج الندبات، تعافي الجراحة، {p['category_label']}",
+                "keywords": f"{p['name_ar']}، علاج الندبات، تعافي الجراحة، {p['category_label']}" + (f"، {trends_kw_str}" if trends_kw_str else ""),
                 "hook_summary": hook,
                 "quick_takeaways": takeaways,
                 "content_paragraphs": paragraphs,
@@ -447,6 +455,7 @@ def get_clinical_cluster_articles(products: list) -> list:
                 "hashtags": hashtags_dict,
                 "comparison_table": comp_table,
                 "faqs": faqs,
+                "live_trends": live_cat_trends[:5],
             })
             art_id += 1
 
@@ -454,14 +463,90 @@ def get_clinical_cluster_articles(products: list) -> list:
 
 
 # -----------------------------------------------------------------------------
+# رادار الترندات الصاعدة الحية في مصر (Live Google Egypt Trend Radar - Zero API Keys)
+# -----------------------------------------------------------------------------
+LIVE_TRENDS_FILE = BASE_DIR / "media_assets" / "live_trends_registry.json"
+_LIVE_TRENDS_CACHE = None
+
+
+def harvest_live_egypt_trends() -> dict:
+    """
+    يسحب لحظياً من محرك بحث جوجل مصر (gl=eg) ويوتيوب مصر أحدث الكلمات والأسئلة الصاعدة
+    ويقارنها بالسجل التاريخي لاكتشاف الترندات الجديدة وحقنها في الموقع والهاشتاجات والبوستات.
+    """
+    global _LIVE_TRENDS_CACHE
+    if _LIVE_TRENDS_CACHE is not None:
+        return _LIVE_TRENDS_CACHE
+
+    seeds_by_cat = {
+        "c-section": ["جرح القيصرية ", "ندبة القيصرية ", "شيت سيليكون ", "الاستحمام بعد القيصرية "],
+        "rhinoplasty": ["تورم الانف بعد ", "لصقات الانف بعد ", "عملية تجميل الانف ", "فتحات الانف بعد "],
+        "bariatric": ["جروح التكميم ", "اثار عملية التكميم ", "الاستحمام بعد عملية "],
+        "thyroid-gynecomastia": ["جرح عملية الغدة ", "عملية التثدي ", "ندبة الرقبة "],
+    }
+
+    previous_data = {}
+    if LIVE_TRENDS_FILE.exists():
+        try:
+            previous_data = json.loads(LIVE_TRENDS_FILE.read_text(encoding="utf-8")).get("categories", {})
+        except Exception:
+            previous_data = {}
+
+    harvested = {}
+    rising_alerts = []
+
+    for cat, seeds in seeds_by_cat.items():
+        cat_queries = []
+        old_set = set(previous_data.get(cat, []))
+        for seed in seeds:
+            try:
+                url = f"https://suggestqueries.google.com/complete/search?client=firefox&hl=ar&gl=eg&q={urllib.parse.quote(seed)}"
+                res = requests.get(url, timeout=5)
+                if res.status_code == 200:
+                    suggestions = res.json()[1]
+                    for s in suggestions[:5]:
+                        s_clean = s.strip()
+                        if s_clean and s_clean not in cat_queries and not any(bad in s_clean for bad in ["حرام", "حلال", "بالانجليزي"]):
+                            cat_queries.append(s_clean)
+                            if s_clean not in old_set:
+                                rising_alerts.append({"category": cat, "query": s_clean})
+            except Exception:
+                pass
+        harvested[cat] = cat_queries[:12]
+
+    LIVE_TRENDS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "updated_at": datetime.datetime.now().isoformat(),
+        "categories": harvested,
+        "rising_breakouts": rising_alerts[:15],
+    }
+    try:
+        LIVE_TRENDS_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+    _LIVE_TRENDS_CACHE = harvested
+    print(f"[+] 📈 رادار ترندات جوجل مصر: تم رصد وتحديث {sum(len(v) for v in harvested.values())} كلمة بحث صاعدة عبر المشروع.")
+    return harvested
+
+
+def convert_query_to_hashtag(query_str: str) -> str:
+    clean = re.sub(r"[^\w\s\u0600-\u06FF]", "", query_str).strip()
+    tag = "#" + re.sub(r"\s+", "_", clean)
+    return tag
+
+
+# -----------------------------------------------------------------------------
 # محرك الهاشتاجات المصرية عالية النية (R7 Egyptian Patient Hashtags Engine)
 # -----------------------------------------------------------------------------
 def generate_article_hashtags(product: dict, angle: str) -> dict:
     """
-    توليد 25–30 هاشتاج مصري عالي النية مقسم إلى 4 فئات سريرية واجتماعية (R7).
+    توليد 25–30 هاشتاج مصري عالي النية مقسم إلى 4 فئات سريرية واجتماعية + ترندات جوجل الحية.
     """
     cat = product.get("category", "")
     p_id = product.get("id", "")
+    live_trends = harvest_live_egypt_trends().get(cat, [])
+    live_tags = [convert_query_to_hashtag(q) for q in live_trends[:4] if len(q.split()) <= 5]
 
     # 1. الجراحة والتخصص الطبي (6-8)
     surgeries_tags = ["#جراحة_تجميل_مصر", "#دكتور_تجميل_مصر", "#عمليات_مصر"]
@@ -474,11 +559,11 @@ def generate_article_hashtags(product: dict, angle: str) -> dict:
     else:
         surgeries_tags.extend(["#استئصال_الغدة_الدرقية", "#عملية_التثدي_للرجال", "#جراحة_الرقبة", "#جراحة_الصدر", "#دكتور_غدد_مصر"])
 
-    # 2. المشكلة والندبات والتعافي (7-9)
-    issues_tags = [
+    # 2. المشكلة والندبات والتعافي + الترندات الصاعدة الحية (7-9)
+    issues_tags = list(dict.fromkeys(live_tags + [
         "#علاج_الندبات", "#اثار_العمليات_الجراحية", "#تسطيح_الندبات",
         "#الكلويد", "#الندبات_المتضخمة", "#التئام_الجروح", "#العناية_بعد_العملية", "#اثار_الخياطة"
-    ]
+    ]))
     if "rhinoplasty" in cat:
         issues_tags.extend(["#تورم_الانف_بعد_العملية", "#ارنبة_الانف", "#تماثل_فتحات_الانف"])
     else:
