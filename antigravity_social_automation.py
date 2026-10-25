@@ -1058,32 +1058,33 @@ def publish_to_blogger_webhook(blogger_post: dict) -> bool:
     return False
 
 
-def open_tabs_in_default_windows_browser(fb_post_url: str, problems_df: pd.DataFrame, open_groups_radar: bool = True):
-    if fb_post_url:
-        print(f"\n[🔗 فيسبوك] فتح رابط البوست المنشور على صفحتك:\n    {fb_post_url}")
-        open_url_in_default_browser(fb_post_url)
+def open_tabs_in_default_windows_browser(fb_post_url: str = "", blogger_post_file: str = ""):
+    """فتح روابط المنصات المطلوبة للنشر والمراجعة ومجلدات العمل تلقائياً وبشكل نظيف وسلس."""
+    print("\n" + "=" * 65)
+    print("🌐 [روابط النشر والتحقق السريع في المتصفح]:")
+    print("=" * 65)
 
-    if open_groups_radar:
-        print("\n[🔍 رادار الجروبات] فتح تبويبات البحث عن مشاكل العملاء في متصفحك الافتراضي...")
-        first_reply_copied = False
-        if problems_df is not None and not problems_df.empty:
-            for idx, row in problems_df.iterrows():
-                keywords_raw = str(row.get("الكلمات البحثية لرصد المشكلة", ""))
-                smart_reply = str(row.get("نص الرد التفاعلي الجاهز لجذب العميل (80% نصيحة + 20% توجيه للصفحة)", ""))
-                parts = [p.strip() for p in keywords_raw.replace(",", "،").split("،") if p.strip()]
-                if not parts:
-                    continue
-                first_keyword = f"{parts[0]} {parts[1]}" if (len(parts) > 1 and (len(parts[0].split()) == 1 or parts[0] == "عدم تماثل")) else parts[0]
-                search_url = f"https://www.facebook.com/search/posts?q={urllib.parse.quote(first_keyword)}"
-                if not first_reply_copied and smart_reply:
-                    copy_to_windows_clipboard(smart_reply)
-                    first_reply_copied = True
-                    print(f"\n📋 [تم نسخ أول رد استشاري في الحافظة Clipboard جاهز للصق Ctrl+V]:\n   {smart_reply}\n")
-                print(f"   • فتح تبويب بحث ({idx + 1}): '{first_keyword}'")
-                open_url_in_default_browser(search_url)
-        else:
-            for kw in DEFAULT_SURGICAL_KEYWORDS:
-                open_url_in_default_browser(f"https://www.facebook.com/search/posts?q={urllib.parse.quote(kw)}")
+    # 1. فتح بوست فيسبوك المنشور حديثاً
+    if fb_post_url:
+        print(f"   • [فيسبوك] عرض المنشور المباشر: {fb_post_url}")
+        open_url_in_default_browser(fb_post_url)
+    else:
+        open_url_in_default_browser(f"https://www.facebook.com/{FB_PAGE_ID}")
+
+    # 2. فتح مدونة جوجل Blogger للمعاينة والمراجعة
+    blogger_url = f"https://draft.blogger.com/blog/posts/{BLOGGER_BLOG_ID}"
+    print(f"   • [بلوجر] عرض مدونة جوجل: {blogger_url}")
+    open_url_in_default_browser(blogger_url)
+
+    # 3. فتح صفحة رفع البوست لإنستجرام
+    ig_upload_url = "https://www.instagram.com/"
+    print(f"   • [إنستجرام] فتح صفحة إنستجرام للرفع المباشر: {ig_upload_url}")
+    open_url_in_default_browser(ig_upload_url)
+
+    # 4. فتح صفحة رفع الفيديو لتيك توك
+    tiktok_upload_url = "https://www.tiktok.com/creator-center/upload?from=upload"
+    print(f"   • [تيك توك] فتح صفحة رفع فيديو تيك توك: {tiktok_upload_url}")
+    open_url_in_default_browser(tiktok_upload_url)
 
 
 def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = False) -> tuple[bool, str]:
@@ -1127,15 +1128,15 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     generate_blogger_atom_xml([blogger_post])
     notebook_file = export_notebooklm_master_source()
 
-    # تجهيز مجلد الوسائط ونسخ نص البوست للحافظة لسهولة الرفع اليدوي لـ TikTok / Instagram
+    # تجهيز مجلد الوسائط ونسخ نص البوست للحافظة لسهولة الرفع لـ TikTok / Instagram
     copy_to_windows_clipboard(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
     print(f"\n📋 [تم نسخ كابشن إنستجرام وتيك توك كاملاً في الحافظة Clipboard جاهز للصق Ctrl+V]")
 
-    # فتح مجلد التصميمات والفيديو تلقائياً في Windows Explorer
+    # فتح مجلد التصميمات والفيديو تلقائياً في Windows Explorer (يحتوي على بوست إنستجرام المربع، وبطاقة الستوري، وفيديو تيك توك)
     try:
         branded_dir = str(BASE_DIR / "media_assets" / "branded_designs")
         os.startfile(branded_dir)
-        print(f"📂 [تم فتح مجلد التصميمات والفيديوهات تلقائياً]: {branded_dir}")
+        print(f"📂 [تم فتح مجلد محتوى إنستجرام وتيك توك (الصور والفيديوهات)]: {branded_dir}")
     except Exception as e:
         print(f"[!] تنبيه فتح المجلد: {e}")
 
@@ -1162,6 +1163,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print("\nالهاشتاجات (مدمجة بهاشتاجات الترند الحي):")
         print(tmpl["hashtags"])
         print("=" * 65)
+        # فتح تبويبات المتصفح المطلوبة حتى في وضع المعاينة
+        open_tabs_in_default_windows_browser(fb_post_url="", blogger_post_file=blogger_post['file_path'])
         return True, ""
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
@@ -1169,6 +1172,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     publish_to_reddit_api(tmpl["title"], f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
+    # فتح تبويبات المتصفح المطلوبة فوراً
+    open_tabs_in_default_windows_browser(fb_post_url=permalink, blogger_post_file=blogger_post['file_path'])
     return ok, permalink
 
 
@@ -1200,26 +1205,17 @@ def main():
         return
 
     if args.mode == "groups":
-        problems_df = fetch_sheet_tab(PROBLEMS_TAB_NAME)
-        open_tabs_in_default_windows_browser(fb_post_url="", problems_df=problems_df, open_groups_radar=True)
+        print("[*] تم دمج واستيعاب كلمات رادار الجروبات والترندات تلقائياً داخل قاعدة بيانات محرك السيو والمحتوى بدون الحاجة لفتح نوافذ يدوية.")
         return
 
     if args.mode == "open-latest":
         log = load_published_log()
         latest_url = log[-1].get("permalink_url", "") if log else f"https://www.facebook.com/{FB_PAGE_ID}"
-        problems_df = fetch_sheet_tab(PROBLEMS_TAB_NAME)
-        open_tabs_in_default_windows_browser(fb_post_url=latest_url, problems_df=problems_df, open_groups_radar=True)
+        open_tabs_in_default_windows_browser(fb_post_url=latest_url)
         return
 
     is_dry = args.dry_run or (args.mode == "dry-run")
     ok, permalink = run_unified_studio_and_publish(template_idx=args.index, dry_run=is_dry)
-
-    if not is_dry and args.mode == "all":
-        try:
-            problems_df = fetch_sheet_tab(PROBLEMS_TAB_NAME)
-        except Exception:
-            problems_df = pd.DataFrame()
-        open_tabs_in_default_windows_browser(fb_post_url=permalink, problems_df=problems_df, open_groups_radar=True)
 
 
 if __name__ == "__main__":
