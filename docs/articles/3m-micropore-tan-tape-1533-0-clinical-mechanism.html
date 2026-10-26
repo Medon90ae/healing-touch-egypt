@@ -1185,6 +1185,11 @@
 
     /* تفعيل الـ Micro-Popup Drawer (R3) */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
+      if (contextTopic === 'whatsapp' || contextTopic === 'instagram') {
+        const tmp = contextTopic;
+        contextTopic = preferredChannel;
+        preferredChannel = tmp;
+      }
       currentPendingContext = {
         topic: contextTopic || document.title,
         channel: preferredChannel || 'whatsapp',
@@ -1504,7 +1509,7 @@
       <h3>هل لديكِ سؤال يخص مرحلة جرحكِ أو تريدين التأكد من المقاس والتوقيت المناسب؟</h3>
       <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع</strong> بكود <strong>HT10</strong>.</p>
       <div class="triage-actions">
-        <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8." data-topic="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore" class="btn-free-chat">
+        <a href="javascript:void(0)" onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp'); return false;" data-topic="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore" class="btn-free-chat">
           💬 احصلي على استشارة مجانية الآن عبر واتساب (01155803307)
         </a>
         <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">

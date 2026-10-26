@@ -282,6 +282,23 @@ def load_products_registry() -> list:
     return []
 
 
+def extract_numeric_price(clean_price: str) -> int:
+    """استخراج قيمة السعر بالأرقام الصحيحة بدقة، مع استبعاد المقاسات والكميات (مثل 1.25 سم أو 5-10 قطع)."""
+    m = re.findall(r"(?:بـ\s*)?(\d+)(?:\s*-\s*\d+)?\s*(?:ج\.م|جنيه|ج|EGP)", clean_price)
+    if m:
+        val = int(m[0])
+        if val >= 50:
+            return val
+    m2 = re.findall(r"(?:بـ|EGP)\s*(\d+)", clean_price)
+    if m2:
+        val = int(m2[0])
+        if val >= 50:
+            return val
+    cleaned = re.sub(r"\d+(?:\.\d+)?\s*(?:سم|قطع|قطعة|مل|ملم|متر|بوصة|أمتار)", "", clean_price)
+    cands = [int(d) for d in re.findall(r"\d+", cleaned) if int(d) >= 50]
+    return cands[0] if cands else 0
+
+
 def sync_live_prices_from_sheet(products: list) -> list:
     """سحب وتحديث أحدث أسعار المنتجات مباشرة من Google Sheet حياً في كل عملية بناء (R6 Price Sync)."""
     try:
@@ -314,9 +331,9 @@ def sync_live_prices_from_sheet(products: list) -> list:
                     new_price_str = price_updates[p_id]
                     clean_price = sanitize_arabic_copy(new_price_str)
                     prod["price_display"] = clean_price
-                    digits = re.findall(r"\d+", clean_price)
-                    if digits:
-                        prod["price_value"] = int(digits[0])
+                    val = extract_numeric_price(clean_price)
+                    if val > 0:
+                        prod["price_value"] = val
                     updated_count += 1
 
             if updated_count > 0:
@@ -2102,6 +2119,11 @@ def get_shared_js(cfg: dict) -> str:
 
     /* تفعيل الـ Micro-Popup Drawer (R3) */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {{
+      if (contextTopic === 'whatsapp' || contextTopic === 'instagram') {{
+        const tmp = contextTopic;
+        contextTopic = preferredChannel;
+        preferredChannel = tmp;
+      }}
       currentPendingContext = {{
         topic: contextTopic || document.title,
         channel: preferredChannel || 'whatsapp',
@@ -2473,7 +2495,7 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
 
     <!-- أزرار الاستشارة المباشرة -->
     <div class="triage-actions" style="margin: 22px 0;">
-      <a href="{wa_consult_link}" data-topic="استفسار عن {prod['short_title']}" class="btn-free-chat">
+      <a href="javascript:void(0)" onclick="openPromoDrawer('استفسار عن {prod['short_title']}', 'whatsapp'); return false;" data-topic="استفسار عن {prod['short_title']}" class="btn-free-chat">
         💬 استشارة مجانية: هل يناسب حالتي؟
       </a>
       <button onclick="openPromoDrawer('استفسار عن {prod['short_title']}', 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
@@ -2732,7 +2754,7 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
       <h3>هل لديكِ سؤال يخص مرحلة جرحكِ أو تريدين التأكد من المقاس والتوقيت المناسب؟</h3>
       <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>{offer["offer_title"]}</strong> بكود <strong>{offer["code"]}</strong>.</p>
       <div class="triage-actions">
-        <a href="{wa_article_link}" data-topic="{clean_title}" class="btn-free-chat">
+        <a href="javascript:void(0)" onclick="openPromoDrawer('{clean_title}', 'whatsapp'); return false;" data-topic="{clean_title}" class="btn-free-chat">
           💬 احصلي على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
         </a>
         <button onclick="openPromoDrawer('{clean_title}', 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">

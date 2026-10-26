@@ -665,7 +665,7 @@ def generate_tiktok_reel_video(story_card_path: str, duration_sec: int = 8) -> s
         ]
 
     try:
-        subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=90)
         if out_mp4.exists():
             print(f"[+] 🚀 تم إنشاء فيديو TikTok/Reels: {out_mp4.name}")
             return str(out_mp4)
@@ -1256,6 +1256,22 @@ def open_tabs_in_default_windows_browser(fb_post_url: str = "", blogger_post_fil
     open_url_in_default_browser(tiktok_upload_url)
 
 
+def read_resilient_text(file_path: Path) -> str:
+    """قراءة مرنة للنصوص العربية بمختلف التراميز (UTF-8, Windows-1256 ANSI, مع استبدال الأخطاء كخيار أخير لمنع الانهيار)."""
+    try:
+        raw_bytes = file_path.read_bytes()
+    except Exception as e:
+        print(f"[!] خطأ قراءة الملف {file_path.name}: {e}")
+        return ""
+
+    for enc in ("utf-8", "cp1256", "windows-1256"):
+        try:
+            return raw_bytes.decode(enc)
+        except (UnicodeDecodeError, LookupError):
+            continue
+    return raw_bytes.decode("utf-8", errors="replace")
+
+
 def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = False) -> tuple[bool, str]:
     """الدورة الموحدة الشاملة: رصد الترند الصاعد + اختيار الحالة + صورة جديدة + تصميم كانفا + فيديو ريلز + بلوجر + NotebookLM + نشر."""
     print("=" * 65)
@@ -1298,28 +1314,54 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     notebook_file = export_notebooklm_master_source()
 
     # فحص مجلد الاستقبال الموحد manual_inbox إن وضع المستخدم به أي مخرج من NotebookLM (نص، صوت، فيديو، صورة)
-    # 1. فحص الصوتيات الجديدة ونقلها أوتوماتيكياً لمجلد الصوت لدمجها فوراً
-    for aud_f in list(MANUAL_INBOX_DIR.glob("*.m4a")) + list(MANUAL_INBOX_DIR.glob("*.mp3")) + list(MANUAL_INBOX_DIR.glob("*.wav")):
+    # 1. فحص الصوتيات الجديدة ونقلها أوتوماتيكياً لمجلد الصوت لدمجها فوراً (التحقق من صحة الملف والحجم > 0)
+    aud_files = [
+        f for f in list(MANUAL_INBOX_DIR.glob("*.m4a")) + list(MANUAL_INBOX_DIR.glob("*.mp3")) + list(MANUAL_INBOX_DIR.glob("*.wav"))
+        if f.is_file() and f.stat().st_size > 0
+    ]
+    for aud_f in aud_files:
         dest_aud = NOTEBOOK_AUDIO_DIR / aud_f.name
         if not dest_aud.exists():
             shutil.copy2(str(aud_f), str(dest_aud))
             print(f"[+] 🎙️ تم التقاط ونقل ملف صوتي من manual_inbox إلى audio_inputs ({aud_f.name})!")
 
     # 2. فحص النصوص والمستندات (txt, md) المخصصة لحالة اليوم فقط
-    txt_files = sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
+    txt_files = [
+        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
+        if f.is_file() and f.stat().st_size > 0
+    ]
     if txt_files:
         # البحث عن ملف نصي يتطابق مع الحالة الحالية أو استبعاد الملف المجمع الشامل
         target_kw = "csection" if tmpl["category"] == "c-section" else ("rhino" if tmpl["category"] == "rhinoplasty" else ("bariatric" if tmpl["category"] == "bariatric" else "thyroid"))
-        matching_txt = next((f for f in txt_files if target_kw in f.name.lower()), None)
-        chosen_txt = matching_txt if matching_txt else next((f for f in txt_files if "notebooklm_exported_pack" not in f.name and "حزمة" not in f.name), None)
+        
+        def is_fallback_candidate(f: Path) -> bool:
+            lower = f.name.lower()
+            return (
+                f.stat().st_size <= 8000
+                and "clinical-content" not in lower
+                and "reference" not in lower
+                and "notebooklm_exported_pack" not in lower
+                and "حزمة" not in lower
+            )
+
+        matching_txt = next((f for f in txt_files if target_kw in f.name.lower() and is_fallback_candidate(f)), None)
+        chosen_txt = matching_txt if matching_txt else next((f for f in txt_files if is_fallback_candidate(f)), None)
         if chosen_txt:
-            custom_text = chosen_txt.read_text(encoding="utf-8").strip()
+            custom_text = read_resilient_text(chosen_txt).strip()
             if custom_text and len(custom_text) > 50:
-                print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ لحالة اليوم من manual_inbox ({chosen_txt.name})!")
+                # تقييد طول النص بحد أقصى 1500 حرف لضمان عدم تجاوز حدود كابشن إنستجرام (2200 حرف)
+                if len(custom_text) > 1500:
+                    truncated = custom_text[:1500]
+                    last_space = truncated.rfind(" ")
+                    custom_text = (truncated[:last_space] if last_space > 1200 else truncated) + "..."
+                print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ لحالة اليوم من manual_inbox ({chosen_txt.name}) [{len(custom_text)} حرف]!")
                 tmpl["story_text"] = custom_text
 
     # 3. فحص الصور والتصاميم المخصصة من المستخدم (jpg, png)
-    img_files = sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
+    img_files = [
+        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
+        if f.is_file() and f.stat().st_size > 0
+    ]
     if img_files:
         square_img_path = str(img_files[0])
         story_img_path = str(img_files[0])
@@ -1330,7 +1372,10 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         story_img_path = square_img_path
 
     # 4. فحص الفيديوهات المباشرة (mp4)
-    vid_files = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
+    vid_files = [
+        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
+        if f.is_file() and f.stat().st_size > 0
+    ]
     if vid_files:
         video_path = str(vid_files[0])
         print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
@@ -1338,6 +1383,12 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     # تجهيز ملفات نصوص صريحة ومستقلة لكل منصة (فيسبوك، إنستجرام، تيك توك، بلوجر، وريديت) بتاريخ اليوم
     date_str = datetime.now().strftime("%Y-%m-%d")
     full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
+    # التأكد التام من أن كابشن إنستجرام لا يتجاوز 2200 حرف تحت أي ظرف
+    if len(full_caption) > 2200:
+        max_story_len = max(100, 2200 - len(tmpl['hashtags']) - 4)
+        tmpl['story_text'] = tmpl['story_text'][:max_story_len].rsplit(" ", 1)[0] + "..."
+        full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
+
     blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n{blogger_post['html_content']}"
     reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n**استشارة مجانية عبر واتساب:** 01155803307\n**كود الخصم:** HT10 (شحن مجاني ومعاينة قبل الدفع)\n\n{tmpl['hashtags']}"
     

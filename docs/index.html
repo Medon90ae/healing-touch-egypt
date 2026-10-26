@@ -1184,6 +1184,11 @@
 
     /* تفعيل الـ Micro-Popup Drawer (R3) */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
+      if (contextTopic === 'whatsapp' || contextTopic === 'instagram') {
+        const tmp = contextTopic;
+        contextTopic = preferredChannel;
+        preferredChannel = tmp;
+      }
       currentPendingContext = {
         topic: contextTopic || document.title,
         channel: preferredChannel || 'whatsapp',
