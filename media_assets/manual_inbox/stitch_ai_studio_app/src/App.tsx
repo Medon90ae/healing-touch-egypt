@@ -1,208 +1,222 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useEffect } from 'react';
+import { CampaignId } from './types/campaign';
+import { CAMPAIGNS } from './data/campaignConfig';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { StageCalculator } from './components/StageCalculator';
-import { ProtocolKits } from './components/ProtocolKits';
-import { ClinicalComparison } from './components/ClinicalComparison';
-import { ShowerGuide } from './components/ShowerGuide';
-import { ReviewsAndFAQ } from './components/ReviewsAndFAQ';
-import { CheckoutDrawer } from './components/CheckoutDrawer';
-import { OrderLookupModal } from './components/OrderLookupModal';
-import { MobileStickyBar } from './components/MobileStickyBar';
+import { HeroSection } from './components/HeroSection';
+import { TrustAndSafety } from './components/TrustAndSafety';
+import { ClinicalArticle } from './components/ClinicalArticle';
+import { ScientificEvidence } from './components/ScientificEvidence';
+import { VisualStepGuide } from './components/VisualStepGuide';
+import { ClinicalCalculator } from './components/ClinicalCalculator';
+import { ProductCatalog } from './components/ProductCatalog';
+import { ProtocolTimeline } from './components/ProtocolTimeline';
+import { ReviewsAndDoctorEndorsement } from './components/ReviewsAndDoctorEndorsement';
+import { ClinicalFaq } from './components/ClinicalFaq';
+import { LeadGateModal } from './components/LeadGateModal';
+import { StickyMobileBar } from './components/StickyMobileBar';
 import { Footer } from './components/Footer';
-import { CartItem, Order } from './types/protocol';
-import { PROTOCOL_PRODUCTS } from './data/protocolData';
-import { CheckCircle2 } from 'lucide-react';
 
 export default function App() {
-  // Cart State (Initialized with default complete bundle for high-conversion seamless start)
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('healing_touch_cart');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        // fallback
+  // Campaign selector state, synced with URL query parameter ?campaign=...
+  const [activeCampaignId, setActiveCampaignId] = useState<CampaignId>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const queryCampaign = params.get('campaign') as CampaignId;
+      if (queryCampaign && CAMPAIGNS[queryCampaign]) {
+        return queryCampaign;
       }
     }
-    const bundle = PROTOCOL_PRODUCTS.find((p) => p.id === 'complete-protocol-bundle')!;
-    return [{ product: bundle, quantity: 1 }];
+    return 'c-section';
   });
 
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isOrdersOpen, setIsOrdersOpen] = useState(false);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const activeCampaign = CAMPAIGNS[activeCampaignId] || CAMPAIGNS['c-section'];
 
-  // Sync cart to localStorage
-  useEffect(() => {
-    localStorage.setItem('healing_touch_cart', JSON.stringify(cart));
-  }, [cart]);
+  // Lead Gate Modal & Selected Bundle state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBundleId, setSelectedBundleId] = useState<string>(
+    activeCampaign.bundles[0]?.id || ''
+  );
 
-  // Load orders from localStorage
-  useEffect(() => {
-    const savedOrders = localStorage.getItem('healing_touch_orders');
-    if (savedOrders) {
-      try {
-        setOrders(JSON.parse(savedOrders));
-      } catch {
-        // ignore
-      }
+  // Update URL parameter when campaign changes
+  const handleSelectCampaign = (id: CampaignId) => {
+    setActiveCampaignId(id);
+    setSelectedBundleId(CAMPAIGNS[id]?.bundles[0]?.id || '');
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('campaign', id);
+      window.history.pushState({}, '', url.toString());
     }
+  };
+
+  // Sync with browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const queryCampaign = params.get('campaign') as CampaignId;
+      if (queryCampaign && CAMPAIGNS[queryCampaign]) {
+        setActiveCampaignId(queryCampaign);
+        setSelectedBundleId(CAMPAIGNS[queryCampaign]?.bundles[0]?.id || '');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+  // Update default selected bundle when campaign changes
+  useEffect(() => {
+    if (!activeCampaign.bundles.find((b) => b.id === selectedBundleId)) {
+      setSelectedBundleId(activeCampaign.bundles[0]?.id || '');
+    }
+  }, [activeCampaignId, activeCampaign.bundles, selectedBundleId]);
+
+  const handleOpenLeadModal = (bundleId?: string) => {
+    if (bundleId) {
+      setSelectedBundleId(bundleId);
+    }
+    setIsModalOpen(true);
   };
 
-  const handleAddToCart = (productId: string) => {
-    const product = PROTOCOL_PRODUCTS.find((p) => p.id === productId);
-    if (!product) return;
-
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === productId);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
-    });
-
-    showToast(`تمت إضافة "${product.titleAr}" إلى سلة مشترياتك`);
-  };
-
-  const handleInstantBuy = (productId: string) => {
-    const product = PROTOCOL_PRODUCTS.find((p) => p.id === productId);
-    if (!product) return;
-
-    setCart((prev) => {
-      const exists = prev.some((item) => item.product.id === productId);
-      if (exists) return prev;
-      return [...prev, { product, quantity: 1 }];
-    });
-
-    setIsCheckoutOpen(true);
-  };
-
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== productId));
-  };
-
-  const handleClearCart = () => {
-    setCart([]);
-  };
-
-  const handleOrderPlaced = (newOrder: Order) => {
-    setOrders((prev) => [newOrder, ...prev]);
-    showToast(`تم تسجيل طلبك بنجاح برقم: ${newOrder.orderNumber}`);
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
+  const handleScrollToCalculator = () => {
+    const el = document.getElementById('clinical-calculator');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const handleScrollToCatalog = () => {
+    const el = document.getElementById('product-catalog');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Search navigation highlight state
+  const [highlightSectionId, setHighlightSectionId] = useState<string | null>(null);
+  const [highlightFaqIndex, setHighlightFaqIndex] = useState<number | null>(null);
+
+  const handleNavigateToSearchResult = (params: {
+    campaignId: CampaignId;
+    targetElementId: string;
+    sectionId?: string;
+    faqIndex?: number;
+  }) => {
+    // 1. Switch campaign if needed
+    if (params.campaignId !== activeCampaignId) {
+      handleSelectCampaign(params.campaignId);
+    }
+
+    // 2. Set highlight targets
+    setHighlightSectionId(params.sectionId || null);
+    setHighlightFaqIndex(typeof params.faqIndex === 'number' ? params.faqIndex : null);
+
+    // 3. Smooth scroll after DOM updates
+    setTimeout(() => {
+      const el = document.getElementById(params.targetElementId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        const fallbackId = typeof params.faqIndex === 'number' ? 'clinical-faq' : 'clinical-article';
+        const fallbackEl = document.getElementById(fallbackId);
+        fallbackEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+
+    // 4. Clear highlight after 4.5 seconds
+    setTimeout(() => {
+      setHighlightSectionId(null);
+      setHighlightFaqIndex(null);
+    }, 4500);
+  };
 
   return (
-    <div className="min-h-screen bg-[#fbfdfb] text-[#121c2a] flex flex-col font-sans selection:bg-[#059669]/20 selection:text-[#064e3b]">
-      
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#064e3b] text-white px-5 py-2.5 rounded-full shadow-lg text-xs font-semibold flex items-center gap-2 border border-[#82f5c1]/30 animate-in fade-in slide-in-from-top-4 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-[#82f5c1] shrink-0" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Top Bar Header */}
+    <div className="min-h-screen bg-[#FBFDFB] text-[#121C2A] flex flex-col font-sans selection:bg-[#82F5C1] selection:text-[#003527]">
+      {/* App Header with Campaign Switcher & Local Search Bar */}
       <Header
-        cartCount={totalCartCount}
-        onOpenCart={() => setIsCheckoutOpen(true)}
-        onOpenOrders={() => setIsOrdersOpen(true)}
-        onScrollTo={scrollToSection}
+        activeCampaignId={activeCampaignId}
+        onSelectCampaign={handleSelectCampaign}
+        onOpenLeadModal={handleOpenLeadModal}
+        onNavigateToSearchResult={handleNavigateToSearchResult}
       />
 
-      {/* Main Content Sections */}
+      {/* Main Content-First Educational & Clinical Portal */}
       <main className="flex-1">
-        {/* Hero Section */}
-        <Hero
-          onStartCalculator={() => scrollToSection('calculator')}
-          onExploreProtocol={() => scrollToSection('products')}
-          onInstantOrder={() => handleInstantBuy('complete-protocol-bundle')}
+        {/* 1. Hero Section with Clinical Packaging Mockup */}
+        <HeroSection
+          campaign={activeCampaign}
+          onOpenLeadModal={handleOpenLeadModal}
+          onScrollToCalculator={handleScrollToCalculator}
         />
 
-        {/* Interactive Recovery Stage & Shower Readiness Calculator */}
-        <StageCalculator
-          onSelectProduct={(id) => handleInstantBuy(id)}
-          onAddToCart={handleAddToCart}
+        {/* 2. Clinical Trust & Safety Pillars */}
+        <TrustAndSafety />
+
+        {/* 3. Comprehensive Clinical Article (Deep Medical Authority) */}
+        <ClinicalArticle
+          article={activeCampaign.article}
+          campaignName={activeCampaign.name}
+          highlightSectionId={highlightSectionId}
         />
 
-        {/* 3-Phase Protocol Kits & Products */}
-        <ProtocolKits
-          onAddToCart={handleAddToCart}
-          onInstantBuy={handleInstantBuy}
+        {/* 4. Peer-Reviewed Scientific Evidence Table (PubMed & Cochrane) */}
+        <ScientificEvidence
+          studies={activeCampaign.scientificStudies}
+          campaignName={activeCampaign.name}
         />
 
-        {/* Clinical Comparison with Ordinary Bandages */}
-        <ClinicalComparison />
+        {/* 5. Visual Step-by-Step Application Guide */}
+        <VisualStepGuide
+          campaignId={activeCampaign.id}
+          campaignName={activeCampaign.name}
+          onScrollToCatalog={handleScrollToCatalog}
+        />
 
-        {/* Step-by-Step Safe Shower Guide */}
-        <ShowerGuide />
+        {/* 6. Interactive Clinical Recovery Calculator */}
+        <ClinicalCalculator
+          campaign={activeCampaign}
+          onSelectBundleAndOpenModal={handleOpenLeadModal}
+        />
 
-        {/* Mother Experiences & Clinical FAQ */}
-        <ReviewsAndFAQ />
+        {/* 7. Product & Protocol Catalog with Rich Photography */}
+        <ProductCatalog
+          campaign={activeCampaign}
+          onOpenLeadModal={handleOpenLeadModal}
+        />
+
+        {/* 8. Step-by-Step Clinical Timeline */}
+        <ProtocolTimeline campaign={activeCampaign} />
+
+        {/* 9. Verified Egyptian Doctor Endorsements & Patient Reviews */}
+        <ReviewsAndDoctorEndorsement campaign={activeCampaign} />
+
+        {/* 10. Clinical FAQs */}
+        <ClinicalFaq
+          faqs={activeCampaign.faqs}
+          highlightFaqIndex={highlightFaqIndex}
+        />
       </main>
 
       {/* Footer */}
       <Footer
-        onScrollTo={scrollToSection}
-        onOpenOrders={() => setIsOrdersOpen(true)}
+        campaign={activeCampaign}
+        onSelectCampaign={handleSelectCampaign}
+        onOpenLeadModal={() => handleOpenLeadModal()}
       />
 
-      {/* Mobile Sticky Conversion Drawer (under 15% viewport height) */}
-      <MobileStickyBar
-        cartCount={totalCartCount}
-        onOpenCheckout={() => setIsCheckoutOpen(true)}
+      {/* Sticky Mobile Conversion Bar */}
+      <StickyMobileBar
+        campaign={activeCampaign}
+        selectedBundleId={selectedBundleId}
+        onOpenLeadModal={handleOpenLeadModal}
       />
 
-      {/* Slide-over Checkout Drawer (COD & InstaPay for Egypt) */}
-      <CheckoutDrawer
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        cart={cart}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-        onClearCart={handleClearCart}
-        onOrderPlaced={handleOrderPlaced}
+      {/* The ZERO-BYPASS Lead Gate Modal */}
+      <LeadGateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        campaign={activeCampaign}
+        selectedBundleId={selectedBundleId}
+        onSelectBundleId={setSelectedBundleId}
       />
-
-      {/* Order Lookup & Shipping Tracker Modal */}
-      <OrderLookupModal
-        isOpen={isOrdersOpen}
-        onClose={() => setIsOrdersOpen(false)}
-        orders={orders}
-      />
-
     </div>
   );
 }
