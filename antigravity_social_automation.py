@@ -1085,7 +1085,13 @@ def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
                 timeout=35,
             ).json()
             if "id" in publish_res:
-                print(f"[+] 📸 تم النشر تلقائياً وحياً على إنستجرام بنجاح! Post ID: {publish_res['id']}")
+                post_id = publish_res['id']
+                try:
+                    p_info = requests.get(f"https://graph.instagram.com/v21.0/{post_id}?fields=permalink&access_token={token}", timeout=10).json()
+                    ig_permalink = p_info.get("permalink", f"https://www.instagram.com/")
+                except Exception:
+                    ig_permalink = "https://www.instagram.com/"
+                print(f"[+] 📸 تم النشر تلقائياً وحياً على إنستجرام بنجاح!\n   • الرابط المباشر للمنشور: {ig_permalink}")
                 return True
             else:
                 print(f"[!] خطأ نشر إنستجرام في مرحلة النشر: {publish_res}")
