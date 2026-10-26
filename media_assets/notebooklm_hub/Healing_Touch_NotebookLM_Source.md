@@ -1,5 +1,5 @@
 # 🌿 الدليل السريري وحزمة المحتوى والإنتاج الرقمي الموحد – هيلينج تاتش مصر
-**تاريخ ووقت التوليد اللحظي:** 2026-10-26 11:16 PM
+**تاريخ ووقت التوليد اللحظي:** 2026-10-27 02:57 AM
 **المشروع:** منصة استشارات طبية متخصصة ومستلزمات التعافي بعد العمليات الجراحية وعلاج الندبات في مصر.
 **العرض المعتمد:** كود الخصم الحصري `HT10` (شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع).
 **رابط الاستشارة المجانية عبر واتساب:** `01155803307` | رابط الحجز: `https://medon90ae.github.io/healing-touch-egypt/wa.html`
@@ -256,18 +256,18 @@ C:\followUPSHEET\healing_touch\media_assets\manual_inbox
 
 ---
 ## 📸 صور الحالات السريرية المرفوعة في المصادر للاستلهام البصري المباشر (Available in pic/):
-- `pic/2026-10-26_23-10-26_[تيكتوك_وستوري]_thyroid_case_thyroid_pixabay_10353810.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-10-26_[فيسبوك_وإنستجرام]_thyroid_case_thyroid_pixabay_10353810.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-10-26_[تيكتوك_وستوري]_rhinoplasty_case_rhinoplasty_pexels_39192335.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-10-26_[فيسبوك_وإنستجرام]_rhinoplasty_case_rhinoplasty_pexels_39192335.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[تيكتوك_وستوري]_thyroid_case_thyroid_pexels_6129246.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[فيسبوك_وإنستجرام]_thyroid_case_thyroid_pexels_6129246.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[تيكتوك_وستوري]_bariatric_case_bariatric_pexels_8413183.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[فيسبوك_وإنستجرام]_bariatric_case_bariatric_pexels_8413183.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[تيكتوك_وستوري]_rhinoplasty_case_rhinoplasty_pexels_7108144.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[فيسبوك_وإنستجرام]_rhinoplasty_case_rhinoplasty_pexels_7108144.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[تيكتوك_وستوري]_c-section_case_c-section_pexels_8657369.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
-- `pic/2026-10-26_23-08-49_[فيسبوك_وإنستجرام]_c-section_case_c-section_pexels_8657369.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/smith-nephew-opsite-spray_3_opsite_spray_packaging_box.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/silicone-nostril-retainer_5_nostril_retainer_box_inventory_real.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/silicone-nostril-retainer_4_nasal_retainer_clinical_view3.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/silicone-nostril-retainer_3_nasal_retainer_clinical_view2.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/silicone-nostril-retainer_2_nasal_retainer_clinical_view1.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/silicone-nostril-retainer_1_silicone_nostril_retainer_pair_highres.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/smith-nephew-opsite-spray_5_opsite_spray_inventory_real.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/smith-nephew-opsite-spray_4_opsite_240ml_saudi_medical.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/smith-nephew-opsite-spray_2_opsite_can_and_actuator_lavabis.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/smith-nephew-opsite-spray_1_opsite_spray_can_studio.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/3m-tegaderm-plus-pad_5_sterile_pouch_specifications_table.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
+- `pic/3m-tegaderm-plus-pad_4_sterile_pouch_envelope_real.jpg` (لقطة سريرية معتمدة تم جلبها من Pexels/Pixabay)
 
 ---
 ## 💡 رابعاً: الأمر المباشر للنسخ واللصق داخل Google NotebookLM (Master Copy-Paste Prompt):

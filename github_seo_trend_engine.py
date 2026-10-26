@@ -2288,6 +2288,7 @@ def render_top_and_header(cfg: dict, is_subpage: bool = False, depth: int = 1) -
       🌿 هيلينج تاتش مصر | Healing Touch
     </a>
     <nav class="nav-links">
+      <a href="{prefix}portal/" style="background:#059669;color:#ffffff;padding:5px 12px;border-radius:20px;font-weight:bold;">🩺 بوابة البروتوكولات والحاسبة</a>
       <a href="{prefix}index.html#guided-triage">🧭 مُوجِّه الحالات</a>
       <a href="{prefix}index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
       <a href="{prefix}index.html#products-section">🛡️ المستلزمات المعتمدة</a>

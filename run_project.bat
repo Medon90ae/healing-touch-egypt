@@ -35,8 +35,8 @@ echo [*] [1/4] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ æÊÍÏíË ÕİÍÇÊ æãŞÇáÇÊ ÇáãæŞÚ ÇáÃÓÇÓí...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
 echo [*] [2/4] ÌÇÑí ÈäÇÁ æÊÍÏíË ÊØÈíŞ ÇáÈæÇÈÉ ÇáÓÑíÑíÉ ÇáÊİÇÚáíÉ (Stitch AI Portal)...
-call npm --prefix "media_assets\manual_inbox\stitch_ai_studio_app" run build
-xcopy /E /Y /I "media_assets\manual_inbox\stitch_ai_studio_app\dist\*" "docs\portal\"
+call npm --prefix "portal_app" run build
+xcopy /E /Y /I "portal_app\dist\*" "docs\portal\"
 echo.
 echo [*] [3/4] ÌÇÑí ÑİÚ æäÔÑ ÃÍÏË ßæÏ æÊÕãíãÇÊ Åáì GitHub Pages ÊáŞÇÆíÇğ...
 git add docs/ media_assets/manual_inbox/stitch_ai_studio_app/ campaign_landing_engine.py github_seo_trend_engine.py products_registry.json promo_config.json PROJECT.md run_project.bat .gitignore
@@ -77,8 +77,8 @@ echo [*] [1/3] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ ÇáÍíÉ æãŞÇáÇÊ ÇáÓíæ ãä Google Sheet...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
 echo [*] [2/3] ÌÇÑí ÈäÇÁ æÊÌãíÚ ÊØÈíŞ ÇáÈæÇÈÉ ÇáÊİÇÚáíÉ (Stitch AI Studio)...
-call npm --prefix "media_assets\manual_inbox\stitch_ai_studio_app" run build
-xcopy /E /Y /I "media_assets\manual_inbox\stitch_ai_studio_app\dist\*" "docs\portal\"
+call npm --prefix "portal_app" run build
+xcopy /E /Y /I "portal_app\dist\*" "docs\portal\"
 echo.
 echo [*] [3/3] ÌÇÑí ÇáÑİÚ æÇáäÔÑ ÇáãÈÇÔÑ Åáì GitHub Pages...
 git add docs/ media_assets/manual_inbox/stitch_ai_studio_app/ campaign_landing_engine.py github_seo_trend_engine.py products_registry.json promo_config.json PROJECT.md run_project.bat .gitignore

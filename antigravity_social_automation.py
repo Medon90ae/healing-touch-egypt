@@ -30,6 +30,7 @@ import time
 import urllib.parse
 import webbrowser
 import campaign_landing_engine as cle
+from smart_intake_classifier import scan_and_triage_manual_inbox, archive_used_inbox_files
 from datetime import datetime
 from pathlib import Path
 
@@ -1303,7 +1304,23 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     print("🌿 هيلينج تاتش مصر | المحرك الشامل للتصميم والفيديو والترندات والنشر")
     print("=" * 65)
 
-    chosen_idx = get_next_template_index(template_idx)
+    # مسح وفحص صندوق manual_inbox بالمصنف الذكي التلقائي
+    inbox_triage = scan_and_triage_manual_inbox(MANUAL_INBOX_DIR)
+    used_inbox_files = []
+
+    if template_idx is not None:
+        chosen_idx = get_next_template_index(template_idx)
+    elif inbox_triage.get("detected_category"):
+        det_cat = inbox_triage["detected_category"]
+        matched_idx = next((i for i, t in enumerate(CLINICAL_STORIES_TEMPLATES) if t.get("category") == det_cat), None)
+        if matched_idx is not None:
+            chosen_idx = matched_idx
+            print(f"[*] 🤖 [المصنف الذكي]: تم رصد مدخلات مرفوعة خاصة بتخصص ({det_cat})، وتوجيه النشر تلقائياً لها!")
+        else:
+            chosen_idx = get_next_template_index(template_idx)
+    else:
+        chosen_idx = get_next_template_index(template_idx)
+
     tmpl = dict(CLINICAL_STORIES_TEMPLATES[chosen_idx])
     print(f"[*] 📖 [حالة رقم {chosen_idx + 1} من {len(CLINICAL_STORIES_TEMPLATES)}]: {tmpl['title']}")
 
@@ -1338,78 +1355,53 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     generate_blogger_atom_xml([blogger_post])
     notebook_file = export_notebooklm_master_source()
 
-    # فحص مجلد الاستقبال الموحد manual_inbox إن وضع المستخدم به أي مخرج من NotebookLM (نص، صوت، فيديو، صورة)
-    # 1. فحص الصوتيات الجديدة ونقلها أوتوماتيكياً لمجلد الصوت لدمجها فوراً (التحقق من صحة الملف والحجم > 0)
-    aud_files = [
-        f for f in list(MANUAL_INBOX_DIR.glob("*.m4a")) + list(MANUAL_INBOX_DIR.glob("*.mp3")) + list(MANUAL_INBOX_DIR.glob("*.wav"))
-        if f.is_file() and f.stat().st_size > 0
-    ]
-    for aud_f in aud_files:
+    # اختيار الوسائط المرفوعة بناءً على تصنيف التخصص الجراحي الدقيق (Smart Matching)
+    cat_matched = inbox_triage["matched_files"].get(tmpl["category"], {"videos": [], "images": [], "audios": [], "texts": [], "htmls": []})
+
+    # 1. الصوت
+    if cat_matched.get("audios"):
+        aud_f = cat_matched["audios"][0]
         dest_aud = NOTEBOOK_AUDIO_DIR / aud_f.name
         if not dest_aud.exists():
             shutil.copy2(str(aud_f), str(dest_aud))
-            print(f"[+] 🎙️ تم التقاط ونقل ملف صوتي من manual_inbox إلى audio_inputs ({aud_f.name})!")
+        used_inbox_files.append(aud_f)
+        print(f"[+] 🎙️ [المصنف الذكي]: تم التقاط ملف صوتي مطابق للتخصص ({aud_f.name})!")
 
-    # 2. فحص النصوص والمستندات (txt, md) المخصصة لحالة اليوم فقط
-    txt_files = [
-        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.txt")) + list(MANUAL_INBOX_DIR.glob("*.md")), key=lambda x: x.stat().st_mtime, reverse=True)
-        if f.is_file() and f.stat().st_size > 0
-    ]
-    if txt_files:
-        # البحث عن ملف نصي يتطابق مع الحالة الحالية أو استبعاد الملف المجمع الشامل
-        target_kw = "csection" if tmpl["category"] == "c-section" else ("rhino" if tmpl["category"] == "rhinoplasty" else ("bariatric" if tmpl["category"] == "bariatric" else "thyroid"))
-        
-        def is_fallback_candidate(f: Path) -> bool:
-            lower = f.name.lower()
-            return (
-                f.stat().st_size <= 8000
-                and "clinical-content" not in lower
-                and "reference" not in lower
-                and "notebooklm_exported_pack" not in lower
-                and "حزمة" not in lower
-            )
+    # 2. النص والمقال
+    if cat_matched.get("texts"):
+        chosen_txt = cat_matched["texts"][0]
+        custom_text = read_resilient_text(chosen_txt).strip()
+        if custom_text and len(custom_text) > 50:
+            if len(custom_text) > 1500:
+                truncated = custom_text[:1500]
+                last_space = truncated.rfind(" ")
+                custom_text = (truncated[:last_space] if last_space > 1200 else truncated) + "..."
+            tmpl["story_text"] = custom_text
+            used_inbox_files.append(chosen_txt)
+            print(f"[+] 📝 [المصنف الذكي]: تم دمج نص سريري مطابق لحالة اليوم ({chosen_txt.name}) [{len(custom_text)} حرف]!")
 
-        matching_txt = next((f for f in txt_files if target_kw in f.name.lower() and is_fallback_candidate(f)), None)
-        chosen_txt = matching_txt if matching_txt else next((f for f in txt_files if is_fallback_candidate(f)), None)
-        if chosen_txt:
-            custom_text = read_resilient_text(chosen_txt).strip()
-            if custom_text and len(custom_text) > 50:
-                # تقييد طول النص بحد أقصى 1500 حرف لضمان عدم تجاوز حدود كابشن إنستجرام (2200 حرف)
-                if len(custom_text) > 1500:
-                    truncated = custom_text[:1500]
-                    last_space = truncated.rfind(" ")
-                    custom_text = (truncated[:last_space] if last_space > 1200 else truncated) + "..."
-                print(f"[+] 📝 تم اكتشاف واعتماد نص سريري راقٍ لحالة اليوم من manual_inbox ({chosen_txt.name}) [{len(custom_text)} حرف]!")
-                tmpl["story_text"] = custom_text
-
-    # 3. فحص الصور والتصاميم المخصصة من المستخدم (jpg, png)
-    img_files = [
-        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.jpg")) + list(MANUAL_INBOX_DIR.glob("*.png")), key=lambda x: x.stat().st_mtime, reverse=True)
-        if f.is_file() and f.stat().st_size > 0
-    ]
-    if img_files:
-        square_img_path = str(img_files[0])
-        story_img_path = str(img_files[0])
-        print(f"[+] 🎨 تم اكتشاف واعتماد تصميم يدوي راقٍ من manual_inbox ({Path(square_img_path).name})!")
+    # 3. الصورة والتصميم
+    if cat_matched.get("images"):
+        square_img_path = str(cat_matched["images"][0])
+        story_img_path = str(cat_matched["images"][0])
+        used_inbox_files.append(cat_matched["images"][0])
+        print(f"[+] 🎨 [المصنف الذكي]: تم اعتماد تصميم مطابق للحالة من manual_inbox ({Path(square_img_path).name})!")
     else:
-        # إذا لم يضع المستخدم صورة يدوية، لا يتم التوليد الآلي العشوائي بل نعتمد الكارت الرسمي الموحد
         square_img_path = str(BASE_DIR / "docs" / "assets" / "og-image.jpg")
         story_img_path = square_img_path
 
-    # 4. فحص الفيديوهات المباشرة (mp4)
-    vid_files = [
-        f for f in sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
-        if f.is_file() and f.stat().st_size > 0
-    ]
-    if vid_files:
-        video_path = str(vid_files[0])
-        print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
+    # 4. الفيديو
+    if cat_matched.get("videos"):
+        video_path = str(cat_matched["videos"][0])
+        used_inbox_files.append(cat_matched["videos"][0])
+        print(f"[+] 🎬 [المصنف الذكي]: تم اعتماد فيديو مطابق لحالة اليوم ({Path(video_path).name})!")
 
-    # فحص ما إذا كان المستخدم قد وضع تصميماً مخصصاً من Google Stitch في manual_inbox
-    stitch_files = [f for f in MANUAL_INBOX_DIR.glob("*.html") if f.is_file() and f.stat().st_size > 100]
-    custom_stitch_html = stitch_files[0].read_text(encoding="utf-8") if stitch_files else ""
+    # 5. ملفات HTML مخصصة
+    custom_stitch_html = ""
+    if cat_matched.get("htmls"):
+        custom_stitch_html = cat_matched["htmls"][0].read_text(encoding="utf-8")
+        used_inbox_files.append(cat_matched["htmls"][0])
 
-    # بناء ونشر الـ Landing Page المخصصة لحالة اليوم
     lp_res = cle.build_campaign_landing_page(
         case_data=tmpl,
         media_assets={"square_path": square_img_path, "story_path": story_img_path},
@@ -1496,6 +1488,10 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
     # أرشفة الملفات المعالجة من manual_inbox
     cle.archive_manual_inbox_processed()
+    if used_inbox_files:
+        archived_count = archive_used_inbox_files(MANUAL_INBOX_DIR, used_inbox_files)
+        if archived_count > 0:
+            print(f"[+] 🗄️ [المصنف الذكي]: تم أرشفة وتفريغ {archived_count} ملفات مستخدمة بنجاح!")
 
     # فتح تبويبات المتصفح المطلوبة فوراً
     open_tabs_in_default_windows_browser(fb_post_url=permalink, blogger_post_file=blogger_post['file_path'])
