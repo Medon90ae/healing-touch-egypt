@@ -6,18 +6,18 @@ echo =====================================================================
 echo         åíáíäÌ ÊÇÊÔ ãÕÑ - áæÍÉ ÇáÊÍßã æÇáãÍÑß ÇáãæÍÏ ÇáÔÇãá (2026)
 echo =====================================================================
 echo.
-echo   [1] ÇáÊÔÛíá ÇáÔÇãá æÇáäÔÑ ÇáİæÑí (ÈäÇÁ ÇááÇäÏäÌ ÈíÏÌ + äÔÑ ßá ÇáãäÕÇÊ)
+echo   [1] ÇáÊÔÛíá ÇáÔÇãá æÇáäÔÑ ÇáİæÑí (ÈäÇÁ ÇáãæŞÚ + ÇáÈæÇÈÉ + ÇáäÔÑ áÜ GitHub + ÇáÓæÔíÇá)
 echo   [2] ÊÌåíÒ ÍãáÉ Çáíæã æÇáÈÑæãÈÊÇÊ æãÕÇÏÑ ÇáÈÍË (Pomelli + Stitch + AI)
 echo   [3] ãÚÇíäÉ æÊÌåíÒ ÇáÃÕæá æÇááÇäÏäÌ ÈíÏÌ ÈÏæä äÔÑ (Dry Run)
 echo   [4] İÊÍ ÕäÏæŞ ÇáÇÓÊŞÈÇá manual_inbox æãáİ ÇáÈÑæãÈÊÇÊ ÇáÌÇåÒÉ ááäÓÎ
-echo   [5] ÊÍÏíË ÃÓÚÇÑ æãŞÇáÇÊ ÇáãæŞÚ ãä Google Sheet æÇáÑİÚ áÜ GitHub
+echo   [5] ÊÍÏíË ÇáãæŞÚ æÊØÈíŞ ÇáÈæÇÈÉ æäÔÑ ÇáÊÛííÑÇÊ ãÈÇÔÑÉ Åáì GitHub Pages
 echo   [6] ÇÓÊÚÑÇÖ æİÍÕ ÓÌá ÇáÚãáÇÁ æÍÌæÒÇÊ ÇáÇÓÊÔÇÑÇÊ İí Google Sheet
 echo   [7] ÑÈØ æÊİÚíá ÍÓÇÈ Reddit ÊáŞÇÆíÇğ (áãÑÉ æÇÍÏÉ İŞØ)
 echo   [8] İÊÍ ÃÍÏË ãäÔæÑ Êã äÔÑå Úáì İíÓÈæß İí ÇáãÊÕİÍ
 echo.
 echo =====================================================================
-set choice=1
-set /p choice="ÇÎÊÑ ÑŞã ÇáÚãáíÉ ÇáãØáæÈÉ (ÇÖÛØ Enter áÇÎÊíÇÑ 1 ÇİÊÑÇÖíÇğ): "
+set choice=5
+set /p choice="ÇÎÊÑ ÑŞã ÇáÚãáíÉ ÇáãØáæÈÉ (ÇÖÛØ Enter áÇÎÊíÇÑ 5 ÇİÊÑÇÖíÇğ áÊÍÏíË æäÔÑ ÇáãæŞÚ): "
 
 if "%choice%"=="1" goto opt1
 if "%choice%"=="2" goto opt2
@@ -27,14 +27,23 @@ if "%choice%"=="5" goto opt5
 if "%choice%"=="6" goto opt6
 if "%choice%"=="7" goto opt7
 if "%choice%"=="8" goto opt8
-goto opt1
+goto opt5
 
 :opt1
 echo.
-echo [*] [1/2] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ æÊÍÏíË ÇáãæŞÚ ÇáÃÓÇÓí...
+echo [*] [1/4] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ æÊÍÏíË ÕİÍÇÊ æãŞÇáÇÊ ÇáãæŞÚ ÇáÃÓÇÓí...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
-echo [*] [2/2] ÌÇÑí ÈäÇÁ ÇááÇäÏäÌ ÈíÏÌ æÇáÊŞÇØ ÃÕæá manual_inbox æÇáäÔÑ ÇáÔÇãá...
+echo [*] [2/4] ÌÇÑí ÈäÇÁ æÊÍÏíË ÊØÈíŞ ÇáÈæÇÈÉ ÇáÓÑíÑíÉ ÇáÊİÇÚáíÉ (Stitch AI Portal)...
+call npm --prefix "media_assets\manual_inbox\stitch_ai_studio_app" run build
+xcopy /E /Y /I "media_assets\manual_inbox\stitch_ai_studio_app\dist\*" "docs\portal\"
+echo.
+echo [*] [3/4] ÌÇÑí ÑİÚ æäÔÑ ÃÍÏË ßæÏ æÊÕãíãÇÊ Åáì GitHub Pages ÊáŞÇÆíÇğ...
+git add docs/ media_assets/manual_inbox/stitch_ai_studio_app/ campaign_landing_engine.py github_seo_trend_engine.py products_registry.json promo_config.json PROJECT.md run_project.bat .gitignore
+git commit -m "Auto-deploy: full clinical portal and site sync"
+git push origin main
+echo.
+echo [*] [4/4] ÌÇÑí ÈäÇÁ ÇááÇäÏäÌ ÈíÏÌ æÇáÊŞÇØ ÃÕæá manual_inbox æÇáäÔÑ ÇáÔÇãá...
 ".venv\Scripts\python.exe" antigravity_social_automation.py --mode all
 goto end
 
@@ -64,8 +73,21 @@ goto end
 
 :opt5
 echo.
-echo [*] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ ÇáÍíÉ æãŞÇáÇÊ ÇáÓíæ ãä Google Sheet æÇáÑİÚ áÜ GitHub...
-".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site --push-github
+echo [*] [1/3] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ ÇáÍíÉ æãŞÇáÇÊ ÇáÓíæ ãä Google Sheet...
+".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
+echo.
+echo [*] [2/3] ÌÇÑí ÈäÇÁ æÊÌãíÚ ÊØÈíŞ ÇáÈæÇÈÉ ÇáÊİÇÚáíÉ (Stitch AI Studio)...
+call npm --prefix "media_assets\manual_inbox\stitch_ai_studio_app" run build
+xcopy /E /Y /I "media_assets\manual_inbox\stitch_ai_studio_app\dist\*" "docs\portal\"
+echo.
+echo [*] [3/3] ÌÇÑí ÇáÑİÚ æÇáäÔÑ ÇáãÈÇÔÑ Åáì GitHub Pages...
+git add docs/ media_assets/manual_inbox/stitch_ai_studio_app/ campaign_landing_engine.py github_seo_trend_engine.py products_registry.json promo_config.json PROJECT.md run_project.bat .gitignore
+git commit -m "Auto-deploy: latest portal and landing pages to GitHub Pages"
+git push origin main
+echo.
+echo [OK] Êã ÇáäÔÑ ÈäÌÇÍ Úáì GitHub Pages!
+echo [URL] ÌÇÑí İÊÍ ÑÇÈØ ÇáÈæÇÈÉ ÇáÍíÉ İí ÇáãÊÕİÍ...
+start https://medon90ae.github.io/healing-touch-egypt/portal/
 goto end
 
 :opt6

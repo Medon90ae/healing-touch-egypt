@@ -68,10 +68,28 @@ export function calculateOrderPrice(basePriceEGP: number, enteredCode: string): 
  */
 export async function submitLeadToGoogleSheet(data: LeadSubmissionData): Promise<{ success: boolean; error?: string }> {
   try {
+    const normPhone = normalizeEgyptianPhone(data.phone);
+    const bundleTopic = `${data.campaignName} - ${data.bundleTitle} (${data.finalPriceEGP} ج.م) - ${data.governorate}`;
+    const pageUrl = data.sourceUrl || (typeof window !== 'undefined' ? window.location.href : '');
+
     const payload = {
-      timestamp: data.timestamp || new Date().toISOString(),
+      // Keys expected by Google Apps Script
+      patient_name: data.fullName,
+      patient_phone: normPhone,
+      context_topic: bundleTopic,
+      channel: 'whatsapp',
+      promo_code: data.promoCode || 'HT10',
+      page_url: pageUrl,
+
+      // Aliases
+      name: data.fullName,
       fullName: data.fullName,
-      phone: normalizeEgyptianPhone(data.phone),
+      client_name: data.fullName,
+      phone: normPhone,
+      client_phone: normPhone,
+      topic: bundleTopic,
+
+      // Extended fields
       governorate: data.governorate,
       address: data.address || '',
       notes: data.notes || '',
@@ -82,8 +100,9 @@ export async function submitLeadToGoogleSheet(data: LeadSubmissionData): Promise
       priceEGP: data.priceEGP,
       discountApplied: data.discountApplied,
       finalPriceEGP: data.finalPriceEGP,
-      promoCode: data.promoCode,
-      sourceUrl: data.sourceUrl || (typeof window !== 'undefined' ? window.location.href : '')
+      promoCode: data.promoCode || 'HT10',
+      sourceUrl: pageUrl,
+      timestamp: data.timestamp || new Date().toISOString()
     };
 
     // Google Apps Script requires no-cors when executed from client browsers without CORS headers

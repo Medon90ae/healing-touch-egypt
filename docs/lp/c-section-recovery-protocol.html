@@ -362,11 +362,16 @@
           body: JSON.stringify({
             timestamp: new Date().toISOString(),
             channel: 'whatsapp',
+            patient_name: pName,
+            client_name: pName,
+            name: pName,
+            patient_phone: pPhone,
+            client_phone: pPhone,
+            phone: pPhone,
+            context_topic: currentTopic,
             topic: currentTopic,
             promo_code: PROMO_CODE,
-            page_url: window.location.href,
-            client_name: pName,
-            client_phone: pPhone
+            page_url: window.location.href
           })
         }).catch(() => {});
       } catch(e) {}

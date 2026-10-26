@@ -3061,7 +3061,8 @@ Sitemap: {SITE_BASE_URL}/sitemap.xml
 def build_sitemap_xml(articles: list, products: list):
     today_str = datetime.date.today().strftime("%Y-%m-%d")
     urls = [
-        f"  <url><loc>{SITE_BASE_URL}/</loc><lastmod>{today_str}</lastmod><priority>1.0</priority></url>"
+        f"  <url><loc>{SITE_BASE_URL}/</loc><lastmod>{today_str}</lastmod><priority>1.0</priority></url>",
+        f"  <url><loc>{SITE_BASE_URL}/portal/</loc><lastmod>{today_str}</lastmod><priority>0.98</priority></url>",
     ]
     for p in products:
         urls.append(

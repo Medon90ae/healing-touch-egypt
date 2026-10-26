@@ -599,11 +599,16 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
           body: JSON.stringify({{
             timestamp: new Date().toISOString(),
             channel: 'whatsapp',
+            patient_name: pName,
+            client_name: pName,
+            name: pName,
+            patient_phone: pPhone,
+            client_phone: pPhone,
+            phone: pPhone,
+            context_topic: currentTopic,
             topic: currentTopic,
             promo_code: PROMO_CODE,
-            page_url: window.location.href,
-            client_name: pName,
-            client_phone: pPhone
+            page_url: window.location.href
           }})
         }}).catch(() => {{}});
       }} catch(e) {{}}
@@ -666,7 +671,20 @@ def _inject_gate_and_tracking_into_stitch_html(raw_html: str, title: str, catego
           fetch('{TRACKING_ENDPOINT}', {{
             method: 'POST', mode: 'no-cors',
             headers: {{ 'Content-Type': 'application/json' }},
-            body: JSON.stringify({{ timestamp: new Date().toISOString(), channel: 'whatsapp', topic: '{title}', promo_code: '{OFFICIAL_PROMO_CODE}', page_url: '{page_url}', client_name: n, client_phone: p }})
+            body: JSON.stringify({{
+              timestamp: new Date().toISOString(),
+              channel: 'whatsapp',
+              patient_name: n,
+              client_name: n,
+              name: n,
+              patient_phone: p,
+              client_phone: p,
+              phone: p,
+              context_topic: '{title}',
+              topic: '{title}',
+              promo_code: '{OFFICIAL_PROMO_CODE}',
+              page_url: '{page_url}'
+            }})
           }}).catch(() => {{}});
         }} catch(e) {{}}
         document.getElementById('promo-lead-modal').style.display='none';
