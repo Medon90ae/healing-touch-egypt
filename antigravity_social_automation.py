@@ -1246,9 +1246,19 @@ def open_tabs_in_default_windows_browser(fb_post_url: str = "", blogger_post_fil
     else:
         open_url_in_default_browser(f"https://www.facebook.com/{FB_PAGE_ID}")
 
-    # 2. فتح مدونة جوجل Blogger للمعاينة والمراجعة
+    # 2. فتح مدونة جوجل Blogger للمعاينة والمراجعة ونسخ المقال تلقائياً للحافظة
     blogger_url = f"https://draft.blogger.com/blog/posts/{BLOGGER_BLOG_ID}"
     print(f"   • [بلوجر] عرض مدونة جوجل: {blogger_url}")
+    try:
+        if blogger_post_file and Path(blogger_post_file).exists():
+            subprocess.run(
+                ["powershell", "-ExecutionPolicy", "Bypass", "-Command", f"Get-Content -LiteralPath '{Path(blogger_post_file).resolve()}' -Raw -Encoding UTF8 | Set-Clipboard"],
+                timeout=5,
+                capture_output=True,
+            )
+            print("   • [بلوجر 📋] تم نسخ مقال HTML بالكامل تلقائياً إلى الحافظة! فقط اضغط '+ مشاركة جديدة' ثم Ctrl+V ثم نشر!")
+    except Exception:
+        pass
     open_url_in_default_browser(blogger_url)
 
     # 3. فتح صفحة رفع البوست لإنستجرام
