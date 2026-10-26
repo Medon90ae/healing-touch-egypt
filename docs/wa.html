@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>جاري تحويلك إلى واتساب | هيلينج تاتش مصر</title>
+  <title>تأكيد الاستشارة المجانية | هيلينج تاتش مصر</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,116 +11,210 @@
     :root {
       --bg: #F8FAFC;
       --surface: #FFFFFF;
+      --teal-deep: #0D4A4D;
+      --teal-mid: #145E63;
+      --teal-light: #E6F4F1;
       --primary: #065F46;
       --primary-light: #10B981;
       --text: #0F172A;
       --muted: #64748B;
       --accent: #D97706;
+      --border: #E2E8F0;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #ECFDF5 0%, #F8FAFC 100%);
+      background: linear-gradient(135deg, #ECFDF5 0%, #F1F5F9 100%);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      margin: 0;
       padding: 20px;
-      text-align: center;
     }
     .bridge-card {
       background: var(--surface);
-      border-radius: 20px;
-      padding: 40px 28px;
-      max-width: 440px;
+      border-radius: 24px;
+      padding: 36px 28px;
+      max-width: 460px;
       width: 100%;
-      box-shadow: 0 10px 25px -5px rgba(6, 95, 70, 0.1), 0 8px 10px -6px rgba(6, 95, 70, 0.05);
+      box-shadow: 0 20px 40px -10px rgba(13, 74, 77, 0.12), 0 8px 16px -6px rgba(13, 74, 77, 0.06);
       border: 1px solid #D1FAE5;
+      text-align: right;
       animation: fadeIn 0.3s ease-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .brand-icon {
-      width: 64px;
-      height: 64px;
+      width: 60px;
+      height: 60px;
       background: #ECFDF5;
       color: var(--primary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      margin: 0 auto 16px;
+      font-size: 28px;
+      margin: 0 auto 12px;
       border: 2px solid #A7F3D0;
     }
-    h2 {
-      margin: 0 0 8px;
-      color: var(--primary);
+    h1 {
+      margin: 0 0 6px;
+      color: var(--teal-deep);
       font-size: 1.35rem;
       font-weight: 800;
     }
-    p {
+    .subtitle {
       color: var(--muted);
-      font-size: 0.95rem;
-      margin: 0 0 20px;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .topic-badge {
+      background: var(--teal-light);
+      color: var(--teal-deep);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin: 16px 0;
+      border: 1px solid #B2DFDB;
+      text-align: center;
     }
     .promo-pill {
       background: #FEF3C7;
       border: 1px dashed var(--accent);
       color: #92400E;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
       font-size: 0.88rem;
       font-weight: 700;
-      display: inline-block;
-      margin-bottom: 24px;
+      color: var(--teal-deep);
+      margin-bottom: 6px;
     }
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3px solid #E2E8F0;
-      border-top-color: var(--primary-light);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 20px;
+    .form-group label span.req {
+      color: #DC2626;
+      font-size: 0.82rem;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .input-field {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #FAFAFA;
+      transition: all 0.2s;
+      outline: none;
     }
-    .btn-manual {
-      display: inline-block;
+    .input-field:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+    .alert-box {
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      color: #B91C1C;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.5;
+    }
+    .btn-submit {
       width: 100%;
       background: #25D366;
       color: #FFFFFF;
-      text-decoration: none;
-      padding: 13px 20px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .btn-manual:hover {
+    .btn-submit:hover:not(:disabled) {
       background: #1EBE5D;
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      background: #94A3B8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .security-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 16px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
   <div class="bridge-card">
-    <div class="brand-icon">🌿</div>
-    <h2>هيلينج تاتش مصر</h2>
-    <p id="bridge-status">جاري تسجيل طلب الاستشارة وتوجيهك مباشرة إلى أخصائية العناية بالتعافي عبر واتساب...</p>
-    
-    <div class="promo-pill" id="promo-display">🎁 كود الخصم (HT10): شحن مجاني + حق المعاينة</div>
+    <div class="brand-header">
+      <div class="brand-icon">🌿</div>
+      <h1>هيلينج تاتش مصر</h1>
+      <p class="subtitle">تأكيد حجز الاستشارة المجانية مع أخصائية التعافي الجراحي</p>
+    </div>
 
-    <div class="spinner" id="spinner"></div>
+    <div class="topic-badge" id="topic-badge">📋 جاري تجهيز الاستشارة...</div>
 
-    <a href="#" class="btn-manual" id="manual-btn">💬 فتح واتساب الآن</a>
+    <div class="promo-pill">
+      <span>🎁</span>
+      <span>كود الخصم الحصري (HT10): شحن مجاني لكافة المحافظات + حق المعاينة قبل الدفع</span>
+    </div>
+
+    <div id="wa-alert" class="alert-box"></div>
+
+    <form id="lead-bridge-form" onsubmit="handleBridgeSubmit(event)">
+      <div class="form-group">
+        <label for="cust-name">الاسم بالكامل <span class="req">* (إلزامي لتسجيل ملف الاستشارة)</span></label>
+        <input type="text" id="cust-name" class="input-field" placeholder="اكتب اسمك الكريم هنا..." required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label for="cust-phone">رقم الموبايل / واتساب <span class="req">* (إلزامي 11 رقماً لتفعيل كود الخصم)</span></label>
+        <input type="tel" id="cust-phone" class="input-field" placeholder="01xxxxxxxxx" maxlength="11" required>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn-submit">
+        <span>💬 تأكيد الحجز وفتح الاستشارة عبر واتساب</span>
+      </button>
+    </form>
+
+    <p class="security-note">
+      🔒 خصوصيتك أولويتنا: يتم تسجيل ملف الاستشارة وتثبيت كود الخصم تلقائياً قبل فتح محادثة الواتساب المباشرة.
+    </p>
   </div>
 
   <script>
@@ -132,58 +226,91 @@
     const caseType = urlParams.get('case') || 'general';
     const topicParam = urlParams.get('topic') || '';
     const code = urlParams.get('code') || 'HT10';
-    const sourceParam = urlParams.get('source') || 'فيسبوك - دراسة حالة سريرية';
+    const sourceParam = urlParams.get('source') || 'فيسبوك - استشارة سريرية';
 
     const TOPIC_TITLES = {
-      'c-section': 'جرح القيصرية والندبات وعزل الماء',
+      'c-section': 'جرح القيصرية والندبات وتأمين الاستحمام',
       'rhinoplasty': 'تجميل الأنف ودعامة السيليكون وتورم الأرنبة',
-      'bariatric': 'جراحات السمنة وثقوب المنظار وبخاخ أوبسايت',
-      'thyroid': 'جراحة الغدة والرقبة وحماية الندبة',
-      'general': 'استشارة التعافي بعد العمليات'
+      'bariatric': 'جراحات السمنة والتكميم وثقوب المنظار وبخاخ أوبسايت',
+      'thyroid': 'جراحة الغدة الدرقية وحماية ندبة الرقبة',
+      'general': 'استشارة التعافي بعد العمليات وعلاج الندبات'
     };
 
     const resolvedTopic = topicParam || TOPIC_TITLES[caseType] || 'استشارة طبية بعد العمليات';
+    document.getElementById('topic-badge').innerText = "📌 موضوع الاستشارة: " + resolvedTopic;
 
-    // إعداد رسالة الواتساب
-    const waText = "أهلاً بكِ، محتاجة استشارة مجانية مع أخصائية التعافي بخصوص (" + resolvedTopic + ") مع كود الخصم الحصري (" + code + " - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع).";
-    const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waText);
-
-    document.getElementById('manual-btn').href = waUrl;
-
-    // تسجيل الليد تلقائياً في جوجل شيت عبر الويب هوك
-    const leadPayload = {
-      name: "عميل مهتم (نقرة رابط فيسبوك)",
-      phone: "محادثة مباشرة عبر واتساب",
-      surgery_type: resolvedTopic,
-      promo_code: code,
-      source: sourceParam,
-      notes: "نقر العميل على رابط استشارة واتساب من بوست: " + resolvedTopic
-    };
-
-    let redirected = false;
-    function doRedirect() {
-      if (redirected) return;
-      redirected = true;
-      window.location.href = waUrl;
+    function showAlert(msg) {
+      const alertBox = document.getElementById('wa-alert');
+      alertBox.innerText = msg;
+      alertBox.style.display = 'block';
     }
 
-    // إرسال البيانات لجوجل شيت فوراً
-    try {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(TRACKING_ENDPOINT, JSON.stringify(leadPayload));
+    function handleBridgeSubmit(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('wa-alert');
+      alertBox.style.display = 'none';
+
+      const nameInput = document.getElementById('cust-name');
+      const phoneInput = document.getElementById('cust-phone');
+      const submitBtn = document.getElementById('submit-btn');
+
+      const nameVal = nameInput ? nameInput.value.trim() : '';
+      const phoneVal = phoneInput ? phoneInput.value.trim().replace(/\s+/g, '') : '';
+
+      if (!nameVal || nameVal.length < 2) {
+        showAlert("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة.");
+        nameInput.focus();
+        return;
       }
-      fetch(TRACKING_ENDPOINT, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(leadPayload)
-      }).catch(function(e) { console.warn(e); });
-    } catch(err) {
-      console.warn("Tracking error:", err);
-    }
 
-    // التوجيه السريع خلال 350 مللي ثانية (فائق السرعة)
-    setTimeout(doRedirect, 350);
+      const egyptPhoneRegex = /^01[0125][0-9]{8}$/;
+      if (!phoneVal || !egyptPhoneRegex.test(phoneVal)) {
+        showAlert("⚠️ يرجى إدخال رقم موبايل/واتساب مصري صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتفعيل كود الخصم وتأكيد الاستشارة.");
+        phoneInput.focus();
+        return;
+      }
+
+      // تعطيل الزر لمنع تكرار الإرسال
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "<span>⏳ جاري تثبيت الحجز وتوجيهك لواتساب...</span>";
+
+      // تجهيز رسالة الواتساب الدقيقة باسم العميل والموضوع
+      const waText = "أهلاً بكِ، أنا (" + nameVal + ") مسجل في موقع هيلينج تاتش، ومعايا كود العرض الحصري (" + code + " - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص (" + resolvedTopic + ").";
+      const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waText);
+
+      // البيانات الرسمية المطابقة لأعمدة الشيت بدقة
+      const leadPayload = {
+        patient_name: nameVal,
+        patient_phone: phoneVal,
+        context_topic: resolvedTopic,
+        channel: "whatsapp",
+        promo_code: code,
+        page_url: window.location.href,
+        source: sourceParam,
+        notes: "تم حجز الاستشارة وتأكيد كود الخصم HT10 من صفحة التحويل"
+      };
+
+      // إرسال البيانات لجوجل شيت فوراً
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(TRACKING_ENDPOINT, JSON.stringify(leadPayload));
+        } else {
+          fetch(TRACKING_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(leadPayload)
+          }).catch(function(err) {});
+        }
+      } catch(err) {
+        console.warn("Tracking dispatch error:", err);
+      }
+
+      // تحويل العميل لواتساب بعد 350 مللي ثانية لضمان انطلاق طلب التسجيل للشيت
+      setTimeout(function() {
+        window.location.href = waUrl;
+      }, 350);
+    }
   </script>
 </body>
 </html>

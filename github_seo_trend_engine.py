@@ -874,18 +874,19 @@ def build_promo_modal_html(cfg: dict) -> str:
         </div>
 
         <div class="quick-lead-form">
-          <label for="lead-patient-name" style="font-size:0.85rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block;">الاسم أو اللقب (اختياري لتسهيل التواصل):</label>
-          <input type="text" id="lead-patient-name" class="modal-input" placeholder="مثال: أم يوسف / مروان...">
-          <label for="lead-patient-phone" style="font-size:0.85rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:8px;">رقم الموبايل / واتساب (اختياري لتثبيت حجز الخصم):</label>
-          <input type="tel" id="lead-patient-phone" class="modal-input" placeholder="01xxxxxxxxx">
+          <label for="lead-patient-name" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block;">الاسم أو اللقب <span style="color:#DC2626;">* (إلزامي لتسجيل ملف الاستشارة)</span>:</label>
+          <input type="text" id="lead-patient-name" class="modal-input" placeholder="اكتب اسمك الكريم هنا..." required>
+          <label for="lead-patient-phone" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:10px;">رقم الموبايل / واتساب <span style="color:#DC2626;">* (إلزامي 11 رقماً لتفعيل الخصم)</span>:</label>
+          <input type="tel" id="lead-patient-phone" class="modal-input" placeholder="01xxxxxxxxx" maxlength="11" required>
+          <div id="lead-form-error" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; padding:8px 12px; border-radius:8px; font-size:0.84rem; font-weight:700; margin-top:10px; text-align:right;"></div>
         </div>
 
         <div class="modal-action-buttons">
           <button id="modal-proceed-wa-btn" class="modal-btn-wa" onclick="executeProceedToConsultation('whatsapp')">
-            💬 متابعة الاستشارة المجانية عبر واتساب الآن
+            💬 تأكيد الحجز ومتابعة الاستشارة عبر واتساب
           </button>
           <button id="modal-proceed-ig-btn" class="modal-btn-ig" onclick="executeProceedToConsultation('instagram')">
-            📸 استشارة مجانية عبر شات إنستجرام
+            📸 تأكيد الحجز عبر شات إنستجرام
           </button>
         </div>
         <p class="modal-fine-print">🔒 بياناتك في سرية تامة ولن يتم استخدامها لأي غرض ترويجي مزعج.</p>
@@ -2112,13 +2113,18 @@ def get_shared_js(cfg: dict) -> str:
         navigator.clipboard.writeText(PROMO_CODE).catch(() => {{}});
       }}
 
+      const errEl = document.getElementById('lead-form-error');
+      if (errEl) errEl.style.display = 'none';
+
       const modal = document.getElementById('promo-lead-modal');
       if (modal) {{
         modal.style.display = 'flex';
+        const nameInput = document.getElementById('lead-patient-name');
+        if (nameInput) setTimeout(() => nameInput.focus(), 200);
       }} else {{
-        // إذا لم يكن المودال موجوداً في الصفحة ننتقل مباشرة للواتساب
-        logConsultationLead(preferredChannel, contextTopic, '', '');
-        window.open(currentPendingContext.directWaUrl, '_blank');
+        // في حالة عدم وجود المودال، يتم توجيهه إلى صفحة تأكيد الاستشارة wa.html لتسجيل البيانات أولاً
+        const targetCase = "general";
+        window.location.href = "wa.html?case=" + encodeURIComponent(targetCase) + "&topic=" + encodeURIComponent(contextTopic || document.title);
       }}
     }}
 
@@ -2136,22 +2142,46 @@ def get_shared_js(cfg: dict) -> str:
     function executeProceedToConsultation(targetChannel) {{
       const nameInput = document.getElementById('lead-patient-name');
       const phoneInput = document.getElementById('lead-patient-phone');
+      const errEl = document.getElementById('lead-form-error');
       const pName = nameInput ? nameInput.value.trim() : '';
-      const pPhone = phoneInput ? phoneInput.value.trim() : '';
+      const pPhone = phoneInput ? phoneInput.value.trim().replace(/\\s+/g, '') : '';
 
+      function setFormError(msg) {{
+        if (errEl) {{
+          errEl.innerText = msg;
+          errEl.style.display = 'block';
+        }} else {{
+          alert(msg);
+        }}
+      }}
+
+      if (!pName || pName.length < 2) {{
+        setFormError("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة وتفعيل الخصم.");
+        if (nameInput) nameInput.focus();
+        return;
+      }}
+
+      const egyptPhoneRegex = /^01[0125][0-9]{{8}}$/;
+      if (!pPhone || !egyptPhoneRegex.test(pPhone)) {{
+        setFormError("⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتفعيل كود الخصم وتأكيد الاستشارة.");
+        if (phoneInput) phoneInput.focus();
+        return;
+      }}
+
+      if (errEl) errEl.style.display = 'none';
+
+      // تسجيل بيانات العميل فوراً في جدول جوجل شيت
       logConsultationLead(targetChannel, currentPendingContext.topic, pName, pPhone);
       closePromoModal();
 
       if (targetChannel === 'whatsapp') {{
-        let url = currentPendingContext.directWaUrl || buildDynamicWaUrl(currentPendingContext.topic);
-        if (pName) {{
-          url += encodeURIComponent(" (الاسم: " + pName + ")");
-        }}
-        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح الاستشارة المجانية عبر واتساب...");
-        setTimeout(() => {{ window.open(url, '_blank'); }}, 400);
+        const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الخصم (HT10 - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص: " + currentPendingContext.topic;
+        const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waMsg);
+        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح الاستشارة عبر واتساب...");
+        setTimeout(() => {{ window.open(waUrl, '_blank'); }}, 350);
       }} else {{
-        showToast("✅ تم تفعيل كود الخصم HT10! جاري فتح إنستجرام...");
-        setTimeout(() => {{ window.open(IG_URL, '_blank'); }}, 400);
+        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح شات إنستجرام...");
+        setTimeout(() => {{ window.open(IG_URL, '_blank'); }}, 350);
       }}
     }}
 
@@ -2239,7 +2269,7 @@ def render_top_and_header(cfg: dict, is_subpage: bool = False, depth: int = 1) -
       <a href="{prefix}index.html#guided-triage">🧭 مُوجِّه الحالات</a>
       <a href="{prefix}index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
       <a href="{prefix}index.html#products-section">🛡️ المستلزمات المعتمدة</a>
-      <a href="{wa_general}" data-topic="استشارة مجانية عامة" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
+      <a href="javascript:void(0)" onclick="openPromoDrawer('استشارة مجانية عامة', 'whatsapp'); return false;" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
     </nav>
   </div>
 </header>
@@ -2280,7 +2310,7 @@ def render_footer(cfg: dict) -> str:
     <p style="font-size:1.15rem; font-weight:800; color:#fff; margin-top:0;">🌿 هيلينج تاتش مصر (Healing Touch Egypt 2026)</p>
     <p>المنصة التوعوية والاستشارية المعتمدة لرعاية ما بعد العمليات الجراحية والتجميلية في مصر. مهمتنا إرشادك علمياً والإجابة على أسئلتك مجاناً مع ضمان حق فحص ومعاينة المنتج الأصلي قبل الدفع.</p>
     <p style="margin-top:16px;">
-      <a href="{wa_footer}" data-topic="استفسار طبي من الفوتر">💬 محادثة مجانية على واتساب ({offer["whatsapp_display"]})</a> |
+      <a href="javascript:void(0)" onclick="openPromoDrawer('استفسار طبي من الفوتر', 'whatsapp'); return false;">💬 محادثة مجانية على واتساب ({offer["whatsapp_display"]})</a> |
       <a href="{offer['instagram_url']}" target="_blank" rel="noopener">📸 حساب إنستجرام</a> |
       <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener">📘 صفحتنا على فيسبوك</a>
     </p>
@@ -2906,7 +2936,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
         في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.
       </p>
       <div class="triage-actions">
-        <a id="triage-wa-btn" href="{default_wa_triage}" data-topic="استفسار سريري لحالة ولادة قيصرية / شد بطن" class="btn-free-chat">
+        <a id="triage-wa-btn" href="javascript:void(0)" onclick="openPromoDrawer(this.getAttribute('data-topic') || 'استشارة سريرية', 'whatsapp'); return false;" data-topic="استفسار سريري لحالة ولادة قيصرية / شد بطن" class="btn-free-chat">
           💬 احصل على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
         </a>
         <button onclick="openPromoDrawer(document.getElementById('triage-title-text').innerText, 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
