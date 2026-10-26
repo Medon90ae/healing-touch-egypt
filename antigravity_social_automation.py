@@ -1139,8 +1139,8 @@ def authorize_reddit_permanent_token():
     open_url_in_default_browser(auth_url)
 
     server = HTTPServer(("localhost", 8000), OAuthHandler)
-    server.timeout = 120
-    print("[*] ⏳ في انتظار ضغطك على زر 'Allow' في المتصفح...")
+    server.timeout = 300
+    print("[*] ⏳ في انتظار ضغطك على زر 'Allow' في المتصفح (المهلة: 5 دقائق)...")
     server.handle_request()
 
     code = auth_code_holder.get("code")
