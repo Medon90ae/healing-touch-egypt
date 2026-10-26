@@ -3071,6 +3071,12 @@ def build_sitemap_xml(articles: list, products: list):
         urls.append(
             f"  <url><loc>{SITE_BASE_URL}/articles/{art['slug']}.html</loc><lastmod>{today_str}</lastmod><priority>0.9</priority></url>"
         )
+    lp_dir = DOCS_DIR / "lp"
+    if lp_dir.exists():
+        for lp_file in sorted(lp_dir.glob("*.html")):
+            urls.append(
+                f"  <url><loc>{SITE_BASE_URL}/lp/{lp_file.name}</loc><lastmod>{today_str}</lastmod><priority>0.92</priority></url>"
+            )
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
     (DOCS_DIR / "sitemap.xml").write_text(xml, encoding="utf-8")
 

@@ -29,6 +29,7 @@ import sys
 import time
 import urllib.parse
 import webbrowser
+import campaign_landing_engine as cle
 from datetime import datetime
 from pathlib import Path
 
@@ -907,6 +908,14 @@ def export_notebooklm_master_source() -> str:
     print(f"[+] 🧠 تم إنشاء ملف المصدر المؤرخ بالوقت بنجاح: {out_file.name}")
     print(f"[+] 📁 تم حفظ نسخة في أرشيف الترندات الزمني: {archive_file}")
 
+    # توليد حزمة برومبتات Google Pomelli و Google Stitch و Gemini Deep Research
+    try:
+        sample_case = CLINICAL_STORIES_TEMPLATES[0]
+        prompts_pack = cle.generate_prompts_and_sources_pack(sample_case)
+        print(f"[+] 🎯 تم تجهيز حزمة البرومبتات الشاملة (Pomelli + Stitch + Deep Research + NotebookLM):\n   👉 {prompts_pack['txt_path']}")
+    except Exception as e:
+        print(f"[!] تنبيه حزمة البرومبتات: {e}")
+
     # جلب صور طبية جديدة من Pexels و Pixabay وحفظها في مجلد pic بأسماء المنصات والتاريخ
     try:
         print("\n[*] 📸 جاري جلب صور طبية جديدة من Pexels و Pixabay لمجلد pic...")
@@ -1396,17 +1405,28 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         video_path = str(vid_files[0])
         print(f"[+] 🎬 تم اكتشاف واعتماد فيديو يدوي راقٍ من manual_inbox ({Path(video_path).name})!")
 
-    # تجهيز ملفات نصوص صريحة ومستقلة لكل منصة (فيسبوك، إنستجرام، تيك توك، بلوجر، وريديت) بتاريخ اليوم
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
-    # التأكد التام من أن كابشن إنستجرام لا يتجاوز 2200 حرف تحت أي ظرف
-    if len(full_caption) > 2200:
-        max_story_len = max(100, 2200 - len(tmpl['hashtags']) - 4)
-        tmpl['story_text'] = tmpl['story_text'][:max_story_len].rsplit(" ", 1)[0] + "..."
-        full_caption = f"{tmpl['story_text']}\n\n{tmpl['hashtags']}"
+    # فحص ما إذا كان المستخدم قد وضع تصميماً مخصصاً من Google Stitch في manual_inbox
+    stitch_files = [f for f in MANUAL_INBOX_DIR.glob("*.html") if f.is_file() and f.stat().st_size > 100]
+    custom_stitch_html = stitch_files[0].read_text(encoding="utf-8") if stitch_files else ""
 
-    blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n{blogger_post['html_content']}"
-    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n**استشارة مجانية عبر واتساب:** 01155803307\n**كود الخصم:** HT10 (شحن مجاني ومعاينة قبل الدفع)\n\n{tmpl['hashtags']}"
+    # بناء ونشر الـ Landing Page المخصصة لحالة اليوم
+    lp_res = cle.build_campaign_landing_page(
+        case_data=tmpl,
+        media_assets={"square_path": square_img_path, "story_path": story_img_path},
+        custom_stitch_html=custom_stitch_html
+    )
+    lp_url = lp_res["public_url"]
+
+    # تجهيز نصوص المنصات بتاريخ اليوم مدمجاً برابط صفحة الهبوط الجديدة
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    full_caption = f"{tmpl['story_text']}\n\n🔗 رابط الدليل السريري وحجز الاستشارة:\n{lp_url}\n\n{tmpl['hashtags']}"
+    if len(full_caption) > 2200:
+        max_story_len = max(100, 2200 - len(tmpl['hashtags']) - len(lp_url) - 45)
+        tmpl['story_text'] = tmpl['story_text'][:max_story_len].rsplit(" ", 1)[0] + "..."
+        full_caption = f"{tmpl['story_text']}\n\n🔗 رابط الدليل السريري وحجز الاستشارة:\n{lp_url}\n\n{tmpl['hashtags']}"
+
+    blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n<p style='background:#ECFDF5;padding:12px;border-radius:10px;font-weight:bold;'>👉 <strong>رابط الدليل السريري وحجز الاستشارة المباشر:</strong> <a href='{lp_url}'>{lp_url}</a></p>\n\n{blogger_post['html_content']}"
+    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**\n\n**استشارة مجانية عبر واتساب:** 01155803307 | **كود الخصم:** HT10 (شحن مجاني ومعاينة قبل الدفع)\n\n{tmpl['hashtags']}"
     
     (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(full_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(full_caption, encoding="utf-8")
@@ -1457,12 +1477,26 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         open_tabs_in_default_windows_browser(fb_post_url="", blogger_post_file=blogger_post['file_path'])
         return True, ""
 
+    # رفع صفحة الهبوط وخريطة الموقع فورياً إلى GitHub Pages
+    print("\n[*] 🌐 جاري رفع الـ Landing Page الجديدة إلى GitHub Pages...")
+    try:
+        subprocess.run(["git", "add", "docs"], cwd=str(BASE_DIR), check=False)
+        subprocess.run(["git", "commit", "-m", f"feat(lp): deploy campaign landing page {tmpl.get('category')}"], cwd=str(BASE_DIR), check=False)
+        subprocess.run(["git", "push", "origin", "main"], cwd=str(BASE_DIR), check=False)
+        print(f"[+] 🚀 تم نشر وتفعيل الـ Landing Page بنجاح على الرابط:\n   👉 {lp_url}")
+    except Exception as e:
+        print(f"[!] تنبيه رفع GitHub: {e}")
+
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
-    publish_instagram_graph_api(f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
+    publish_instagram_graph_api(full_caption)
     publish_to_blogger_webhook(blogger_post)
-    publish_to_reddit_api(tmpl["title"], f"{tmpl['story_text']}\n\n{tmpl['hashtags']}")
+    publish_to_reddit_api(tmpl["title"], reddit_text)
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
+
+    # أرشفة الملفات المعالجة من manual_inbox
+    cle.archive_manual_inbox_processed()
+
     # فتح تبويبات المتصفح المطلوبة فوراً
     open_tabs_in_default_windows_browser(fb_post_url=permalink, blogger_post_file=blogger_post['file_path'])
     return ok, permalink
@@ -1497,7 +1531,10 @@ def main():
         print("🧠 [خطوات بسيطة للحصول على الفيديو والصوت والنصوص والمقالات كاملة]:")
         print("=" * 65)
         print(f"1. تم إنشاء وتحديث الملف المرجعي الحامل للبرومبت والتعليمات الصارمة:\n   👉 {src_path}")
-        print("2. جاري فتح صفحة Google NotebookLM في متصفحك لرفع الملف أو تحديثه...")
+        print("2. 🌐 جاري فتح منصات وأدوات الذكاء الاصطناعي الأربعة (Pomelli + Stitch + Deep Research + NotebookLM)...")
+        open_url_in_default_browser("https://labs.google.com/pomelli/campaigns")
+        open_url_in_default_browser("https://stitch.withgoogle.com/")
+        open_url_in_default_browser("https://gemini.google.com/")
         open_url_in_default_browser("https://notebooklm.google.com/")
         print("3. جاري فتح مجلد الحزمة ومجلد الصور الطبية pic وصندوق الاستقبال manual_inbox...")
         try:
