@@ -1,6 +1,6 @@
 {
-  "total_studies": 6,
-  "last_updated": "2026-10-27 10:39:22",
+  "total_studies": 9,
+  "last_updated": "2026-10-27 23:31:05",
   "studies": [
     {
       "pmid": "40459590",
@@ -73,6 +73,42 @@
       "product_name": "ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)",
       "summary_ar": "دراسة سريرية محكمة منشورة في (Acta Biomater) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)).",
       "discovered_at": "2026-10-27T10:39:22.351720"
+    },
+    {
+      "pmid": "42564702",
+      "title": "Cosmetic outcomes of postoperative scar taping after surgical incisions: A systematic review",
+      "journal": "JPRAS Open",
+      "pub_year": "2026",
+      "doi": "10.1016/j.jpra.2026.07.002",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42564702/",
+      "product_choice": "3",
+      "product_name": "شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (JPRAS Open) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)).",
+      "discovered_at": "2026-10-27T23:31:05.049791"
+    },
+    {
+      "pmid": "36973982",
+      "title": "Effectiveness of various methods of manual scar therapy",
+      "journal": "Skin Res Technol",
+      "pub_year": "2023",
+      "doi": "10.1111/srt.13272",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36973982/",
+      "product_choice": "3",
+      "product_name": "شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Skin Res Technol) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)).",
+      "discovered_at": "2026-10-27T23:31:05.049838"
+    },
+    {
+      "pmid": "9827954",
+      "title": "Hydration and occlusive treatment of a sutured wound",
+      "journal": "Ann Plast Surg",
+      "pub_year": "1998",
+      "doi": "10.1097/00000637-199811000-00010",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9827954/",
+      "product_choice": "3",
+      "product_name": "شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Ann Plast Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)).",
+      "discovered_at": "2026-10-27T23:31:05.049852"
     }
   ]
 }
