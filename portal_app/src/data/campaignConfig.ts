@@ -5,11 +5,37 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     id: 'c-section',
     name: 'الولادة القيصرية',
     slug: 'c-section',
-    title: 'بروتوكول التعافي السريري للجراحة القيصرية',
-    subtitle: 'حماية متكاملة ضد بلل الاستحمام ووقاية معتمدة من تضخم ندبات القيصرية (الهايبرتروفيك والكيلويد) بشرائح السيليكون الطبية المعتمدة عالمياً.',
+    title: 'هو جرح القيصرية التجميلي ممكن يفتح من المية؟ وليه حاسة بخط ناشف ومكلكع تحت الجلد بعد أسبوعين؟',
+    subtitle: 'الدليل الإكلينيكي الشامل لعلاج فوبيا الاستحمام، حماية الخياطة التجميلية من البكتيريا، وتسطيح ندبة القيصرية بشرائح السيليكون الطبية المعتمدة خطوة بخطوة بالصور والفيديو.',
     surgicalArea: 'جرح أسفل البطن القيصري (Pfannenstiel Incision)',
-    heroBadge: 'بروتوكول معتمد من استشاريي النساء والتوليد وجراحة التجميل',
-    heroImageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80',
+    heroBadge: 'الموسوعة السريرية المعتمدة • مراجعة طبية دقيقة (أكتوبر 2026)',
+    heroImageUrl: './assets/campaign_c-section_hero.png',
+    videoUrl: './assets/campaign_c-section_video.mp4',
+    videoPosterUrl: './assets/campaign_c-section_hero.png',
+    videoTitle: 'شرح سريري عملي: الطريقة الصحيحة لحماية جرح القيصرية أثناء الاستحمام وتطبيق السيليكون الطبي',
+    videoDuration: '2:45 دقيقة',
+    galleryImages: [
+      {
+        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
+        title: 'ضمادة 3M Tegaderm + Pad الطبية الأصلية',
+        subtitle: 'غشاء بولي يوريثان نفاذ للبخار وعازل 100% لمياه الشاور وبكتيريا الاستحمام'
+      },
+      {
+        url: './assets/gallery/3m-tegaderm-plus-pad/2_dressing_film_and_absorbent_pad.jpg',
+        title: 'الوسادة الماصة غير الملتصقة',
+        subtitle: 'تحمي خياطة القيصرية التجميلية وتمنع احتكاك الملابس مع تهوية صحية مستمرة'
+      },
+      {
+        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
+        title: 'شرائح BUPY سيليكون جل طبي أصلي',
+        subtitle: 'المعيار الذهبي الدولي لتسطيح الندبات وإعادة تنظيم ألياف الكولاجين'
+      },
+      {
+        url: './assets/gallery/bupy-silicone-scar-sheet/6_bupy_box_with_roll_real.jpg',
+        title: 'شريحة سيليكون فائقة النقاء قابلة لإعادة الغسيل',
+        subtitle: 'سماكة طبية تمنع التكلكع والشد وتوحد لون الجلد خلال 8-12 أسبوعاً'
+      }
+    ],
     heroHighlights: [
       'عزل كامل ومقاومة بنسبة 100% للماء أثناء الاستحمام',
       'شرائح سيليكون BUPY الطبية الأصلية لترطيب وضغط الندبة',
@@ -413,11 +439,31 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     id: 'rhinoplasty',
     name: 'تجميل الأنف',
     slug: 'rhinoplasty',
-    title: 'بروتوكول تثبيت الأنف والحد من تورم الأرنبة (Supratip Edema)',
-    subtitle: 'أشرطة 3M Micropore الطبية الأصلية بلون البشرة رقم 1533-0 مع دعامات السيليكون المعتمدة لتثبيت عظام وغضاريف الأنف وتسريع انحسار التورم بعد الجراحة.',
+    title: 'ليه حاسة بانسداد وتورم في أرنبة الأنف بعد فك الجبيرة؟ وازاي اضمن تماثل فتحتي الأنف؟',
+    subtitle: 'دليل الرعاية اليومية بعد فك جبيرة الأنف: تقنية التثبيت الدقيق بأشرطة 3M Micropore الأصلية، دعم الغضاريف بدعامات السيليكون، وتسريع تصريف الوذمة اللمفاوية بالصور التوضيحية.',
     surgicalArea: 'غضاريف وعظام الأنف والأرنبة (Nasal Dorsum & Tip)',
-    heroBadge: 'البروتوكول المعتمد لجراحي التجميل والأنف والأذن بمصر',
-    heroImageUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1000&q=80',
+    heroBadge: 'الموسوعة السريرية المعتمدة • مراجعة استشاريي جراحة الأنف والوجه (أكتوبر 2026)',
+    heroImageUrl: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
+    videoPosterUrl: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
+    videoTitle: 'الدليل المرئي المعتمد: الطريقة الصحيحة لتثبيت شريط Micropore وتقليل تورم أرنبة الأنف',
+    videoDuration: 'دليل مرئي معتمد',
+    galleryImages: [
+      {
+        url: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
+        title: 'شريط 3M Micropore Tan 1533-0 الجراحي الأصلي',
+        subtitle: 'لون لحمي طبيعي غير لامع هيبوالرجينيك لتثبيت الأنسجة وتقليل التورم'
+      },
+      {
+        url: './assets/gallery/3m-micropore-tan-tape-1533-0/2_single_roll_profile_hand_real.jpg',
+        title: 'سماكة دقيقة مخصصة للأنف',
+        subtitle: 'تسمح بتنفس الجلد دون حساسية أو احمرار عند النزع'
+      },
+      {
+        url: './assets/gallery/silicone-nostril-retainer/1_silicone_nostril_retainer_pack.jpg',
+        title: 'دعامات السيليكون لتثبيت فتحتي الأنف',
+        subtitle: 'سيليكون طبي مرن يحافظ على تماثل فتحات الأنف ومنع انكماش الغضاريف'
+      }
+    ],
     heroHighlights: [
       'شريط 3M Micropore Tan 1533-0 الأصلي غير اللامع المتطابق مع البشرة',
       'ضغط متدرج يمنع تراكم التورم اللمفاوي تحت جلد الأرنبة السميك',
@@ -747,11 +793,32 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     id: 'bariatric',
     name: 'جراحات السمنة والتكميم',
     slug: 'bariatric',
-    title: 'بروتوكول حماية ثقوب المنظار والتعافي بعد التكميم',
-    subtitle: 'سبراي Smith & Nephew Opsite الطبي العازل مع شرائح BUPY السيليكونية لفتحات المنظار (Trocar Sites) لحماية فورية من الاحتكاك ومنع تمدد الندبات مع نزول الوزن السريع.',
+    title: 'ازاي احمي ثقوب المنظار الـ 5 من العرق والشاور؟ وليه البلاستر العادي بيسلخ جلد البطن؟',
+    subtitle: 'البروتوكول السريري المعتمد لعزل ثقوب المنظار الجراحي ضد مياه الاستحمام ومنع الالتهابات الميكروبية مع تسريع التئام الكولاجين بعد جراحات السمنة والتكميم بالفيديو والشرح العملي.',
     surgicalArea: 'ثقوب منظار جدار البطن (3 إلى 5 فتحات مقاس 5 - 12 مم)',
-    heroBadge: 'البروتوكول الموصى به لجراحي السمنة والمناظير المتطورة',
-    heroImageUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1000&q=80',
+    heroBadge: 'الموسوعة السريرية المعتمدة • مراجعة استشاريي جراحة السمنة والمناظير (أكتوبر 2026)',
+    heroImageUrl: './assets/campaign_bariatric_hero.png',
+    videoUrl: './assets/campaign_bariatric_video.mp4',
+    videoPosterUrl: './assets/campaign_bariatric_hero.png',
+    videoTitle: 'شرح سريري عملي: عزل ثقوب المنظار الـ 5 المقاوم للماء ومنع تسلخ الجلد وبكتيريا الشاور',
+    videoDuration: '3:10 دقيقة',
+    galleryImages: [
+      {
+        url: './assets/gallery/smith-nephew-opsite-spray/1_opsite_spray_can_studio.jpg',
+        title: 'سبراي Smith & Nephew Opsite الطبي العازل',
+        subtitle: 'غشاء شفاف مرن وسريع الجفاف يعزل منافذ المنظار الدقيقة ضد الماء والعرق'
+      },
+      {
+        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
+        title: 'ضمادات 3M Tegaderm المقاومة للماء',
+        subtitle: 'حماية منفذ استخراج المعدة الأكبر حجماً ومنع الاحتكاك مع مشد البطن'
+      },
+      {
+        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
+        title: 'شرائح سيليكون BUPY الطبية الأصلية',
+        subtitle: 'تمنع تحول ثقوب المنظار إلى نقاط بارزة بنية غامقة أو تليف كلويدي'
+      }
+    ],
     heroHighlights: [
       'سبراي Smith & Nephew Opsite الشفاف لعزل ثقوب المنظار من التلوث',
       'شرائح BUPY سيليكون متخصصة مقطعة بحجم فتحات المنظار',
@@ -1020,11 +1087,31 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     id: 'thyroid',
     name: 'استئصال الغدة الدرقية والرقبة',
     slug: 'thyroid',
-    title: 'بروتوكول تعافي ندبة الرقبة وجراحة الغدة الدرقية',
-    subtitle: 'شرائح BUPY سيليكون فائقة النعومة والمرونة للرقبة مع شريط 3M البيج غير اللامع وبروتوكول الحماية القصوى من أشعة الشمس فوق البنفسجية UV لمنع تصبغ خط الرقبة.',
+    title: 'ازاي اخفي خط جرح الرقبة بعد استئصال الغدة؟ وهل شمس الصيف بتغمق مكان العملية؟',
+    subtitle: 'خطة التعافي التجميلي لعنق الرقبة: الحماية من التصبغات بالسيليكون الشفاف، منع بروز الندبة، وتدليك التصريف اللمفاوي الآمن بالصور التوضيحية.',
     surgicalArea: 'ثنية الرقبة الأمامية السفلية (Kocher Transverse Collar Incision)',
-    heroBadge: 'البروتوكول المعتمد لجراحي الأورام والغدد الصماء والرقبة',
-    heroImageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1000&q=80',
+    heroBadge: 'الموسوعة السريرية المعتمدة • مراجعة أساتذة جراحة الأورام والغدد (أكتوبر 2026)',
+    heroImageUrl: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
+    videoPosterUrl: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
+    videoTitle: 'الدليل المرئي المعتمد: حماية ندبة الرقبة وتلاشي الأثر بالسيليكون الطبي وتفادي تصبغات الشمس',
+    videoDuration: 'دليل مرئي معتمد',
+    galleryImages: [
+      {
+        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
+        title: 'شرائح سيليكون BUPY الطبية فائقة الرقة للرقبة',
+        subtitle: 'سماكة 0.3 مم شفافة تماماً غير مرئية توفر عزلاً وحماية من أشعة الشمس'
+      },
+      {
+        url: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
+        title: 'شريط 3M Micropore Tan الواقي من الشمس',
+        subtitle: 'حماية إضافية لحجب الأشعة فوق البنفسجية UV ومنع اسمرار وتصبغ الخط الجراحي'
+      },
+      {
+        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
+        title: 'ضمادة 3M Tegaderm لحماية الرقبة أثناء الاستحمام',
+        subtitle: 'تمنع وصول مياه الشامبو والصابون لمنطقة الرقبة الحساسة في أول أسبوع'
+      }
+    ],
     heroHighlights: [
       'شرائح سيليكون BUPY فائقة الرقة (0.3 مم) تتمدد بمرونة مع حركة وحني الرقبة',
       'حماية 100% من تصبغات الشمس والأشعة فوق البنفسجية في منطقة الرقبة المكشوفة',

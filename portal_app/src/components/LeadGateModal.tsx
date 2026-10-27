@@ -122,28 +122,24 @@ export const LeadGateModal: React.FC<LeadGateModalProps> = ({
       timestamp: new Date().toISOString()
     };
 
+    // 3. Build programmatic WhatsApp redirection URL upfront
+    const targetWhatsAppUrl = buildWhatsAppRedirectUrl(leadData);
+    setRedirectUrl(targetWhatsAppUrl);
+    setSubmissionState('success');
+
+    // 4. Background non-blocking lead submission to Google Sheet (using beacon & fetch)
+    submitLeadToGoogleSheet(leadData).catch((sheetErr) => {
+      console.warn('Background lead submission warning:', sheetErr);
+    });
+
+    // 5. Immediate user-initiated redirect to WhatsApp while click event is active
     try {
-      // 3. Programmatic Gating: Post to Google Sheet webhook FIRST via no-cors mode
-      await submitLeadToGoogleSheet(leadData);
-
-      // 4. Build programmatic WhatsApp redirection URL (Phone numbers are NEVER shown in UI)
-      const targetWhatsAppUrl = buildWhatsAppRedirectUrl(leadData);
-      setRedirectUrl(targetWhatsAppUrl);
-      setSubmissionState('success');
-
-      // 5. Automatic redirect after short clinical reassurance delay (1.2 seconds)
-      setTimeout(() => {
-        window.location.href = targetWhatsAppUrl;
-      }, 1400);
-    } catch (err) {
-      console.error('Submission error:', err);
-      // Fallback to allow customer flow even if offline
-      const targetWhatsAppUrl = buildWhatsAppRedirectUrl(leadData);
-      setRedirectUrl(targetWhatsAppUrl);
-      setSubmissionState('success');
-      setTimeout(() => {
-        window.location.href = targetWhatsAppUrl;
-      }, 1400);
+      const waWin = window.open(targetWhatsAppUrl, '_blank');
+      if (!waWin || waWin.closed || typeof waWin.closed === 'undefined') {
+        window.location.assign(targetWhatsAppUrl);
+      }
+    } catch {
+      window.location.href = targetWhatsAppUrl;
     }
   };
 
@@ -212,24 +208,20 @@ export const LeadGateModal: React.FC<LeadGateModalProps> = ({
                   </p>
                 </div>
 
-                {/* Progress Indicator */}
-                <div className="flex items-center justify-center gap-2 text-xs font-semibold text-[#064E3B] pt-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#059669]" />
-                  <span>جاري فتح محادثة المتابعة الطبية الآمنة...</span>
-                </div>
-
-                {/* Manual Fallback Action Button (Strictly labeled as required) */}
-                <div className="pt-4">
+                {/* Prominent Direct WhatsApp Open Button */}
+                <div className="pt-2 space-y-3">
                   <a
                     href={redirectUrl}
-                    className="inline-flex items-center justify-center gap-2 bg-[#064E3B] hover:bg-[#003527] text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-md transition-all active:scale-98"
-                    aria-label="متابعة مع أخصائية التعافي"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2.5 bg-[#059669] hover:bg-[#047857] text-white py-4 px-6 rounded-2xl font-extrabold text-base sm:text-lg shadow-lg shadow-[#059669]/30 transition-all active:scale-98 animate-pulse"
+                    aria-label="اضغطي هنا لفتح محادثة واتساب الآن مباشرة"
                   >
-                    <MessageSquare className="w-4 h-4 text-[#82F5C1]" />
-                    <span>متابعة مع أخصائية التعافي</span>
+                    <MessageSquare className="w-6 h-6 text-[#82F5C1]" />
+                    <span>اضغطي هنا لفتح محادثة واتساب الآن مباشرة</span>
                   </a>
-                  <p className="text-[11px] text-[#707974] mt-2">
-                    إذا لم يتم تحويلك تلقائياً خلال ثوانٍ، اضغطي على الزر أعلاه للمتابعة الفورية.
+                  <p className="text-xs text-[#065F46] font-semibold bg-[#DCFCE7] p-2.5 rounded-xl border border-[#82F5C1]">
+                    ✅ تم تسجيل بياناتك بنجاح في السجل الطبي. اضغطي على الزر الأخضر أعلاه لبدء المحادثة الفورية وتأكيد الاستشارة مع أخصائية التعافي.
                   </p>
                 </div>
               </div>

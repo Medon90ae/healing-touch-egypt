@@ -105,14 +105,26 @@ export async function submitLeadToGoogleSheet(data: LeadSubmissionData): Promise
       timestamp: data.timestamp || new Date().toISOString()
     };
 
-    // Google Apps Script requires no-cors when executed from client browsers without CORS headers
-    await fetch(WEBHOOK_URL, {
+    // 1. Try navigator.sendBeacon for instant non-blocking delivery that survives redirects
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      try {
+        const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
+        navigator.sendBeacon(WEBHOOK_URL, blob);
+      } catch (beaconErr) {
+        console.warn('sendBeacon delivery fallback:', beaconErr);
+      }
+    }
+
+    // 2. Also dispatch fetch with no-cors mode
+    fetch(WEBHOOK_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
+    }).catch((fetchErr) => {
+      console.warn('Background lead fetch error:', fetchErr);
     });
 
     return { success: true };

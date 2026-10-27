@@ -2988,15 +2988,6 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
     </div>
   </section>
 
-  <!-- المحطة 3: المستلزمات الطبية المعتمدة (ربطها بصفحات المنتجات المستقلة R6) -->
-  <section id="products-section" style="margin-top: 50px;">
-    <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا (5 منتجات رئيسية)</h2>
-    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات الكاملة أو طلب استشارة مجانية مع تفعيل كود <strong>{offer["code"]}</strong> ({offer["offer_title"]}):</p>
-    <div class="products-cards-grid">
-      {products_grid_html}
-    </div>
-  </section>
-
   <!-- المحطة 4: الموسوعة الطبية الحية (عرض كافة المقالات الـ 15+ في وقت واحد مع الفلترة والبحث) -->
   <section id="knowledge-hub-section" style="margin-top: 55px;">
     <div class="hub-header-box">
@@ -3029,6 +3020,15 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
     <!-- شبكة جميع المقالات المعروضة في نفس الوقت -->
     <div id="articles-bento-grid" class="articles-bento-grid">
       {articles_grid_html}
+    </div>
+  </section>
+
+  <!-- المحطة 3: المستلزمات الطبية المعتمدة (ربطها بصفحات المنتجات المستقلة R6) -->
+  <section id="products-section" style="margin-top: 50px;">
+    <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا (5 منتجات رئيسية)</h2>
+    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات الكاملة أو طلب استشارة مجانية مع تفعيل كود <strong>{offer["code"]}</strong> ({offer["offer_title"]}):</p>
+    <div class="products-cards-grid">
+      {products_grid_html}
     </div>
   </section>
 

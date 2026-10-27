@@ -8,10 +8,11 @@ import {
   Sparkles,
   Command,
   Filter,
-  Check
+  Check,
+  MessageSquare
 } from 'lucide-react';
 import { CampaignId } from '../types/campaign';
-import { CAMPAIGNS } from '../data/campaignConfig';
+import { CAMPAIGNS, WHATSAPP_RECOVERY_NUMBER } from '../data/campaignConfig';
 import {
   buildClinicalSearchIndex,
   searchKnowledge,
@@ -120,6 +121,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     inputRef.current?.focus();
   };
 
+  const handleDirectWhatsAppConsultation = (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
+    const activeName = CAMPAIGNS[activeCampaignId]?.name || 'موسوعة التعافي';
+    const text = `مرحباً، أود استشارة أخصائية التعافي في هيلينج تاتش بخصوص: "${searchQuery.trim()}" (${activeName}).`;
+    const url = `https://wa.me/${WHATSAPP_RECOVERY_NUMBER}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    setIsOpen(false);
+  };
+
   const activeCampaignName = CAMPAIGNS[activeCampaignId]?.name || 'الجراحة الحالية';
 
   return (
@@ -145,13 +155,34 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             if (!isOpen) setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (query.trim()) {
+                handleDirectWhatsAppConsultation(query.trim());
+              }
+            }
+          }}
           placeholder="ابحث في المقالات الإكلينيكية، الاستحمام، السيليكون، والأسئلة الشائعة..."
           className="w-full py-2.5 sm:py-3 text-xs sm:text-sm text-[#121C2A] placeholder-[#707974] bg-transparent outline-none pr-1 pl-2"
           aria-label="بحث محلي في المقالات والأسئلة الشائعة"
         />
 
-        {/* Clear or Shortcut badges */}
+        {/* Clear, Consultation or Shortcut badges */}
         <div className="flex items-center gap-1.5 pl-3 pr-1">
+          {query.trim() && (
+            <button
+              type="button"
+              onClick={() => handleDirectWhatsAppConsultation(query.trim())}
+              className="flex items-center gap-1 bg-[#059669] hover:bg-[#047857] text-white text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg shadow-2xs transition-all cursor-pointer active:scale-95 shrink-0"
+              title="تأكيد البحث والتحويل لاستشارة واتساب فوراً"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-[#82F5C1]" />
+              <span className="hidden sm:inline">اسألي واتساب</span>
+              <span className="sm:hidden">واتساب</span>
+            </button>
+          )}
+
           {query ? (
             <button
               type="button"
@@ -176,6 +207,35 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Dropdown Flyout Panel */}
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-[#E2ECE6] shadow-xl z-50 overflow-hidden max-h-[80vh] flex flex-col animate-fade-in-up">
+          
+          {/* Prominent Direct WhatsApp Consultation Banner (Visible when typing) */}
+          {query.trim() && (
+            <div
+              onClick={() => handleDirectWhatsAppConsultation(query.trim())}
+              className="p-3 sm:p-4 bg-gradient-to-r from-[#E6F4F1] via-[#DCFCE7] to-[#E6EEFF] border-b border-[#82F5C1] flex items-center justify-between gap-3 cursor-pointer hover:bg-[#D1FAE5] transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#059669] text-white flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                  <MessageSquare className="w-5 h-5 text-[#82F5C1]" />
+                </div>
+                <div>
+                  <div className="text-xs sm:text-sm font-bold text-[#003527] flex items-center gap-2">
+                    <span>استشارة فورية بخصوص: "{query.trim()}"</span>
+                    <span className="text-[10px] bg-[#059669] text-white px-2 py-0.5 rounded-full font-bold animate-pulse">
+                      واتساب متاح الآن
+                    </span>
+                  </div>
+                  <div className="text-[11px] sm:text-xs text-[#065F46] mt-0.5">
+                    اضغطي هنا لنقل سؤالك مباشرة إلى أخصائية التعافي والإجابة المعتمدة فوراً
+                  </div>
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#064E3B] group-hover:bg-[#003527] px-3.5 py-2 rounded-xl shadow-xs transition-all shrink-0">
+                <span>تأكيد وسؤال واتساب</span>
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0" />
+              </div>
+            </div>
+          )}
           {/* Filter Bar & Scope Switcher */}
           <div className="p-3 sm:p-4 bg-[#F8F9FF] border-b border-[#E2ECE6] flex flex-wrap items-center justify-between gap-2 text-xs">
             {/* Type Filter Chips */}

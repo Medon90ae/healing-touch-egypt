@@ -120,6 +120,11 @@ export interface Campaign {
   heroBadge: string;
   heroHighlights: string[];
   heroImageUrl: string;
+  videoUrl?: string;
+  videoPosterUrl?: string;
+  videoTitle?: string;
+  videoDuration?: string;
+  galleryImages?: { url: string; title: string; subtitle: string }[];
   primaryRecommendation: string;
   protocolDescription: string;
   products: Product[];
