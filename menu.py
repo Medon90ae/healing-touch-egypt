@@ -35,7 +35,7 @@ def print_banner():
     print("  [6] استعراض وفحص سجل العملاء وحجوزات الاستشارات في Google Sheet")
     print("  [7] ربط وتفعيل حساب Reddit تلقائياً (لمرة واحدة فقط)")
     print("  [8] فتح أحدث منشور تم نشره على فيسبوك في المتصفح")
-    print("  [9] 📋 فتح مجلد قوالب النشر الجاهزة السريعة لريديت وبلوجر (Ready to Publish Pack)")
+    print("  [9] 📋 فتح حزمة النشر الجاهزة الشاملة (YouTube + Blogger + Reddit)")
     print()
     print("=" * 70)
 
@@ -158,7 +158,7 @@ def run_option_8():
 
 
 def run_option_9():
-    print("\n[*] 📋 فتح مجلد قوالب النشر الجاهزة السريعة لريديت وبلوجر...")
+    print("\n[*] 📋 تجهيز وفتح حزمة النشر الشاملة (YouTube + Blogger + Reddit)...")
     ready_dir = BASE_DIR / "media_assets" / "ready_to_publish"
     ready_dir.mkdir(parents=True, exist_ok=True)
     try:
@@ -169,11 +169,12 @@ def run_option_9():
         os.startfile(str(ready_dir))
     except Exception:
         pass
-    # فتح روابط النشر في المتصفح تلقائياً
+    # فتح روابط النشر في المتصفح تلقائياً لجميع المنصات
     import webbrowser
+    webbrowser.open("https://studio.youtube.com/channel/UCcHqrSEET7IEhr9ueM8VELQ/videos/upload?d=ud")
     webbrowser.open("https://draft.blogger.com/blog/posts/6258225961862592152")
     webbrowser.open("https://www.reddit.com/r/u_Dull-Nectarine4963/submit")
-    print("[+] تم فتح مجلد القوالب وصفحات النشر المباشرة في المتصفح!")
+    print("[+] تم فتح مجلد الأصول الجاهزة ونوافذ النشر المباشرة (YouTube + Blogger + Reddit) في المتصفح!")
 
 
 def main():
