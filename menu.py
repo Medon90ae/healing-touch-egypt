@@ -36,6 +36,7 @@ def print_banner():
     print("  [7] ربط وتفعيل حساب Reddit تلقائياً (لمرة واحدة فقط)")
     print("  [8] فتح أحدث منشور تم نشره على فيسبوك في المتصفح")
     print("  [9] 📋 فتح حزمة النشر الجاهزة الشاملة (YouTube + Blogger + Reddit)")
+    print("  [10] 🌐 حصر واستعراض كافة صفحات الهبوط (11 صفحة هبوط حية) وروابطها المباشرة")
     print()
     print("=" * 70)
 
@@ -178,6 +179,20 @@ def run_option_9():
     print("[+] تم فتح مجلد الأصول الجاهزة ونوافذ النشر المباشرة (YouTube + Blogger + Reddit) في المتصفح!")
 
 
+def run_option_10():
+    print("\n[*] 🌐 جاري فحص واستعراض كافة صفحات الهبوط (Landing Pages Directory)...")
+    try:
+        subprocess.run([VENV_PYTHON, "scripts/build_landing_pages_directory.py"], cwd=str(BASE_DIR))
+    except Exception:
+        pass
+    md_file = BASE_DIR / "media_assets" / "LANDING_PAGES_DIRECTORY.md"
+    if md_file.exists():
+        try:
+            os.startfile(str(md_file))
+        except Exception:
+            pass
+
+
 def main():
     print_banner()
     try:
@@ -198,6 +213,7 @@ def main():
         "7": run_option_7,
         "8": run_option_8,
         "9": run_option_9,
+        "10": run_option_10,
     }
 
     action = actions.get(choice, run_option_1)
