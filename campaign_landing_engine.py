@@ -276,7 +276,15 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
         </div>
         """)
 
+    # فحص وجود فيديو
     video_block = ""
+    if not video_rel_path:
+        for ext in [".mp4", ".mov", ".webm"]:
+            cand_v = DOCS_DIR / "assets" / f"campaign_{cat}_video{ext}"
+            if cand_v.exists():
+                video_rel_path = f"../assets/{cand_v.name}"
+                break
+
     if video_rel_path:
         video_block = f"""
         <div class="video-container-card">
@@ -289,11 +297,32 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
         </div>
         """
 
+    # فحص وجود تعليق صوتي وبودكاست سريري
+    audio_rel_path = ""
+    for ext in [".m4a", ".mp3", ".wav"]:
+        cand_a = DOCS_DIR / "assets" / f"campaign_{cat}_audio{ext}"
+        if cand_a.exists():
+            audio_rel_path = f"../assets/{cand_a.name}"
+            break
+
+    audio_block = ""
+    if audio_rel_path:
+        audio_block = f"""
+        <div class="audio-container-card" style="background:#F0FDF4; border:1px solid #A7F3D0; border-radius:14px; padding:20px; margin:24px 0;">
+          <div style="font-weight:800; color:#065F46; margin-bottom:10px; font-size:1.05rem;">🎙️ استمع إلى الشرح والبودكاست السريري لحالة اليوم (Audio Overview):</div>
+          <audio controls style="width:100%; border-radius:30px;">
+            <source src="{audio_rel_path}" type="audio/mp4">
+            متصفحك لا يدعم تشغيل الصوت المباشر.
+          </audio>
+          <p style="font-size:0.88rem; color:#475569; margin-top:8px;">حوار سريري توضيحي حول فيزيولوجيا التئام الأنسجة، ترطيب الكولاجين، وطريقة الوقاية من تضخم الندبات والكلويد.</p>
+        </div>
+        """
+
     # أسئلة شائعة مطابقة لترندات بحث جوجل مصر
     faq_items = [
         ("هو ينفع أستحمى بأمان بعد الجراحة بدون ما الجرح يلتهب؟", "نعم، باستخدام الضمادات شبه المنفذة مثل 3M Tegaderm أو بخاخ أوبسايت العازل Smith & Nephew Opsite، يتم عزل الماء بنسبة 100% مع السماح للجلد بالتنفس وطرد بخار العرق، مما يتيح لك الاستحمام بحرية تامة دون رطوبة متبقية على خط الخياطة."),
         ("ليه حاسة بخط ناشف ومكلكع تحت مكان الجرح بعد أسبوعين؟", "هذا تكتل طبيعي ناتج عن إفراز مكثف وعشوائي لألياف الكولاجين خلال مرحلة الالتئام. تطبيق رول السيليكون الطبي BUPY يمارس ضغطاً ميكانيكياً خفيفاً ويحبس الرطوبة الفسيولوجية، مما يعيد ترتيب ألياف الكولاجين في مسار مسطح وناعم ويمنع تحول الخط إلى كلويد دائم."),
-        ("ما هي مميزات كود HT10 وكيف أحصل على الاستشارة السريرية؟", "كود HT10 يمنحك أولوية المتابعة السريرية المجانية مع أخصائية العناية بالتعافي عبر واتساب، بالإضافة لحق فتح ومعاينة الشحنة الطبية قبل الاستلام للتأكد من أصلية العبوات وتاريخ الصلاحية.")
+        ("كيف أحصل على التوجيه والاستشارة السريرية المجانية لمرحلة تعافي جرحي؟", "يمكنك التواصل المباشر مع استشاري العناية بالتعافي عبر واتساب من خلال الرابط أو الزر المباشر بالصفحة؛ لتحصل على إرشادات علمية دقيقة تناسب نوع عمليتك وتاريخ إجرائها ومعدل التئام الأنسجة لديك.")
     ]
 
     faq_html = "\n".join([f"""
@@ -484,6 +513,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 
     <!-- مشغل الفيديو الشارح إن وجد -->
     {video_block}
+    {audio_block}
 
     <!-- السرد الإكلينيكي وحل المشكلة -->
     <section class="clinical-narrative-card">
@@ -1094,6 +1124,7 @@ def generate_all_multi_angle_product_lps() -> list:
     </section>
 
     {video_block}
+    {audio_block}
 
     <section class="clinical-narrative-card">
       <h2>📖 الشرح السريري والآلية العلمية للتعافي</h2>

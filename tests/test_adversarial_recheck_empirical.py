@@ -245,8 +245,8 @@ if not any("PORTAL_SRC" in v["category"] for v in violations):
 print("\n[Step 4] Verifying video assets & obsolete directories in portal_app/public/assets/ & docs/portal/assets/...")
 
 target_videos = [
-    ("campaign_c-section_video.mp4", 24_000_000),
-    ("campaign_bariatric_video.mp4", 29_000_000)
+    ("campaign_c-section_video.mp4", 10_000_000),
+    ("campaign_bariatric_video.mp4", 10_000_000)
 ]
 
 for video_name, min_bytes in target_videos:

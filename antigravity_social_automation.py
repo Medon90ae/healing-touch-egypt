@@ -887,11 +887,10 @@ def prompt_user_for_product_selection() -> str:
     return choice
 
 
-def export_notebooklm_master_source(product_choice: str = None) -> str:
+def export_notebooklm_master_source(product_choice: str = None, interactive: bool = False) -> str:
     """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Pomelli و Deep Research."""
     if product_choice is None:
-        # إذا كنا في طرفية تفاعلية، نطلب الاختيار من المستخدم
-        if sys.stdin and sys.stdin.isatty():
+        if interactive and sys.stdin and sys.stdin.isatty():
             product_choice = prompt_user_for_product_selection()
         else:
             product_choice = "1"
@@ -1475,67 +1474,108 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     except Exception as e:
         print(f"[!] تنبيه سحب الترندات الحية: {e}")
 
-    photo_info = get_clinical_case_photo(tmpl["title"], tmpl["category"])
-    raw_img = photo_info.get("local_path", "")
-    print(f"[*] 📸 الصورة المختارة: {Path(raw_img).name if raw_img else 'افتراضية'} (المصدر: {photo_info.get('source')})")
+    # 📥 فحص واستيعاب كافة ملفات manual_inbox فورياً وتوجيهها للمشروع
+    inbox_files = [f for f in MANUAL_INBOX_DIR.iterdir() if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]]
+    
+    inbox_videos = [f for f in inbox_files if f.suffix.lower() in [".mp4", ".mov", ".mkv", ".webm"]]
+    inbox_audios = [f for f in inbox_files if f.suffix.lower() in [".m4a", ".mp3", ".wav", ".aac"]]
+    inbox_images = [f for f in inbox_files if f.suffix.lower() in [".jpg", ".jpeg", ".png", ".webp"]]
+    inbox_texts = [f for f in inbox_files if f.suffix.lower() in [".txt", ".md"]]
+    inbox_htmls = [f for f in inbox_files if f.suffix.lower() in [".html", ".htm"]]
 
-    cards = generate_branded_card(tmpl, raw_img) if raw_img else {"square_path": "", "story_path": ""}
-    square_img_path = cards.get("square_path", "") or raw_img
-    story_img_path = cards.get("story_path", "")
-
-    video_path = generate_tiktok_reel_video(story_img_path, duration_sec=8) if story_img_path else ""
-    export_canva_bulk_csv(CLINICAL_STORIES_TEMPLATES)
-
-    blogger_post = format_clinical_case_for_blogger(tmpl, photo_info)
-    generate_blogger_atom_xml([blogger_post])
-    notebook_file = export_notebooklm_master_source()
-
-    # اختيار الوسائط المرفوعة بناءً على تصنيف التخصص الجراحي الدقيق (Smart Matching)
-    cat_matched = inbox_triage["matched_files"].get(tmpl["category"], {"videos": [], "images": [], "audios": [], "texts": [], "htmls": []})
-
-    # 1. الصوت
-    if cat_matched.get("audios"):
-        aud_f = cat_matched["audios"][0]
-        dest_aud = NOTEBOOK_AUDIO_DIR / aud_f.name
-        if not dest_aud.exists():
-            shutil.copy2(str(aud_f), str(dest_aud))
-        used_inbox_files.append(aud_f)
-        print(f"[+] 🎙️ [المصنف الذكي]: تم التقاط ملف صوتي مطابق للتخصص ({aud_f.name})!")
-
-    # 2. النص والمقال
-    if cat_matched.get("texts"):
-        chosen_txt = cat_matched["texts"][0]
-        custom_text = read_resilient_text(chosen_txt).strip()
-        if custom_text and len(custom_text) > 50:
-            if len(custom_text) > 1500:
-                truncated = custom_text[:1500]
-                last_space = truncated.rfind(" ")
-                custom_text = (truncated[:last_space] if last_space > 1200 else truncated) + "..."
-            tmpl["story_text"] = custom_text
-            used_inbox_files.append(chosen_txt)
-            print(f"[+] 📝 [المصنف الذكي]: تم دمج نص سريري مطابق لحالة اليوم ({chosen_txt.name}) [{len(custom_text)} حرف]!")
-
-    # 3. الصورة والتصميم
-    if cat_matched.get("images"):
-        square_img_path = str(cat_matched["images"][0])
-        story_img_path = str(cat_matched["images"][0])
-        used_inbox_files.append(cat_matched["images"][0])
-        print(f"[+] 🎨 [المصنف الذكي]: تم اعتماد تصميم مطابق للحالة من manual_inbox ({Path(square_img_path).name})!")
+    # 1. معالجة الفيديو المرفوع
+    uploaded_video_rel = ""
+    if inbox_videos:
+        chosen_vid = inbox_videos[0]
+        used_inbox_files.append(chosen_vid)
+        dest_vid = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+        dest_portal_vid = BASE_DIR / "portal_app" / "public" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+        dest_docs_portal_vid = BASE_DIR / "docs" / "portal" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+        try:
+            shutil.copy2(str(chosen_vid), str(dest_vid))
+            dest_portal_vid.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(str(chosen_vid), str(dest_portal_vid))
+            dest_docs_portal_vid.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(str(chosen_vid), str(dest_docs_portal_vid))
+            video_path = str(dest_vid)
+            uploaded_video_rel = f"../assets/{dest_vid.name}"
+            print(f"[+] 🎬 تم اعتماد ونشر الفيديو المرفوع: {chosen_vid.name} ({chosen_vid.stat().st_size / (1024*1024):.1f} MB)")
+        except Exception as e:
+            print(f"[!] تنبيه نسخ الفيديو: {e}")
+            video_path = str(chosen_vid)
     else:
-        square_img_path = str(BASE_DIR / "docs" / "assets" / "og-image.jpg")
-        story_img_path = square_img_path
+        video_path = ""
 
-    # 4. الفيديو
-    if cat_matched.get("videos"):
-        video_path = str(cat_matched["videos"][0])
-        used_inbox_files.append(cat_matched["videos"][0])
-        print(f"[+] 🎬 [المصنف الذكي]: تم اعتماد فيديو مطابق لحالة اليوم ({Path(video_path).name})!")
+    # 2. معالجة الصوت المرفوع
+    if inbox_audios:
+        chosen_aud = inbox_audios[0]
+        used_inbox_files.append(chosen_aud)
+        dest_aud = NOTEBOOK_AUDIO_DIR / chosen_aud.name
+        dest_docs_aud = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_audio{chosen_aud.suffix}"
+        try:
+            shutil.copy2(str(chosen_aud), str(dest_aud))
+            shutil.copy2(str(chosen_aud), str(dest_docs_aud))
+            print(f"[+] 🎙️ تم اعتماد ونشر التعليق الصوتي المرفوع: {chosen_aud.name}")
+        except Exception as e:
+            print(f"[!] تنبيه نسخ الصوت: {e}")
+
+    # 3. معالجة النص والمقال السريري المرفوع
+    if inbox_texts:
+        chosen_txt = inbox_texts[0]
+        used_inbox_files.append(chosen_txt)
+        custom_raw = read_resilient_text(chosen_txt).strip()
+        if custom_raw and len(custom_raw) > 50:
+            # استخراج ملخص سريري غني يوضح المشكلة والحل بدون بتر عشوائي
+            paragraphs = [p.strip() for p in custom_raw.split("\n") if len(p.strip()) > 30 and not p.strip().startswith("#")]
+            if paragraphs:
+                top_paragraphs = []
+                current_len = 0
+                for p in paragraphs[:4]:
+                    if current_len + len(p) < 1400:
+                        top_paragraphs.append(p)
+                        current_len += len(p)
+                if top_paragraphs:
+                    tmpl["story_text"] = "\n\n".join(top_paragraphs)
+            print(f"[+] 📝 تم استيعاب وصياغة التقرير السريري المرفوع ({chosen_txt.name})!")
+
+    # 4. معالجة الصور المرفوعة من Pomelli
+    if inbox_images:
+        # تفضيل الصور ذات الحجم الأنسب للويب (مثل 1-2 ميجابايت بدلاً من 20 ميجابايت)
+        sorted_imgs = sorted(inbox_images, key=lambda x: (abs(x.stat().st_size - 1.5 * 1024 * 1024)))
+        chosen_img = sorted_imgs[0]
+        for img in inbox_images:
+            used_inbox_files.append(img)
+            
+        dest_hero_img = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_hero.png"
+        try:
+            shutil.copy2(str(chosen_img), str(dest_hero_img))
+            square_img_path = str(dest_hero_img)
+            story_img_path = str(dest_hero_img)
+            print(f"[+] 🎨 تم اعتماد صور Pomelli السريرية المرفوعة ({chosen_img.name})!")
+        except Exception:
+            square_img_path = str(chosen_img)
+            story_img_path = str(chosen_img)
+    else:
+        photo_info = get_clinical_case_photo(tmpl["title"], tmpl["category"])
+        raw_img = photo_info.get("local_path", "")
+        cards = generate_branded_card(tmpl, raw_img) if raw_img else {"square_path": "", "story_path": ""}
+        square_img_path = cards.get("square_path", "") or raw_img
+        story_img_path = cards.get("story_path", "")
+
+    # إذا لم يكن هناك فيديو مرفوع، ننشئ فيديو ريلز من الصورة
+    if not video_path and story_img_path:
+        video_path = generate_tiktok_reel_video(story_img_path, duration_sec=8)
+
+    export_canva_bulk_csv(CLINICAL_STORIES_TEMPLATES)
+    blogger_post = format_clinical_case_for_blogger(tmpl, {"image_url": "../assets/og-image.jpg"})
+    generate_blogger_atom_xml([blogger_post])
+    notebook_file = str(NOTEBOOKLM_DIR / "Healing_Touch_NotebookLM_Source.md")
 
     # 5. ملفات HTML مخصصة
     custom_stitch_html = ""
-    if cat_matched.get("htmls"):
-        custom_stitch_html = cat_matched["htmls"][0].read_text(encoding="utf-8")
-        used_inbox_files.append(cat_matched["htmls"][0])
+    if inbox_htmls:
+        custom_stitch_html = inbox_htmls[0].read_text(encoding="utf-8")
+        used_inbox_files.append(inbox_htmls[0])
 
     # توليد وتحديث كافة صفحات الهبوط متعددة الزوايا للمنتجات الطبية
     try:
@@ -1551,16 +1591,29 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     )
     lp_url = lp_res["public_url"]
 
-    # تجهيز نصوص المنصات بتاريخ اليوم مدمجاً برابط صفحة الهبوط الجديدة
+    # تجهيز نصوص المنصات بتاريخ اليوم مدمجاً برابط صفحة الهبوط الجديدة ورابط واتساب المباشر
     date_str = datetime.now().strftime("%Y-%m-%d")
-    full_caption = f"{tmpl['story_text']}\n\n🔗 رابط الدليل السريري وحجز الاستشارة:\n{lp_url}\n\n{tmpl['hashtags']}"
-    if len(full_caption) > 2200:
-        max_story_len = max(100, 2200 - len(tmpl['hashtags']) - len(lp_url) - 45)
-        tmpl['story_text'] = tmpl['story_text'][:max_story_len].rsplit(" ", 1)[0] + "..."
-        full_caption = f"{tmpl['story_text']}\n\n🔗 رابط الدليل السريري وحجز الاستشارة:\n{lp_url}\n\n{tmpl['hashtags']}"
+    wa_direct_url = f"https://wa.me/201155803307?text={urllib.parse.quote('أهلاً بكِ، أود استشارة سريرية مجانية حول مرحلة تعافي جرحي')}"
+    
+    clean_story_text = tmpl['story_text'].strip()
+    if len(clean_story_text) > 1200:
+        clean_story_text = clean_story_text[:1200].rsplit(" ", 1)[0] + "..."
+        
+    full_caption = f"""🌿 {tmpl['title']}
+
+{clean_story_text}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🔗 رابط الدليل السريري وحاسبة التعافي المتخصصة:
+👉 {lp_url}
+
+💬 للتوجيه السريري المجاني والاستشارة عبر واتساب (01155803307):
+👉 {wa_direct_url}
+
+{tmpl['hashtags']}"""
 
     blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n<p style='background:#ECFDF5;padding:12px;border-radius:10px;font-weight:bold;'>👉 <strong>رابط الدليل السريري وحجز الاستشارة المباشر:</strong> <a href='{lp_url}'>{lp_url}</a></p>\n\n{blogger_post['html_content']}"
-    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**\n\n**استشارة مجانية عبر واتساب:** 01155803307 | **كود الخصم:** HT10 (شحن مجاني ومعاينة قبل الدفع)\n\n{tmpl['hashtags']}"
+    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**\n\n**للتوجيه السريري والاستشارة المجانية عبر واتساب:** 01155803307\n\n{tmpl['hashtags']}"
     
     (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(full_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(full_caption, encoding="utf-8")
@@ -1586,8 +1639,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
     post_data = {
         "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
-        "caption": tmpl["story_text"],
-        "hashtags": tmpl["hashtags"],
+        "caption": full_caption,
+        "hashtags": "",
         "row_index": -1,
     }
 
@@ -1628,14 +1681,19 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
 
-    # أرشفة الملفات المعالجة من manual_inbox
-    cle.archive_manual_inbox_processed()
-    if used_inbox_files:
-        archived_count = archive_used_inbox_files(MANUAL_INBOX_DIR, used_inbox_files)
+    # 🧹 تفريغ وأرشفة كافة الملفات المعالجة من manual_inbox لحفظ نظافة الصندوق بالكامل
+    all_inbox_remaining = [
+        f for f in MANUAL_INBOX_DIR.iterdir()
+        if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]
+    ]
+    files_to_clean = list(set(used_inbox_files + all_inbox_remaining))
+    if files_to_clean:
+        archived_count = archive_used_inbox_files(MANUAL_INBOX_DIR, files_to_clean)
         if archived_count > 0:
-            print(f"[+] 🗄️ [المصنف الذكي]: تم أرشفة وتفريغ {archived_count} ملفات مستخدمة بنجاح!")
+            print(f"\n[+] 🧹 [تفريغ الصندوق]: تم تنظيف وأرشفة {archived_count} ملفات من manual_inbox إلى archive/ بنجاح!")
 
     # فتح تبويبات المتصفح المطلوبة فوراً
+    open_url_in_default_browser(lp_url)
     open_tabs_in_default_windows_browser(fb_post_url=permalink, blogger_post_file=blogger_post['file_path'])
     return ok, permalink
 
@@ -1665,7 +1723,7 @@ def main():
         return
 
     if args.mode == "notebooklm":
-        src_path = export_notebooklm_master_source(product_choice=args.product)
+        src_path = export_notebooklm_master_source(product_choice=args.product, interactive=True)
         print("\n" + "=" * 65)
         print("🧠 [خطوات بسيطة للحصول على الفيديو والصوت والنصوص والمقالات كاملة]:")
         print("=" * 65)
