@@ -922,6 +922,20 @@ def export_notebooklm_master_source(product_choice: str = None) -> str:
     except Exception:
         pass
 
+    # 🔬 استكشاف أحدث الأبحاث السريرية من PubMed / NCBI لنمو الموسوعة والمصادر
+    discovered_studies = []
+    try:
+        from clinical_research_harvester import harvest_pubmed_studies, format_evidence_for_notebooklm_and_prompts
+        print("\n[*] 🔬 جاري استكشاف أحدث الأبحاث والدراسات السريرية من PubMed / NCBI لهذا المنتج...")
+        discovered_studies = harvest_pubmed_studies(product_choice, max_results=3)
+        if discovered_studies:
+            print(f"[+] 📚 تم رصد وتوثيق {len(discovered_studies)} أبحاث طبية جديدة في الموسوعة وسجل الأبحاث:")
+            for s in discovered_studies:
+                print(f"    • [{s['pub_year']}] {s['title'][:75]}...")
+                print(f"      🔗 {s['url']}")
+    except Exception as e:
+        print(f"[!] تنبيه استكشاف PubMed: {e}")
+
     # تجهيز ملف البرومبتات القابل للنسخ المباشر PROMPTS_PACK_TODAY.txt
     prompts_pack_lines = [
         "=====================================================================",
@@ -987,6 +1001,17 @@ def export_notebooklm_master_source(product_choice: str = None) -> str:
         "```",
         "",
         "---------------------------------------------------------------------",
+        "4️⃣ أحدث الأبحاث والمراجع الطبية الحقيقية المستكشفة من PubMed / NCBI (جاهزة للاستشهاد):",
+        "---------------------------------------------------------------------",
+    ])
+    if discovered_studies:
+        for idx, s in enumerate(discovered_studies, 1):
+            prompts_pack_lines.append(f"[{idx}] {s['title']}")
+            prompts_pack_lines.append(f"    • المجلة وسنة النشر: {s['journal']} ({s['pub_year']}) | PMID: {s['pmid']}")
+            prompts_pack_lines.append(f"    • الرابط المباشر للدراسة: {s['url']}")
+            prompts_pack_lines.append(f"    • الأهمية السريرية: {s['summary_ar']}\n")
+    prompts_pack_lines.extend([
+        "---------------------------------------------------------------------",
         "📥 الخطوة التالية ببساطة:",
         "---------------------------------------------------------------------",
         "1. انسخ البرومبتات أعلاه واستخدمها في المنصات المفتوحة أمامك الآن.",
@@ -1028,6 +1053,10 @@ def export_notebooklm_master_source(product_choice: str = None) -> str:
         md_lines.append(f"- {anz}")
 
     md_lines.append("\n## 📚 ثانياً: المراجع السريرية والأبحاث المعتمدة:")
+    if discovered_studies:
+        md_lines.append("### 🔬 أبحاث PubMed / NCBI الحديثة المستكشفة اليوم:")
+        for s in discovered_studies:
+            md_lines.append(f"- [{s['title']} ({s['journal']} - {s['pub_year']})]({s['url']}) — {s['summary_ar']}")
     md_lines.append("- [1] [The Efficacy of Silicone Gel for the Treatment of Hypertrophic Scars and Keloids (NCBI / PMC2918339)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2918339/)")
     md_lines.append("- [2] [Review of Silicone Gel Sheeting and Silicone Gel for Prevention of Hypertrophic Scars (PubMed 28570253)](https://pubmed.ncbi.nlm.nih.gov/28570253/)")
     md_lines.append("- [3] [3M Tegaderm +Pad Film Dressing Clinical Summary (3M Medical Division)](https://multimedia.3m.com/mws/media/864087O/tegaderm-pad-film-dressing-clinical-summary.pdf)")

@@ -2670,10 +2670,46 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
     paragraphs_html = "\n".join([f"<p>{sanitize_arabic_copy(p)}</p>" for p in art["content_paragraphs"]])
     takeaways_html = "\n".join([f"<li>{sanitize_arabic_copy(t)}</li>" for t in art.get("quick_takeaways", [])])
 
-    # قائمة المراجع الطبية (10 إلى 12 مرجعاً موثقاً من PubMed وNCBI)
+    # قائمة المراجع الطبية (10 إلى 12 مرجعاً موثقاً من PubMed وNCBI) + الأبحاث المكتشفة حديثاً
+    all_art_sources = list(art.get("sources", []))
+    try:
+        ev_file = BASE_DIR / "media_assets" / "medical_evidence_registry.json"
+        if ev_file.exists():
+            ev_data = json.loads(ev_file.read_text(encoding="utf-8"))
+            prod_id_map = {
+                "1": "3m-tegaderm-plus-pad",
+                "2": "bupy-silicone-scar-sheet",
+                "3": "3m-micropore-tan-tape-1533-0",
+                "4": "silicone-nostril-retainer",
+                "5": "smith-nephew-opsite-spray",
+                "6": "all"
+            }
+            for st in ev_data.get("studies", []):
+                pmid_k = f"PubMed {st.get('pmid')}"
+                target_pid = prod_id_map.get(str(st.get("product_choice")), "")
+                if pmid_k not in all_art_sources and (target_pid == art.get("product_id") or target_pid == "all"):
+                    all_art_sources.append(pmid_k)
+    except Exception:
+        pass
+
     refs_list_html = []
-    for i, s_key in enumerate(art.get("sources", []), 1):
-        ref_obj = ALL_MEDICAL_REFERENCES.get(s_key)
+    for i, s_key in enumerate(all_art_sources, 1):
+        # دمج أبحاث PubMed الحية المكتشفة من سجل الأبحاث
+        expanded_refs = dict(ALL_MEDICAL_REFERENCES)
+        try:
+            ev_file = BASE_DIR / "media_assets" / "medical_evidence_registry.json"
+            if ev_file.exists():
+                ev_data = json.loads(ev_file.read_text(encoding="utf-8"))
+                for st in ev_data.get("studies", []):
+                    pmid_k = f"PubMed {st.get('pmid')}"
+                    expanded_refs[pmid_k] = {
+                        "title": f"{st.get('title')} ({st.get('journal', 'PubMed')} - {st.get('pub_year', '2026')})",
+                        "url": st.get("url"),
+                        "summary": st.get("summary_ar", "بحث سريري محكم موثق من قاعدة بيانات المكتبة الطبية الأمريكية الوطنية (NCBI / PubMed).")
+                    }
+        except Exception:
+            pass
+        ref_obj = expanded_refs.get(s_key)
         if ref_obj:
             refs_list_html.append(
                 f'<li><strong>[{i}]</strong> <a href="{ref_obj["url"]}" target="_blank" rel="noopener">{ref_obj["title"]}</a> — <em>{ref_obj["summary"]}</em></li>'
@@ -2823,7 +2859,7 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
   <article class="article-full-box">
     <div class="art-meta-top" style="margin-bottom:14px;">
       <span class="art-cat-tag">{art.get("category_label", "دليل التعافي الجراحي")}</span>
-      <span class="art-Evidence-tag">🛡️ موثق بـ {len(art.get("sources", []))} مراجع سريرية من PubMed وNCBI</span>
+      <span class="art-Evidence-tag">🛡️ موثق بـ {len(all_art_sources)} مراجع سريرية من PubMed وNCBI</span>
     </div>
 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.8rem; line-height:1.4;">{clean_title}</h1>
@@ -2872,7 +2908,7 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
     {hashtags_box_html}
 
     <div class="refs-container">
-      <h3 style="color:var(--teal-deep); margin-top:0;">📚 المراجع والأبحاث الطبية المعتمدة في هذا الدليل ({len(art.get("sources", []))} مراجع موثقة):</h3>
+      <h3 style="color:var(--teal-deep); margin-top:0;">📚 المراجع والأبحاث الطبية المعتمدة في هذا الدليل ({len(all_art_sources)} مراجع موثقة):</h3>
       <ol>
         {refs_html}
       </ol>
