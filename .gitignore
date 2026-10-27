@@ -23,3 +23,7 @@ media_assets/manual_inbox/*.txt
 media_assets/manual_inbox/archive/**
 media_assets/pomelli_library/**
 
+
+media_assets/ready_to_publish/20*
+media_assets/ready_to_publish/LATEST_PACK_PATH.txt
+

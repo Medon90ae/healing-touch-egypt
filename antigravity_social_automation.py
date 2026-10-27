@@ -978,6 +978,13 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
         "1. نبرة طبية توجيهية هادئة تشرح فسيولوجيا التئام الأنسجة وتبدد المخاوف دون تهويل.",
         "2. منع تام لأي عروض تسويقية أو خصومات أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.",
         "3. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 لأي متابعة للحالة.",
+    ])
+    if discovered_studies:
+        prompts_pack_lines.append("")
+        prompts_pack_lines.append("روابط أحدث أبحاث PubMed السريرية المعتمدة للاستشهاد بها ودعم المحتوى:")
+        for s in discovered_studies:
+            prompts_pack_lines.append(f"• [{s['pub_year']}] {s['title']} -> {s['url']}")
+    prompts_pack_lines.extend([
         "```",
         "",
         "---------------------------------------------------------------------",

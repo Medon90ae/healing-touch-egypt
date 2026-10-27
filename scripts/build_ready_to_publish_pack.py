@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-🌿 هيلينج تاتش مصر | محرك حزم النشر الجاهزة الموحد (2026)
-YouTube, Google Blogger, Reddit, and Social Media Publishing Suite
+🌿 هيلينج تاتش مصر | محرك حزم النشر الشاملة بالمجلدات المؤرخة المفرزة (2026)
+YouTube, TikTok, Instagram, Blogger, and Reddit Multi-Platform Suite
 =============================================================================
 """
 
@@ -22,421 +22,272 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-READY_DIR = BASE_DIR / "media_assets" / "ready_to_publish"
-READY_DIR.mkdir(parents=True, exist_ok=True)
+MEDIA_DIR = BASE_DIR / "media_assets"
+READY_BASE_DIR = MEDIA_DIR / "ready_to_publish"
+MANUAL_INBOX_DIR = MEDIA_DIR / "manual_inbox"
+POMELLI_LIB_DIR = MEDIA_DIR / "pomelli_library"
+DOCS_DIR = BASE_DIR / "docs"
 
-# معرف قناة اليوتيوب المأخوذ من حساب المالك
+# استيراد محرك الفيديو والبودكاست السريري
+sys.path.append(str(BASE_DIR / "scripts"))
+from media_video_engine import build_audio_visual_videos, build_uploaded_video_variants, generate_clean_youtube_thumbnail
+
 YOUTUBE_CHANNEL_ID = "UCcHqrSEET7IEhr9ueM8VELQ"
 YOUTUBE_UPLOAD_URL = f"https://studio.youtube.com/channel/{YOUTUBE_CHANNEL_ID}/videos/upload?d=ud"
 
-def generate_pack():
-    date_str = dt.datetime.now().strftime("%Y-%m-%d")
 
-    # تنظيف أي ملفات مكررة أو قديمة داخل المجلد لضمان تحديث الحزمة 100%
-    stale_files = ["00_دليل_النشر_السريع.txt", "05_صورة_مصغرة_يوتيوب_Thumbnail.png"]
-    for sf in stale_files:
-        stale_path = READY_DIR / sf
-        if stale_path.exists():
-            try:
-                stale_path.unlink()
-            except Exception:
-                pass
-    
-    # 1. عناوين وبيانات الحالة الحالية
-    general_title = "بروتوكول تعافي جرح القيصرية والشاور وإدارة الندبات الجراحية (الدليل السريري المعتمد 2026)"
-    youtube_title = "بروتوكول تعافي جرح القيصرية والشاور الآمن | كيف يمنع السيليكون تشوه الندبات وتكون الكلويد؟"
+def get_active_assets() -> dict:
+    """اكتشاف وتحديد أحدث ملفات الحملة النشطة في manual_inbox أو pomelli_library."""
+    assets = {
+        "video": None,
+        "audio": None,
+        "hero_img": None,
+        "square_img": None,
+        "vertical_img": None,
+        "text": None,
+        "category": "c-section"
+    }
+
+    # 1. الفيديو المرفوع
+    vids = list(MANUAL_INBOX_DIR.glob("*.mp4"))
+    if vids:
+        assets["video"] = vids[0]
+
+    # 2. الصوت المرفوع
+    audios = list(MANUAL_INBOX_DIR.glob("*.m4a")) + list(MANUAL_INBOX_DIR.glob("*.mp3"))
+    if audios:
+        assets["audio"] = audios[0]
+
+    # 3. صور Pomelli
+    imgs = list(MANUAL_INBOX_DIR.glob("*pomelli*.png")) + list(MANUAL_INBOX_DIR.glob("*.png"))
+    if not imgs and POMELLI_LIB_DIR.exists():
+        imgs = list(POMELLI_LIB_DIR.glob("*.png"))
+
+    if imgs:
+        hero = next((im for im in imgs if "photoshoot-4" in im.name), imgs[0])
+        assets["hero_img"] = hero
+        assets["square_img"] = next((im for im in imgs if "1_1" in im.name or "photoshoot-1" in im.name), hero)
+        assets["vertical_img"] = next((im for im in imgs if "9_16" in im.name), hero)
+
+    # 4. النص السريري المرفوع
+    texts = [f for f in MANUAL_INBOX_DIR.glob("*.txt") if not f.name.startswith("PROMPTS")]
+    if texts:
+        assets["text"] = texts[0]
+
+    return assets
+
+
+def get_latest_pack_dir() -> Path:
+    """إرجاع أحدث مجلد حزمة مؤرخ تم إنشاؤه."""
+    if not READY_BASE_DIR.exists():
+        READY_BASE_DIR.mkdir(parents=True, exist_ok=True)
+    dirs = sorted([d for d in READY_BASE_DIR.iterdir() if d.is_dir() and d.name.startswith("202")], key=lambda x: x.name, reverse=True)
+    if dirs:
+        return dirs[0]
+    return READY_BASE_DIR
+
+
+def generate_pack() -> Path:
+    now = dt.datetime.now()
+    timestamp_folder_name = now.strftime("%Y-%m-%d_%H-%M-%S")
+    pack_dir = READY_BASE_DIR / timestamp_folder_name
+    pack_dir.mkdir(parents=True, exist_ok=True)
+
+    # مجلدات المنصات المخصصة
+    yt_dir = pack_dir / "01_يوتيوب_YouTube"
+    tiktok_dir = pack_dir / "02_تيكتوك_TikTok"
+    ig_dir = pack_dir / "03_إنستجرام_Instagram"
+    blogger_dir = pack_dir / "04_بلوجر_Blogger"
+    reddit_dir = pack_dir / "05_ريديت_Reddit"
+
+    for d in [yt_dir, tiktok_dir, ig_dir, blogger_dir, reddit_dir]:
+        d.mkdir(parents=True, exist_ok=True)
+
+    assets = get_active_assets()
+
+    # نصوص وروابط الحملة السريرية المعتمدة
+    title = "بروتوكول تعافي جرح القيصرية والشاور الآمن ومنع الندبات وتكون الكلويد"
     shorts_title = "خايفة من أول شاور بعد القيصرية؟ الحل الطبي لحماية الجرح من الماء #Shorts #قيصرية"
-    reddit_title = "دليل تعافي جرح القيصرية والشاور الآمن: كيف يمنع السيليكون الطبي تشوه الندبات وتكون الكلويد؟"
-    
-    hero_img_url = "https://medon90ae.github.io/healing-touch-egypt/assets/campaign_c-section_hero.png"
-    video_url = "https://medon90ae.github.io/healing-touch-egypt/assets/campaign_c-section_video.mp4"
-    audio_url = "https://medon90ae.github.io/healing-touch-egypt/assets/campaign_c-section_audio.m4a"
     lp_url = "https://medon90ae.github.io/healing-touch-egypt/lp/c-section-recovery-protocol.html"
     site_url = "https://medon90ae.github.io/healing-touch-egypt/"
-    portal_url = "https://medon90ae.github.io/healing-touch-egypt/portal/"
-    
     wa_msg = "أهلاً بحضرتك، محتاجة استشارة بخصوص جرح القيصرية والشاور الآمن، وتفعيل كود (HT10) للشحن المجاني وحق معاينة الشحنة قبل الاستلام."
     wa_url = f"https://wa.me/201155803307?text={urllib.parse.quote(wa_msg)}"
-    
-    labels = "ولادة قيصرية, جرح القيصرية, علاج الندبات, شيت سيليكون, ضمادات تيجاديرم, صحة المرأة, رعاية بعد الجراحة"
-    tags_comma = "ولادة قيصرية, جرح القيصرية, علاج ندبات القيصرية, الاستحمام بعد القيصرية, شيت سيليكون طبي, ضمادات تيجاديرم, كلويد, هيلينج تاتش مصر, c section recovery, hypertrophic scar, silicone scar sheet"
+    tags = "#ولادة_قيصرية #جرح_القيصرية #علاج_الندبات #شيت_سيليكون #تيجاديرم #صحة_المرأة #هيلينج_تاتش_مصر #الاستحمام_بعد_القيصرية"
 
     # =========================================================================
-    # 🎥 1. تجهيز ونسخ ملفات الفيديو لليوتيوب مباشرة داخل مجلد النشر
+    # 🎥 1. معالجة الفيديو المرفوع (كامل + شورتس + ريلز + تيك توك)
     # =========================================================================
-    full_video_src = BASE_DIR / "docs" / "assets" / "campaign_c-section_video.mp4"
-    if not full_video_src.exists():
-        full_video_src = BASE_DIR / "media_assets" / "manual_inbox" / "بيولوجيا_التئام_الأنسجة.mp4"
-    
-    full_video_dest = READY_DIR / "فيديو_يوتيوب_كامل_[بيولوجيا_التئام_الأنسجة].mp4"
-    if full_video_src.exists():
-        shutil.copy2(str(full_video_src), str(full_video_dest))
-
-    # أحدث فيديو شورتس رأسي
-    shorts_video_src = BASE_DIR / "media_assets" / "branded_designs" / f"{date_str}_[فيديو_تيكتوك_وريلز]_c-section.mp4"
-    if not shorts_video_src.exists():
-        shorts_list = sorted(list((BASE_DIR / "media_assets" / "branded_designs").glob("*[فيديو_تيكتوك_وريلز]*.mp4")), key=os.path.getmtime, reverse=True)
-        if shorts_list:
-            shorts_video_src = shorts_list[0]
-            
-    shorts_video_dest = READY_DIR / "فيديو_يوتيوب_شورتس_Shorts.mp4"
-    if shorts_video_src.exists():
-        shutil.copy2(str(shorts_video_src), str(shorts_video_dest))
+    if assets["video"]:
+        build_uploaded_video_variants(assets["video"], yt_dir, yt_dir)
+        shorts_file = yt_dir / "فيديو_شورتس_وريلز_9x16.mp4"
+        if shorts_file.exists():
+            shutil.copy2(str(shorts_file), str(tiktok_dir / "فيديو_تيكتوك_رأسي_9x16.mp4"))
+            shutil.copy2(str(shorts_file), str(ig_dir / "فيديو_ريلز_Reels_9x16.mp4"))
 
     # =========================================================================
-    # 🖼️ 2. توليد صورة مصغرة عالية الدقة لليوتيوب (1280x720 Thumbnail)
+    # 🎙️ 2. تحويل الصوت والبودكاست المرفوع إلى فيديوهات مرئية لجميع المنصات
     # =========================================================================
-    inbox_candidates = list((BASE_DIR / "media_assets" / "manual_inbox").glob("*pomelli*.png"))
-    lib_candidates = list((BASE_DIR / "media_assets" / "pomelli_library").glob("*.png"))
-    pomelli_candidates = inbox_candidates + lib_candidates
-    thumb_dest = READY_DIR / "صورة_مصغرة_يوتيوب_Thumbnail.png"
-    if pomelli_candidates:
-        try:
-            # تفضيل جلسة التصوير photoshoot-4 المرفوعة لحملة اليوم
-            best_img = next((p for p in pomelli_candidates if "photoshoot-4" in p.name), pomelli_candidates[0])
-            img = Image.open(best_img)
-            w, h = img.size
-            target_ratio = 16 / 9
-            current_ratio = w / h
-            if current_ratio > target_ratio:
-                new_w = int(h * target_ratio)
-                left = (w - new_w) // 2
-                img_cropped = img.crop((left, 0, left + new_w, h))
-            else:
-                new_h = int(w / target_ratio)
-                top = (h - new_h) // 2
-                img_cropped = img.crop((0, top, w, top + new_h))
-            thumb = img_cropped.resize((1280, 720), Image.Resampling.LANCZOS)
-            thumb.save(str(thumb_dest))
-        except Exception as e:
-            pass
+    if assets["audio"] and assets["hero_img"]:
+        audio_vids = build_audio_visual_videos(assets["audio"], assets["hero_img"], yt_dir, yt_dir)
+        vert_audio_vid = yt_dir / "فيديو_بودكاست_صوتي_شورتس_9x16.mp4"
+        if vert_audio_vid.exists():
+            shutil.copy2(str(vert_audio_vid), str(tiktok_dir / "فيديو_بودكاست_صوتي_تيكتوك_9x16.mp4"))
+            shutil.copy2(str(vert_audio_vid), str(ig_dir / "فيديو_بودكاست_صوتي_ريلز_9x16.mp4"))
 
     # =========================================================================
-    # 📺 3. قالب يوتيوب - فيديو كامل (Title, Description, Tags, Timestamps)
+    # 🖼️ 3. توليد وحفظ الصور المصغرة والبوستات
     # =========================================================================
-    yt_full_text = f"""=============================================================================
-🌿 هيلينج تاتش مصر | قالب نشر فيديو يوتيوب الكامل (YouTube Video Pack)
-=============================================================================
+    if assets["hero_img"]:
+        generate_clean_youtube_thumbnail(assets["hero_img"], yt_dir / "صورة_مصغرة_Thumbnail.png")
+        shutil.copy2(str(assets["hero_img"]), str(ig_dir / "صورة_بوست_رئيسية_1x1.png"))
+        if assets["vertical_img"]:
+            shutil.copy2(str(assets["vertical_img"]), str(ig_dir / "صورة_ستوري_Story_9x16.png"))
 
-👉 رابط الرفع المباشر في استوديو يوتيوب:
-{YOUTUBE_UPLOAD_URL}
+    # =========================================================================
+    # 📝 4. قوالب نصوص يوتيوب
+    # =========================================================================
+    yt_desc = f"""🌿 بروتوكول التعافي السريري لجرح القيصرية والشاور الآمن ومنع تشوه الندبات الجراحية (2026)
+دليل علمي شامل يشرح للأمهات كيفية حماية جرح القيصرية أثناء الاستحمام، والآلية البيولوجية لتدخل السيليكون الطبي لمنع تكون الكلويد والندبات المتضخمة.
 
-ملف الفيديو للرفع:
-📂 فيديو_يوتيوب_كامل_[بيولوجيا_التئام_الأنسجة].mp4
-
-الصورة المصغرة (Thumbnail):
-📂 صورة_مصغرة_يوتيوب_Thumbnail.png
-
------------------------------------------------------------------------------
-[1] عنوان الفيديو (Title) - انسخه وضعه في خانة العنوان:
------------------------------------------------------------------------------
-{youtube_title}
-
------------------------------------------------------------------------------
-[2] وصف الفيديو (Description) - انسخه بالكامل وضعه في خانة الوصف:
------------------------------------------------------------------------------
-🌿 بروتوكول التعافي السريري لجرح القيصرية ومنع تشوه الندبات الجراحية (2026)
-دليل علمي شامل ومبسط يشرح للأمهات كيفية حماية جرح القيصرية خلال مرحلة الاستحمام، والآلية البيولوجية لتدخل السيليكون الطبي لمنع تكون الكلويد والندبات المتضخمة.
-
-⏱️ الفواصل الزمنية للمحاضرة (Timestamps):
+⏱️ الفواصل الزمنية (Timestamps):
 00:00 مقدمة: هواجس التعافي بعد الولادة القيصرية
 00:45 بيولوجيا التئام جدار البطن ومراحل تشكل النسيج الرابط
 02:15 لماذا تتكون الندبة البارزة ومتى يفرز الجسم كولاجين مفرط؟
 04:00 بروتوكول الاستحمام الآمن: عزل الماء والبكتيريا بواسطة Tegaderm
 05:30 المعيار الذهبي: كيف يُنظم شيت السيليكون الطبي فقدان الماء (TEWL)؟
 07:15 إرشادات العناية اليومية ونمط الحياة الآمن لتعافي الأنسجة
-08:30 التوجيه والاستشارة السريرية المجانية
+08:30 التوجيه والاستشارة السريرية المجانية وتفعيل كود HT10
 
 🔗 روابط الدليل وحاسبة التعافي السريرية:
-🌐 زيارة دليل التعافي وحاسبة الجرح التفاعلية:
+🌐 دليل التعافي وحاسبة الجرح التفاعلية:
 {lp_url}
 
 🏛️ تصفح الموسوعة الطبية السريرية الشاملة:
 {site_url}
 
-💬 للتوجيه السريري المجاني والاستفسارات عبر واتساب (بدون أي التزام):
+💬 للتوجيه السريري المجاني وتفعيل كود (HT10) للشحن المجاني والمعاينة قبل الاستلام:
 👉 {wa_url}
 
-⚠️ تنويه طبي سريري:
-هذا المحتوى مُعد لأغراض التوعية والإرشاد الصحي وفق أحدث المراجع السريرية ولا يُغني عن استشارة طبيبك المعالج المتابع لحالتك.
+⚠️ تنويه طبي: المحتوى للتوعية السريرية المعتمدة ولا يُغني عن استشارة طبيبك المعالج.
 
-#ولادة_قيصرية #جرح_القيصرية #علاج_الندبات #شيت_سيليكون #تيجاديرم #صحة_المرأة #هيلينج_تاتش_مصر #الاستحمام_بعد_القيصرية
+{tags}"""
 
------------------------------------------------------------------------------
-[3] الكلمات المفتاحية والوسوم (Tags):
------------------------------------------------------------------------------
-{tags_comma}
-
------------------------------------------------------------------------------
-[4] الفئة والجمهور (Category & Audience):
------------------------------------------------------------------------------
-* الفئة (Category): العلوم والتكنولوجيا (Science & Technology) أو الصحة والتعليم
-* الجمهور (Audience): لا، الفيديو ليس مخصصاً للأطفال (No, it's not made for kids)
-=============================================================================
-"""
-    (READY_DIR / "[قالب_يوتيوب_YouTube]_فيديو_كامل_جاهز_للنشر.txt").write_text(yt_full_text, encoding="utf-8")
+    (yt_dir / "بيانات_الفيديو_عنوان_ووصف_وهاشتاجات.txt").write_text(f"العنوان:\n{title}\n\nالوصف:\n{yt_desc}", encoding="utf-8")
+    (yt_dir / "بيانات_الشورتس.txt").write_text(f"العنوان:\n{shorts_title}\n\nالوصف:\nاستحمام آمن بعد القيصرية بدون خوف من الماء! عزل كامل بضمادة تيجاديرم وحماية خط الجرح بشيت السيليكون الطبي.\nللتفاصيل وتفعيل كود HT10 للشحن المجاني:\n{wa_url}\n\n{tags}", encoding="utf-8")
 
     # =========================================================================
-    # 📱 4. قالب يوتيوب شورتس (YouTube Shorts Pack)
+    # 📱 5. قوالب تيك توك وإنستجرام
     # =========================================================================
-    yt_shorts_text = f"""=============================================================================
-🌿 هيلينج تاتش مصر | قالب نشر يوتيوب شورتس (YouTube Shorts Pack)
-=============================================================================
+    tiktok_caption = f"""خايفة من أول شاور بعد الولادة القيصرية؟ 🚿
+الحل الطبي السريري: عزل تام للماء والبكتيريا بالضمادات الشفافة المعتمدة، ثم حماية الجرح بشيت السيليكون الطبي لمنع الندبة البارزة والكلويد.
 
-👉 رابط الرفع المباشر في استوديو يوتيوب:
-{YOUTUBE_UPLOAD_URL}
+استشارة سريرية مجانية وتفعيل كود HT10 للشحن المجاني والمعاينة قبل الاستلام:
+👉 الرابط في البايو أو واتساب المباشر: {wa_url}
 
-ملف الفيديو الرأسي للرفع:
-📂 فيديو_يوتيوب_شورتس_Shorts.mp4
-
------------------------------------------------------------------------------
-[1] عنوان الشورتس (Title):
------------------------------------------------------------------------------
-{shorts_title}
-
------------------------------------------------------------------------------
-[2] وصف الشورتس (Description):
------------------------------------------------------------------------------
-الاستحمام بعد الولادة القيصرية مش لازم يكون مصدر قلق أو خوف! 🚿
-تعرفي على بروتوكول عزل الماء التام بالضمادات الشفافة الطبية وكيفية الحفاظ على تعافي خط الجرح بنعومة وأمان.
-
-🌐 لمعرفة تفاصيل بروتوكول التعافي وحاسبة الجرح:
-{lp_url}
-
-💬 للتوجيه السريري المجاني عبر واتساب:
-{wa_url}
-
-#Shorts #ولادة_قيصرية #جرح_القيصرية #علاج_الندبات #تيجاديرم #شيت_سيليكون #هيلينج_تاتش
-=============================================================================
-"""
-    (READY_DIR / "[قالب_يوتيوب_شورتس_Shorts]_جاهز_للنشر.txt").write_text(yt_shorts_text, encoding="utf-8")
+{tags} #Shorts #تيك_توك_طبي"""
+    (tiktok_dir / "كابشن_وهاشتاجات_تيكتوك.txt").write_text(tiktok_caption, encoding="utf-8")
+    (ig_dir / "كابشن_وهاشتاجات_إنستجرام.txt").write_text(f"🌿 {title}\n\n{tiktok_caption}", encoding="utf-8")
 
     # =========================================================================
-    # 🔴 5. قالب REDDIT
+    # 📰 6. قالب مقال بلوجر HTML
     # =========================================================================
-    reddit_content = f"""# {reddit_title}
+    hero_rel_url = f"https://medon90ae.github.io/healing-touch-egypt/assets/campaign_c-section_hero.png"
+    blogger_html = f"""<div dir="rtl" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width:820px; margin:auto; background:#ffffff; padding:28px; border-radius:18px; border:1px solid #E2E8F0; color:#1E293B; line-height:1.9;">
+    <div style="text-align:center; margin-bottom:28px;">
+        <img src="{hero_rel_url}" alt="{title}" style="max-width:100%; height:auto; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.06);" />
+    </div>
+    <h1 style="color:#0D4A4D; font-size:1.9rem; font-weight:900; line-height:1.4; margin-bottom:18px;">{title}</h1>
+    <div style="background:#ECFDF5; border-right:4px solid #10B981; padding:16px 20px; border-radius:12px; margin-bottom:26px;">
+        <strong style="color:#065F46; font-size:1.05rem;">💡 القاعدة السريرية الذهبية:</strong>
+        <p style="margin:6px 0 0 0; color:#064E3B; font-size:0.96rem;">الاستحمام بعد القيصرية آمن تماماً عند عزل الجرح بضمادات شفافة عازلة شبه نفاذة. والوقاية من الندبة البارزة تبدأ بعد التئام السطح باستخدام شيت السيليكون الطبي كمعيار ذهبي معتمد عالمياً.</p>
+    </div>
+    <h3 style="color:#134E4A; font-size:1.35rem; margin-top:28px;">البروتوكول السريري المتكامل (خطوة بخطوة):</h3>
+    <ol style="padding-right:24px; font-size:1rem; color:#334155;">
+        <li style="margin-bottom:12px;"><strong>تأمين أول شاور:</strong> وضع ضمادة 3M Tegaderm المقاومة للماء لعزل بكتيريا الاستحمام والسماح للجلد بطرد بخار العرق.</li>
+        <li style="margin-bottom:12px;"><strong>تسطيح الندبة:</strong> بعد سقوط القشرة السطحية والتئام الجرح (الأسبوع الثاني إلى الثالث)، يبدأ تطبيق شيت السيليكون الطبي BUPY يومياً لمدة 12-16 ساعة لفرملة الكولاجين العشوائي.</li>
+        <li style="margin-bottom:12px;"><strong>حماية اللون:</strong> تجنب التعرض المباشر للشمس لحماية خط الجرح من التصبغ الداكن.</li>
+    </ol>
+    <div style="background:linear-gradient(135deg, #0D4A4D 0%, #134E4A 100%); color:#ffffff; padding:24px; border-radius:16px; text-align:center; margin-top:35px;">
+        <h4 style="margin:0 0 10px 0; font-size:1.25rem;">🩺 احصلي على استشارة سريرية وتوجيه مجاني لحالتك</h4>
+        <p style="margin:0 0 18px 0; color:#CCFBF1; font-size:0.95rem;">تواصلِ مباشرة مع أخصائية التعافي مع تفعيل كود <strong>(HT10)</strong> للشحن المجاني وحق فتح ومعاينة الشحنة قبل الاستلام.</p>
+        <a href="{wa_url}" target="_blank" style="display:inline-block; background:#10B981; color:#ffffff; font-weight:800; font-size:1.05rem; padding:12px 28px; border-radius:30px; text-decoration:none;">محادثة واتساب الفورية ←</a>
+    </div>
+</div>"""
+    (blogger_dir / "مقال_بلوجر_جاهز_للنشر.html").write_text(blogger_html, encoding="utf-8")
+
+    # =========================================================================
+    # 🔴 7. قالب مقال ريديت Markdown
+    # =========================================================================
+    reddit_md = f"""# {title}
 
 ### 🌿 نظرة سريرية عامة
-يُعد جرح الولادة القيصرية من أكثر الجروح الجراحية التي تتطلب عناية دقيقة تجمع بين الأمان الفسيولوجي والراحة النفسية للأم في الأيام والأسابيع الأولى. إن الهاجس الأكبر الذي تواجهه معظم الأمهات يتمثل في:
-1. **الخوف من الاستحمام (الشاور)** وملامسة المياه للجرح خلال أول أسبوعين.
-2. **الخوف من تحول خط الجرح إلى ندبة متضخمة أو كلويد بارز وداكن** يسبب الحكة أو الألم المشدود.
+يُعد جرح الولادة القيصرية من أكثر الجروح الجراحية التي تتطلب عناية دقيقة تجمع بين الأمان الفسيولوجي والراحة النفسية للأم في الأسابيع الأولى:
+1. **الخوف من الاستحمام (الشاور)** وتلوث الجرح بمياه الاستحمام.
+2. **الخوف من تحول خط الجرح إلى ندبة متضخمة أو كلويد بارز وداكن.**
 
 ---
 
 ### 🧬 الآلية البيولوجية لالتئام الأنسجة (Physiology of Tissue Healing)
-يمر التئام جدار البطن بعد القيصرية بثلاث مراحل بيولوجية متتابعة:
-- **مرحلة الالتهاب الدفاعي (Inflammatory Phase):** في الأيام الأولى، تتدفق الخلايا المناعية لإغلاق الشعيرات الدموية ومنع العدوى.
-- **مرحلة إعادة البناء والترميم (Proliferative Phase):** تبدأ الخلايا الليفية بتصنيع الكولاجين العشوائي. إذا تعرض الجرح للجفاف أو الاحتكاك المستمر، يفرز الجسم كولاجين مفرطاً ينتج عنه الكلويد.
-- **مرحلة النضج وإعادة التشكيل (Remodeling Phase):** تستمر من 6 أشهر إلى سنة، وهي المرحلة الحاسمة التي يتدخل فيها السيليكون الطبي لتنظيم ألياف الكولاجين لتصبح مسطحة ومطابقة للون الجلد الطبيعي.
+- **مرحلة الالتهاب الدفاعي (Inflammatory Phase):** إغلاق الشعيرات ومنع العدوى البكتيرية.
+- **مرحلة إعادة البناء (Proliferative Phase):** الخلايا الليفية تصنع كولاجين. إذا جف الجرح أو تعرض للاحتكاك، ينتج الجسم كولاجين مفرطاً يشكل الكلويد.
+- **مرحلة النضج (Remodeling Phase):** يتدخل السيليكون الطبي لتنظيم ألياف الكولاجين لتصبح مسطحة ومطابقة للجلد الطبيعي.
 
 ---
 
-### 🛡️ بروتوكول التعافي المعتمد (الخطوة بخطوة)
-
-#### ١. تأمين الشاور العازل للماء (Waterproof Protection)
-* يُوصى باستخدام الضمادات الشفافة العازلة (مثل **3M Tegaderm Film**) بعد استقرار الجرح، حيث توفر غشاءً شبه نفاذ يعزل الماء والبكتيريا تماماً ويسمح للجلد بالتنفس وطرد بخار العرق.
-* يتيح للأم أخذ شاور كامل بكل راحة دون القلق من تبلل الجرح أو الحاجة لغيار يومي مؤلم.
-
-#### ٢. التحكم بالترطيب ومنع الندبة البارزة (Silicone Hydration)
-* بمجرد إغلاق الجرح والتئام القشرة السطحية (عادة بعد أسبوعين إلى 3 أسابيع)، يُعد **شيت السيليكون الطبي (Medical Silicone Sheet)** المعيار الذهبي المعتمد عالمياً (Gold Standard).
-* يعمل السيليكون على حبس الرطوبة الفسيولوجية (Transepidermal Water Loss Control)، مما يرسل إشارة بيولوجية للخلايا الليفية بالتوقف عن إنتاج الكولاجين الزائد، مانعاً بذلك بروز الندبة وتصلبها.
+### 🛡️ بروتوكول التعافي المعتمد
+1. **الشاور العازل للماء:** ضمادات Tegaderm العازلة بنسبة 100% للماء والبكتيريا.
+2. **شيت السيليكون الطبي:** شيت BUPY الطبي لتنظيم فقدان الماء السطحي (TEWL) وحبس الرطوبة الفسيولوجية.
 
 ---
 
-### 🎬 المحاضرة المرئية والشرح الصوتي الموثق
-* **فيديو التئام الأنسجة السريري:** [مشاهدة الفيديو الموثق]({video_url})
-* **التسجيل الصوتي التحليلي:** [الاستماع للشرح السريري الكامل]({audio_url})
+### 🔗 روابط الدليل والاستشارة
+* 🌐 **[دليل التعافي وحاسبة الجرح السريرية التفاعلية]({lp_url})**
+* 💬 **للتوجيه السريري المجاني وتفعيل كود (HT10) للشحن والمعاينة المجانية:** [تواصل عبر واتساب]({wa_url})
 
----
-
-### 📚 مصادر وتوجيه سريري إضافي
-* 🔗 **[دليل التعافي السريري التفاعلي وحاسبة الجرح]({lp_url})**
-* 💬 **للتوجيه السريري المجاني والاستفسارات الطبية:** [تواصل مع أخصائية الرعاية عبر واتساب]({wa_url})
-
-#ولادة_قيصرية #علاج_الندبات #جرح_القيصرية #شيت_سيليكون #تيجاديرم #صحة_المرأة
-"""
-    (READY_DIR / "[قالب_ريديت_Reddit]_جاهز_للنشر.md").write_text(reddit_content, encoding="utf-8")
+{tags}"""
+    (reddit_dir / "منشور_ومقال_ريديت_Markdown.md").write_text(reddit_md, encoding="utf-8")
 
     # =========================================================================
-    # 📝 6. قالب BLOGGER (HTML نظيف ومرتب للنسخ واللصق)
+    # 📋 8. الدليل الإرشادي السريع داخل الحزمة
     # =========================================================================
-    blogger_html = f"""<!-- 
-=============================================================================
-🌿 هيلينج تاتش مصر | قالب مقال مدونة جوجل (Google Blogger) المنسق
-=============================================================================
--->
-
-<div dir="rtl" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width:820px; margin:auto; background:#ffffff; padding:28px; border-radius:18px; border:1px solid #E2E8F0; color:#1E293B; line-height:1.9;">
-
-    <div style="text-align:center; margin-bottom:28px;">
-        <img src="{hero_img_url}" alt="{general_title}" style="max-width:100%; height:auto; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.06);" />
-    </div>
-
-    <h1 style="color:#065F46; font-size:1.85rem; font-weight:700; border-bottom:3px solid #10B981; padding-bottom:14px; margin-bottom:24px;">
-        {general_title}
-    </h1>
-
-    <div style="background:#F0FDF4; border-right:5px solid #10B981; padding:18px 22px; border-radius:12px; margin-bottom:28px;">
-        <p style="margin:0; font-size:1.08rem; color:#064E3B; font-weight:500;">
-            <strong>🌿 إرشاد وتوجيه سريري معتمد:</strong> صُمم هذا البروتوكول للإجابة عن التساؤلات الأكثر شيوعاً للأمهات حول حماية جرح القيصرية أثناء الاستحمام والوقاية المبكرة من الندبات المتضخمة والكلويد وفق أحدث الدراسات الطبية المنشورة (2024–2026).
-        </p>
-    </div>
-
-    <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px; padding:20px; margin:28px 0; text-align:center;">
-        <h3 style="color:#1E293B; margin-top:0; margin-bottom:14px; font-size:1.2rem;">🎬 الفيديو التوضيحي السريري: فسيولوجيا التئام جدار البطن</h3>
-        <video controls style="max-width:100%; width:720px; border-radius:12px; outline:none; background:#000;">
-            <source src="{video_url}" type="video/mp4">
-            متصفحك لا يدعم مشغل الفيديو المباشر.
-        </video>
-        
-        <div style="margin-top:20px; padding-top:16px; border-top:1px dashed #CBD5E1;">
-            <p style="margin:0 0 10px 0; font-weight:600; color:#475569;">🎙️ الاستماع للشرح الصوتي الكامل (آلية عمل السيليكون الطبي لمنع تشوه الندبات):</p>
-            <audio controls style="width:100%; max-width:600px;">
-                <source src="{audio_url}" type="audio/mp4">
-                متصفحك لا يدعم مشغل الصوت المباشر.
-            </audio>
-        </div>
-    </div>
-
-    <h2 style="color:#047857; font-size:1.45rem; margin-top:32px;">🧬 بيولوجيا التئام الجروح: لماذا تتكون الندبة البارزة بعد القيصرية؟</h2>
-    <p style="font-size:1.05rem; color:#334155;">
-        الجلد هو خط الدفاع الأول للجسم، وعند إجراء الشق الجراحي في الولادة القيصرية، يبدأ الجسم فسيولوجياً في تكوين نسيج ليفي رابط لسد الفجوة بأسرع ما يمكن. ورغم أهمية هذه الاستجابة لحماية الجسم من العدوى، إلا أن فقدان الجلد للرطوبة وتوتر الأنسجة يؤديان غالباً إلى <strong>إفراز مفرط لبروتين الكولاجين</strong>، مما يحول خط الجرح الناعم إلى ندبة متضخمة حمراء (Hypertrophic Scar) أو كلويد بارز ومتيبس.
-    </p>
-
-    <h2 style="color:#047857; font-size:1.45rem; margin-top:32px;">🛡️ المعايير الطبية المعتمدة للتعافي الجراحي الآمن</h2>
-    
-    <div style="margin:20px 0;">
-        <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
-            <h3 style="color:#0D9488; margin:0 0 8px 0; font-size:1.18rem;">1. تأمين شاور الاستحمام الآمن (عزل الماء والبكتيريا)</h3>
-            <p style="margin:0; color:#475569; font-size:1rem;">
-                الاستحمام دون حماية قد يعرض الجرح للبلل والعدوى، بينما الضمادات القطنية التقليدية تحبس الرطوبة وتزيد الاحتكاك. استخدام الضمادات الشفافة العازلة للماء تماماً (مثل <strong>3M Tegaderm</strong>) يسمح للأم بالشاور المريح مع بقاء الجرح جافاً ومحمياً بنسبة 100%.
-            </p>
-        </div>
-
-        <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
-            <h3 style="color:#0D9488; margin:0 0 8px 0; font-size:1.18rem;">2. إدارة الندبات بشرائح السيليكون الطبي (Medical Silicone)</h3>
-            <p style="margin:0; color:#475569; font-size:1rem;">
-                يُجمع جراحو التجميل والنساء والولادة عالمياً على أن <strong>شرائح السيليكون الطبي</strong> هي الخط الأول غير الجراحي لإعادة تسطيح وتنعيم الندبات؛ حيث تقوم بحفظ التوازن الرطوبي للأنسجة وإيقاف النشاط المفرط للخلايا الليفية.
-            </p>
-        </div>
-    </div>
-
-    <div style="background:linear-gradient(135deg, #065F46 0%, #047857 100%); color:#ffffff; border-radius:16px; padding:30px 24px; text-align:center; margin-top:40px; box-shadow:0 12px 30px rgba(6,95,70,0.2);">
-        <h3 style="margin:0 0 10px 0; font-size:1.4rem; color:#FFFFFF;">هل لديك استفسار أو قلق بخصوص مظهر أو مرحلة التئام جرحك؟</h3>
-        <p style="margin:0 0 24px 0; font-size:1.05rem; opacity:0.92; max-width:620px; margin-left:auto; margin-right:auto;">
-            فريق التوجيه السريري متاح لتقديم الإرشاد الطبي المجاني والموثوق لمساعدتك في اختيار الخطوة الأمثل للتعافي براحة وطمأنينة.
-        </p>
-        <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
-            <a href="{lp_url}" target="_blank" style="background:#FFFFFF; color:#065F46; padding:14px 26px; border-radius:12px; font-weight:700; text-decoration:none; display:inline-block; font-size:1rem;">
-                🌐 زيارة دليل التعافي وحاسبة الجرح
-            </a>
-            <a href="{wa_url}" target="_blank" style="background:#25D366; color:#FFFFFF; padding:14px 26px; border-radius:12px; font-weight:700; text-decoration:none; display:inline-block; font-size:1rem;">
-                💬 استشارة سريرية مجانية عبر واتساب
-            </a>
-        </div>
-    </div>
-
-    <div style="margin-top:24px; padding-top:14px; border-top:1px solid #E2E8F0; font-size:0.9rem; color:#64748B;">
-        <strong>التصنيفات الموصى بها في بلوجر (Labels):</strong> {labels}
-    </div>
-</div>
-"""
-    (READY_DIR / "[قالب_بلوجر_Blogger]_جاهز_للنشر.html").write_text(blogger_html, encoding="utf-8")
-
-    # =========================================================================
-    # 📦 7. ملف استيراد بلوجر الآلي (Atom XML)
-    # =========================================================================
-    now_iso = dt.datetime.now(dt.timezone.utc).isoformat()
-    escaped_html = (
-        blogger_html
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-    )
-    categories_xml = "\n".join([f'<category scheme="http://www.blogger.com/atom/ns#" term="{t.strip()}" />' for t in labels.split(",")])
-
-    atom_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title type="text">مدونة هيلينج تاتش مصر للتعافي الجراحي</title>
-  <subtitle type="text">الدليل السريري الموثق للعناية بالجروح وإدارة الندبات</subtitle>
-  <updated>{now_iso}</updated>
-  <entry>
-    <id>tag:blogger.com,1999:post-csection-recovery-protocol</id>
-    <published>{now_iso}</published>
-    <updated>{now_iso}</updated>
-    <title type="text">{general_title}</title>
-    <content type="html">{escaped_html}</content>
-    {categories_xml}
-  </entry>
-</feed>
-"""
-    (READY_DIR / "[استيراد_بلوجر_XML]_blogger_import.xml").write_text(atom_xml, encoding="utf-8")
-
-    # =========================================================================
-    # 📘 8. الدليل الشامل الموحد للنشر السريع
-    # =========================================================================
-    guide_txt = f"""=============================================================================
-🌿 هيلينج تاتش مصر | الدليل الشامل الموحد للنشر السريع (YouTube, Blogger, Reddit)
+    guide_text = f"""=============================================================================
+🌿 هيلينج تاتش مصر | حزمة النشر الشاملة المفرزة ({timestamp_folder_name})
 =============================================================================
 
-أهلاً بك! كافة ملفات وفيديوهات وتصاميم اليوم جاهزة في هذا المجلد لرفعها فوراً:
+📁 01_يوتيوب_YouTube:
+   - فيديو يوتيوب كامل 16x9 (MP4)
+   - فيديو شورتس 9x16 (MP4)
+   - فيديو بودكاست صوتي مرئي 16x9 (MP4)
+   - فيديو بودكاست صوتي شورتس 9x16 (MP4)
+   - صورة مصغرة Thumbnail بدقة 4K
+   - ملف بيانات الفيديو والشورتس الجاهزة للنسخ
 
------------------------------------------------------------------------------
-📺 [1] طريقة نشر فيديو YouTube في 30 ثانية:
------------------------------------------------------------------------------
-1. افتح صفحة رفع الفيديوهات في استوديو قناتك:
-   👉 {YOUTUBE_UPLOAD_URL}
-2. اسحب وأفلت ملف الفيديو:
-   📂 فيديو_يوتيوب_كامل_[بيولوجيا_التئام_الأنسجة].mp4
-3. افتح الملف:
-   📄 [قالب_يوتيوب_YouTube]_فيديو_كامل_جاهز_للنشر.txt
-   وانسخ العنوان والوصف والكلمات الدلالية والصقها.
-4. في خانة الصورة المصغرة (Thumbnail)، اختر الملف:
-   🖼️ صورة_مصغرة_يوتيوب_Thumbnail.png
-5. اضغط التالي ثم اختر "علني" (Public) واضغط "نشر"!
+📁 02_تيكتوك_TikTok:
+   - فيديو تيكتوك رأسي 9x16 (MP4)
+   - فيديو بودكاست صوتي تيكتوك 9x16 (MP4)
+   - كابشن وهاشتاجات تيكتوك
 
-(لرفع فيديو الشورتس القصير الرأسي):
-* اسحب ملف: 📂 فيديو_يوتيوب_شورتس_Shorts.mp4
-* واستخدم النصوص من: 📄 [قالب_يوتيوب_شورتس_Shorts]_جاهز_للنشر.txt
+📁 03_إنستجرام_Instagram:
+   - فيديو ريلز 9x16 (MP4)
+   - فيديو بودكاست صوتي ريلز 9x16 (MP4)
+   - صور البوست والستوري (Pomelli 4K)
+   - كابشن وهاشتاجات إنستجرام
 
------------------------------------------------------------------------------
-🔴 [2] طريقة نشر مقال REDDIT في 15 ثانية:
------------------------------------------------------------------------------
-1. افتح صفحة إنشاء المنشور على حسابك في Reddit:
-   👉 https://www.reddit.com/r/u_Dull-Nectarine4963/submit
-2. افتح الملف:
-   📄 [قالب_ريديت_Reddit]_جاهز_للنشر.md
-3. انسخ السطر الأول وضعه في خانة "Title".
-4. انسخ باقي النص وضعه في خانة "Post (Text)".
-5. اضغط على زر "Post" وسيكون مقالك منشوراً فورياً بنسبة 100%!
+📁 04_بلوجر_Blogger:
+   - مقال HTML جاهز للنسخ ولصقه فوراً في بلوجر
 
------------------------------------------------------------------------------
-📝 [3] طريقة نشر مقال BLOGGER في 15 ثانية:
------------------------------------------------------------------------------
-1. افتح لوحة تحكم مدونتك:
-   👉 https://draft.blogger.com/blog/posts/6258225961862592152
-2. اضغط على زر "مشاركة جديدة" (+ New Post).
-3. ضع في العنوان:
-   {general_title}
-4. من شريط الأدوات بأعلى اليمين، اضغط على أيقونة القلم واختر: "عرض HTML" (<>).
-5. افتح الملف:
-   📄 [قالب_بلوجر_Blogger]_جاهز_للنشر.html
-   وانسخ محتواه بالكامل والصقه في المحرر.
-6. في القائمة الجانبية (Labels / التصنيفات)، الصق:
-   {labels}
-7. اضغط على زر "نشر" (Publish) البرتقالي!
+📁 05_ريديت_Reddit:
+   - مقال Markdown جاهز للنشر في مجتمعات ريديت
+============================================================================="""
+    (pack_dir / "00_دليل_النشر_السريع.txt").write_text(guide_text, encoding="utf-8")
 
------------------------------------------------------------------------------
-🌟 جميع الملفات موجودة في:
-{READY_DIR.resolve()}
-=============================================================================
-"""
-    (READY_DIR / "00_دليل_النشر_السريع_الشامل.txt").write_text(guide_txt, encoding="utf-8")
+    # تسجيل مسار أحدث حزمة في ملف ثابت لسهولة الفتح
+    (READY_BASE_DIR / "LATEST_PACK_PATH.txt").write_text(str(pack_dir), encoding="utf-8")
 
-    print("[+] 🎉 تم إنشاء وتجهيز حزمة النشر الشاملة (YouTube + Blogger + Reddit) بنجاح في:")
-    print(f"    {READY_DIR.resolve()}")
-    return True
+    print(f"\n[+] 🎉 تم إنشاء وتجهيز حزمة النشر الشاملة بنجاح في المجلد المؤرخ:")
+    print(f"    👉 {pack_dir}")
+    return pack_dir
+
 
 if __name__ == "__main__":
     generate_pack()

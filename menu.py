@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-🌿 هيلينج تاتش مصر | لوحة التحكم والمحرك الموحد الشامل (2026)
+🌿 هيلينج تاتش مصر | محرك التشغيل والنشر السريري الموحد (2026)
 Interactive Terminal Control Center & Unified Orchestration Suite
 =============================================================================
 """
@@ -24,19 +24,14 @@ VENV_PYTHON = str(BASE_DIR / ".venv" / "Scripts" / "python.exe")
 
 def print_banner():
     print("=" * 70)
-    print("        🌿 هيلينج تاتش مصر - لوحة التحكم والمحرك الموحد الشامل (2026)")
+    print("        🌿 هيلينج تاتش مصر - محرك التشغيل والنشر السريري الموحد (2026)")
     print("=" * 70)
     print()
-    print("  [1] التشغيل الشامل والنشر الفوري (استيعاب manual_inbox + بناء LPs + نشر GitHub وسوشيال)")
-    print("  [2] تجهيز حملة اليوم والبرومبتات ومصادر البحث باختيار المنتج (Pomelli + Deep Research + PubMed)")
-    print("  [3] معاينة وتجهيز الأصول واللاندنج بيدج بدون نشر (Dry Run)")
-    print("  [4] فتح صندوق الاستقبال manual_inbox وملف البرومبتات")
-    print("  [5] تحديث الموقع وتطبيق البوابة ونشر التغييرات مباشرة إلى GitHub Pages")
-    print("  [6] استعراض وفحص سجل العملاء وحجوزات الاستشارات في Google Sheet")
-    print("  [7] ربط وتفعيل حساب Reddit تلقائياً (لمرة واحدة فقط)")
-    print("  [8] فتح أحدث منشور تم نشره على فيسبوك في المتصفح")
-    print("  [9] 📋 فتح حزمة النشر الجاهزة الشاملة (YouTube + Blogger + Reddit)")
-    print("  [10] 🌐 حصر واستعراض كافة صفحات الهبوط (11 صفحة هبوط حية) وروابطها المباشرة")
+    print("  [1] التشغيل الشامل واستيعاب manual_inbox وبناء LPs وتجهيز المنصات")
+    print("  [2] تجهيز برومبتات اليوم ومصادر الأبحاث الطبية المعتمدة (PubMed + Deep Research)")
+    print("  [3] تحديث ونشر الموقع والموسوعة ورفع التحديثات مباشرة إلى GitHub Pages")
+    print("  [4] فتح أحدث حزمة نشر جاهزة للمنصات (أحدث مجلد مؤرخ)")
+    print("  [5] استعراض روابط صفحات الهبوط الـ 12 الحية المباشرة")
     print()
     print("=" * 70)
 
@@ -79,18 +74,21 @@ def run_option_1():
     print("\n[*] [4/5] جاري رفع ونشر كافة التحديثات والصفحات الحية إلى GitHub Pages...")
     try:
         subprocess.run(["git", "add", "-A"], cwd=str(BASE_DIR), check=False)
-        subprocess.run(["git", "commit", "-m", "feat(deploy): update live clinical portal, landing pages, and ingested media"], cwd=str(BASE_DIR), check=False)
+        subprocess.run(["git", "commit", "-m", "feat(deploy): live portal and multi-angle landing pages sync"], cwd=str(BASE_DIR), check=False)
         subprocess.run(["git", "push", "origin", "main"], cwd=str(BASE_DIR), check=False)
         print("[+] 🚀 تم النشر بنجاح على GitHub Pages!")
     except Exception as e:
         print(f"[!] خطأ في رفع GitHub: {e}")
 
-    print("\n[*] [5/5] جاري تجهيز حزمة النشر الشاملة (YouTube + Blogger + Reddit) وتحديث فهرس الصفحات...")
+    print("\n[*] [5/5] جاري تجهيز حزمة النشر الشاملة بالمجلدات المؤرخة وتحديث فهرس الصفحات...")
     try:
         subprocess.run([VENV_PYTHON, "scripts/build_ready_to_publish_pack.py"], cwd=str(BASE_DIR), check=False)
         subprocess.run([VENV_PYTHON, "scripts/build_landing_pages_directory.py"], cwd=str(BASE_DIR), check=False)
     except Exception:
         pass
+
+    # فتح أحدث حزمة مؤرخة تلقائياً
+    run_option_4()
 
     print("\n" + "=" * 70)
     print("🎉 اكتمل النشر الشامل وتحديث كافة صفحات الموقع والأصول بنجاح!")
@@ -100,7 +98,7 @@ def run_option_1():
 
 
 def run_option_2():
-    print("\n[*] تجهيز حزمة البرومبتات والمصادر السريرية باختيار المنتج...")
+    print("\n[*] تجهيز حزمة البرومبتات ومصادر الأبحاث السريرية المعتمدة (PubMed + Deep Research)...")
     subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "notebooklm"], cwd=str(BASE_DIR))
     prompts_txt = BASE_DIR / "media_assets" / "manual_inbox" / "PROMPTS_PACK_TODAY.txt"
     if prompts_txt.exists():
@@ -111,27 +109,7 @@ def run_option_2():
 
 
 def run_option_3():
-    print("\n[*] معاينة وتوليد الأصول واللاندنج بيدج بدون نشر فعلي (Dry Run)...")
-    subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--dry-run"], cwd=str(BASE_DIR))
-
-
-def run_option_4():
-    print("\n[*] فتح صندوق الاستقبال manual_inbox وملف البرومبتات...")
-    inbox = BASE_DIR / "media_assets" / "manual_inbox"
-    try:
-        os.startfile(str(inbox))
-    except Exception:
-        pass
-    prompts_txt = inbox / "PROMPTS_PACK_TODAY.txt"
-    if prompts_txt.exists():
-        try:
-            os.startfile(str(prompts_txt))
-        except Exception:
-            pass
-
-
-def run_option_5():
-    print("\n[*] [1/3] جاري تحديث صفحات الموقع ومقالات السيو...")
+    print("\n[*] [1/3] جاري تحديث صفحات الموقع ومقالات السيو والموسوعة...")
     subprocess.run([VENV_PYTHON, "github_seo_trend_engine.py", "--build-site"], cwd=str(BASE_DIR))
 
     print("\n[*] [2/3] جاري بناء وتجميع تطبيق البوابة التفاعلية (Clinical Portal App)...")
@@ -142,58 +120,48 @@ def run_option_5():
         import shutil
         shutil.copytree(str(portal_dist), str(docs_portal), dirs_exist_ok=True)
 
-    print("\n[*] [3/3] جاري نشر التغييرات إلى GitHub Pages...")
+    print("\n[*] [3/3] جاري نشر التغييرات مباشرة إلى GitHub Pages...")
     subprocess.run(["git", "add", "-A"], cwd=str(BASE_DIR), check=False)
     subprocess.run(["git", "commit", "-m", "feat(deploy): live site & portal sync to GitHub Pages"], cwd=str(BASE_DIR), check=False)
     subprocess.run(["git", "push", "origin", "main"], cwd=str(BASE_DIR), check=False)
 
     print("[OK] تم التحديث والنشر بنجاح على GitHub Pages!")
     print("👉 رابط البوابة المباشر: https://medon90ae.github.io/healing-touch-egypt/portal/")
-    try:
-        import webbrowser
-        webbrowser.open("https://medon90ae.github.io/healing-touch-egypt/portal/")
-    except Exception:
-        pass
 
 
-def run_option_6():
-    print("\n[*] فحص الاتصال بسجل Google Sheet...")
-    subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--check-sheet"], cwd=str(BASE_DIR))
-    import webbrowser
-    webbrowser.open("https://docs.google.com/spreadsheets/d/12yAqzm-pSykfv7nRlvgocAHmwIYD_NPxqcNxrRKzA8k/edit?gid=513215731#gid=513215731")
-
-
-def run_option_7():
-    print("\n[*] ربط وتفويض حساب Reddit...")
-    subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "auth-reddit"], cwd=str(BASE_DIR))
-
-
-def run_option_8():
-    print("\n[*] فتح أحدث منشور تم نشره على فيسبوك...")
-    subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "open-latest"], cwd=str(BASE_DIR))
-
-
-def run_option_9():
-    print("\n[*] 📋 تجهيز وفتح حزمة النشر الشاملة (YouTube + Blogger + Reddit)...")
+def run_option_4():
+    print("\n[*] 📂 جاري فتح أحدث حزمة نشر جاهزة ومفرزة للمنصات...")
     ready_dir = BASE_DIR / "media_assets" / "ready_to_publish"
-    ready_dir.mkdir(parents=True, exist_ok=True)
-    try:
-        subprocess.run([VENV_PYTHON, "scripts/build_ready_to_publish_pack.py"], cwd=str(BASE_DIR), check=False)
-    except Exception:
-        pass
-    try:
-        os.startfile(str(ready_dir))
-    except Exception:
-        pass
-    # فتح روابط النشر في المتصفح تلقائياً لجميع المنصات
-    import webbrowser
-    webbrowser.open("https://studio.youtube.com/channel/UCcHqrSEET7IEhr9ueM8VELQ/videos/upload?d=ud")
-    webbrowser.open("https://draft.blogger.com/blog/posts/6258225961862592152")
-    webbrowser.open("https://www.reddit.com/r/u_Dull-Nectarine4963/submit")
-    print("[+] تم فتح مجلد الأصول الجاهزة ونوافذ النشر المباشرة (YouTube + Blogger + Reddit) في المتصفح!")
+    latest_marker = ready_dir / "LATEST_PACK_PATH.txt"
+    target_pack = None
+
+    if latest_marker.exists():
+        try:
+            p_text = latest_marker.read_text(encoding="utf-8").strip()
+            if p_text and Path(p_text).exists():
+                target_pack = Path(p_text)
+        except Exception:
+            pass
+
+    if not target_pack and ready_dir.exists():
+        recent_packs = sorted([d for d in ready_dir.iterdir() if d.is_dir() and d.name.startswith("202")], key=lambda x: x.name, reverse=True)
+        if recent_packs:
+            target_pack = recent_packs[0]
+
+    if target_pack and target_pack.exists():
+        print(f"[+] تم تحديد أحدث مجلد مؤرخ: {target_pack.name}")
+        try:
+            os.startfile(str(target_pack))
+        except Exception:
+            pass
+    elif ready_dir.exists():
+        try:
+            os.startfile(str(ready_dir))
+        except Exception:
+            pass
 
 
-def run_option_10():
+def run_option_5():
     print("\n[*] 🌐 جاري فحص واستعراض كافة صفحات الهبوط (Landing Pages Directory)...")
     try:
         subprocess.run([VENV_PYTHON, "scripts/build_landing_pages_directory.py"], cwd=str(BASE_DIR))
@@ -210,7 +178,7 @@ def run_option_10():
 def main():
     print_banner()
     try:
-        choice = input("اختر رقم العملية المطلوبة (اضغط Enter لاختيار 1 للتشغيل والنشر الشامل): ").strip()
+        choice = input("اختر رقم العملية المطلوبة (اضغط Enter لاختيار 1 للتشغيل الشامل): ").strip()
     except (EOFError, KeyboardInterrupt):
         return
 
@@ -223,11 +191,6 @@ def main():
         "3": run_option_3,
         "4": run_option_4,
         "5": run_option_5,
-        "6": run_option_6,
-        "7": run_option_7,
-        "8": run_option_8,
-        "9": run_option_9,
-        "10": run_option_10,
     }
 
     action = actions.get(choice, run_option_1)
