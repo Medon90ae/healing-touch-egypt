@@ -1,6 +1,6 @@
 {
-  "total_studies": 3,
-  "last_updated": "2026-10-27 06:59:32",
+  "total_studies": 6,
+  "last_updated": "2026-10-27 10:39:22",
   "studies": [
     {
       "pmid": "40459590",
@@ -37,6 +37,42 @@
       "product_name": "شيت السيليكون المطور للندبات (BUPY Silicone Scar Sheet)",
       "summary_ar": "دراسة سريرية محكمة منشورة في (Cureus) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شيت السيليكون المطور للندبات (BUPY Silicone Scar Sheet)).",
       "discovered_at": "2026-10-27T06:59:32.372442"
+    },
+    {
+      "pmid": "42320089",
+      "title": "A bilayer polyurethane scaffold integrating degradation-dependent therapeutic release with directional exudate transport for diabetic wound healing",
+      "journal": "Biomater Adv",
+      "pub_year": "2026",
+      "doi": "10.1016/j.bioadv.2026.215016",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42320089/",
+      "product_choice": "1",
+      "product_name": "ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Biomater Adv) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)).",
+      "discovered_at": "2026-10-27T10:39:22.351638"
+    },
+    {
+      "pmid": "42097023",
+      "title": "Replenishing interfacial lubrication: A cartilage-inspired polyzwitterionic dressing for spatiotemporal healing of friction-prone diabetic wound",
+      "journal": "Biomaterials",
+      "pub_year": "2026",
+      "doi": "10.1016/j.biomaterials.2026.124228",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42097023/",
+      "product_choice": "1",
+      "product_name": "ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Biomaterials) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)).",
+      "discovered_at": "2026-10-27T10:39:22.351702"
+    },
+    {
+      "pmid": "42600968",
+      "title": "Mechanically compliant multifunctional bioadhesive hydrogel for rapid wound repair",
+      "journal": "Acta Biomater",
+      "pub_year": "2026",
+      "doi": "10.1016/j.actbio.2026.08.027",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42600968/",
+      "product_choice": "1",
+      "product_name": "ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Acta Biomater) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (ضمادة تيغاديرم الشفافة المقاومة للماء (3M Tegaderm)).",
+      "discovered_at": "2026-10-27T10:39:22.351720"
     }
   ]
 }
