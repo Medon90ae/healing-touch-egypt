@@ -35,6 +35,7 @@ def print_banner():
     print("  [6] استعراض وفحص سجل العملاء وحجوزات الاستشارات في Google Sheet")
     print("  [7] ربط وتفعيل حساب Reddit تلقائياً (لمرة واحدة فقط)")
     print("  [8] فتح أحدث منشور تم نشره على فيسبوك في المتصفح")
+    print("  [9] 📋 فتح مجلد قوالب النشر الجاهزة السريعة لريديت وبلوجر (Ready to Publish Pack)")
     print()
     print("=" * 70)
 
@@ -68,6 +69,12 @@ def run_option_1():
 
     print("\n[*] [5/5] جاري بث المنشورات والتوجيهات السريرية إلى منصات التواصل الاجتماعي (Facebook, Reddit, Blogger)...")
     subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "publish"], cwd=str(BASE_DIR))
+
+    # تجهيز حزمة النشر الجاهزة السريعة لريديت وبلوجر
+    try:
+        subprocess.run([VENV_PYTHON, "scripts/build_ready_to_publish_pack.py"], cwd=str(BASE_DIR), check=False)
+    except Exception:
+        pass
 
     print("\n" + "=" * 70)
     print("🎉 اكتمل النشر الشامل وتحديث كافة صفحات الموقع والأصول بنجاح!")
@@ -150,6 +157,25 @@ def run_option_8():
     subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "open-latest"], cwd=str(BASE_DIR))
 
 
+def run_option_9():
+    print("\n[*] 📋 فتح مجلد قوالب النشر الجاهزة السريعة لريديت وبلوجر...")
+    ready_dir = BASE_DIR / "media_assets" / "ready_to_publish"
+    ready_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        subprocess.run([VENV_PYTHON, "scripts/build_ready_to_publish_pack.py"], cwd=str(BASE_DIR), check=False)
+    except Exception:
+        pass
+    try:
+        os.startfile(str(ready_dir))
+    except Exception:
+        pass
+    # فتح روابط النشر في المتصفح تلقائياً
+    import webbrowser
+    webbrowser.open("https://draft.blogger.com/blog/posts/6258225961862592152")
+    webbrowser.open("https://www.reddit.com/r/u_Dull-Nectarine4963/submit")
+    print("[+] تم فتح مجلد القوالب وصفحات النشر المباشرة في المتصفح!")
+
+
 def main():
     print_banner()
     try:
@@ -169,6 +195,7 @@ def main():
         "6": run_option_6,
         "7": run_option_7,
         "8": run_option_8,
+        "9": run_option_9,
     }
 
     action = actions.get(choice, run_option_1)
