@@ -14,26 +14,94 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     videoPosterUrl: './assets/campaign_c-section_hero.png',
     videoTitle: 'شرح سريري عملي: الطريقة الصحيحة لحماية جرح القيصرية أثناء الاستحمام وتطبيق السيليكون الطبي',
     videoDuration: '2:45 دقيقة',
-    galleryImages: [
+        galleryImages: [
       {
-        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
-        title: 'ضمادة 3M Tegaderm + Pad الطبية الأصلية',
-        subtitle: 'غشاء بولي يوريثان نفاذ للبخار وعازل 100% لمياه الشاور وبكتيريا الاستحمام'
+        id: 'c-pomelli-sq-1',
+        url: './assets/pomelli/pomelli_1_1_sq1.webp',
+        title: 'جلسة تصوير Pomelli AI - باقة حماية جرح القيصرية (1:1)',
+        subtitle: 'تصميم فوتوغرافي متطور بالذكاء الاصطناعي بدقة 4K يوضح مكونات بروتوكول التعافي القيصري المعقم',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/3m-tegaderm-plus-pad/2_dressing_film_and_absorbent_pad.jpg',
-        title: 'الوسادة الماصة غير الملتصقة',
-        subtitle: 'تحمي خياطة القيصرية التجميلية وتمنع احتكاك الملابس مع تهوية صحية مستمرة'
+        id: 'c-pomelli-sq-2',
+        url: './assets/pomelli/pomelli_1_1_sq2.webp',
+        title: 'ضمادات 3M Tegaderm المعقمة العازلة للماء (1:1)',
+        subtitle: 'لقطة مقربة توضح غشاء البولي يوريثان النفاذ للبخار والمقاوم لمياه الشاور بنسبة 100%',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
-        title: 'شرائح BUPY سيليكون جل طبي أصلي',
-        subtitle: 'المعيار الذهبي الدولي لتسطيح الندبات وإعادة تنظيم ألياف الكولاجين'
+        id: 'c-pomelli-sq-3',
+        url: './assets/pomelli/pomelli_1_1_sq3.webp',
+        title: 'شرائح BUPY سيليكون جل طبي أصلية (1:1)',
+        subtitle: 'شريحة السيليكون الطبي المتخصصة في تسطيح أثر جرح القيصرية ومنع تكلكع الكلويد',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/bupy-silicone-scar-sheet/6_bupy_box_with_roll_real.jpg',
-        title: 'شريحة سيليكون فائقة النقاء قابلة لإعادة الغسيل',
-        subtitle: 'سماكة طبية تمنع التكلكع والشد وتوحد لون الجلد خلال 8-12 أسبوعاً'
+        id: 'c-pomelli-sq-4',
+        url: './assets/pomelli/pomelli_1_1_sq4.webp',
+        title: 'تجهيزات التعقيم والتبديل المنزلي الآمن (1:1)',
+        subtitle: 'شاش قطني طبي وأشرطة تثبيت ناعمة بدون أي ألم أو حساسية للجلد',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
+      },
+      {
+        id: 'c-pomelli-vert-1',
+        url: './assets/pomelli/pomelli_9_16_vert1.webp',
+        title: 'ستوري وريلز Pomelli 4K - العناية بجرح القيصرية (9:16)',
+        subtitle: 'مقاس عمودي كامل مخصص لقصص إنستجرام وريلز وتيك توك لشرح خطوات التعافي السريع',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'c-pomelli-vert-2',
+        url: './assets/pomelli/pomelli_9_16_vert2.webp',
+        title: 'دليل الاستحمام الآمن بدون التهاب - ستوري (9:16)',
+        subtitle: 'تصميم عمودي تفاعلي يوضح حماية الخياطة التجميلية أثناء الاستحمام',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'c-pomelli-vert-3',
+        url: './assets/pomelli/pomelli_9_16_vert3.webp',
+        title: 'تطبيق شرائح السيليكون الطبي BUPY - ستوري (9:16)',
+        subtitle: 'شرح عمودي بالذكاء الاصطناعي لكيفية تثبيت الشريحة وتلاشي أثر الندبة',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'c-pomelli-story-1',
+        url: './assets/pomelli/pomelli_story_1.webp',
+        title: 'كبسولة التعافي السريري Pomelli Photoshoot (9:16)',
+        subtitle: 'لقطة سينمائية رأسية توضح تغليف الباقة الطبية وحق المعاينة قبل الاستلام',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
       }
     ],
     heroHighlights: [
@@ -447,21 +515,61 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     videoPosterUrl: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
     videoTitle: 'الدليل المرئي المعتمد: الطريقة الصحيحة لتثبيت شريط Micropore وتقليل تورم أرنبة الأنف',
     videoDuration: 'دليل مرئي معتمد',
-    galleryImages: [
+        galleryImages: [
       {
-        url: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
-        title: 'شريط 3M Micropore Tan 1533-0 الجراحي الأصلي',
-        subtitle: 'لون لحمي طبيعي غير لامع هيبوالرجينيك لتثبيت الأنسجة وتقليل التورم'
+        id: 'rh-pomelli-sq-1',
+        url: './assets/pomelli/pomelli_1_1_sq6.webp',
+        title: 'جلسة تصوير Pomelli AI - باقة تثبيت وتورم الأنف (1:1)',
+        subtitle: 'تصميم ذكاء اصطناعي 4K يوضح شريط 3M Micropore ودعامات السيليكون المرنة',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/3m-micropore-tan-tape-1533-0/2_single_roll_profile_hand_real.jpg',
-        title: 'سماكة دقيقة مخصصة للأنف',
-        subtitle: 'تسمح بتنفس الجلد دون حساسية أو احمرار عند النزع'
+        id: 'rh-pomelli-sq-2',
+        url: './assets/pomelli/pomelli_1_1_sq4.webp',
+        title: 'أشرطة التثبيت الطبية الناعمة بلون البشرة (1:1)',
+        subtitle: 'شريط هيبوالرجينيك لا يسحب الجلد ولا يؤثر على ثبات الغضاريف',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/silicone-nostril-retainer/1_silicone_nostril_retainer_pack.jpg',
-        title: 'دعامات السيليكون لتثبيت فتحتي الأنف',
-        subtitle: 'سيليكون طبي مرن يحافظ على تماثل فتحات الأنف ومنع انكماش الغضاريف'
+        id: 'rh-pomelli-vert-1',
+        url: './assets/pomelli/pomelli_9_16_vert2.webp',
+        title: 'ستوري وريلز Pomelli 4K - تقنية تلصيق الأنف الصحيحة (9:16)',
+        subtitle: 'شرح عمودي تفاعلي لتقنية التلصيق المتدرج لتصريف تورم الأرنبة',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'rh-pomelli-story-3',
+        url: './assets/pomelli/pomelli_story_3.webp',
+        title: 'لقطة سينمائية Pomelli - دعامات السيليكون لتناغم الفتحات (9:16)',
+        subtitle: 'تصوير رأسي عالي الدقة يوضح مرونة دعامات السيليكون وتسهيل التنفس',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'rh-pomelli-story-4',
+        url: './assets/pomelli/pomelli_story_4.webp',
+        title: 'دليل تصريف التورم اللمفاوي بعد فك الجبيرة (9:16)',
+        subtitle: 'إرشادات بصرية عمودية للحد من الوذمة والحفاظ على خط النحت الجراحي',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
       }
     ],
     heroHighlights: [
@@ -802,21 +910,72 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     videoPosterUrl: './assets/campaign_bariatric_hero.png',
     videoTitle: 'شرح سريري عملي: عزل ثقوب المنظار الـ 5 المقاوم للماء ومنع تسلخ الجلد وبكتيريا الشاور',
     videoDuration: '3:10 دقيقة',
-    galleryImages: [
+        galleryImages: [
       {
-        url: './assets/gallery/smith-nephew-opsite-spray/1_opsite_spray_can_studio.jpg',
-        title: 'سبراي Smith & Nephew Opsite الطبي العازل',
-        subtitle: 'غشاء شفاف مرن وسريع الجفاف يعزل منافذ المنظار الدقيقة ضد الماء والعرق'
+        id: 'bar-pomelli-sq-1',
+        url: './assets/pomelli/pomelli_1_1_sq5.webp',
+        title: 'جلسة تصوير Pomelli AI - باقة ثقوب المنظار والتكميم (1:1)',
+        subtitle: 'تصميم ذكاء اصطناعي 4K لمستلزمات عزل منافذ المنظار الخمسة ضد العرق والماء',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
-        title: 'ضمادات 3M Tegaderm المقاومة للماء',
-        subtitle: 'حماية منفذ استخراج المعدة الأكبر حجماً ومنع الاحتكاك مع مشد البطن'
+        id: 'bar-pomelli-sq-2',
+        url: './assets/pomelli/pomelli_1_1_sq2.webp',
+        title: 'ضمادات العزل المائي لفتحة استخراج المعدة الأكبر (1:1)',
+        subtitle: 'حماية معقمة متقدمة تمنع الاحتكاك مع ملابس الكورسيه الضاغط',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
-        title: 'شرائح سيليكون BUPY الطبية الأصلية',
-        subtitle: 'تمنع تحول ثقوب المنظار إلى نقاط بارزة بنية غامقة أو تليف كلويدي'
+        id: 'bar-pomelli-sq-3',
+        url: './assets/pomelli/pomelli_1_1_sq3.webp',
+        title: 'شرائح سيليكون لفتحات المنظار الـ 5 لمنع التصبغات (1:1)',
+        subtitle: 'قطع سيليكون طبية تحمي من تحول الثقوب لندبات سميكة بنية داكنة',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
+      },
+      {
+        id: 'bar-pomelli-vert-1',
+        url: './assets/pomelli/pomelli_9_16_vert4.webp',
+        title: 'ستوري وريلز Pomelli 4K - عزل ثقوب المنظار ضد العرق (9:16)',
+        subtitle: 'شرح عمودي تفاعلي لحماية الثقوب أثناء المشي وممارسة الرياضة المبكرة',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'bar-pomelli-vert-2',
+        url: './assets/pomelli/pomelli_9_16_vert5.webp',
+        title: 'بروتوكول حماية الجروح تحت المشد الجراحي - ستوري (9:16)',
+        subtitle: 'تصميم عمودي يوضح تجنب تسلخ الجلد الناتج عن البلاستر التقليدي',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'bar-pomelli-story-2',
+        url: './assets/pomelli/pomelli_story_2.webp',
+        title: 'لقطة سينمائية Pomelli - سبراي Opsite وشرائح السيليكون (9:16)',
+        subtitle: 'تصوير رأسي عالي الجودة للغشاء الواقي سريع الجفاف المقاوم للماء',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
       }
     ],
     heroHighlights: [
@@ -1095,21 +1254,61 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     videoPosterUrl: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
     videoTitle: 'الدليل المرئي المعتمد: حماية ندبة الرقبة وتلاشي الأثر بالسيليكون الطبي وتفادي تصبغات الشمس',
     videoDuration: 'دليل مرئي معتمد',
-    galleryImages: [
+        galleryImages: [
       {
-        url: './assets/gallery/bupy-silicone-scar-sheet/1_front_box_bupy.jpg',
-        title: 'شرائح سيليكون BUPY الطبية فائقة الرقة للرقبة',
-        subtitle: 'سماكة 0.3 مم شفافة تماماً غير مرئية توفر عزلاً وحماية من أشعة الشمس'
+        id: 'thy-pomelli-sq-1',
+        url: './assets/pomelli/pomelli_1_1_sq3.webp',
+        title: 'شريحة BUPY سيليكون الرقبة المرنة - تصوير Pomelli AI (1:1)',
+        subtitle: 'سماكة 0.3 مم فائقة الرقة تتكيف مع ثنية الرقبة وحركة الالتفات',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/3m-micropore-tan-tape-1533-0/1_box_and_tan_rolls_real.jpg',
-        title: 'شريط 3M Micropore Tan الواقي من الشمس',
-        subtitle: 'حماية إضافية لحجب الأشعة فوق البنفسجية UV ومنع اسمرار وتصبغ الخط الجراحي'
+        id: 'thy-pomelli-sq-2',
+        url: './assets/pomelli/pomelli_1_1_sq4.webp',
+        title: 'شريط 3M البيج الواقي من تصبغات الشمس UV (1:1)',
+        subtitle: 'حجب أشعة الشمس فوق البنفسجية لمنع اسمرار خط جرح الغدة الدرقية',
+        platform: 'feed',
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك وويب',
+        aspectRatio: '1:1',
+        dimensions: '4096 × 4096 (4K Ultra HD)',
+        tag: 'Square 1:1'
       },
       {
-        url: './assets/gallery/3m-tegaderm-plus-pad/1_retail_box_packaging.jpg',
-        title: 'ضمادة 3M Tegaderm لحماية الرقبة أثناء الاستحمام',
-        subtitle: 'تمنع وصول مياه الشامبو والصابون لمنطقة الرقبة الحساسة في أول أسبوع'
+        id: 'thy-pomelli-vert-1',
+        url: './assets/pomelli/pomelli_9_16_vert3.webp',
+        title: 'ستوري وريلز Pomelli 4K - حماية خط جرح الرقبة (9:16)',
+        subtitle: 'تصميم عمودي يوضح العناية بفتحة الرقبة وتفادي الشد والتيبس',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '2304 × 4096 (4K Mobile)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'thy-pomelli-story-5',
+        url: './assets/pomelli/pomelli_story_5.webp',
+        title: 'لقطة سينمائية Pomelli - رول السيليكون فائق الرقة 0.3 مم (9:16)',
+        subtitle: 'تصوير رأسي احترافي يوضح الشفافية والمرونة الكاملة على جلد الرقبة',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
+      },
+      {
+        id: 'thy-pomelli-story-6',
+        url: './assets/pomelli/pomelli_story_6.webp',
+        title: 'دليل الوقاية من تصبغات الشمس النهارية - ستوري (9:16)',
+        subtitle: 'إرشادات بصرية عمودية لحماية الأنسجة الحساسة عند الخروج نهاراً',
+        platform: 'story',
+        platformLabel: 'ستوري وريلز (9:16) • إنستجرام وتيك توك',
+        aspectRatio: '9:16',
+        dimensions: '1080 × 1920 (Mobile HD)',
+        tag: 'Story 9:16'
       }
     ],
     heroHighlights: [

@@ -110,6 +110,20 @@ export interface EvidenceStudy {
   evidenceGrade: string;
 }
 
+export type PlatformFormat = '1:1' | '9:16' | '16:9';
+
+export interface GalleryProductImage {
+  id?: string;
+  url: string;
+  title: string;
+  subtitle: string;
+  platform?: 'feed' | 'story' | 'web';
+  platformLabel?: string;
+  aspectRatio?: PlatformFormat;
+  dimensions?: string;
+  tag?: string;
+}
+
 export interface Campaign {
   id: CampaignId;
   name: string;
@@ -124,7 +138,7 @@ export interface Campaign {
   videoPosterUrl?: string;
   videoTitle?: string;
   videoDuration?: string;
-  galleryImages?: { url: string; title: string; subtitle: string }[];
+  galleryImages?: GalleryProductImage[];
   primaryRecommendation: string;
   protocolDescription: string;
   products: Product[];

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   ShieldCheck, 
   CheckCircle2, 
@@ -13,9 +13,10 @@ import {
   MessageSquare,
   Clock,
   Layers,
-  HeartPulse
+  Smartphone,
+  Maximize2
 } from 'lucide-react';
-import { Campaign } from '../types/campaign';
+import { Campaign, GalleryProductImage, PlatformFormat } from '../types/campaign';
 
 interface HeroSectionProps {
   campaign: Campaign;
@@ -29,15 +30,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onScrollToCalculator
 }) => {
   const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'gallery'>('video');
+  const [platformFilter, setPlatformFilter] = useState<'all' | '1:1' | '9:16'>('all');
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
-  const galleryList = campaign.galleryImages || [
-    {
-      url: campaign.heroImageUrl,
-      title: 'مستلزمات التعافي السريري المعتمدة',
-      subtitle: 'منتجات طبية أصلية 100% معقمة ومغلفة لحماية موضع الجراحة'
-    }
-  ];
+  const allGallery: GalleryProductImage[] = useMemo(() => {
+    return campaign.galleryImages || [
+      {
+        url: campaign.heroImageUrl,
+        title: 'مستلزمات التعافي السريري المعتمدة',
+        subtitle: 'منتجات طبية أصلية 100% معقمة ومغلفة لحماية موضع الجراحة',
+        aspectRatio: '1:1' as PlatformFormat,
+        platform: 'feed' as const,
+        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك'
+      }
+    ];
+  }, [campaign.galleryImages, campaign.heroImageUrl]);
+
+  const filteredGallery = useMemo(() => {
+    if (platformFilter === 'all') return allGallery;
+    return allGallery.filter((item) => item.aspectRatio === platformFilter);
+  }, [allGallery, platformFilter]);
+
+  // Safe selected item index
+  const activePhotoIndex = selectedGalleryIdx < filteredGallery.length ? selectedGalleryIdx : 0;
+  const currentPhoto = filteredGallery[activePhotoIndex] || allGallery[0];
 
   const handleScrollToArticle = () => {
     const el = document.getElementById('clinical-article');
@@ -140,11 +156,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Embedded Clinical Video Player & 4K Photo Gallery (5 cols on desktop) */}
+          {/* Right Column: Embedded Clinical Video Player & Pomelli AI Product Images (5 cols on desktop) */}
           <div className="lg:col-span-5 animate-fade-in-up delay-100">
             <div className="relative bg-white rounded-2xl border border-[#E2ECE6] shadow-xl shadow-[#064E3B]/5 overflow-hidden">
               
-              {/* Media Switcher Tabs (فيديو الشرح العملي vs صور التعافي 4K) */}
+              {/* Media Switcher Tabs (فيديو الشرح السريري vs صور المنتجات Pomelli AI) */}
               <div className="flex border-b border-[#E2ECE6] bg-[#F8F9FF]">
                 <button
                   type="button"
@@ -174,9 +190,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   }`}
                 >
                   <ImageIcon className="w-4 h-4 text-[#059669]" />
-                  <span>معرض الصور السريرية 4K</span>
+                  <span>عرض صور المنتجات (Pomelli 4K)</span>
                   <span className="text-[10px] bg-[#DCFCE7] text-[#006C4A] px-1.5 py-0.2 rounded-full font-semibold">
-                    {galleryList.length} صور
+                    {allGallery.length} صور
                   </span>
                 </button>
               </div>
@@ -227,7 +243,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
 
                   {/* Video Title and Caption */}
-                  <div className="p-2 rounded-xl bg-[#F3F7F5] border border-[#E2ECE6]">
+                  <div className="p-2.5 rounded-xl bg-[#F3F7F5] border border-[#E2ECE6]">
                     <div className="text-xs font-bold text-[#003527] mb-0.5">
                       {campaign.videoTitle || 'شرح سريري معتمد للتعامل مع موضع الجراحة'}
                     </div>
@@ -238,56 +254,168 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               )}
 
-              {/* Tab 2: 4K Clinical Photo Gallery */}
+              {/* Tab 2: Pomelli AI Product Images with Platform Aspect Ratio Distinctions */}
               {activeMediaTab === 'gallery' && (
                 <div className="p-3.5 space-y-3">
-                  {/* Active Photo Display */}
-                  <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-[#F3F7F5] border border-[#E2ECE6]">
-                    <img
-                      src={galleryList[selectedGalleryIdx]?.url}
-                      alt={galleryList[selectedGalleryIdx]?.title}
-                      className="w-full h-full object-cover transition-all duration-300"
-                    />
-                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 text-white">
-                      <div className="text-xs font-bold">
-                        {galleryList[selectedGalleryIdx]?.title}
-                      </div>
-                      <div className="text-[11px] text-white/90 line-clamp-1">
-                        {galleryList[selectedGalleryIdx]?.subtitle}
-                      </div>
+                  
+                  {/* Platform & Aspect Ratio Filter Switcher Bar */}
+                  <div className="flex flex-wrap items-center justify-between gap-1.5 pb-1 border-b border-[#E2ECE6]/70">
+                    <div className="text-xs font-bold text-[#003527] flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>مقاس المنصة:</span>
                     </div>
-                    <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-white/90 text-[#003527] text-[10px] font-bold border border-[#D0DBED]">
-                      صورة {selectedGalleryIdx + 1} من {galleryList.length}
-                    </div>
-                  </div>
 
-                  {/* Thumbnails Row */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {galleryList.map((item, idx) => (
+                    <div className="inline-flex items-center gap-1 bg-[#F3F7F5] p-1 rounded-xl border border-[#E2ECE6] text-[11px]">
                       <button
-                        key={idx}
                         type="button"
-                        onClick={() => setSelectedGalleryIdx(idx)}
-                        className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
-                          selectedGalleryIdx === idx
-                            ? 'border-[#059669] ring-2 ring-[#059669]/30 scale-102'
-                            : 'border-[#E2ECE6] opacity-70 hover:opacity-100'
+                        onClick={() => {
+                          setPlatformFilter('all');
+                          setSelectedGalleryIdx(0);
+                        }}
+                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
+                          platformFilter === 'all'
+                            ? 'bg-[#003527] text-white shadow-2xs'
+                            : 'text-[#404944] hover:bg-white'
                         }`}
                       >
-                        <img
-                          src={item.url}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
+                        الكل ({allGallery.length})
                       </button>
-                    ))}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPlatformFilter('1:1');
+                          setSelectedGalleryIdx(0);
+                        }}
+                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                          platformFilter === '1:1'
+                            ? 'bg-[#003527] text-white shadow-2xs'
+                            : 'text-[#404944] hover:bg-white'
+                        }`}
+                        title="مقاس مربع 1:1 مخصص لمنشورات إنستجرام وفيسبوك والموقع"
+                      >
+                        <Layers className="w-3 h-3" />
+                        <span>📐 1:1 مربع</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPlatformFilter('9:16');
+                          setSelectedGalleryIdx(0);
+                        }}
+                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                          platformFilter === '9:16'
+                            ? 'bg-[#003527] text-white shadow-2xs'
+                            : 'text-[#404944] hover:bg-white'
+                        }`}
+                        title="مقاس عمودي 9:16 مخصص لقصص إنستجرام ستوري وريلز وتيك توك"
+                      >
+                        <Smartphone className="w-3 h-3" />
+                        <span>📱 9:16 ستوري</span>
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Caption of Selected Photo */}
-                  <div className="p-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-xs text-[#065F46]">
-                    <strong>الاستخدام السريري: </strong>
-                    <span>{galleryList[selectedGalleryIdx]?.subtitle}</span>
+                  {/* Adaptive Image Frame: Changes aspect ratio dynamically based on platform format */}
+                  <div className="w-full flex justify-center bg-[#F8FAF9] rounded-2xl p-2 border border-[#E2ECE6]">
+                    <div
+                      className={`relative overflow-hidden rounded-xl bg-black border border-[#E2ECE6] shadow-sm transition-all duration-300 w-full ${
+                        currentPhoto?.aspectRatio === '9:16'
+                          ? 'max-h-[440px] aspect-[9/16] mx-auto'
+                          : 'max-h-[380px] aspect-square mx-auto'
+                      }`}
+                    >
+                      <img
+                        src={currentPhoto?.url}
+                        alt={currentPhoto?.title}
+                        className="w-full h-full object-cover transition-all duration-300"
+                        loading="eager"
+                      />
+
+                      {/* Top Badges: Platform Format & Dimensions */}
+                      <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+                        {currentPhoto?.aspectRatio === '9:16' ? (
+                          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#064E3B]/90 backdrop-blur-md text-[#82F5C1] text-[10px] sm:text-[11px] font-bold border border-[#82F5C1]/40 shadow-xs">
+                            <Smartphone className="w-3 h-3 text-[#FFB77D]" />
+                            <span>ستوري وريلز (9:16)</span>
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#003527]/90 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-bold border border-white/20 shadow-xs">
+                            <Layers className="w-3 h-3 text-[#82F5C1]" />
+                            <span>منشور مربع (1:1)</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-md text-[#003527] text-[10px] font-extrabold border border-[#D0DBED] shadow-xs flex items-center gap-1">
+                        <Sparkles className="w-2.5 h-2.5 text-[#D97706]" />
+                        <span>Pomelli 4K</span>
+                      </div>
+
+                      {/* Bottom Description Overlay */}
+                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-3 sm:p-4 text-white">
+                        <div className="text-xs sm:text-sm font-bold leading-snug">
+                          {currentPhoto?.title}
+                        </div>
+                        <div className="text-[11px] text-white/90 line-clamp-2 mt-0.5">
+                          {currentPhoto?.subtitle}
+                        </div>
+                        <div className="text-[10px] text-[#82F5C1] font-semibold mt-1">
+                          {currentPhoto?.dimensions ? `📐 أبعاد التصميم: ${currentPhoto.dimensions}` : 'دقة تصوير سريرية فائقة 4K'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Thumbnails Row with Miniature Platform Badges */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] text-[#707974]">
+                      <span>انقري على أي صورة لعرض المقاس والتفاصيل:</span>
+                      <span className="font-semibold text-[#003527]">
+                        {activePhotoIndex + 1} من {filteredGallery.length}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-24 overflow-y-auto p-1">
+                      {filteredGallery.map((item, idx) => {
+                        const isSelected = activePhotoIndex === idx;
+                        return (
+                          <button
+                            key={item.id || idx}
+                            type="button"
+                            onClick={() => setSelectedGalleryIdx(idx)}
+                            className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${
+                              isSelected
+                                ? 'border-[#059669] ring-2 ring-[#059669]/40 scale-102 shadow-xs'
+                                : 'border-[#E2ECE6] opacity-70 hover:opacity-100'
+                            }`}
+                          >
+                            <img
+                              src={item.url}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                            {/* Ratio Tag Badge */}
+                            <span className="absolute top-0.5 right-0.5 text-[8px] font-extrabold px-1 rounded bg-black/70 text-white font-mono">
+                              {item.aspectRatio}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Clinical Utility Note */}
+                  <div className="p-2.5 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-xs text-[#065F46] flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#059669] mt-0.5" />
+                    <div>
+                      <strong>جاهز للنشر والاستخدام: </strong>
+                      <span>{currentPhoto?.platformLabel || 'صور Pomelli AI تم إنشاؤها خصيصاً بنسب الأبعاد الدقيقة لكل منصة وتطبيق.'}</span>
+                    </div>
+                  </div>
+
                 </div>
               )}
 
