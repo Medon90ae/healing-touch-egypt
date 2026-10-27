@@ -10,6 +10,7 @@ import sys
 import os
 import shutil
 import glob
+import urllib.parse
 import datetime as dt
 from pathlib import Path
 from PIL import Image
@@ -30,6 +31,16 @@ YOUTUBE_UPLOAD_URL = f"https://studio.youtube.com/channel/{YOUTUBE_CHANNEL_ID}/v
 
 def generate_pack():
     date_str = dt.datetime.now().strftime("%Y-%m-%d")
+
+    # تنظيف أي ملفات مكررة أو قديمة داخل المجلد لضمان تحديث الحزمة 100%
+    stale_files = ["00_دليل_النشر_السريع.txt", "05_صورة_مصغرة_يوتيوب_Thumbnail.png"]
+    for sf in stale_files:
+        stale_path = READY_DIR / sf
+        if stale_path.exists():
+            try:
+                stale_path.unlink()
+            except Exception:
+                pass
     
     # 1. عناوين وبيانات الحالة الحالية
     general_title = "بروتوكول تعافي جرح القيصرية والشاور وإدارة الندبات الجراحية (الدليل السريري المعتمد 2026)"
@@ -43,7 +54,9 @@ def generate_pack():
     lp_url = "https://medon90ae.github.io/healing-touch-egypt/lp/c-section-recovery-protocol.html"
     site_url = "https://medon90ae.github.io/healing-touch-egypt/"
     portal_url = "https://medon90ae.github.io/healing-touch-egypt/portal/"
-    wa_url = "https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D9%85%D8%B1%D8%AD%D9%84%D8%A9%20%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%D8%AC%D8%B1%D8%AD%D9%8A"
+    
+    wa_msg = "أهلاً بحضرتك، محتاجة استشارة بخصوص جرح القيصرية والشاور الآمن، وتفعيل كود (HT10) للشحن المجاني وحق معاينة الشحنة قبل الاستلام."
+    wa_url = f"https://wa.me/201155803307?text={urllib.parse.quote(wa_msg)}"
     
     labels = "ولادة قيصرية, جرح القيصرية, علاج الندبات, شيت سيليكون, ضمادات تيجاديرم, صحة المرأة, رعاية بعد الجراحة"
     tags_comma = "ولادة قيصرية, جرح القيصرية, علاج ندبات القيصرية, الاستحمام بعد القيصرية, شيت سيليكون طبي, ضمادات تيجاديرم, كلويد, هيلينج تاتش مصر, c section recovery, hypertrophic scar, silicone scar sheet"
@@ -53,13 +66,19 @@ def generate_pack():
     # =========================================================================
     full_video_src = BASE_DIR / "docs" / "assets" / "campaign_c-section_video.mp4"
     if not full_video_src.exists():
-        full_video_src = BASE_DIR / "portal_app" / "public" / "assets" / "campaign_c-section_video.mp4"
+        full_video_src = BASE_DIR / "media_assets" / "manual_inbox" / "بيولوجيا_التئام_الأنسجة.mp4"
     
     full_video_dest = READY_DIR / "فيديو_يوتيوب_كامل_[بيولوجيا_التئام_الأنسجة].mp4"
     if full_video_src.exists():
         shutil.copy2(str(full_video_src), str(full_video_dest))
 
-    shorts_video_src = BASE_DIR / "media_assets" / "branded_designs" / "2026-10-27_[فيديو_تيكتوك_وريلز]_c-section.mp4"
+    # أحدث فيديو شورتس رأسي
+    shorts_video_src = BASE_DIR / "media_assets" / "branded_designs" / f"{date_str}_[فيديو_تيكتوك_وريلز]_c-section.mp4"
+    if not shorts_video_src.exists():
+        shorts_list = sorted(list((BASE_DIR / "media_assets" / "branded_designs").glob("*[فيديو_تيكتوك_وريلز]*.mp4")), key=os.path.getmtime, reverse=True)
+        if shorts_list:
+            shorts_video_src = shorts_list[0]
+            
     shorts_video_dest = READY_DIR / "فيديو_يوتيوب_شورتس_Shorts.mp4"
     if shorts_video_src.exists():
         shutil.copy2(str(shorts_video_src), str(shorts_video_dest))
@@ -67,11 +86,15 @@ def generate_pack():
     # =========================================================================
     # 🖼️ 2. توليد صورة مصغرة عالية الدقة لليوتيوب (1280x720 Thumbnail)
     # =========================================================================
-    pomelli_candidates = glob.glob(str(BASE_DIR / "media_assets" / "manual_inbox" / "archive" / "*" / "*pomelli*.png"))
+    inbox_candidates = list((BASE_DIR / "media_assets" / "manual_inbox").glob("*pomelli*.png"))
+    lib_candidates = list((BASE_DIR / "media_assets" / "pomelli_library").glob("*.png"))
+    pomelli_candidates = inbox_candidates + lib_candidates
     thumb_dest = READY_DIR / "صورة_مصغرة_يوتيوب_Thumbnail.png"
     if pomelli_candidates:
         try:
-            img = Image.open(pomelli_candidates[0])
+            # تفضيل جلسة التصوير photoshoot-4 المرفوعة لحملة اليوم
+            best_img = next((p for p in pomelli_candidates if "photoshoot-4" in p.name), pomelli_candidates[0])
+            img = Image.open(best_img)
             w, h = img.size
             target_ratio = 16 / 9
             current_ratio = w / h
