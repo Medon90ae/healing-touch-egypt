@@ -139,7 +139,7 @@ def archive_used_inbox_files(inbox_dir: Path, files_to_archive: list) -> int:
                 f_path = Path(f)
                 if f_path.exists() and f_path.is_file() and f_path.parent.resolve() == inbox_dir.resolve():
                     dest = archive_folder / f_path.name
-                    shutil.move(str(f_path), str(dest))
+                    shutil.copy2(str(f_path), str(dest))
                     count += 1
         except Exception:
             pass

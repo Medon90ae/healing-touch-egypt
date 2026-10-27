@@ -16,3 +16,10 @@ media_assets/manual_inbox/*.m4a
 media_assets/ready_to_publish/*.mp4
 media_assets/ready_to_publish/*.m4a
 
+
+media_assets/manual_inbox/*.png
+media_assets/manual_inbox/*.jpg
+media_assets/manual_inbox/*.txt
+media_assets/manual_inbox/archive/**
+media_assets/pomelli_library/**
+

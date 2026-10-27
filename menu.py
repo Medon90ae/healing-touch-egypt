@@ -43,6 +43,22 @@ def print_banner():
 
 def run_option_1():
     print("\n[*] [1/5] جاري فحص manual_inbox واستيعاب الميديا وتوليد صفحات الهبوط (Multi-Angle LPs)...")
+    manual_inbox = BASE_DIR / "media_assets" / "manual_inbox"
+    user_files = [f for f in manual_inbox.iterdir() if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]]
+    if not user_files:
+        archive_dir = manual_inbox / "archive"
+        if archive_dir.exists():
+            recent_dirs = sorted([d for d in archive_dir.iterdir() if d.is_dir()], key=lambda x: x.name, reverse=True)
+            if recent_dirs:
+                latest = recent_dirs[0]
+                latest_files = [f for f in latest.iterdir() if f.is_file()]
+                if latest_files:
+                    print(f"[*] ℹ️ صندوق manual_inbox فارغ — جاري تلقائياً استعادة ملفات آخر حملة من الأرشيف ({latest.name})...")
+                    import shutil
+                    for lf in latest_files:
+                        shutil.copy2(str(lf), str(manual_inbox / lf.name))
+                    print(f"[+] ✅ تم استعادة {len(latest_files)} ملفات إلى manual_inbox لضمان اعتماد محتواك المرفوع.")
+
     subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "auto-daily"], cwd=str(BASE_DIR))
 
     print("\n[*] [2/5] جاري إعادة بناء الموقع وخريطة السيو sitemap.xml والموسوعة الطبية...")

@@ -25,7 +25,7 @@
     "category": "جراحات سمنة ومناظير (تكميم وتحويل مسار)",
     "has_video": true,
     "has_audio": false,
-    "file_size_kb": 27.3,
+    "file_size_kb": 28.4,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/bariatric-recovery-protocol.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\bariatric-recovery-protocol.html"
   },
@@ -34,8 +34,8 @@
     "title": "روتين الغسيل اليومي وإعادة استخدام شيت السيليكون BUPY وتجنب الحساسية",
     "category": "علاج وتسطيح الندبات بشرائح السيليكون",
     "has_video": true,
-    "has_audio": false,
-    "file_size_kb": 20.6,
+    "has_audio": true,
+    "file_size_kb": 21.2,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/bupy-silicone-daily-care-washing-guide.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\bupy-silicone-daily-care-washing-guide.html"
   },
@@ -44,8 +44,8 @@
     "title": "علاج تليف وبروز جرح القيصرية وتسطيح الندبة بشيت السيليكون الطبي BUPY",
     "category": "علاج وتسطيح الندبات بشرائح السيليكون",
     "has_video": true,
-    "has_audio": false,
-    "file_size_kb": 21.1,
+    "has_audio": true,
+    "file_size_kb": 21.8,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/bupy-silicone-scar-flattening.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\bupy-silicone-scar-flattening.html"
   },
@@ -54,8 +54,8 @@
     "title": "التوقيت الطبي الصحيح لبدء استخدام السيليكون بعد فك الغرز والوقاية من الكيلويد",
     "category": "علاج وتسطيح الندبات بشرائح السيليكون",
     "has_video": true,
-    "has_audio": false,
-    "file_size_kb": 21.4,
+    "has_audio": true,
+    "file_size_kb": 22.0,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/bupy-silicone-timeline-keloid-prevention.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\bupy-silicone-timeline-keloid-prevention.html"
   },
@@ -63,9 +63,9 @@
     "filename": "c-section-recovery-protocol.html",
     "title": "حالة جرح القيصرية والشاور والندبة البارزة",
     "category": "ولادة قيصرية وتجميل بطن",
-    "has_video": false,
-    "has_audio": false,
-    "file_size_kb": 29.7,
+    "has_video": true,
+    "has_audio": true,
+    "file_size_kb": 29.6,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/c-section-recovery-protocol.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\c-section-recovery-protocol.html"
   },
@@ -78,6 +78,16 @@
     "file_size_kb": 20.6,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/opsite-spray-bariatric-trocar-protection.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\opsite-spray-bariatric-trocar-protection.html"
+  },
+  {
+    "filename": "rhinoplasty-recovery-protocol.html",
+    "title": "حالة تورم أرنبة الأنف وتماثل الفتحات بعد التجميل",
+    "category": "تجميل وتثبيت الأنف",
+    "has_video": false,
+    "has_audio": false,
+    "file_size_kb": 27.9,
+    "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/rhinoplasty-recovery-protocol.html",
+    "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\rhinoplasty-recovery-protocol.html"
   },
   {
     "filename": "silicone-nostril-retainer-symmetry-care.html",
@@ -94,8 +104,8 @@
     "title": "فوبيا الاستحمام بعد الولادة القيصرية وعزل الجرح بلصقة 3M Tegaderm + Pad",
     "category": "عزل مائي وشاور آمن للجروح",
     "has_video": true,
-    "has_audio": false,
-    "file_size_kb": 20.5,
+    "has_audio": true,
+    "file_size_kb": 21.1,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/tegaderm-showering-waterproof-protection.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\tegaderm-showering-waterproof-protection.html"
   },
@@ -104,8 +114,8 @@
     "title": "بروتوكول تغيير اللصقة المعقمة بعد فك الضمادة الأولى دون شد الجلد",
     "category": "عزل مائي وشاور آمن للجروح",
     "has_video": true,
-    "has_audio": false,
-    "file_size_kb": 20.6,
+    "has_audio": true,
+    "file_size_kb": 21.2,
     "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/tegaderm-sterile-dressing-change-guide.html",
     "local_path": "C:\\followUPSHEET\\healing_touch\\docs\\lp\\tegaderm-sterile-dressing-change-guide.html"
   }

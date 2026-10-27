@@ -236,46 +236,53 @@ def search_pixabay_photo(query: str, exclude_ids: set = None) -> dict:
 
 
 def get_clinical_case_photo(topic_text: str, custom_category: str = None) -> dict:
+    import random
     cat = custom_category or detect_category_from_text(topic_text)
-    raw_queries = CATEGORY_SEARCH_QUERIES.get(cat, CATEGORY_SEARCH_QUERIES["general"]).copy()
-    random.shuffle(raw_queries)
+    
+    # 🌟 الاعتماد الحصري بنسبة 100% على جلسات تصوير منتجات Pomelli الطبية المعتمدة للمشروع (منع Pexels/Pixabay نهائياً)
+    pomelli_lib = MEDIA_DIR / "pomelli_library"
+    if pomelli_lib.exists():
+        candidates = list(pomelli_lib.glob("*.png")) + list(pomelli_lib.glob("*.jpg"))
+        if candidates:
+            # تصفية ذكية حسب التخصص إن أمكن
+            matched = [c for c in candidates if cat in c.name.lower()] or candidates
+            chosen = random.choice(matched)
+            print(f"[+] 🎨 تم اعتماد صورة منتج سريرية فائقة الدقة من جلسات Pomelli المعتمدة: {chosen.name}")
+            return {
+                "id": chosen.stem,
+                "image_url": "",
+                "source": "Pomelli Studio",
+                "alt": f"جلسة تصوير طبية لمنتجات هيلينج تاتش مصر - {cat}",
+                "photographer": "Healing Touch Egypt Clinical Studio",
+                "local_path": str(chosen),
+            }
 
-    used_ids = load_used_images()
-    photo_info = {}
-    prefer_pexels = random.choice([True, False])
+    # إذا لم تتوفر مكتبة Pomelli، نستخدم الصور المعتمدة في docs/assets
+    docs_assets = BASE_DIR / "docs" / "assets"
+    for ext in [".png", ".jpg"]:
+        cand = docs_assets / f"campaign_{cat}_hero{ext}"
+        if cand.exists():
+            return {
+                "id": cand.stem,
+                "image_url": "",
+                "source": "Clinical Library",
+                "alt": f"منتجات هيلينج تاتش مصر - {cat}",
+                "photographer": "Healing Touch Egypt",
+                "local_path": str(cand),
+            }
 
-    for q in raw_queries:
-        if prefer_pexels:
-            photo_info = search_pexels_photo(q, exclude_ids=used_ids) or search_pixabay_photo(q, exclude_ids=used_ids)
-        else:
-            photo_info = search_pixabay_photo(q, exclude_ids=used_ids) or search_pexels_photo(q, exclude_ids=used_ids)
-        if photo_info and photo_info.get("image_url"):
-            break
+    og_img = docs_assets / "og-image.jpg"
+    if og_img.exists():
+        return {
+            "id": "og-image",
+            "image_url": "",
+            "source": "Clinical Library",
+            "alt": f"منتجات هيلينج تاتش مصر - {cat}",
+            "photographer": "Healing Touch Egypt",
+            "local_path": str(og_img),
+        }
 
-    if not photo_info or not photo_info.get("image_url"):
-        fb_q = random.choice(["hospital surgical recovery", "doctor patient consultation clinic", "dermatology skin care"])
-        photo_info = search_pexels_photo(fb_q, exclude_ids=used_ids) or search_pixabay_photo(fb_q, exclude_ids=used_ids)
-
-    if not photo_info or not photo_info.get("image_url"):
-        return {}
-
-    if photo_info.get("id"):
-        mark_image_as_used(photo_info["id"])
-
-    try:
-        slug_id = f"case_{cat}_{photo_info['source'].lower()}_{photo_info['id']}"
-        local_path = CASES_DIR / f"{slug_id}.jpg"
-        if not local_path.exists():
-            print(f"[*] 📥 جاري تنزيل صورة طبية جديدة من {photo_info['source']} ({photo_info['alt']})...")
-            img_res = requests.get(photo_info["image_url"], timeout=20)
-            if img_res.status_code == 200:
-                local_path.write_bytes(img_res.content)
-                print(f"[+] ✅ تم حفظ الصورة بنجاح: {local_path.name}")
-        photo_info["local_path"] = str(local_path)
-        return photo_info
-    except Exception as exc:
-        print(f"[!] خطأ في تنزيل الصورة: {exc}")
-        return photo_info
+    return {}
 
 
 # =============================================================================
@@ -1683,7 +1690,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"[!] تنبيه رفع GitHub: {e}")
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
-    publish_instagram_graph_api(full_caption)
+    ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{tmpl['category']}_hero.png"
+    publish_instagram_graph_api(full_caption, image_url=ig_image_url)
     publish_to_blogger_webhook(blogger_post)
     publish_to_reddit_api(tmpl["title"], reddit_text)
     if ok:
