@@ -2229,9 +2229,13 @@ def get_shared_js(cfg: dict) -> str:
       }}
     }};
 
-    /* تفعيل الـ Micro-Popup Drawer (R3) */
+    /* تفعيل الـ Micro-Popup Drawer (R3) الموحد */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {{
       const targetTopic = contextTopic || document.title;
+      if (typeof window.HEALING_TOUCH_WHATSAPP !== 'undefined' && window.HEALING_TOUCH_WHATSAPP.showModal) {{
+        window.HEALING_TOUCH_WHATSAPP.showModal(targetTopic);
+        return false;
+      }}
       const targetWaUrl = directWaUrl || buildDynamicWaUrl(targetTopic);
       if (preferredChannel === 'whatsapp' || !preferredChannel) {{
         try {{
@@ -2249,11 +2253,6 @@ def get_shared_js(cfg: dict) -> str:
       }}
       window.open(directWaUrl || IG_URL, '_blank');
       return false;
-    }} else {{
-        // في حالة عدم وجود المودال، يتم توجيهه إلى صفحة تأكيد الاستشارة wa.html لتسجيل البيانات أولاً
-        const targetCase = "general";
-        window.location.href = "wa.html?case=" + encodeURIComponent(targetCase) + "&topic=" + encodeURIComponent(contextTopic || document.title);
-      }}
     }}
 
     function closePromoModal() {{
@@ -2566,6 +2565,7 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
   <meta name="twitter:title" content="{clean_name}">
   <meta name="twitter:description" content="{clean_summary}">
   <style>{get_shared_css()}</style>
+  <script src="assets/whatsapp-triage.js"></script>
   <script>{get_shared_js(cfg)}</script>
   <script type="application/ld+json">
   {jsonld_str}
@@ -2842,6 +2842,7 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
   <meta name="twitter:title" content="{clean_title}">
   <meta name="twitter:description" content="{clean_hook}">
   <style>{get_shared_css()}</style>
+  <script src="assets/whatsapp-triage.js"></script>
   <script>{get_shared_js(cfg)}</script>
   <script type="application/ld+json">
   {jsonld_str}
@@ -3041,6 +3042,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
   <meta name="twitter:title" content="هيلينج تاتش مصر">
   <meta name="twitter:description" content="استشارة التعافي والموسوعة الطبية لتعافي ما بعد الجراحة في مصر.">
   <style>{get_shared_css()}</style>
+  <script src="assets/whatsapp-triage.js"></script>
   <script>{get_shared_js(cfg)}</script>
   <script type="application/ld+json">
   {jsonld_str}

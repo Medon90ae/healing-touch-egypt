@@ -46,6 +46,7 @@ def run_option_1():
 
     print("\n[*] [2/5] جاري إعادة بناء الموقع وخريطة السيو sitemap.xml والموسوعة الطبية...")
     subprocess.run([VENV_PYTHON, "github_seo_trend_engine.py", "--build-site"], cwd=str(BASE_DIR))
+    subprocess.run([VENV_PYTHON, "scripts/inject_triage_all_pages.py"], cwd=str(BASE_DIR), check=False)
 
     print("\n[*] [3/5] جاري بناء وتجميع تطبيق البوابة التفاعلية (Clinical Portal App)...")
     try:

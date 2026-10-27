@@ -1074,6 +1074,7 @@
       .article-full-box, .product-profile-box { padding: 24px 18px; }
     }
     </style>
+  <script src="assets/whatsapp-triage.js"></script>
   <script>
     const TRIAGE_DATA = {"c-section": {"badge": "بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)", "title": "خطة التعافي لجرح القيصرية وشد البطن:", "desc": "في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.", "wa_topic": "استفسار سريري لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)"}, "rhinoplasty": {"badge": "بروتوكول ما بعد تجميل الأنف (ISAPS & MDPI Medicina)", "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:", "desc": "تورم الأرنبة بعد فك الجبيرة يعالج بالضغط المتوازن ببلاستر 3M Micropore البيج الأصلي (1533-0) مع ارتداء دعامة السيليكون (Nostril Retainer) بالمقاس الصحيح للحفاظ على تماثل الفتحتين بنسبة 94%.", "wa_topic": "استفسار سريري لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)"}, "bariatric": {"badge": "بروتوكول جراحات التكميم والمناظير (Smith & Nephew)", "title": "حماية فتحات المنظار الـ 5 من العرق والماء والاحتكاك:", "desc": "بدلاً من وضع 5 ضمادات تسقط مع الحركة والتعرق، يعمل بخاخ الغشاء الشفاف (Opsite Spray) كجلد ثانٍ يعزل الماء والبكتيريا فوراً ويمنع احتكاك المشد أو الملابس بالغرز.", "wa_topic": "استفسار سريري لحالة تكميم / منظار (بخاخ الجروح الشفاف Opsite)"}, "thyroid-gynecomastia": {"badge": "بروتوكول جراحات الغدة الدرقية والتثدي (NCBI Clinical)", "title": "إخفاء خط الرقبة والصدر ومنع الحكة والكلويد:", "desc": "مناطق الرقبة والصدر دائمة الحركة مما يحفز التليف والحكة؛ استخدام شيت السيليكون الطبي (BUPY) ليلاً مع حماية الجرح من الشمس ببلاستر 3M البيج نهاراً يمنحك تسطيحاً وتفتيحاً متميزين.", "wa_topic": "استفسار سريري لحالة جرح الغدة الدرقية / التثدي (شيت السيليكون وبخاخ Opsite)"}};
     const PROMO_CODE = "HT10";
@@ -1239,9 +1240,13 @@
       }
     };
 
-    /* تفعيل الـ Micro-Popup Drawer (R3) */
+    /* تفعيل الـ Micro-Popup Drawer (R3) الموحد */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
       const targetTopic = contextTopic || document.title;
+      if (typeof window.HEALING_TOUCH_WHATSAPP !== 'undefined' && window.HEALING_TOUCH_WHATSAPP.showModal) {
+        window.HEALING_TOUCH_WHATSAPP.showModal(targetTopic);
+        return false;
+      }
       const targetWaUrl = directWaUrl || buildDynamicWaUrl(targetTopic);
       if (preferredChannel === 'whatsapp' || !preferredChannel) {
         try {
@@ -1259,11 +1264,6 @@
       }
       window.open(directWaUrl || IG_URL, '_blank');
       return false;
-    } else {
-        // في حالة عدم وجود المودال، يتم توجيهه إلى صفحة تأكيد الاستشارة wa.html لتسجيل البيانات أولاً
-        const targetCase = "general";
-        window.location.href = "wa.html?case=" + encodeURIComponent(targetCase) + "&topic=" + encodeURIComponent(contextTopic || document.title);
-      }
     }
 
     function closePromoModal() {

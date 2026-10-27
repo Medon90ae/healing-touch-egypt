@@ -367,6 +367,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="../assets/whatsapp-triage.js"></script>
 
   <style>
     :root {{
@@ -689,6 +690,10 @@ def _inject_gate_and_tracking_into_html(raw_html: str, title: str, category: str
 
     <script>
       function openPromoDrawer(topic, channel) {{
+        if (typeof window.HEALING_TOUCH_WHATSAPP !== 'undefined' && window.HEALING_TOUCH_WHATSAPP.showModal) {{
+          window.HEALING_TOUCH_WHATSAPP.showModal(topic || '{title}');
+          return;
+        }}
         const m = document.getElementById('promo-lead-modal');
         if (m) {{ m.style.display = 'flex'; document.getElementById('consult-lead-name').focus(); }}
       }}
@@ -1006,6 +1011,7 @@ def generate_all_multi_angle_product_lps() -> list:
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="../assets/whatsapp-triage.js"></script>
 
   <style>
     :root {{

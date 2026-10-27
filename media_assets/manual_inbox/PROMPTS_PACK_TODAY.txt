@@ -1,93 +1,78 @@
-=====================================================================
-🌿 هيلينج تاتش مصر | حزمة البرومبتات والأوامر السريرية الجاهزة للنسخ
-🎯 المنتج ومحور التركيز: شيت السيليكون المطور للندبات (BUPY Medical Silicone Scar Sheet)
-📅 تاريخ التوليد: 2026-10-27 10:56 AM
-=====================================================================
+# 🌿 حزمة البرومبتات والإنتاج الرقمي الموحد اليومية – هيلينج تاتش مصر
+**تاريخ التوليد:** 2026-10-27 08:08 PM
+**الحالة المستهدفة:** بروتوكول العناية الجراحية المتكامل وعلاج الندبات بعد القيصرية (الولادة القيصرية وتأمين الشاور ومنع الكلويد)
+**كود الأولوية السريرية:** `HT10` (استشارة سريرية ومتابعة مجانية مع أخصائية التعافي + حق فتح ومعاينة الشحنة قبل الاستلام)
+**رابط اللاندنج بيدج المتوقع:** `https://medon90ae.github.io/healing-touch-egypt/lp/c-section-recovery-protocol.html`
 
----------------------------------------------------------------------
-1️⃣ برومبت البحث المعمق في Gemini Deep Research (انسخه وضعه في شات Gemini):
----------------------------------------------------------------------
+=============================================================================
+🎨 [1] برومبت جلسات التوثيق والتصوير السريري للمستلزمات الطبية (Clinical Photography):
+=============================================================================
+💡 تعليمات إنتاج الصور السريرية المعتمدة للمنتج الحقيقي 100%:
+1. ارفع صورة المنتج الطبية الحقيقية من مجلد:
+   C:\followUPSHEET\healing_touch\media_assets\notebooklm_hub\pic
+2. المقاسات المعتمدة:
+   • المربع لمنشورات التوعية.
+   • الرأسي للقصص السريعة ومقاطع الفيديو.
+   • الأفقي لغلاف الدليل السريري وصفحة التوجيه.
+3. انسخ التوجيه الإنجليزي التالي المخصص لكل موضع:
+
+--- [توجيه الصورة المربعة لمنشورات التوعية] ---
+A commercial luxury pharmaceutical photoshoot of BUPY Medical Silicone Scar Sheet and 3M Tegaderm waterproof dressing on a clean white marble tray, soft morning sunlight through hospital window, sterile aesthetic, tiny delicate water droplets showing waterproof seal, warm medical ambiance, 8k product photography, hyper-detailed, advertising quality.
+
+--- [توجيه الصورة الرأسية للقصص السريعة ومقاطع الفيديو] ---
+Vertical editorial commercial shot of BUPY Medical Silicone tape roll and Smith & Nephew Opsite spray, minimal pastel green and white clinical background, soft natural lighting, showing moisture barrier and sterile protection, 8k resolution, elegant maternity healthcare photography.
+
+--- [توجيه الغلاف الأفقي للدليل السريري وصفحة التوجيه] ---
+Wide landscape banner shot of post-cesarean recovery essentials: 3M Tegaderm dressing, BUPY silicone scar roll, and sterile medical wipes on a luxury clinic desk, soft depth of field, high-end medical branding aesthetic.
+
+=============================================================================
+🧩 [2] إرشادات وتصميم الواجهات والصفحات السريرية (Clinical Landing Design):
+=============================================================================
+💡 لبناء وتصميم واجهة صفحة إرشادية سريرية مخصصة:
+انسخ الأمر التالي الموجه لمحرك تصميم الواجهات:
+
 ```text
-بصفتك باحثاً إكلينيكياً واستشارياً في جراحة التعافي وعلاج الندبات في مصر:
-أريد بحثاً سريرياً دقيقاً وموثقاً حول: تسطيح ندبات القيصرية والجراحة، منع وعلاج الكيلويد والندبات المتضخمة، ترطيب ألياف الكولاجين وإزالة الحكة والاحمرار.
+Design a luxury, reassuring Arabic (RTL) medical recovery clinical guide for "Healing Touch Egypt" (هيلينج تاتش مصر).
+Topic: بروتوكول العناية الجراحية المتكامل وعلاج الندبات بعد القيصرية (الولادة القيصرية وتأمين الشاور ومنع الكلويد).
+Brand Colors: Deep Teal (#064E3B), Emerald (#059669), Mint (#10B981), Amber (#D97706), Soft White background.
+Sections to include:
+1. Hero Section with reassuring medical headline, trust badges (Clinical Consultation, Inspection before Acceptance, Code HT10).
+2. Video & Clinical showcase section with physiological proof.
+3. Interactive Comparison Table (Traditional Care vs Healing Touch Protocol).
+4. Clinical Supply Cards with physiological functions and consultation CTA buttons.
+5. Scientific Evidence section citing PubMed and Cochrane studies.
+6. FAQ Accordion for post-op recovery queries.
+7. Sticky Mobile CTA bar: "حجز استشارة مجانية بكود HT10".
+All CTA buttons should trigger free recovery consultation modal.
+```
+💡 ملحوظة: بعد الانتهاء، ضع كود HTML في manual_inbox ليقوم المحرك بحقن بوابة التسجيل السريري فيه تلقائياً (وإذا لم تضعه، المحرك سينشئ صفحة التوجيه أوتوماتيكياً).
 
-الأسئلة السريرية والبحثية المحددة المطلوب الإجابة عليها تفصيلياً:
-• Medical grade silicone gel sheeting hypertrophic scar keloid clinical trials PubMed
-• Mechanism of action silicone sheet stratum corneum hydration collagen downregulation
-• Optimal duration daily wear silicone scar sheets post-operative scar management
-• بروتوكول تسطيح ندبة القيصرية بشيت السيليكون الطبي ومدة الاستخدام اليومي
-• علاج الكلويد والندبات المتضخمة بعد العمليات الجراحية بدون تدخل جراحي
+=============================================================================
+🔬 [3] برومبت أداة Gemini Deep Research & Literature Insights (أبحاث سريرية حديثة):
+الرابط المباشر: https://gemini.google.com/ (مع تفعيل خيار Deep Research)
+=============================================================================
+انسخ هذا الأمر للحصول على أحدث الدراسات الطبية لعام 2025/2026:
 
-مخاوف وتساؤلات المرضى المقلقة المطلوب طمأنتهم علمياً بشأنها:
-• خوف المريضة من تحول خط الجرح إلى حبل بارز أحمر أو كلويد دائم يشوه المظهر
-• الحكة الشديدة والنغزات المزعجة في مكان الندبة التي تجعل لمس الملابس مؤلماً
-• الشكوك حول فاعلية منتجات علاج الندبات بعد شهور من العملية وهل ما زال الوقت متاحاً للعلاج
-
-تساؤلات وترندات بحث جوجل مصر الصاعدة هذا الأسبوع للإجابة عليها:
-• جرح القيصرية ملتهب
-• جرح القيصرية التجميلي
-• جرح القيصرية بعد اسبوع
-• جرح القيصرية كام سم
-
-الشروط الصارمة للمحتوى الناتج:
-1. نبرة طبية توجيهية هادئة تشرح فسيولوجيا التئام الأنسجة وتبدد المخاوف دون تهويل.
-2. منع تام لأي عروض تسويقية أو خصومات أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.
-3. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 لأي متابعة للحالة.
+```text
+قم بإجراء بحث سريري وطبي متعمق (Deep Clinical Research) حول أحدث بروتوكولات العناية بالتعافي ومنع الندبات الجراحية بعد الولادة القيصرية وتأمين الشاور ومنع الكلويد.
+المطلوب:
+1. تحليل أوراق بحثية وتجارب سريرية من PubMed و Cochrane Library و NCBI من 2023 حتى 2026.
+2. مقارنة علمية دقيقة بين: استخدام شرائح السيليكون الطبي (Silicone Gel Sheeting) وبخاخ أوبسايت العازل وضماات 3M تيجاديرم، مقابل الشاش العادي والمراهم التقليدية.
+3. تقديم جدول مقارنة علمي يوضح: نسب منع الكلويد، معدل عزل الماء والبكتيريا، والراحة السريرية.
+4. توثيق المراجع بأرقام وتواريخ النشر وروابط PubMed الرسمية.
+الصياغة: تقرير علمي موثق وموجز قابل للإدراج في الدليل السريري لمنصة هيلينج تاتش مصر.
 ```
 
----------------------------------------------------------------------
-2️⃣ برومبتات توليد الصور الطبية في Google Pomelli (صور واقعية سريرية جاهزة للموقع):
----------------------------------------------------------------------
-📌 [أولاً: مقاس البوست المربع 1:1 - مخصص للموقع وفيسبوك وإنستجرام Feed]:
+=============================================================================
+🎙️ [4] برومبت Google NotebookLM الاستوديو (الفيديو الشارح + نصوص السوشيال):
+الرابط المباشر: https://notebooklm.google.com/
+=============================================================================
+انسخ هذا الأمر في شات NotebookLM (بعد رفع ملف المصدر المحدث):
+
 ```text
-Commercial clinical aesthetic photography of BUPY Medical Silicone Scar Sheet roll partially unrolled on a clean neutral stone surface, ultra-soft flexible medical-grade silicone texture catching gentle diffuse lighting, elegant minimalist dermatology clinic setting, 8k resolution, authentic medical realism, zero commercial graphics, calm reassuring healthcare visual.
+بصفتك رئيس قطاع المحتوى الطبي الرقمي في (هيلينج تاتش مصر)، وبالاعتماد على ملف المصدر (Healing_Touch_Brief) فقط:
+1. 🎬 [فيديو شارح]: شغل أداة (Video Overview) في الاستوديو لإنشاء فيديو شارح تفاعلي لبيولوجيا التعافي بعد الولادة القيصرية وتأمين الشاور ومنع الكلويد باستخدام مستلزمات BUPY و 3M و Opsite مع التنويه لأولوية المتابعة السريرية المجانية بكود HT10 ورقم الواتساب 01155803307.
+2. 📝 [النصوص والمقالات]: اكتب المنشور الكامل لفيسبوك (Clinical Storytelling)، بوست واستوري إنستجرام، مقال سيو كامل لمدونة بلوجر بجدول مقارنة، وسكربت ريلز وتيك توك، ومنشور مناقشة ريديت.
+3. احفظ الفيديو (.mp4) والنصوص (.txt) في مجلد:
+   C:\followUPSHEET\healing_touch\media_assets\manual_inbox
 ```
-
-📌 [ثانياً: مقاس الستوري والريلز العمودي 9:16 - مخصص لإنستجرام وتيك توك وستوري]:
-```text
-Vertical 9:16 editorial dermatology photograph showing translucent BUPY silicone scar sheet being gently held with medical tweezers above a clean clinical sterile field, soft green and neutral tones, demonstrating smooth flexible elasticity, professional scar therapy guidance aesthetic, 8k hyper-realistic.
-```
-
----------------------------------------------------------------------
-3️⃣ برومبتات استوديو Google NotebookLM (أدوات Video Overview و Audio Overview):
----------------------------------------------------------------------
-📌 [أمر الفيديو التوضيحي Video Overview]:
-```text
-أنشئ فيديو شارحاً تفاعلياً (Explainer Video) لحالة التعافي باستخدام شيت السيليكون المطور للندبات (BUPY Medical Silicone Scar Sheet) يركز على بيولوجيا التئام الأنسجة وطريقة العناية السليمة بالخطوات، بنبرة طمأنينة علمية راقية تجيب على قلق المريض من الندبات والالتهاب.
-```
-
-📌 [أمر البودكاست الصوتي Audio Overview (حوار استشاري)]:
-```text
-قم بتوليد حوار صوتي بين اثنين من استشاريي التعافي الطبي باللهجة المصرية الراقية يشرحان فيه بأسلوب ودي مريح للمريض أهمية شيت السيليكون المطور للندبات (BUPY Medical Silicone Scar Sheet) في مرحلة التعافي، وكيفية التغلب على الحكة أو القلق بعد العملية وتصحيح المفاهيم الخاطئة الشائعة.
-```
-
----------------------------------------------------------------------
-4️⃣ أحدث الأبحاث والمراجع الطبية الحقيقية المستكشفة من PubMed / NCBI (جاهزة للاستشهاد):
----------------------------------------------------------------------
-[1] Keloids and hypertrophic scars in individuals with darker Fitzpatrick skin types: a systematic review of treatment efficacy and quality of life outcomes
-    • المجلة وسنة النشر: Arch Dermatol Res (2025) | PMID: 40459590
-    • الرابط المباشر للدراسة: https://pubmed.ncbi.nlm.nih.gov/40459590/
-    • الأهمية السريرية: دراسة سريرية محكمة منشورة في (Arch Dermatol Res) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شيت السيليكون المطور للندبات (BUPY Silicone Scar Sheet)).
-
-[2] Utilizing magnetic discs combined with thin silicone gel sheets for pressure therapy in earlobe keloid postexcision
-    • المجلة وسنة النشر: J Am Acad Dermatol (2025) | PMID: 39307354
-    • الرابط المباشر للدراسة: https://pubmed.ncbi.nlm.nih.gov/39307354/
-    • الأهمية السريرية: دراسة سريرية محكمة منشورة في (J Am Acad Dermatol) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شيت السيليكون المطور للندبات (BUPY Silicone Scar Sheet)).
-
-[3] A Comparative Analysis of the Advances in Scar Reduction: Techniques, Technologies, and Efficacy in Plastic Surgery
-    • المجلة وسنة النشر: Cureus (2024) | PMID: 39268283
-    • الرابط المباشر للدراسة: https://pubmed.ncbi.nlm.nih.gov/39268283/
-    • الأهمية السريرية: دراسة سريرية محكمة منشورة في (Cureus) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شيت السيليكون المطور للندبات (BUPY Silicone Scar Sheet)).
-
----------------------------------------------------------------------
-📥 الخطوة التالية ببساطة:
----------------------------------------------------------------------
-1. انسخ البرومبتات أعلاه واستخدمها في المنصات المفتوحة أمامك الآن.
-2. احفظ مخرجاتك (الصور، الفيديوهات، النصوص) وضعها في مجلد الاستقبال:
-   👉 C:\followUPSHEET\healing_touch\media_assets\manual_inbox
-3. بعد وضع الملفات، شغّل run_project.bat واضغط [1]؛ سيتولى النظام آلياً:
-   • قراءة وتصنيف كافة الملفات التي رفعتها.
-   • بناء وتحديث صفحات الهبوط المتعددة (Multi-Angle LPs) الخاصة بهذا المنتج.
-   • تحديث الموقع الكامل وخريطة السيو sitemap.xml ورفعها لـ GitHub Pages.
-   • نشر وتوزيع المنشورات على منصات التواصل مع الروابط الحية!
-=====================================================================
