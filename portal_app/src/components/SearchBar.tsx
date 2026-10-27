@@ -20,6 +20,7 @@ import {
   SearchResult,
   POPULAR_CLINICAL_SEARCHES
 } from '../utils/searchIndex';
+import { logSearchInquiryToBeacon } from '../utils/validation';
 
 interface SearchBarProps {
   activeCampaignId: CampaignId;
@@ -124,7 +125,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleDirectWhatsAppConsultation = (searchQuery: string) => {
     if (!searchQuery.trim()) return;
     const activeName = CAMPAIGNS[activeCampaignId]?.name || 'موسوعة التعافي';
-    const text = `مرحباً، أود استشارة أخصائية التعافي في هيلينج تاتش بخصوص: "${searchQuery.trim()}" (${activeName}).`;
+    // Asynchronously log search query to Google Sheet without blocking navigation
+    logSearchInquiryToBeacon(searchQuery.trim(), activeName);
+    const text = `مرحباً أخصائية التعافي في هيلينج تاتش مصر، أود استشارة سريرية بخصوص: "${searchQuery.trim()}" (${activeName}).`;
     const url = `https://wa.me/${WHATSAPP_RECOVERY_NUMBER}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
     setIsOpen(false);

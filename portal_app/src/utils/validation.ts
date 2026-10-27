@@ -13,15 +13,17 @@ export function normalizeEgyptianPhone(input: string): string {
   // Remove spaces, hyphens, parentheses, plus
   let cleaned = input.replace(/[\s\-\(\)\+]/g, '').trim();
 
-  // If starts with 0020, strip 002
+  // Strip international prefix (0020 or 20)
   if (cleaned.startsWith('0020')) {
-    cleaned = cleaned.slice(3);
-  } else if (cleaned.startsWith('20') && cleaned.length === 12) {
-    cleaned = '0' + cleaned.slice(2);
+    cleaned = cleaned.slice(4);
+  } else if (cleaned.startsWith('20')) {
+    cleaned = cleaned.slice(2);
   }
 
-  // Ensure leading zero if 10 digits starting with 1
-  if (cleaned.length === 10 && cleaned.startsWith('1')) {
+  // Ensure standard domestic leading zero (010, 011, 012, 015)
+  if (cleaned.startsWith('0')) {
+    // Already has leading zero, preserve it
+  } else if (cleaned.startsWith('1')) {
     cleaned = '0' + cleaned;
   }
 
@@ -36,72 +38,63 @@ export function isValidEgyptianPhone(phone: string): boolean {
 }
 
 /**
- * Calculates discount and final price for promo codes.
+ * Verifies promo / consultation code validity without commercial pricing.
  */
-export function calculateOrderPrice(basePriceEGP: number, enteredCode: string): {
-  finalPriceEGP: number;
-  discountApplied: number;
+export function verifyConsultationCode(enteredCode: string): {
   isPromoValid: boolean;
   promoCode: string;
+  benefitDescription: string;
 } {
   const cleanCode = (enteredCode || '').trim().toUpperCase();
   if (cleanCode === PROMO_CODE_CONFIG.code) {
-    const discount = Math.round(basePriceEGP * (PROMO_CODE_CONFIG.discountPercentage / 100));
     return {
-      finalPriceEGP: Math.max(0, basePriceEGP - discount),
-      discountApplied: discount,
       isPromoValid: true,
-      promoCode: PROMO_CODE_CONFIG.code
+      promoCode: PROMO_CODE_CONFIG.code,
+      benefitDescription: 'كود HT10 مفعل: استشارة سريرية مجانية + حق فتح ومعاينة الشحنة قبل الاستلام'
     };
   }
 
   return {
-    finalPriceEGP: basePriceEGP,
-    discountApplied: 0,
     isPromoValid: false,
-    promoCode: cleanCode
+    promoCode: cleanCode,
+    benefitDescription: ''
   };
 }
 
 /**
- * Submits lead data to the Google Sheets Webhook via POST with mode: 'no-cors'.
+ * Submits triage lead data to the Google Sheets Webhook via POST with mode: 'no-cors'.
+ * Zero commercial pricing or calculations.
  */
 export async function submitLeadToGoogleSheet(data: LeadSubmissionData): Promise<{ success: boolean; error?: string }> {
   try {
     const normPhone = normalizeEgyptianPhone(data.phone);
-    const bundleTopic = `${data.campaignName} - ${data.bundleTitle} (${data.finalPriceEGP} ج.م) - ${data.governorate}`;
+    const contextTopic = `${data.surgeryType || data.campaignName || 'استشارة سريرية'} - ${data.daysPostOp || 'مرحلة التعافي'} - ${data.governorate} - ${data.inquiryNotes || data.notes || ''}`;
     const pageUrl = data.sourceUrl || (typeof window !== 'undefined' ? window.location.href : '');
 
     const payload = {
-      // Keys expected by Google Apps Script
+      // Keys expected by Google Apps Script Webhook
       patient_name: data.fullName,
       patient_phone: normPhone,
-      context_topic: bundleTopic,
-      channel: 'whatsapp',
+      context_topic: contextTopic,
+      channel: data.source || 'whatsapp',
       promo_code: data.promoCode || 'HT10',
       page_url: pageUrl,
 
-      // Aliases
+      // Standard aliases for compatibility
       name: data.fullName,
       fullName: data.fullName,
       client_name: data.fullName,
       phone: normPhone,
       client_phone: normPhone,
-      topic: bundleTopic,
+      topic: contextTopic,
 
-      // Extended fields
+      // Clinical Triage Fields
+      surgery_type: data.surgeryType || data.campaignName || '',
+      days_post_op: data.daysPostOp || '',
       governorate: data.governorate,
+      inquiry_notes: data.inquiryNotes || data.notes || '',
       address: data.address || '',
-      notes: data.notes || '',
-      campaignId: data.campaignId,
-      campaignName: data.campaignName,
-      bundleId: data.bundleId,
-      bundleTitle: data.bundleTitle,
-      priceEGP: data.priceEGP,
-      discountApplied: data.discountApplied,
-      finalPriceEGP: data.finalPriceEGP,
-      promoCode: data.promoCode || 'HT10',
-      sourceUrl: pageUrl,
+      source: data.source || 'lead_modal',
       timestamp: data.timestamp || new Date().toISOString()
     };
 
@@ -130,31 +123,68 @@ export async function submitLeadToGoogleSheet(data: LeadSubmissionData): Promise
     return { success: true };
   } catch (err: unknown) {
     console.error('Lead webhook submission error:', err);
-    // In no-cors, fetch resolves opaque response or network failure.
-    // Return true if network allowed or fallback gracefully
     return { success: true };
   }
 }
 
 /**
- * Builds the WhatsApp handoff link.
- * Note: Customer phone digits are never shown on the webpage; this only constructs the URL
- * for programmatic redirection upon form submission.
+ * Asynchronously logs search queries to the Google Sheet webhook via beacon/fetch
+ * without blocking navigation or modal flow.
+ */
+export function logSearchInquiryToBeacon(searchQuery: string, campaignName?: string): void {
+  if (!searchQuery.trim()) return;
+  const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const payload = {
+    patient_name: 'استفسار بحث سريري فوري',
+    patient_phone: '',
+    context_topic: `بحث فوري: "${searchQuery.trim()}" (${campaignName || 'المنظومة السريرية'})`,
+    channel: 'search_bar',
+    promo_code: 'HT10',
+    page_url: pageUrl,
+    topic: `بحث فوري: "${searchQuery.trim()}"`,
+    inquiry_notes: searchQuery.trim(),
+    source: 'search_bar',
+    timestamp: new Date().toISOString()
+  };
+
+  if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+    try {
+      const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
+      navigator.sendBeacon(WEBHOOK_URL, blob);
+      return;
+    } catch {
+      // fallback to fetch
+    }
+  }
+
+  try {
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch {}
+}
+
+/**
+ * Builds the WhatsApp clinical triage handoff link.
+ * Strictly adheres to the zero-commerce clinical triage template.
  */
 export function buildWhatsAppRedirectUrl(data: LeadSubmissionData): string {
   const normPhone = normalizeEgyptianPhone(data.phone);
   const arabicText = [
-    `مرحباً صرح التعافي الطبي، أود تأكيد طلبي وحجز الاستشارة المجانية:`,
+    `مرحباً أخصائية التعافي الطبي في هيلينج تاتش مصر،`,
+    `أود استشارة سريرية بخصوص حالتي:`,
     `▪️ الاسم: ${data.fullName}`,
     `▪️ رقم الهاتف: ${normPhone}`,
+    `▪️ نوع العملية: ${data.surgeryType || data.campaignName || 'استشارة عامة'}`,
+    `▪️ مرحلة الجرح / الأيام بعد العملية: ${data.daysPostOp || 'غير محدد'}`,
     `▪️ المحافظة: ${data.governorate}`,
-    data.address ? `▪️ العنوان: ${data.address}` : '',
-    `▪️ البروتوكول: ${data.campaignName}`,
-    `▪️ الباقة: ${data.bundleTitle}`,
-    `▪️ كود الخصم: ${data.promoCode} (خصم ${data.discountApplied} ج.م)`,
-    `▪️ إجمالي المبلغ: ${data.finalPriceEGP} ج.م (الدفع عند الاستلام)`,
-    data.notes ? `▪️ ملاحظات: ${data.notes}` : '',
-    `\nأرجو تأكيد تجهيز الشحنة والتواصل لمتابعة بروتوكول التعافي.`
+    data.inquiryNotes ? `▪️ تفاصيل الاستفسار: ${data.inquiryNotes}` : (data.notes ? `▪️ تفاصيل الاستفسار: ${data.notes}` : '▪️ تفاصيل الاستفسار: طلب إرشادات العناية بالتعافي وتحديد المقاسات المناسبة'),
+    `\nأرجو التواصل لتحديد بروتوكول العناية والمتابعة السريرية.`
   ]
     .filter(Boolean)
     .join('\n');

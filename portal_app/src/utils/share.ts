@@ -17,7 +17,7 @@ export function buildCampaignShareData(
   const url = cleanBase ? `${cleanBase}?campaign=${campaign.id}` : `?campaign=${campaign.id}`;
 
   return {
-    title: `Clinical Sanctuary | بروتوكول ${campaign.name}`,
+    title: `هيلينج تاتش مصر | بروتوكول ${campaign.name}`,
     text: `${campaign.title} - المنظومة السريرية المعتمدة لحماية وترميم الجروح الجراحية`,
     url
   };

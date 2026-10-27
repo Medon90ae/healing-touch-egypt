@@ -8,8 +8,6 @@ export interface Product {
   specification: string;
   description: string;
   clinicalBenefit: string;
-  priceEGP: number;
-  originalPriceEGP: number;
   features: string[];
   imageUrl: string;
   galleryImages: string[];
@@ -21,11 +19,9 @@ export interface Bundle {
   subtitle: string;
   tag: string;
   isPopular?: boolean;
-  priceEGP: number;
-  originalPriceEGP: number;
+  clinicalSynergy: string;
   items: string[];
   badge: string;
-  savingsText: string;
   imageUrl: string;
   galleryImages: string[];
 }
@@ -110,17 +106,12 @@ export interface EvidenceStudy {
   evidenceGrade: string;
 }
 
-export type PlatformFormat = '1:1' | '9:16' | '16:9';
-
 export interface GalleryProductImage {
   id?: string;
   url: string;
   title: string;
   subtitle: string;
-  platform?: 'feed' | 'story' | 'web';
-  platformLabel?: string;
-  aspectRatio?: PlatformFormat;
-  dimensions?: string;
+  clinicalFunction?: string;
   tag?: string;
 }
 
@@ -165,19 +156,20 @@ export interface Campaign {
 }
 
 export interface LeadSubmissionData {
-  fullName: string;
-  phone: string;
-  governorate: string;
+  fullName: string;            // Min 2 characters
+  phone: string;               // 11 Egyptian digits (01...)
+  surgeryType: string;         // C-section, rhinoplasty, bariatric, thyroidectomy
+  daysPostOp: string;          // Days elapsed since surgery / recovery stage
+  governorate: string;         // Egyptian governorate
+  inquiryNotes: string;        // Specific question or symptom
+  timestamp: string;           // ISO 8601
+  source: 'lead_modal' | 'search_bar' | 'consultation_button';
+  campaignId?: CampaignId;
+  campaignName?: string;
+  bundleId?: string;
+  bundleTitle?: string;
   address?: string;
   notes?: string;
-  campaignId: CampaignId;
-  campaignName: string;
-  bundleId: string;
-  bundleTitle: string;
-  priceEGP: number;
-  finalPriceEGP: number;
-  discountApplied: number;
-  promoCode: string;
-  sourceUrl: string;
-  timestamp: string;
+  promoCode?: string;
+  sourceUrl?: string;
 }

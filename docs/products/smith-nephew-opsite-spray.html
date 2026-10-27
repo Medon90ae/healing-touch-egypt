@@ -134,6 +134,58 @@
     }
     .nav-cta-chat:hover { background: var(--emerald-hover); }
 
+    /* شريط التنقل المقسم بين المجالات السريرية الـ 5 (R3 & M2 Segmented Tabs) */
+    .clinical-nav-tabs-wrapper {
+      margin: 22px 0 28px 0;
+      position: sticky;
+      top: 68px;
+      z-index: 9970;
+      background: var(--surface);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(13, 74, 77, 0.08);
+      border: 1px solid var(--border-soft);
+    }
+    .clinical-nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 2px;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      min-width: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #F1F5F9;
+      color: var(--teal-deep);
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .nav-tab-btn:hover {
+      background: #E2E8F0;
+      color: var(--teal-mid);
+    }
+    .nav-tab-btn.active {
+      background: var(--teal-deep);
+      color: #FFFFFF;
+      border-color: var(--teal-mid);
+      box-shadow: 0 3px 10px rgba(13, 74, 77, 0.25);
+    }
+    .nav-tab-icon {
+      font-size: 1.15rem;
+    }
+
     /* صندوق البطل التفاعلي (Interactive Guided Triage) */
     .hero-guided-box {
       background: var(--surface);
@@ -541,16 +593,6 @@
       border-radius: 12px;
       font-size: 0.82rem;
       margin-bottom: 8px;
-    }
-    .product-card-price {
-      background: var(--amber-soft);
-      color: var(--amber-text);
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      display: inline-block;
-      margin: 10px 0;
     }
 
     /* صفحة المقال الفردي وصفحة المنتج */
@@ -1033,9 +1075,9 @@
     }
     </style>
   <script>
-    const TRIAGE_DATA = {"c-section": {"badge": "بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)", "title": "خطة التعافي لجرح القيصرية وشد البطن:", "desc": "في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.", "wa_topic": "استفسار سريري لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)"}, "rhinoplasty": {"badge": "بروتوكول ما بعد تجميل الأنف (د. عمرو عادل & MDPI 2026)", "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:", "desc": "تورم الأرنبة بعد فك الجبيرة يعالج بالضغط المتوازن ببلاستر 3M Micropore البيج الأصلي (1533-0) مع ارتداء دعامة السيليكون (Nostril Retainer) بالمقاس الصحيح للحفاظ على تماثل الفتحتين بنسبة 94%.", "wa_topic": "استفسار سريري لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)"}, "bariatric": {"badge": "بروتوكول جراحات التكميم والمناظير (Smith & Nephew)", "title": "حماية فتحات المنظار الـ 5 من العرق والماء والاحتكاك:", "desc": "بدلاً من وضع 5 ضمادات تسقط مع الحركة والتعرق، يعمل بخاخ الغشاء الشفاف (Opsite Spray) كجلد ثانٍ يعزل الماء والبكتيريا فوراً ويمنع احتكاك المشد أو الملابس بالغرز.", "wa_topic": "استفسار سريري لحالة تكميم / منظار (بخاخ الجروح الشفاف Opsite)"}, "thyroid-gynecomastia": {"badge": "بروتوكول جراحات الغدة الدرقية والتثدي (NCBI Clinical)", "title": "إخفاء خط الرقبة والصدر ومنع الحكة والكلويد:", "desc": "مناطق الرقبة والصدر دائمة الحركة مما يحفز التليف والحكة؛ استخدام شيت السيليكون الطبي (BUPY) ليلاً مع حماية الجرح من الشمس ببلاستر 3M البيج نهاراً يمنحك تسطيحاً وتفتيحاً متميزين.", "wa_topic": "استفسار سريري لحالة جرح الغدة الدرقية / التثدي (شيت السيليكون وبخاخ Opsite)"}};
+    const TRIAGE_DATA = {"c-section": {"badge": "بروتوكول الولادة القيصرية وشد البطن (موثق بـ 10 دراسات)", "title": "خطة التعافي لجرح القيصرية وشد البطن:", "desc": "في أول أسبوعين: عزل خط الجرح 100% عن ماء الاستحمام بضمادة الفيلم الشفاف (3M Tegaderm +Pad) لشاور آمن. وبعد التئام السطح وفك الغرز: البدء برول شيت السيليكون الطبي (BUPY 3m) لتسطيح الندبة ومنع بروز الكلويد.", "wa_topic": "استفسار سريري لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)"}, "rhinoplasty": {"badge": "بروتوكول ما بعد تجميل الأنف (ISAPS & MDPI Medicina)", "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:", "desc": "تورم الأرنبة بعد فك الجبيرة يعالج بالضغط المتوازن ببلاستر 3M Micropore البيج الأصلي (1533-0) مع ارتداء دعامة السيليكون (Nostril Retainer) بالمقاس الصحيح للحفاظ على تماثل الفتحتين بنسبة 94%.", "wa_topic": "استفسار سريري لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)"}, "bariatric": {"badge": "بروتوكول جراحات التكميم والمناظير (Smith & Nephew)", "title": "حماية فتحات المنظار الـ 5 من العرق والماء والاحتكاك:", "desc": "بدلاً من وضع 5 ضمادات تسقط مع الحركة والتعرق، يعمل بخاخ الغشاء الشفاف (Opsite Spray) كجلد ثانٍ يعزل الماء والبكتيريا فوراً ويمنع احتكاك المشد أو الملابس بالغرز.", "wa_topic": "استفسار سريري لحالة تكميم / منظار (بخاخ الجروح الشفاف Opsite)"}, "thyroid-gynecomastia": {"badge": "بروتوكول جراحات الغدة الدرقية والتثدي (NCBI Clinical)", "title": "إخفاء خط الرقبة والصدر ومنع الحكة والكلويد:", "desc": "مناطق الرقبة والصدر دائمة الحركة مما يحفز التليف والحكة؛ استخدام شيت السيليكون الطبي (BUPY) ليلاً مع حماية الجرح من الشمس ببلاستر 3M البيج نهاراً يمنحك تسطيحاً وتفتيحاً متميزين.", "wa_topic": "استفسار سريري لحالة جرح الغدة الدرقية / التثدي (شيت السيليكون وبخاخ Opsite)"}};
     const PROMO_CODE = "HT10";
-    const OFFER_TITLE = "شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع";
+    const OFFER_TITLE = "استشارة سريرية مجانية فورية مع أخصائية التعافي";
     const WA_PHONE = "201155803307";
     const IG_URL = "https://www.instagram.com/tapistorefamily2026/";
     const TRACKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr/exec";
@@ -1043,8 +1085,23 @@
     let currentPendingContext = { topic: "استشارة عامة", channel: "whatsapp", directWaUrl: "" };
 
     function buildDynamicWaUrl(topicText) {
-      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج استشارة مجانية عن: " + topicText;
+      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش وأرغب باستشارة سريرية مجانية بخصوص: " + topicText + " (كود المتابعة: " + PROMO_CODE + ").";
       return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
+    }
+
+    function switchClinicalArea(areaKey, btnEl) {
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      if (areaKey === 'all-supplies') {
+        const prodSec = document.getElementById('products-section');
+        if (prodSec) prodSec.scrollIntoView({ behavior: 'smooth' });
+        filterArticlesByCategory('all', null, false);
+      } else {
+        const surgeryBtn = document.querySelector(`.surgery-btn[onclick*="${areaKey}"]`);
+        selectSurgeryTriage(areaKey, surgeryBtn);
+        const triageEl = document.getElementById('guided-triage');
+        if (triageEl) triageEl.scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     function selectSurgeryTriage(catKey, btnEl) {
@@ -1195,7 +1252,7 @@
         directWaUrl: directWaUrl || buildDynamicWaUrl(contextTopic || document.title)
       };
 
-      // نسخ كود الخصم تلقائياً للحافظة
+      // نسخ كود المتابعة تلقائياً للحافظة
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(PROMO_CODE).catch(() => {});
       }
@@ -1243,14 +1300,14 @@
       }
 
       if (!pName || pName.length < 2) {
-        setFormError("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة وتفعيل الخصم.");
+        setFormError("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة السريرية.");
         if (nameInput) nameInput.focus();
         return;
       }
 
       const egyptPhoneRegex = /^01[0125][0-9]{8}$/;
       if (!pPhone || !egyptPhoneRegex.test(pPhone)) {
-        setFormError("⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتفعيل كود الخصم وتأكيد الاستشارة.");
+        setFormError("⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتأكيد طلب الاستشارة السريرية.");
         if (phoneInput) phoneInput.focus();
         return;
       }
@@ -1262,12 +1319,12 @@
       closePromoModal();
 
       if (targetChannel === 'whatsapp') {
-        const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الخصم (HT10 - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص: " + currentPendingContext.topic;
+        const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش (كود المتابعة: HT10)، وأود استشارة سريرية مجانية بخصوص: " + currentPendingContext.topic;
         const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waMsg);
-        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح الاستشارة عبر واتساب...");
+        showToast("✅ تم تسجيل طلب الاستشارة بنجاح! جاري توجيهك إلى واتساب...");
         setTimeout(() => { window.open(waUrl, '_blank'); }, 350);
       } else {
-        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح شات إنستجرام...");
+        showToast("✅ تم تسجيل طلب الاستشارة بنجاح! جاري توجيهك إلى إنستجرام...");
         setTimeout(() => { window.open(IG_URL, '_blank'); }, 350);
       }
     }
@@ -1333,7 +1390,7 @@
     });
     </script>
   <script type="application/ld+json">
-  [{"@context": "https://schema.org", "@type": "Product", "name": "بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)", "description": "بخاخ غشاء طبي شفاف وسريع الجفاف من شركة Smith & Nephew العالمية. يرش مباشرة على الجروح السطحية وفتحات المناظير ليجف خلال ثوانٍ مشكلاً طبقة بوليمرية رقيقة ومرنة تعمل كجلد ثانٍ مقاوم للماء والبكتيريا ويحمي من احتكاك المشدات والملابس.", "brand": {"@type": "Brand", "name": "Smith & Nephew"}, "offers": {"@type": "Offer", "price": 850, "priceCurrency": "EGP", "availability": "https://schema.org/InStock", "seller": {"@type": "Organization", "name": "Healing Touch Egypt"}}}, {"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)", "description": "بخاخ غشاء طبي شفاف وسريع الجفاف من شركة Smith & Nephew العالمية. يرش مباشرة على الجروح السطحية وفتحات المناظير ليجف خلال ثوانٍ مشكلاً طبقة بوليمرية رقيقة ومرنة تعمل كجلد ثانٍ مقاوم للماء والبكتيريا ويحمي من احتكاك المشدات والملابس.", "datePublished": "2026-10-27", "dateModified": "2026-10-27"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "هل يسبب بخاخ Opsite أي ألم أو حرقان عند رشه على الجرح؟", "acceptedAnswer": {"@type": "Answer", "text": "قد يشعر المريض بلسعة خفيفة جداً ومؤقتة لمدة ثوانٍ معدودة نتيجة تبخر المذيب الكحولي، وسرعان ما تزول تماماً تاركة طبقة مريحة ومهدئة تحمي النهايات العصبية من الاحتكاك."}}, {"@type": "Question", "name": "هل يمكنني الاستحمام بعد رش بخاخ Opsite مباشرة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، بمجرد جفاف الطبقة الشفافة (خلال دقيقة واحدة من الرش)، تصبح مقاومة للماء والبلل بنسبة 100%، ويمكنك أخذ شاور خفيف دون تعريض الجرح للفرك الشديد."}}, {"@type": "Question", "name": "كم مرة يحتاج المريض لرش البخاخ على فتحات المناظير؟", "acceptedAnswer": {"@type": "Answer", "text": "تدوم الطبقة من يومين إلى 4 أيام في الظروف العادية، ويُعاد الرش بعد الاستحمام أو عند ملاحظة تلاشي أطراف الغشاء الشفاف حتى التئام الجروح وسقوط القشور."}}, {"@type": "Question", "name": "كيف يتم تنظيف أو إزالة طبقة Opsite عن الجلد؟", "acceptedAnswer": {"@type": "Answer", "text": "تسقط الطبقة تدريجياً وبشكل طبيعي مع التجدد الخلوي للجلد، أو يمكن إزالتها برفق بقطعة قطن مبللة بماء دافئ وصابون لطيف دون شد أو كشط."}}]}, {"@context": "https://schema.org", "@type": "MedicalBusiness", "name": "Healing Touch Egypt", "url": "https://medon90ae.github.io/healing-touch-egypt", "telephone": "+201155803307", "address": {"@type": "PostalAddress", "addressCountry": "EG"}}]
+  [{"@context": "https://schema.org", "@type": "Product", "name": "بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)", "description": "بخاخ غشاء طبي شفاف وسريع الجفاف من شركة Smith & Nephew العالمية. يرش مباشرة على الجروح السطحية وفتحات المناظير ليجف خلال ثوانٍ مشكلاً طبقة بوليمرية رقيقة ومرنة تعمل كجلد ثانٍ مقاوم للماء والبكتيريا ويحمي من احتكاك المشدات والملابس.", "brand": {"@type": "Brand", "name": "Smith & Nephew"}}, {"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)", "description": "بخاخ غشاء طبي شفاف وسريع الجفاف من شركة Smith & Nephew العالمية. يرش مباشرة على الجروح السطحية وفتحات المناظير ليجف خلال ثوانٍ مشكلاً طبقة بوليمرية رقيقة ومرنة تعمل كجلد ثانٍ مقاوم للماء والبكتيريا ويحمي من احتكاك المشدات والملابس.", "datePublished": "2026-10-27", "dateModified": "2026-10-27"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "هل يسبب بخاخ Opsite أي ألم أو حرقان عند رشه على الجرح؟", "acceptedAnswer": {"@type": "Answer", "text": "قد يشعر المريض بلسعة خفيفة جداً ومؤقتة لمدة ثوانٍ معدودة نتيجة تبخر المذيب الكحولي، وسرعان ما تزول تماماً تاركة طبقة مريحة ومهدئة تحمي النهايات العصبية من الاحتكاك."}}, {"@type": "Question", "name": "هل يمكنني الاستحمام بعد رش بخاخ Opsite مباشرة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، بمجرد جفاف الطبقة الشفافة (خلال دقيقة واحدة من الرش)، تصبح مقاومة للماء والبلل بنسبة 100%، ويمكنك أخذ شاور خفيف دون تعريض الجرح للفرك الشديد."}}, {"@type": "Question", "name": "كم مرة يحتاج المريض لرش البخاخ على فتحات المناظير؟", "acceptedAnswer": {"@type": "Answer", "text": "تدوم الطبقة من يومين إلى 4 أيام في الظروف العادية، ويُعاد الرش بعد الاستحمام أو عند ملاحظة تلاشي أطراف الغشاء الشفاف حتى التئام الجروح وسقوط القشور."}}, {"@type": "Question", "name": "كيف يتم تنظيف أو إزالة طبقة Opsite عن الجلد؟", "acceptedAnswer": {"@type": "Answer", "text": "تسقط الطبقة تدريجياً وبشكل طبيعي مع التجدد الخلوي للجلد، أو يمكن إزالتها برفق بقطعة قطن مبللة بماء دافئ وصابون لطيف دون شد أو كشط."}}]}, {"@context": "https://schema.org", "@type": "MedicalBusiness", "name": "Healing Touch Egypt", "url": "https://medon90ae.github.io/healing-touch-egypt", "telephone": "+201155803307", "address": {"@type": "PostalAddress", "addressCountry": "EG"}}]
   </script>
 </head>
 <body>
@@ -1341,7 +1398,7 @@
 
 <div class="live-rep-topbar">
   <span class="pulse-dot"></span>
-  <strong>متاح الآن مجاناً:</strong> تواصل مباشرة للحصول على استشارة مجانية مع أخصائية العناية بالتعافي للإجابة على أسئلتك قبل أي قرار — <span>🎁 كود الحصري: HT10 (شحن مجاني + معاينة قبل الاستلام)</span>
+  <strong>متاح الآن مجاناً:</strong> تواصل مباشرة للحصول على استشارة مجانية مع أخصائية العناية بالتعافي للإجابة على أسئلتك قبل أي قرار — <span>🩺 أولوية الاستشارة السريرية: HT10 (إرشاد طبي مجاني عبر واتساب)</span>
 </div>
 
 <header class="clinical-header">
@@ -1368,11 +1425,10 @@
   <div class="product-profile-box">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
       <span class="product-card-badge">جلد ثانٍ شفاف يعزل فتحات المناظير في ثوانٍ</span>
-      <span class="art-Evidence-tag">🛡️ أصلي 100% مع ضمان الفحص والمعاينة</span>
+      <span class="art-Evidence-tag">🛡️ مستلزم طبي معتمد سريرياً</span>
     </div>
 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.85rem;">بخاخ أوبسايت الشفاف العازل لحماية الجروح (Smith & Nephew Opsite Spray)</h1>
-    <div class="product-card-price">850ج.م (100 مل)</div>
 
     
     <div class="quick-social-share-bar">
@@ -1643,31 +1699,31 @@
     <div id="promo-lead-modal" class="promo-modal-backdrop" style="display:none;" onclick="handleModalBackdropClick(event)">
       <div class="promo-drawer-content" onclick="event.stopPropagation()">
         <button class="modal-close-btn" onclick="closePromoModal()" aria-label="إغلاق">&times;</button>
-        <div class="modal-badge-top">🎉 تم تفعيل الميزة الحصرية بنجاح لحالتك</div>
-        <h3 class="modal-title">كود العرض المعتمد: <span class="promo-code-highlight">HT10</span></h3>
+        <div class="modal-badge-top">🩺 طلب استشارة سريرية وتوجيه مجاني</div>
+        <h3 class="modal-title">أولوية الاستشارة السريرية: <span class="promo-code-highlight">HT10</span></h3>
         <p class="modal-desc">
-          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة مجانية مع أخصائية العناية بالتعافي</strong>.
+          أولوية فورية للحصول على: <strong>استشارة سريرية وتوجيه بروتوكول التعافي</strong> + <strong>متابعة دورية لحالة الجرح والندبات</strong> مع <strong>أخصائية العناية بالتعافي</strong> عبر واتساب.
         </p>
 
         <div class="modal-benefits-grid">
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">🚚</span>
-            <div><strong>شحن مجاني 100%</strong><small>لكل مدن ومراكز مصر</small></div>
+            <span class="m-benefit-icon">🩺</span>
+            <div><strong>استشارة سريرية مجانية</strong><small>توجيه طبي مخصص لحالتك</small></div>
           </div>
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">🔍</span>
-            <div><strong>معاينة وفحص قبل الدفع</strong><small>تأكد من المنتج والكود بنفسك</small></div>
+            <span class="m-benefit-icon">🩹</span>
+            <div><strong>بروتوكول تعافي معتمد</strong><small>مطابق للأدلة السريرية الدولية</small></div>
           </div>
           <div class="m-benefit-item">
             <span class="m-benefit-icon">💬</span>
-            <div><strong>استشارة مجانية متخصصة</strong><small>رد مباشر من أخصائية العناية بالتعافي</small></div>
+            <div><strong>متابعة مباشرة عبر واتساب</strong><small>رد وإرشاد من أخصائية التعافي</small></div>
           </div>
         </div>
 
         <div class="quick-lead-form">
           <label for="lead-patient-name" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block;">الاسم أو اللقب <span style="color:#DC2626;">* (إلزامي لتسجيل ملف الاستشارة)</span>:</label>
           <input type="text" id="lead-patient-name" class="modal-input" placeholder="اكتب اسمك الكريم هنا..." required>
-          <label for="lead-patient-phone" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:10px;">رقم الموبايل / واتساب <span style="color:#DC2626;">* (إلزامي 11 رقماً لتفعيل الخصم)</span>:</label>
+          <label for="lead-patient-phone" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:10px;">رقم الموبايل / واتساب <span style="color:#DC2626;">* (إلزامي 11 رقماً لتأكيد الاستشارة)</span>:</label>
           <input type="tel" id="lead-patient-phone" class="modal-input" placeholder="01xxxxxxxxx" maxlength="11" required>
           <div id="lead-form-error" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; padding:8px 12px; border-radius:8px; font-size:0.84rem; font-weight:700; margin-top:10px; text-align:right;"></div>
         </div>
@@ -1690,10 +1746,10 @@
     <div class="sticky-text">
       <span class="pulse-dot"></span>
       <span>لديك سؤال عن حالتك؟ احصل على استشارة مجانية مع أخصائية العناية بالتعافي</span>
-      <span class="hide-mobile" style="color:#A7F3D0;">(شحن مجاني + حق فتح الشحنة والمعاينة قبل الدفع بكود HT10)</span>
+      <span class="hide-mobile" style="color:#A7F3D0;">(استشارة سريرية مجانية فورية مع أخصائية التعافي بكود HT10)</span>
     </div>
     <div class="sticky-btns">
-      <button onclick="openPromoDrawer('استفسار عن بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D9%85%D8%B9%D8%A7%D9%8A%D8%A7%20%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%28HT10%29%20%D9%84%D9%80%20%28%D8%B4%D8%AD%D9%86%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%20%2B%20%D8%AD%D9%82%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B4%D8%AD%D9%86%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%29%D8%8C%20%D9%88%D8%B9%D9%86%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%88%D9%85%D8%AD%D8%AA%D8%A7%D8%AC%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8.')" class="sticky-wa-btn">
+      <button onclick="openPromoDrawer('استفسار عن بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A8%D8%AE%D8%A7%D8%AE%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD%20%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B2%D9%84%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%20Opsite%20Spray%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="sticky-wa-btn">
         💬 استشارة مجانية عبر واتساب (01155803307)
       </button>
       <button onclick="openPromoDrawer('استفسار عن بخاخ الجروح الشفاف العازل للماء Opsite Spray', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">

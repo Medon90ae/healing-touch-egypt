@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-🌿 هيلينج تاتش مصر | محرك صفحات الهبوط المستقلة وحزم البرومبتات الذكية (2026)
-Campaign Landing Page Engine & Multi-Tool Prompt Orchestrator
-(Google Pomelli + Google Stitch + Gemini Deep Research + Google NotebookLM)
+🌿 هيلينج تاتش مصر | محرك صفحات الهبوط المستقلة وحزم المصادر والأدلة السريرية (2026)
+Campaign Landing Page Engine & Clinical Guidance Orchestrator
+(Clinical Evidence Deep Research & Clinical Guidance Hub)
 =============================================================================
 """
 
@@ -53,7 +53,7 @@ def load_products_data() -> list:
 
 
 # =============================================================================
-# 1️⃣ توليد حزمة البرومبتات المتكاملة (Pomelli + Stitch + Deep Research + NotebookLM)
+# 1️⃣ توليد حزمة المصادر والأدلة السريرية المتكاملة (Clinical Evidence & Guidance Hub)
 # =============================================================================
 def generate_prompts_and_sources_pack(case_data: dict, pic_files: list = None) -> dict:
     title = case_data.get("title", "بروتوكول العناية الجراحية وعلاج الندبات")
@@ -65,8 +65,8 @@ def generate_prompts_and_sources_pack(case_data: dict, pic_files: list = None) -
     timestamp_str = now.strftime("%Y-%m-%d_%H-%M-%S")
     date_display = now.strftime("%Y-%m-%d %I:%M %p")
 
-    # أسماء وتصنيفات بالإنجليزية لأداة Pomelli
-    pomelli_scenarios = {
+    # أسماء وتصنيفات بالإنجليزية للأدلة والمشاهد السريرية
+    clinical_scenarios = {
         "c-section": {
             "ar_name": "الولادة القيصرية وتأمين الشاور ومنع الكلويد",
             "en_product": "BUPY Medical Silicone Scar Sheet & 3M Tegaderm Waterproof Dressing",
@@ -97,59 +97,57 @@ def generate_prompts_and_sources_pack(case_data: dict, pic_files: list = None) -
         }
     }
 
-    scen = pomelli_scenarios.get(cat, pomelli_scenarios["c-section"])
+    scen = clinical_scenarios.get(cat, clinical_scenarios["c-section"])
 
     # نص الحزمة الكامل المنسق
     pack_md = f"""# 🌿 حزمة البرومبتات والإنتاج الرقمي الموحد اليومية – هيلينج تاتش مصر
 **تاريخ التوليد:** {date_display}
 **الحالة المستهدفة:** {title} ({scen['ar_name']})
-**كود الخصم المعتمد:** `HT10` (شحن مجاني لكافة المحافظات + حق فتح ومعاينة الشحنة قبل الدفع)
+**كود الأولوية السريرية:** `HT10` (استشارة سريرية ومتابعة مجانية مع أخصائية التعافي + حق فتح ومعاينة الشحنة قبل الاستلام)
 **رابط اللاندنج بيدج المتوقع:** `{SITE_BASE_URL}/lp/{cat}-recovery-protocol.html`
 
 =============================================================================
-🎨 [1] برومبت أداة Google Pomelli (جلسات التصوير الإعلاني الفاخرة Photoshoot & Campaigns):
-الرابط المباشر: https://labs.google.com/pomelli/campaigns
+🎨 [1] برومبت جلسات التوثيق والتصوير السريري للمستلزمات الطبية (Clinical Photography):
 =============================================================================
-💡 تعليمات الاستخدام في Pomelli للحصول على صور استوديو عالمية بالمنتج الحقيقي 100%:
-1. اضغط على زر [Product] في واجهة Pomelli وارفع صورة المنتج الحقيقية من مجلد:
+💡 تعليمات إنتاج الصور السريرية المعتمدة للمنتج الحقيقي 100%:
+1. ارفع صورة المنتج الطبية الحقيقية من مجلد:
    C:\\followUPSHEET\\healing_touch\\media_assets\\notebooklm_hub\\pic
-2. اختر مقاس العرض [Aspect Ratio]:
-   • اختر 1:1 لبوست فيسبوك وإنستجرام.
-   • اختر 9:16 لكارت الستوري وتيك توك.
-   • اختر 16:9 لغلاف اللاندنج بيدج وبلوجر.
-3. انسخ البرومبت الإنجليزي التالي والصقه في مربع الوصف:
+2. المقاسات المعتمدة:
+   • المربع لمنشورات التوعية.
+   • الرأسي للقصص السريعة ومقاطع الفيديو.
+   • الأفقي لغلاف الدليل السريري وصفحة التوجيه.
+3. انسخ التوجيه الإنجليزي التالي المخصص لكل موضع:
 
---- [برومبت الصورة المربعة 1:1 لبوست فيسبوك وإنستجرام] ---
+--- [توجيه الصورة المربعة لمنشورات التوعية] ---
 {scen['en_prompt_square']}
 
---- [برومبت الصورة الرأسية 9:16 لاستوري إنستجرام وتيك توك] ---
+--- [توجيه الصورة الرأسية للقصص السريعة ومقاطع الفيديو] ---
 {scen['en_prompt_story']}
 
---- [برومبت الغلاف الأفقي 16:9 للاندنج بيدج والمدونة] ---
+--- [توجيه الغلاف الأفقي للدليل السريري وصفحة التوجيه] ---
 {scen['en_prompt_hero']}
 
 =============================================================================
-🧩 [2] برومبت أداة Google Stitch (تصميم واجهات وصفحات الهبوط AI):
-الرابط المباشر: https://stitch.withgoogle.com/
+🧩 [2] إرشادات وتصميم الواجهات والصفحات السريرية (Clinical Landing Design):
 =============================================================================
-💡 لإنشاء واجهة لاندنج بيدج مخصصة بالذكاء الاصطناعي على Stitch:
-انسخ الأمر التالي والصقه في شات Stitch:
+💡 لبناء وتصميم واجهة صفحة إرشادية سريرية مخصصة:
+انسخ الأمر التالي الموجه لمحرك تصميم الواجهات:
 
 ```text
-Design a luxury, high-converting Arabic (RTL) medical recovery landing page for "Healing Touch Egypt" (هيلينج تاتش مصر).
+Design a luxury, reassuring Arabic (RTL) medical recovery clinical guide for "Healing Touch Egypt" (هيلينج تاتش مصر).
 Topic: {title} ({scen['ar_name']}).
 Brand Colors: Deep Teal (#064E3B), Emerald (#059669), Mint (#10B981), Amber (#D97706), Soft White background.
 Sections to include:
-1. Hero Section with reassuring medical headline, trust badges (Free Shipping Egypt, Inspection before Payment, Code HT10).
-2. Video & Photoshoot showcase section with clinical proof.
+1. Hero Section with reassuring medical headline, trust badges (Clinical Consultation, Inspection before Acceptance, Code HT10).
+2. Video & Clinical showcase section with physiological proof.
 3. Interactive Comparison Table (Traditional Care vs Healing Touch Protocol).
-4. Product Cards with real prices in EGP and CTA buttons.
+4. Clinical Supply Cards with physiological functions and consultation CTA buttons.
 5. Scientific Evidence section citing PubMed and Cochrane studies.
 6. FAQ Accordion for post-op recovery queries.
 7. Sticky Mobile CTA bar: "حجز استشارة مجانية بكود HT10".
 All CTA buttons should trigger free recovery consultation modal.
 ```
-💡 ملحوظة: بعد الانتهاء اضغط Export ونزّل كود HTML وضعه في manual_inbox ليقوم المحرك بحقن بوابة التسجيل فيه تلقائياً! (وإذا لم تضعه، المحرك سينشئ اللاندنج بيدج أوتوماتيكياً).
+💡 ملحوظة: بعد الانتهاء، ضع كود HTML في manual_inbox ليقوم المحرك بحقن بوابة التسجيل السريري فيه تلقائياً (وإذا لم تضعه، المحرك سينشئ صفحة التوجيه أوتوماتيكياً).
 
 =============================================================================
 🔬 [3] برومبت أداة Gemini Deep Research & Literature Insights (أبحاث سريرية حديثة):
@@ -175,7 +173,7 @@ All CTA buttons should trigger free recovery consultation modal.
 
 ```text
 بصفتك رئيس قطاع المحتوى الطبي الرقمي في (هيلينج تاتش مصر)، وبالاعتماد على ملف المصدر (Healing_Touch_Brief) فقط:
-1. 🎬 [فيديو شارح]: شغل أداة (Video Overview) في الاستوديو لإنشاء فيديو شارح تفاعلي لبيولوجيا التعافي بعد {scen['ar_name']} باستخدام مستلزمات BUPY و 3M و Opsite مع التنويه لكود الخصم HT10 ورقم الواتساب 01155803307.
+1. 🎬 [فيديو شارح]: شغل أداة (Video Overview) في الاستوديو لإنشاء فيديو شارح تفاعلي لبيولوجيا التعافي بعد {scen['ar_name']} باستخدام مستلزمات BUPY و 3M و Opsite مع التنويه لأولوية المتابعة السريرية المجانية بكود HT10 ورقم الواتساب 01155803307.
 2. 📝 [النصوص والمقالات]: اكتب المنشور الكامل لفيسبوك (Clinical Storytelling)، بوست واستوري إنستجرام، مقال سيو كامل لمدونة بلوجر بجدول مقارنة، وسكربت ريلز وتيك توك، ومنشور مناقشة ريديت.
 3. احفظ الفيديو (.mp4) والنصوص (.txt) في مجلد:
    C:\\followUPSHEET\\healing_touch\\media_assets\\manual_inbox
@@ -198,7 +196,7 @@ All CTA buttons should trigger free recovery consultation modal.
     return {
         "txt_path": str(pack_txt_file),
         "md_path": str(pack_md_file),
-        "pomelli_prompt": scen["en_prompt_square"],
+        "clinical_prompt": scen["en_prompt_square"],
         "title": title,
         "category": cat
     }
@@ -207,7 +205,12 @@ All CTA buttons should trigger free recovery consultation modal.
 # =============================================================================
 # 2️⃣ بناء وتوليد Landing Page مستقلة فائقة التحويل (مع بوابة التسجيل الإجبارية)
 # =============================================================================
-def build_campaign_landing_page(case_data: dict, media_assets: dict = None, custom_stitch_html: str = "") -> dict:
+def build_campaign_landing_page(case_data: dict, media_assets: dict = None, custom_template_html: str = "", **kwargs) -> dict:
+    if not custom_template_html and kwargs:
+        for val in kwargs.values():
+            if isinstance(val, str) and len(val.strip()) > 50:
+                custom_template_html = val
+                break
     cat = case_data.get("category", "c-section")
     title = case_data.get("title", "بروتوكول العناية الجراحية المتكامل وعلاج الندبات")
     story_text = case_data.get("story_text", "")
@@ -242,10 +245,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
         except Exception:
             pass
 
-    # إذا وفّر المستخدم كود HTML مخصص من Google Stitch
-    if custom_stitch_html and len(custom_stitch_html.strip()) > 200:
-        print("[*] 🧩 تم اكتشاف تصميم واجهة مخصص من Google Stitch! جاري حقن بوابة التسجيل الإجبارية وأكواد السيو...")
-        augmented_html = _inject_gate_and_tracking_into_stitch_html(custom_stitch_html, title, cat, page_public_url)
+    # إذا وفّر المستخدم كود HTML مخصص
+    if custom_template_html and len(custom_template_html.strip()) > 200:
+        print("[*] 🧩 تم اكتشاف تصميم واجهة مخصص! جاري حقن بوابة التسجيل الإجبارية وأكواد السيو...")
+        augmented_html = _inject_gate_and_tracking_into_html(custom_template_html, title, cat, page_public_url)
         lp_file.write_text(augmented_html, encoding="utf-8")
         _register_page_in_sitemap(slug)
         return {"slug": slug, "local_file": str(lp_file), "public_url": page_public_url, "title": title}
@@ -263,12 +266,11 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
           <div class="prod-badge">{p.get('badge', 'مستلزم معتمد')}</div>
           <h3>{p.get('name_ar')}</h3>
           <p class="prod-desc">{p.get('short_summary', p.get('clinical_summary', ''))[:160]}...</p>
-          <div class="prod-price-row">
-            <span class="live-price">{p.get('price_display', 'السعر سارٍ')}</span>
-            <span class="promo-pill">شحن مجاني بكود HT10</span>
+          <div class="prod-clinical-role" style="margin-bottom: 16px; padding: 10px 0; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">
+            <span class="clinical-badge" style="font-size: 0.88rem; font-weight: 800; color: var(--teal-deep);">🌿 مستلزم طبي معتمد سريرياً</span>
           </div>
-          <button class="btn-order-prod" onclick="openPromoDrawer('{p.get('name_ar')}', 'whatsapp'); return false;">
-            🩺 اطلب الآن واستشر الأخصائية مجاناً
+          <button class="btn-consult-prod" onclick="openPromoDrawer('{p.get('name_ar')}', 'whatsapp'); return false;">
+            💬 استشيري أخصائية التعافي مجاناً عبر واتساب
           </button>
         </div>
         """)
@@ -277,7 +279,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     if video_rel_path:
         video_block = f"""
         <div class="video-container-card">
-          <div class="video-header-tag">🎬 فيديو الشرح السريري التوضيحي (Google NotebookLM Studio)</div>
+          <div class="video-header-tag">🎬 فيديو الشرح السريري العملي التفاعلي</div>
           <video controls autoplay muted loop playsinline class="lp-video-player">
             <source src="{video_rel_path}" type="video/mp4">
             متصفحك لا يدعم تشغيل الفيديو المباشر.
@@ -290,7 +292,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     faq_items = [
         ("هو ينفع أستحمى بأمان بعد الجراحة بدون ما الجرح يلتهب؟", "نعم، باستخدام الضمادات شبه المنفذة مثل 3M Tegaderm أو بخاخ أوبسايت العازل Smith & Nephew Opsite، يتم عزل الماء بنسبة 100% مع السماح للجلد بالتنفس وطرد بخار العرق، مما يتيح لك الاستحمام بحرية تامة دون رطوبة متبقية على خط الخياطة."),
         ("ليه حاسة بخط ناشف ومكلكع تحت مكان الجرح بعد أسبوعين؟", "هذا تكتل طبيعي ناتج عن إفراز مكثف وعشوائي لألياف الكولاجين خلال مرحلة الالتئام. تطبيق رول السيليكون الطبي BUPY يمارس ضغطاً ميكانيكياً خفيفاً ويحبس الرطوبة الفسيولوجية، مما يعيد ترتيب ألياف الكولاجين في مسار مسطح وناعم ويمنع تحول الخط إلى كلويد دائم."),
-        ("ما هي مميزات كود الخصم HT10 وكيف أحصل على الاستشارة؟", "كود HT10 يمنحك شحناً مجانياً لكافة محافظات مصر مع ميزة فتح ومعاينة الشحنة قبل الدفع للتأكد من أصلية المستلزمات الطبية وتاريخ الصلاحية، بالإضافة لمتابعة سريرية مجانية عبر واتساب مع أخصائية العناية بالتعافي.")
+        ("ما هي مميزات كود HT10 وكيف أحصل على الاستشارة السريرية؟", "كود HT10 يمنحك أولوية المتابعة السريرية المجانية مع أخصائية العناية بالتعافي عبر واتساب، بالإضافة لحق فتح ومعاينة الشحنة الطبية قبل الاستلام للتأكد من أصلية العبوات وتاريخ الصلاحية.")
     ]
 
     faq_html = "\n".join([f"""
@@ -312,7 +314,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <!-- Open Graph / Facebook / WhatsApp -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="{title} | هيلينج تاتش مصر">
-  <meta property="og:description" content="بروتوكول علمي متكامل لمنع تضخم الندبات وتأمين الاستحمام مع كود الخصم HT10 وشحن مجاني ومعاينة قبل الدفع.">
+  <meta property="og:description" content="بروتوكول علمي متكامل لمنع تضخم الندبات وتأمين الاستحمام مع استشارة سريرية مجانية وأولوية المتابعة بكود HT10.">
   <meta property="og:image" content="{image_rel_path}">
   <meta property="og:url" content="{page_public_url}">
 
@@ -402,11 +404,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     .prod-badge {{ display: inline-block; background: var(--mint-light); color: var(--teal-deep); font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 8px; margin-bottom: 12px; align-self: flex-start; }}
     .product-lp-card h3 {{ font-size: 1.15rem; font-weight: 800; color: #0F172A; margin-bottom: 10px; }}
     .prod-desc {{ font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }}
-    .prod-price-row {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 10px 0; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9; }}
-    .live-price {{ font-size: 1.25rem; font-weight: 900; color: var(--teal-deep); }}
-    .promo-pill {{ font-size: 0.78rem; background: var(--amber-light); color: #B45309; padding: 3px 8px; border-radius: 6px; font-weight: 800; }}
-    .btn-order-prod {{ width: 100%; background: var(--teal-dark); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }}
-    .btn-order-prod:hover {{ background: var(--emerald); }}
+    .prod-clinical-role {{ margin-bottom: 16px; padding: 10px 0; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9; }}
+    .clinical-badge {{ font-size: 0.88rem; font-weight: 800; color: var(--teal-deep); }}
+    .btn-consult-prod {{ width: 100%; background: var(--teal-dark); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }}
+    .btn-consult-prod:hover {{ background: var(--emerald); }}
 
     /* الأسئلة الشائعة Accordion */
     .faq-card {{ background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 32px; box-shadow: var(--shadow); }}
@@ -439,9 +440,9 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 
   <!-- شريط العرض العلوي -->
   <div class="top-banner">
-    <span>🌿 كود الخصم الحصري المعتمد لليوم:</span>
+    <span>🌿 كود الأولوية السريرية المعتمد:</span>
     <span class="code-pill">HT10</span>
-    <span>(شحن مجاني لكافة محافظات مصر + حق فتح ومعاينة الشحنة قبل الدفع)</span>
+    <span>(استشارة ومتابعة سريرية مجانية عبر واتساب مع أخصائية التعافي)</span>
   </div>
 
   <!-- الناف بار -->
@@ -464,18 +465,18 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       <p class="hero-lead">الدليل السريري المعتمد للوقاية من تضخم الندبات (الكلويد)، عزل الماء 100% أثناء الاستحمام، وتنظيم بناء ألياف الكولاجين بعد العمليات الجراحية.</p>
 
       <div class="trust-badges-grid">
-        <div class="trust-badge-item">🚚 شحن مجاني لكافة محافظات مصر</div>
-        <div class="trust-badge-item">📦 حق فتح وفحص الشحنة قبل الدفع</div>
+        <div class="trust-badge-item">🌿 بروتوكول سريري معتمد دولياً</div>
+        <div class="trust-badge-item">🔬 مبني على توصيات PubMed وCochrane</div>
         <div class="trust-badge-item">🛡️ مستلزمات طبية أصلية 100%</div>
-        <div class="trust-badge-item">🩺 متابعة مستمرة مع أخصائية التعافي</div>
+        <div class="trust-badge-item">🩺 استشارة ومتابعة سريرية مجانية</div>
       </div>
 
       <div class="hero-cta-row">
         <button class="btn-hero-primary" onclick="openPromoDrawer('{title}', 'whatsapp'); return false;">
-          💬 احجز استشارة مجانية الآن وفعّل كود HT10
+          💬 استشيري أخصائية التعافي مجاناً بكود HT10
         </button>
         <a href="#products-section" class="btn-hero-secondary">
-          📦 استعرض المستلزمات الطبية والأسعار
+          📦 استعرض المستلزمات الطبية المعتمدة
         </a>
       </div>
     </section>
@@ -492,9 +493,9 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       </button>
     </section>
 
-    <!-- قائمة المستلزمات الطبية المعتمدة بأسعارها الحية -->
+    <!-- قائمة المستلزمات الطبية المعتمدة ودورها السريري -->
     <section id="products-section">
-      <h2 class="products-section-title">📦 المستلزمات الطبية المعتمدة للبروتوكول السريري (بأسعارها الرسمية):</h2>
+      <h2 class="products-section-title">📦 المستلزمات الطبية المعتمدة ودورها السريري في البروتوكول:</h2>
       <div class="products-grid">
         {"".join(products_cards_html)}
       </div>
@@ -512,8 +513,8 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <aside class="sticky-bottom-bar">
     <div class="sticky-inner">
       <div class="sticky-promo-info">
-        <span>كود الخصم <strong>HT10</strong> مفعل تلقائياً</span>
-        <br><small style="color: #64748B;">شحن مجاني ومعاينة قبل الدفع</small>
+        <span>كود الأولوية السريرية <strong>HT10</strong> مفعل</span>
+        <br><small style="color: #64748B;">استشارة ومتابعة سريرية مجانية عبر واتساب</small>
       </div>
       <button class="btn-sticky-cta" onclick="openPromoDrawer('{title}', 'whatsapp'); return false;">
         💬 حجز استشارة مجانية
@@ -525,7 +526,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <div id="promo-lead-modal" onclick="if(event.target.id === 'promo-lead-modal') this.style.display = 'none';">
     <div class="lead-modal-card">
       <h3>🩺 استشارة سريرية مجانية</h3>
-      <p class="lead-modal-desc">أهلاً بكِ في هيلينج تاتش مصر. لتسجيل ملفك وتفعيل كود الخصم <strong>HT10</strong> (شحن مجاني + حق المعاينة قبل الدفع)، يرجى إدخال اسمك ورقم الموبايل للمتابعة:</p>
+      <p class="lead-modal-desc">أهلاً بكِ في هيلينج تاتش مصر. لتسجيل ملفك وتفعيل أولوية الاستشارة السريرية بكود <strong>HT10</strong>، يرجى إدخال اسمك ورقم الموبايل للمتابعة:</p>
       
       <div class="input-group">
         <label for="lead-patient-name">اسم المريض / العميل الكريم:</label>
@@ -540,7 +541,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       <div id="lead-form-error" class="lead-err-msg"></div>
 
       <button class="btn-confirm-lead" onclick="executeProceedToConsultation();">
-        💬 تفعيل الخصم وبدء المحادثة عبر واتساب
+        💬 تأكيد الاستشارة وبدء المحادثة عبر واتساب
       </button>
 
       <button class="btn-close-lead" onclick="document.getElementById('promo-lead-modal').style.display = 'none';">
@@ -574,7 +575,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       const pPhone = phoneInput ? phoneInput.value.trim().replace(/\\s+/g, '') : '';
 
       if (!pName || pName.length < 2) {{
-        errEl.innerText = "⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) لتسجيل ملف الاستشارة وتفعيل الخصم.";
+        errEl.innerText = "⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) لتسجيل ملف الاستشارة وتأكيد الطلب.";
         errEl.style.display = 'block';
         if (nameInput) nameInput.focus();
         return;
@@ -582,7 +583,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 
       const egyptPhoneRegex = /^01[0125][0-9]{{8}}$/;
       if (!pPhone || !egyptPhoneRegex.test(pPhone)) {{
-        errEl.innerText = "⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 لتفعيل كود الخصم.";
+        errEl.innerText = "⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 لتأكيد الاستشارة السريرية.";
         errEl.style.display = 'block';
         if (phoneInput) phoneInput.focus();
         return;
@@ -615,7 +616,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 
       document.getElementById('promo-lead-modal').style.display = 'none';
 
-      const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الخصم (HT10 - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص: " + currentTopic;
+      const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الأولوية السريرية (HT10)، ومحتاج استشارة سريرية مجانية بخصوص: " + currentTopic;
       const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waMsg);
       setTimeout(() => {{ window.open(waUrl, '_blank'); }}, 250);
     }}
@@ -631,25 +632,25 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     return {"slug": slug, "local_file": str(lp_file), "public_url": page_public_url, "title": title}
 
 
-def _inject_gate_and_tracking_into_stitch_html(raw_html: str, title: str, category: str, page_url: str) -> str:
-    """حقن بوابة تسجيل البيانات الإلزامية في أي كود HTML مصدّر من Google Stitch لمنع أي تجاوز للواتساب."""
+def _inject_gate_and_tracking_into_html(raw_html: str, title: str, category: str, page_url: str) -> str:
+    """حقن بوابة تسجيل البيانات الإلزامية في أي كود HTML مصدّر لمنع أي تجاوز للواتساب."""
     gate_script_and_modal = f"""
     <!-- Zero-Bypass Lead Drawer Injected by Healing Touch Engine -->
     <div id="promo-lead-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(6,78,59,0.7); backdrop-filter:blur(4px); z-index:999999; justify-content:center; align-items:center; padding:16px; direction:rtl; font-family:'Cairo',sans-serif;">
       <div style="background:#fff; border-radius:20px; max-width:460px; width:100%; padding:28px; box-shadow:0 20px 40px rgba(0,0,0,0.25); border:2px solid #6EE7B7; text-align:center;">
         <h3 style="color:#064E3B; font-size:1.35rem; font-weight:900; margin-bottom:8px;">🩺 استشارة سريرية مجانية</h3>
-        <p style="font-size:0.92rem; color:#475569; margin-bottom:20px; line-height:1.5;">لتسجيل ملفك وتفعيل كود الخصم <strong>{OFFICIAL_PROMO_CODE}</strong> (شحن مجاني + معاينة قبل الدفع)، يرجى إدخال اسمك ورقم الموبايل:</p>
+        <p style="font-size:0.92rem; color:#475569; margin-bottom:20px; line-height:1.5;">لتسجيل ملفك وتفعيل أولوية الاستشارة السريرية بكود <strong>{OFFICIAL_PROMO_CODE}</strong>، يرجى إدخال اسمك ورقم الموبايل:</p>
         <div style="text-align:right; margin-bottom:14px;">
           <label style="display:block; font-weight:800; font-size:0.88rem; color:#1E293B; margin-bottom:6px;">اسم العميل الكريم:</label>
-          <input type="text" id="stitch-lead-name" placeholder="مثال: سارة أحمد" style="width:100%; padding:12px; border-radius:10px; border:1.5px solid #CBD5E1; font-size:1rem; outline:none; box-sizing:border-box;">
+          <input type="text" id="consult-lead-name" placeholder="مثال: سارة أحمد" style="width:100%; padding:12px; border-radius:10px; border:1.5px solid #CBD5E1; font-size:1rem; outline:none; box-sizing:border-box;">
         </div>
         <div style="text-align:right; margin-bottom:16px;">
           <label style="display:block; font-weight:800; font-size:0.88rem; color:#1E293B; margin-bottom:6px;">رقم الموبايل / واتساب (11 رقماً):</label>
-          <input type="tel" id="stitch-lead-phone" placeholder="مثال: 01012345678" style="width:100%; padding:12px; border-radius:10px; border:1.5px solid #CBD5E1; font-size:1rem; outline:none; box-sizing:border-box;">
+          <input type="tel" id="consult-lead-phone" placeholder="مثال: 01012345678" style="width:100%; padding:12px; border-radius:10px; border:1.5px solid #CBD5E1; font-size:1rem; outline:none; box-sizing:border-box;">
         </div>
-        <div id="stitch-lead-error" style="color:#DC2626; font-size:0.85rem; font-weight:700; margin-bottom:12px; display:none; text-align:right;"></div>
-        <button onclick="confirmStitchLead();" style="width:100%; background:#059669; color:#fff; border:none; padding:14px; border-radius:12px; font-size:1.05rem; font-weight:800; cursor:pointer;">
-          💬 تفعيل الخصم وبدء المحادثة عبر واتساب
+        <div id="consult-lead-error" style="color:#DC2626; font-size:0.85rem; font-weight:700; margin-bottom:12px; display:none; text-align:right;"></div>
+        <button onclick="confirmConsultLead();" style="width:100%; background:#059669; color:#fff; border:none; padding:14px; border-radius:12px; font-size:1.05rem; font-weight:800; cursor:pointer;">
+          💬 تأكيد الاستشارة وبدء المحادثة عبر واتساب
         </button>
         <button onclick="document.getElementById('promo-lead-modal').style.display='none';" style="background:transparent; border:none; color:#94A3B8; font-weight:700; font-size:0.88rem; cursor:pointer; margin-top:10px;">إلغاء</button>
       </div>
@@ -658,12 +659,12 @@ def _inject_gate_and_tracking_into_stitch_html(raw_html: str, title: str, catego
     <script>
       function openPromoDrawer(topic, channel) {{
         const m = document.getElementById('promo-lead-modal');
-        if (m) {{ m.style.display = 'flex'; document.getElementById('stitch-lead-name').focus(); }}
+        if (m) {{ m.style.display = 'flex'; document.getElementById('consult-lead-name').focus(); }}
       }}
-      function confirmStitchLead() {{
-        const n = document.getElementById('stitch-lead-name').value.trim();
-        const p = document.getElementById('stitch-lead-phone').value.trim().replace(/\\s+/g, '');
-        const err = document.getElementById('stitch-lead-error');
+      function confirmConsultLead() {{
+        const n = document.getElementById('consult-lead-name').value.trim();
+        const p = document.getElementById('consult-lead-phone').value.trim().replace(/\\s+/g, '');
+        const err = document.getElementById('consult-lead-error');
         if (!n || n.length < 2) {{ err.innerText = "يرجى كتابة الاسم الكريم أولاً"; err.style.display='block'; return; }}
         if (!/^01[0125][0-9]{{8}}$/.test(p)) {{ err.innerText = "يرجى كتابة رقم موبايل صحيح (11 رقماً)"; err.style.display='block'; return; }}
         err.style.display='none';
@@ -688,7 +689,7 @@ def _inject_gate_and_tracking_into_stitch_html(raw_html: str, title: str, catego
           }}).catch(() => {{}});
         }} catch(e) {{}}
         document.getElementById('promo-lead-modal').style.display='none';
-        const msg = "أهلاً بكِ، أنا (" + n + ") مسجل في موقع هيلينج تاتش بكود الخصم (HT10)، ومحتاج استشارة بخصوص: {title}";
+        const msg = "أهلاً بكِ، أنا (" + n + ") مسجل في موقع هيلينج تاتش بكود الأولوية السريرية (HT10)، ومحتاج استشارة بخصوص: {title}";
         setTimeout(() => {{ window.open("https://wa.me/{OFFICIAL_WA_PHONE}?text=" + encodeURIComponent(msg), '_blank'); }}, 250);
       }}
       document.addEventListener("DOMContentLoaded", function() {{
@@ -709,7 +710,7 @@ def _register_page_in_sitemap(slug: str):
     """تحديث خريطة الموقع sitemap.xml بإضافة صفحة الهبوط الجديدة فورياً."""
     sitemap_file = DOCS_DIR / "sitemap.xml"
     today_str = datetime.now().strftime("%Y-%m-%d")
-    new_url_entry = f"  <url><loc>{SITE_BASE_URL}/lp/{slug}.html</loc><lastmod>{today_str}</lastmod><priority>0.92</priority></url>"
+    new_url_entry = f"  <url><loc>{SITE_BASE_URL}/lp/{slug}.html</loc><lastmod>{today_str}</lastmod><priority>0.90</priority></url>"
     if sitemap_file.exists():
         try:
             content = sitemap_file.read_text(encoding="utf-8")
@@ -735,3 +736,14 @@ def archive_manual_inbox_processed():
                 pass
     if moved_count > 0:
         print(f"[+] 🗄️ تم نقل {moved_count} ملفات تمت معالجتها من manual_inbox إلى الأرشيف النظيف: {archive_dir.name}")
+
+
+if __name__ == "__main__":
+    sample_case = {
+        "title": "بروتوكول العناية الجراحية المتكامل وعلاج الندبات بعد القيصرية",
+        "category": "c-section",
+        "story_text": "بروتوكول سريري متكامل للعناية بالندبات وتأمين الاستحمام بعد الولادة القيصرية.",
+        "hashtags": "#ولادة_قيصرية #ندبات_الولادة #هيلينج_تاتش"
+    }
+    pack = generate_prompts_and_sources_pack(sample_case)
+    print(f"[+] 🎯 تم تجهيز حزمة البرومبتات السريرية:\n   👉 {pack['txt_path']}")

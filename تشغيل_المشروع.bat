@@ -7,10 +7,10 @@ echo         åíáíäÌ ÊÇÊÔ ãÕÑ - áæÍÉ ÇáÊÍßã æÇáãÍÑß ÇáãæÍÏ ÇáÔÇãá (2026)
 echo =====================================================================
 echo.
 echo   [1] ÇáÊÔÛíá ÇáÔÇãá æÇáäÔÑ ÇáİæÑí (ÈäÇÁ ÇááÇäÏäÌ ÈíÏÌ + äÔÑ ßá ÇáãäÕÇÊ)
-echo   [2] ÊÌåíÒ ÍãáÉ Çáíæã æÇáÈÑæãÈÊÇÊ æãÕÇÏÑ ÇáÈÍË (Pomelli + Stitch + AI)
+echo   [2] ÊÌåíÒ ÍãáÉ Çáíæã æÇáÈÑæãÈÊÇÊ æãÕÇÏÑ ÇáÈÍË (Clinical Research & Guidance)
 echo   [3] ãÚÇíäÉ æÊÌåíÒ ÇáÃÕæá æÇááÇäÏäÌ ÈíÏÌ ÈÏæä äÔÑ (Dry Run)
 echo   [4] İÊÍ ÕäÏæŞ ÇáÇÓÊŞÈÇá manual_inbox æãáİ ÇáÈÑæãÈÊÇÊ ÇáÌÇåÒÉ ááäÓÎ
-echo   [5] ÊÍÏíË ÃÓÚÇÑ æãŞÇáÇÊ ÇáãæŞÚ ãä Google Sheet æÇáÑİÚ áÜ GitHub
+echo   [5] ÊÍÏíË æäÔÑ ãŞÇáÇÊ æãÍÊæì ÇáãæŞÚ ÇáÓÑíÑí (Zero-Commerce) æÇáÑİÚ áÜ GitHub
 echo   [6] ÇÓÊÚÑÇÖ æİÍÕ ÓÌá ÇáÚãáÇÁ æÍÌæÒÇÊ ÇáÇÓÊÔÇÑÇÊ İí Google Sheet
 echo   [7] ÑÈØ æÊİÚíá ÍÓÇÈ Reddit ÊáŞÇÆíÇğ (áãÑÉ æÇÍÏÉ İŞØ)
 echo   [8] İÊÍ ÃÍÏË ãäÔæÑ Êã äÔÑå Úáì İíÓÈæß İí ÇáãÊÕİÍ
@@ -31,7 +31,7 @@ goto opt1
 
 :opt1
 echo.
-echo [*] [1/2] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ æÊÍÏíË ÇáãæŞÚ ÇáÃÓÇÓí...
+echo [*] [1/2] ÌÇÑí ÊÍÏíË ãÍÊæì ÇáãæŞÚ ÇáÓÑíÑí ÇáÃÓÇÓí...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
 echo [*] [2/2] ÌÇÑí ÈäÇÁ ÇááÇäÏäÌ ÈíÏÌ æÇáÊŞÇØ ÃÕæá manual_inbox æÇáäÔÑ ÇáÔÇãá...
@@ -40,7 +40,7 @@ goto end
 
 :opt2
 echo.
-echo [*] ÌÇÑí ÅÚÏÇÏ æÊÍÏíË ÍÒãÉ ÇáÈÑæãÈÊÇÊ æÇáãÕÇÏÑ (Pomelli + Stitch + Deep Research + NotebookLM)...
+echo [*] ÌÇÑí ÅÚÏÇÏ æÊæáíÏ ÍÒãÉ ÇáãÕÇÏÑ æÇáÈÍæË ÇáÓÑíÑíÉ (Clinical Research & Sources)...
 ".venv\Scripts\python.exe" antigravity_social_automation.py --mode notebooklm
 if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
     start notepad "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt"
@@ -64,7 +64,7 @@ goto end
 
 :opt5
 echo.
-echo [*] ÌÇÑí ãÒÇãäÉ ÇáÃÓÚÇÑ ÇáÍíÉ æãŞÇáÇÊ ÇáÓíæ ãä Google Sheet æÇáÑİÚ áÜ GitHub...
+echo [*] ÌÇÑí ÊÍÏíË æäÔÑ ãŞÇáÇÊ ÇáÓíæ ÇáÓÑíÑíÉ æÇáÑİÚ áÜ GitHub...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site --push-github
 goto end
 

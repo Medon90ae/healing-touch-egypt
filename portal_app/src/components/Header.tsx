@@ -40,9 +40,9 @@ export const Header: React.FC<HeaderProps> = ({
               الدفع عند الاستلام مع فحص الشحنة
             </span>
             <span className="hidden lg:inline text-white/40">•</span>
-            <span className="hidden lg:inline-flex items-center gap-1 text-[#FFDCC3]">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF9939]" />
-              كود الخصم الحصري <strong>HT10</strong> فعال الآن
+            <span className="hidden lg:inline-flex items-center gap-1 text-[#82F5C1]">
+              <Sparkles className="w-3.5 h-3.5 text-[#82F5C1]" />
+              استشارة سريرية مجانية ومتابعة مستمرة للتعافي
             </span>
           </div>
 
@@ -60,15 +60,15 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Brand Logo & Medical Seal */}
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#064E3B] to-[#006C4A] flex items-center justify-center text-white shadow-md shadow-[#064E3B]/15 shrink-0">
-                <span className="font-bold text-lg sm:text-xl tracking-tighter">CS</span>
+                <span className="font-bold text-lg sm:text-xl tracking-tighter">HT</span>
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-lg sm:text-xl text-[#003527] tracking-tight">
-                    Clinical Sanctuary
+                    هيلينج تاتش مصر
                   </span>
                   <span className="hidden md:inline-block text-[11px] font-semibold bg-[#E6EEFF] text-[#003527] px-2 py-0.5 rounded-full border border-[#D0DBED]">
-                    صرح التعافي الجراحي
+                    Healing Touch Egypt
                   </span>
                 </div>
                 <p className="text-xs text-[#404944] hidden sm:block">
@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onOpenLeadModal()}
                 type="button"
                 className="inline-flex items-center gap-1.5 bg-[#064E3B] hover:bg-[#003527] text-white px-3 py-2 rounded-lg font-semibold text-xs shadow-xs transition-all duration-200 cursor-pointer active:scale-98"
-                aria-label="متابعة مع أخصائية التعافي"
+                aria-label="استشيري أخصائية التعافي مجاناً"
               >
                 <MessageSquare className="w-3.5 h-3.5 text-[#82F5C1]" />
                 <span>استشارة مجاناً</span>
@@ -105,10 +105,10 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onOpenLeadModal()}
               type="button"
               className="inline-flex items-center gap-2 bg-[#064E3B] hover:bg-[#003527] text-white px-4 sm:px-5 py-2.5 rounded-lg font-semibold text-xs sm:text-sm shadow-sm transition-all duration-200 cursor-pointer active:scale-98 focus:outline-none focus:ring-2 focus:ring-[#059669] focus:ring-offset-2"
-              aria-label="متابعة مع أخصائية التعافي"
+              aria-label="استشيري أخصائية التعافي مجاناً"
             >
               <MessageSquare className="w-4 h-4 text-[#82F5C1]" />
-              <span>متابعة مع أخصائية التعافي</span>
+              <span>استشيري أخصائية التعافي مجاناً</span>
             </button>
           </div>
         </div>

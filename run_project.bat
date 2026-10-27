@@ -7,7 +7,7 @@ echo            -      (2026)
 echo =====================================================================
 echo.
 echo   [1]     (  +  +   GitHub + )
-echo   [2]       (Pomelli + Stitch + AI)
+echo   [2]       (Clinical Content + Verified Medical Design)
 echo   [3]        (Dry Run)
 echo   [4]    manual_inbox    
 echo   [5]         GitHub Pages
@@ -34,7 +34,7 @@ echo.
 echo [*] [1/4]        ...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
-echo [*] [2/4]        (Stitch AI Portal)...
+echo [*] [2/4]        (Clinical Guidance Portal App)...
 call npm --prefix "portal_app" run build
 xcopy /E /Y /I "portal_app\dist\*" "docs\portal\"
 echo.
@@ -49,7 +49,7 @@ goto end
 
 :opt2
 echo.
-echo [*]       (Pomelli + Stitch + Deep Research + NotebookLM)...
+echo [*]       (Clinical Research & NotebookLM)...
 ".venv\Scripts\python.exe" antigravity_social_automation.py --mode notebooklm
 if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
     start notepad "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt"
@@ -76,7 +76,7 @@ echo.
 echo [*] [1/3]        Google Sheet...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
 echo.
-echo [*] [2/3]       (Stitch AI Studio)...
+echo [*] [2/3]       (Clinical Guidance Portal App)...
 call npm --prefix "portal_app" run build
 xcopy /E /Y /I "portal_app\dist\*" "docs\portal\"
 echo.

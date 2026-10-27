@@ -86,7 +86,7 @@
       border: 1px solid #B2DFDB;
       text-align: center;
     }
-    .promo-pill {
+    .priority-pill {
       background: #FEF3C7;
       border: 1px dashed var(--accent);
       color: #92400E;
@@ -189,9 +189,9 @@
 
     <div class="topic-badge" id="topic-badge">📋 جاري تجهيز الاستشارة...</div>
 
-    <div class="promo-pill">
-      <span>🎁</span>
-      <span>كود الخصم الحصري (HT10): شحن مجاني لكافة المحافظات + حق المعاينة قبل الدفع</span>
+    <div class="priority-pill">
+      <span>🩺</span>
+      <span>أولوية الاستشارة السريرية (HT10): إرشاد طبي ومتابعة مجانية مع أخصائية التعافي</span>
     </div>
 
     <div id="wa-alert" class="alert-box"></div>
@@ -203,7 +203,7 @@
       </div>
 
       <div class="form-group">
-        <label for="cust-phone">رقم الموبايل / واتساب <span class="req">* (إلزامي 11 رقماً لتفعيل كود الخصم)</span></label>
+        <label for="cust-phone">رقم الموبايل / واتساب <span class="req">* (إلزامي 11 رقماً لتأكيد الاستشارة السريرية)</span></label>
         <input type="tel" id="cust-phone" class="input-field" placeholder="01xxxxxxxxx" maxlength="11" required>
       </div>
 
@@ -213,7 +213,7 @@
     </form>
 
     <p class="security-note">
-      🔒 خصوصيتك أولويتنا: يتم تسجيل ملف الاستشارة وتثبيت كود الخصم تلقائياً قبل فتح محادثة الواتساب المباشرة.
+      🔒 خصوصيتك أولويتنا: يتم تسجيل ملف الاستشارة وتأكيد كود المتابعة تلقائياً قبل فتح محادثة الواتساب المباشرة.
     </p>
   </div>
 
@@ -265,7 +265,7 @@
 
       const egyptPhoneRegex = /^01[0125][0-9]{8}$/;
       if (!phoneVal || !egyptPhoneRegex.test(phoneVal)) {
-        showAlert("⚠️ يرجى إدخال رقم موبايل/واتساب مصري صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتفعيل كود الخصم وتأكيد الاستشارة.");
+        showAlert("⚠️ يرجى إدخال رقم موبايل/واتساب مصري صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتأكيد حجز الاستشارة السريرية المجانية.");
         phoneInput.focus();
         return;
       }
@@ -275,7 +275,7 @@
       submitBtn.innerHTML = "<span>⏳ جاري تثبيت الحجز وتوجيهك لواتساب...</span>";
 
       // تجهيز رسالة الواتساب الدقيقة باسم العميل والموضوع
-      const waText = "أهلاً بكِ، أنا (" + nameVal + ") مسجل في موقع هيلينج تاتش، ومعايا كود العرض الحصري (" + code + " - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص (" + resolvedTopic + ").";
+      const waText = "أهلاً بكِ، أنا (" + nameVal + ") مسجل في موقع هيلينج تاتش (كود المتابعة: " + code + ")، وأود استشارة سريرية مجانية بخصوص (" + resolvedTopic + ").";
       const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waText);
 
       // البيانات الرسمية المطابقة لأعمدة الشيت بدقة
@@ -287,7 +287,7 @@
         promo_code: code,
         page_url: window.location.href,
         source: sourceParam,
-        notes: "تم حجز الاستشارة وتأكيد كود الخصم HT10 من صفحة التحويل"
+        notes: "تم حجز الاستشارة وتأكيد طلب التوجيه السريري من صفحة التحويل"
       };
 
       // إرسال البيانات لجوجل شيت فوراً

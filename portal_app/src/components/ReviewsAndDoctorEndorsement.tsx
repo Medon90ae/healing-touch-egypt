@@ -49,7 +49,7 @@ export const ReviewsAndDoctorEndorsement: React.FC<ReviewsAndDoctorEndorsementPr
                 <CheckCircle className="w-8 h-8" />
               </div>
               <div className="font-bold text-sm text-white mb-1">
-                اعتماد الأطباء المصريين
+                الإجماع العلمي وتوصيات الهيئات الدولية
               </div>
               <p className="text-xs text-white/80 max-w-xs">
                 مطابق لأحدث إرشادات الجمعيات الطبية للجراحة التجميلية والعناية بالجروح
@@ -98,7 +98,7 @@ export const ReviewsAndDoctorEndorsement: React.FC<ReviewsAndDoctorEndorsementPr
                     <span>{rev.author}</span>
                     {rev.verified && (
                       <span className="text-[10px] bg-[#E6EEFF] text-[#059669] px-1.5 py-0.2 rounded font-semibold">
-                        طلب موثق
+                        استشارة موثقة
                       </span>
                     )}
                   </div>

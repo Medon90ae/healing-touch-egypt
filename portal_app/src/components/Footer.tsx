@@ -56,11 +56,11 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#064E3B] to-[#059669] flex items-center justify-center text-white font-bold text-lg border border-white/20">
-                CS
+                HT
               </div>
               <div>
-                <span className="font-bold text-lg text-white">Clinical Sanctuary</span>
-                <span className="block text-xs text-[#82F5C1]">صرح التعافي الجراحي الإكلينيكي</span>
+                <span className="font-bold text-lg text-white">هيلينج تاتش مصر</span>
+                <span className="block text-xs text-[#82F5C1]">Healing Touch Egypt • المنظومة السريرية للتعافي</span>
               </div>
             </div>
 
@@ -151,10 +151,10 @@ export const Footer: React.FC<FooterProps> = ({
                 className="w-full inline-flex items-center justify-center gap-2 bg-[#059669] hover:bg-[#064E3B] text-white px-4 py-2.5 rounded-xl font-bold text-xs transition-colors cursor-pointer"
               >
                 <MessageSquare className="w-4 h-4 text-[#82F5C1]" />
-                <span>متابعة مع أخصائية التعافي</span>
+                <span>استشيري أخصائية التعافي مجاناً</span>
               </button>
               <p className="text-[11px] text-white/50 text-center">
-                استشارة هاتفية مجانية لمتابعة حالة الجرح وتحديد المقاسات
+                استشارة هاتفية وسريرية مجانية لمتابعة حالة الجرح وتحديد المقاسات
               </p>
             </div>
           </div>
@@ -167,7 +167,7 @@ export const Footer: React.FC<FooterProps> = ({
           </p>
           <div className="shrink-0 text-center sm:text-left flex items-center gap-1">
             <HeartHandshake className="w-3.5 h-3.5 text-[#82F5C1]" />
-            <span>جميع الحقوق محفوظة © {new Date().getFullYear()} Clinical Sanctuary Egypt</span>
+            <span>جميع الحقوق محفوظة © {new Date().getFullYear()} هيلينج تاتش مصر - Healing Touch Egypt</span>
           </div>
         </div>
       </div>

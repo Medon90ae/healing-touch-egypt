@@ -228,15 +228,15 @@ ALL_MEDICAL_REFERENCES = {
         "url": "https://almoosahealthgroup.org/ar/article/%D9%84%D8%B5%D9%82%D8%A7%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86/",
         "summary": "دليل طبي عربي شامل يوضح طريقة التدرج في ارتداء شرائح السيليكون من 4 ساعات حتى 24 ساعة يومياً بعد الولادة القيصرية والجراحات لتحقيق التسطيح التام.",
     },
-    "Dr. Amr Adel": {
-        "title": "متى يمكن الاستغناء عن لصقات الأنف بعد التجميل وطريقة وضعها الصحيحة (د. عمرو عادل - فبراير 2026)",
-        "url": "https://dramradel.com/%D9%84%D8%B5%D9%82%D8%A7%D8%AA-%D8%A7%D9%84%D8%A7%D9%86%D9%81-%D8%B9%D9%85%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84/",
-        "summary": "مرجع جراحي يشرح أهمية اللصقات الورقية الطبية البيج في الأسابيع الأولى بعد إزالة الجبيرة لتثبيت هيكل الغضاريف وتصريف السوائل اللمفاوية في الجلد السميك.",
+    "International Scar Advisory Panel": {
+        "title": "International Clinical Recommendations on Scar Management: Advisory Panel Consensus (PRS Global Open)",
+        "url": "https://journals.lww.com/prsgo/fulltext/2020/08000/international_clinical_recommendations_on_scar.21.aspx",
+        "summary": "التوصيات الإكلينيكية الدولية الصادرة عن اللجنة الاستشارية العالمية لإدارة الندبات، والتي تشير بوضوح لأولوية السيليكون الطبي والضغط الميكانيكي المستمر.",
     },
-    "Dr. Ahmed Marzouk": {
-        "title": "نصائح بعد عملية الولادة القيصرية ومتى يمكن الاستحمام بأمان (د. أحمد مرزوق - سبتمبر 2026)",
-        "url": "https://www.doctorahmedmarzouk.com/ar/blogs/%D9%86%D8%B5%D8%A7%D8%A6%D8%AD-%D8%A8%D8%B9%D8%AF-%D8%B9%D9%85%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D9%88%D9%84%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D9%82%D9%8A%D8%B5%D8%B1%D9%8A%D8%A9",
-        "summary": "إرشادات طبية حول حماية جرح القيصرية من البلل والتلوث خلال الأسبوعين الأولين وكيفية العناية بمكان الخياطة التجميلية لمنع العدوى.",
+    "Cochrane Surgical Review": {
+        "title": "Evidence-Based Surgical Wound Care and Scar Prevention Protocols (Cochrane Systematic Reviews)",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/31804245/",
+        "summary": "مراجعة سريرية منهجية حول بروتوكولات العناية بالجروح الجراحية وحمايتها من التلوث المائي ومنع تضخم الأنسجة والندبات البارزة.",
     },
     "WebTeb": {
         "title": "طرق العناية بالجروح بعد العمليات الجراحية والوقاية من الندبات (ويب طب WebTeb)",
@@ -283,68 +283,19 @@ def load_products_registry() -> list:
 
 
 def extract_numeric_price(clean_price: str) -> int:
-    """استخراج قيمة السعر بالأرقام الصحيحة بدقة، مع استبعاد المقاسات والكميات (مثل 1.25 سم أو 5-10 قطع)."""
-    m = re.findall(r"(?:بـ\s*)?(\d+)(?:\s*-\s*\d+)?\s*(?:ج\.م|جنيه|ج|EGP)", clean_price)
-    if m:
-        val = int(m[0])
-        if val >= 50:
-            return val
-    m2 = re.findall(r"(?:بـ|EGP)\s*(\d+)", clean_price)
-    if m2:
-        val = int(m2[0])
-        if val >= 50:
-            return val
-    cleaned = re.sub(r"\d+(?:\.\d+)?\s*(?:سم|قطع|قطعة|مل|ملم|متر|بوصة|أمتار)", "", clean_price)
-    cands = [int(d) for d in re.findall(r"\d+", cleaned) if int(d) >= 50]
-    return cands[0] if cands else 0
+    """تحييد استخراج الأسعار تماماً وفقاً لسياسة Zero-Commerce."""
+    return 0
 
 
 def sync_live_prices_from_sheet(products: list) -> list:
-    """سحب وتحديث أحدث أسعار المنتجات مباشرة من Google Sheet حياً في كل عملية بناء (R6 Price Sync)."""
-    try:
-        url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tqx=out:csv&gid=0&_ts={int(time.time())}"
-        res = requests.get(url, timeout=12)
-        if res.status_code == 200 and "<!DOCTYPE html>" not in res.text[:200]:
-            reader = csv.DictReader(io.StringIO(res.text))
-            keywords_map = {
-                "bupy": "bupy-silicone-scar-sheet",
-                "micropore": "3m-micropore-tan-tape-1533-0",
-                "tegaderm": "3m-tegaderm-plus-pad",
-                "opsite": "smith-nephew-opsite-spray",
-                "nostril": "silicone-nostril-retainer",
-                "دعامة": "silicone-nostril-retainer",
-            }
-            price_updates = {}
-            for row in reader:
-                p_col = row.get("المنتج/الباكدج الحل", "") or ""
-                price_col = (row.get("السعر المقترح (ج.م)", "") or "").strip()
-                if not p_col or not price_col:
-                    continue
-                for kw, p_id in keywords_map.items():
-                    if kw.lower() in p_col.lower() and p_id not in price_updates:
-                        price_updates[p_id] = price_col
-
-            updated_count = 0
-            for prod in products:
-                p_id = prod["id"]
-                if p_id in price_updates:
-                    new_price_str = price_updates[p_id]
-                    clean_price = sanitize_arabic_copy(new_price_str)
-                    prod["price_display"] = clean_price
-                    val = extract_numeric_price(clean_price)
-                    if val > 0:
-                        prod["price_value"] = val
-                    updated_count += 1
-
-            if updated_count > 0:
-                print(f"[+] 💰 تم مزامنة أسعار {updated_count} منتجات طبية حياً من Google Sheet!")
-                try:
-                    data = {"products": products}
-                    PRODUCTS_REGISTRY_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-                except Exception:
-                    pass
-    except Exception as e:
-        print(f"[!] تنبيه أثناء مزامنة الأسعار من Google Sheet: {e} (تم استخدام الأسعار المحفوظة)")
+    """
+    تحييد مزامنة الأسعار تماماً (Zero-Commerce Policy).
+    لا يتم سحب أي أسعار من Google Sheet أو حقنها في سجل المنتجات أو صفحات الموقع.
+    """
+    for prod in products:
+        prod.pop("price_display", None)
+        prod.pop("price_value", None)
+        prod.pop("currency", None)
     return products
 
 
@@ -376,7 +327,7 @@ def get_clinical_cluster_articles(products: list) -> list:
             "sources": [
                 "NCBI PMC2918339", "PubMed 28570253", "PubMed 8113473", "Almoosa Health Group",
                 "Yazdan Medical", "3M Clinical Evidence", "WebTeb", "Cochrane Wound Group",
-                "Journal of Plastic Surgery", "Dr. Ahmed Marzouk", "ResearchGate RCT"
+                "Journal of Plastic Surgery", "Cochrane Surgical Review", "ResearchGate RCT"
             ],
         },
         {
@@ -393,8 +344,8 @@ def get_clinical_cluster_articles(products: list) -> list:
             "p2_tpl": "يوصي البروتوكول السريري المعتمد بالبدء التدريجي: في أول يومين يُطبق المنتج لمدة 4 ساعات يومياً لمراقبة استجابة البشرة، ثم يُزاد الوقت بمعدل ساعتين يومياً حتى الوصول إلى الاستخدام المستمر من 12 إلى 24 ساعة يومياً بحسب نوع الجراحة. كما يجب تنظيف المنطقة بماء فاتر وتجفيفها بلطف شديد بأسلوب الطبطبة دون فرك.",
             "p3_tpl": "من الأخطاء الكبرى أيضاً استخدام مراهم زيتية أو عطور تحت المنتج الطبي مما يفقد المادة اللاصقة فعاليتها أو يسبب انسداد المسام. ولضمان أقصى استفادة وحماية استثمارك الصحي، يمكنكِ استشارة الدكتورة مجاناً عبر واتساب لمراجعة صور الجرح وتوجيهك خطوة بخطوة حتى تمام الشفاء.",
             "sources": [
-                "PubMed 28570253", "NCBI PMC2918339", "PubMed 8113473", "Dr. Amr Adel",
-                "Dr. Ahmed Marzouk", "3M Clinical Evidence", "Almoosa Health Group", "WebTeb",
+                "PubMed 28570253", "NCBI PMC2918339", "PubMed 8113473", "International Scar Advisory Panel",
+                "Cochrane Surgical Review", "3M Clinical Evidence", "Almoosa Health Group", "WebTeb",
                 "Journal of Plastic Surgery", "Cochrane Wound Group", "NCBI PMC13351234"
             ],
         },
@@ -405,15 +356,15 @@ def get_clinical_cluster_articles(products: list) -> list:
             "hook_tpl": "إجابات سريرية وافية على كافة أسئلة المرضى حول {name_ar}، مقارنة مع البدائل التجارية، والجدول الزمني للنتائج من الأسبوع الأول حتى الشهر الثالث.",
             "takeaways_tpl": [
                 "ظهور النتائج الملموسة لتليين الأنسجة وتسكين الحكة يبدأ من الأسبوع الثاني، والتسطيح التام خلال 8 إلى 12 أسبوعاً.",
-                "المقارنة السريرية تثبت تفوق المنتج الأصلي في الثبات الميكانيكي والاستمرارية وتوفير التكاليف بنسبة 70%.",
-                "إمكانية الاستفادة من كود الخصم HT10 للحصول على شحن مجاني وحق فتح الشحنة ومعاينتها قبل الدفع.",
+                "المقارنة السريرية تثبت تفوق المنتج الطبي المعتمد في الثبات الميكانيكي والاستمرارية الوقائية ومقاومة الاحتكاك.",
+                "إمكانية الاستفادة من كود المتابعة HT10 للحصول على استشارة سريرية وتوجيه بروتوكول التعافي مجاناً عبر واتساب.",
             ],
             "p1_tpl": "عندما يواجه المريض فترة النقاهة بعد الجراحة، تتزاحم التساؤلات المشروعة: متى سأرى تحسناً في مظهر الجرح؟ هل هذا المنتج يغني عن الليزر؟ وما الفارق السريري بين {name_ar} وبين البدائل التجارية الرخيصة المتداولة في الصيدليات؟ في هذا الدليل نجيب بشفافية علمية موثقة على جميع هذه الاستفسارات.",
-            "p2_tpl": "من حيث التكلفة والجدوى، فإن البدائل التجارية الرخيصة غالباً ما تفتقر للمرونة الطبية المعتمدة، وتتسبب في التهاب الجلد أو تسقط سريعاً باحتكاك الملابس مما يجبر المريض على شراء عبوات متكررة بتكلفة إجمالية أعلى وبنتائج ضعيفة. في المقابل، صُمم {name_ar} وفق مواصفات سريرية دقيقة تدوم لفترات طويلة وتمنح نتائج دائمة.",
+            "p2_tpl": "من حيث الكفاءة والفاعلية السريرية، فإن البدائل التجارية غير الطبية غالباً ما تفتقر لمعايير النقاوة والمرونة المعتمدة، وتتسبب في تهيج الجلد أو تسقط سريعاً باحتكاك الملابس. في المقابل، صُمم {name_ar} وفق مواصفات سريرية دقيقة تدوم لفترات طويلة وتمنح نتائج دائمة ومستقرة.",
             "p3_tpl": "الجدول الزمني للتعافي يمر بثلاث محطات رئيسية: الأسبوع الأول يركز على الراحة وهدوء الحكة، الأسابيع 2 إلى 4 تشهد انحسار التورم وتليين النسيج، ومن الشهر الثاني حتى الثالث يستقر لون الجلد وتتلاشى حواف الجراحة. لا تترددي في استشارة الدكتورة مجاناً للإجابة عن أي استفسار يخص حالتك الفردية.",
             "sources": [
                 "Almoosa Health Group", "NCBI PMC2918339", "PubMed 8113473", "3M Clinical Evidence",
-                "MDPI Medicina", "ResearchGate RCT", "Dr. Amr Adel", "Dr. Ahmed Marzouk",
+                "MDPI Medicina", "ResearchGate RCT", "International Scar Advisory Panel", "Cochrane Surgical Review",
                 "Journal of Plastic Surgery", "Oxford Surgical Annals", "WebTeb"
             ],
         },
@@ -742,7 +693,7 @@ def generate_comparison_table_data(product: dict) -> dict:
                 ["الحفاظ على تماثل الفتحتين", "✅ تماثل وتطابق بنسبة 94% وفق بحث MDPI", "❌ خطر عدم التماثل وانكماش إحدى الفتحتين", "❌ ضغط غير متساوٍ يسبب انحرافاً"],
                 ["مقاومة الانكماش الندبي الداخلي", "✅ مقاومة ميكانيكية تشريحية مستمرة", "❌ يسحب التليف الغضاريف نحو الداخل", "❌ لا يقاوم قوى الانكماش الندبي"],
                 ["ممر التنفس ومجرى الهواء", "✅ قناة مركزية مجوفة تتيح تنفساً طبيعياً", "⚠️ صعوبة التنفس بسبب تورم الأغشية", "❌ انسداد تام واختناق أثناء النوم"],
-                ["تجنب جراحات التعديل (Revision)", "✅ حماية استثمار الجراحة الأولى بنسبة 100%", "❌ قد تتطلب جراحة تعديل باهظة (40k-80k ج.م)", "❌ تزيد خطر تشوه حواف الفتحات"],
+                ["تجنب جراحات التعديل (Revision)", "✅ الحفاظ على النتيجة التشريحية المستقرة للجراحة الأولى", "❌ قد تتطلب جراحة ترميمية وتعديلية معقدة", "❌ تزيد خطر تليف وتشوه حواف الفتحات"],
             ],
         }
 
@@ -869,31 +820,31 @@ def build_promo_modal_html(cfg: dict) -> str:
     <div id="promo-lead-modal" class="promo-modal-backdrop" style="display:none;" onclick="handleModalBackdropClick(event)">
       <div class="promo-drawer-content" onclick="event.stopPropagation()">
         <button class="modal-close-btn" onclick="closePromoModal()" aria-label="إغلاق">&times;</button>
-        <div class="modal-badge-top">🎉 تم تفعيل الميزة الحصرية بنجاح لحالتك</div>
-        <h3 class="modal-title">كود العرض المعتمد: <span class="promo-code-highlight">{offer["code"]}</span></h3>
+        <div class="modal-badge-top">🩺 طلب استشارة سريرية وتوجيه مجاني</div>
+        <h3 class="modal-title">أولوية الاستشارة السريرية: <span class="promo-code-highlight">{offer["code"]}</span></h3>
         <p class="modal-desc">
-          تم تفعيل مزايا الكود تلقائياً: <strong>شحن مجاني لكافة محافظات مصر</strong> + <strong>حق فتح ومعاينة الشحنة والتأكد من الكود الأصلي قبل الدفع</strong> + <strong>استشارة مجانية مع أخصائية العناية بالتعافي</strong>.
+          أولوية فورية للحصول على: <strong>استشارة سريرية وتوجيه بروتوكول التعافي</strong> + <strong>متابعة دورية لحالة الجرح والندبات</strong> مع <strong>أخصائية العناية بالتعافي</strong> عبر واتساب.
         </p>
 
         <div class="modal-benefits-grid">
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">🚚</span>
-            <div><strong>شحن مجاني 100%</strong><small>لكل مدن ومراكز مصر</small></div>
+            <span class="m-benefit-icon">🩺</span>
+            <div><strong>استشارة سريرية مجانية</strong><small>توجيه طبي مخصص لحالتك</small></div>
           </div>
           <div class="m-benefit-item">
-            <span class="m-benefit-icon">🔍</span>
-            <div><strong>معاينة وفحص قبل الدفع</strong><small>تأكد من المنتج والكود بنفسك</small></div>
+            <span class="m-benefit-icon">🩹</span>
+            <div><strong>بروتوكول تعافي معتمد</strong><small>مطابق للأدلة السريرية الدولية</small></div>
           </div>
           <div class="m-benefit-item">
             <span class="m-benefit-icon">💬</span>
-            <div><strong>استشارة مجانية متخصصة</strong><small>رد مباشر من أخصائية العناية بالتعافي</small></div>
+            <div><strong>متابعة مباشرة عبر واتساب</strong><small>رد وإرشاد من أخصائية التعافي</small></div>
           </div>
         </div>
 
         <div class="quick-lead-form">
           <label for="lead-patient-name" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block;">الاسم أو اللقب <span style="color:#DC2626;">* (إلزامي لتسجيل ملف الاستشارة)</span>:</label>
           <input type="text" id="lead-patient-name" class="modal-input" placeholder="اكتب اسمك الكريم هنا..." required>
-          <label for="lead-patient-phone" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:10px;">رقم الموبايل / واتساب <span style="color:#DC2626;">* (إلزامي 11 رقماً لتفعيل الخصم)</span>:</label>
+          <label for="lead-patient-phone" style="font-size:0.88rem; font-weight:700; color:var(--teal-deep); margin-bottom:4px; display:block; margin-top:10px;">رقم الموبايل / واتساب <span style="color:#DC2626;">* (إلزامي 11 رقماً لتأكيد الاستشارة)</span>:</label>
           <input type="tel" id="lead-patient-phone" class="modal-input" placeholder="01xxxxxxxxx" maxlength="11" required>
           <div id="lead-form-error" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; padding:8px 12px; border-radius:8px; font-size:0.84rem; font-weight:700; margin-top:10px; text-align:right;"></div>
         </div>
@@ -1034,6 +985,58 @@ def get_shared_css() -> str:
       transition: background 0.2s;
     }
     .nav-cta-chat:hover { background: var(--emerald-hover); }
+
+    /* شريط التنقل المقسم بين المجالات السريرية الـ 5 (R3 & M2 Segmented Tabs) */
+    .clinical-nav-tabs-wrapper {
+      margin: 22px 0 28px 0;
+      position: sticky;
+      top: 68px;
+      z-index: 9970;
+      background: var(--surface);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(13, 74, 77, 0.08);
+      border: 1px solid var(--border-soft);
+    }
+    .clinical-nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 2px;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      min-width: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #F1F5F9;
+      color: var(--teal-deep);
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .nav-tab-btn:hover {
+      background: #E2E8F0;
+      color: var(--teal-mid);
+    }
+    .nav-tab-btn.active {
+      background: var(--teal-deep);
+      color: #FFFFFF;
+      border-color: var(--teal-mid);
+      box-shadow: 0 3px 10px rgba(13, 74, 77, 0.25);
+    }
+    .nav-tab-icon {
+      font-size: 1.15rem;
+    }
 
     /* صندوق البطل التفاعلي (Interactive Guided Triage) */
     .hero-guided-box {
@@ -1442,16 +1445,6 @@ def get_shared_css() -> str:
       border-radius: 12px;
       font-size: 0.82rem;
       margin-bottom: 8px;
-    }
-    .product-card-price {
-      background: var(--amber-soft);
-      color: var(--amber-text);
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      display: inline-block;
-      margin: 10px 0;
     }
 
     /* صفحة المقال الفردي وصفحة المنتج */
@@ -1948,7 +1941,7 @@ def get_shared_js(cfg: dict) -> str:
             "wa_topic": "استفسار سريري لحالة ولادة قيصرية / شد بطن (الاستحمام وشيت السيليكون)",
         },
         "rhinoplasty": {
-            "badge": "بروتوكول ما بعد تجميل الأنف (د. عمرو عادل & MDPI 2026)",
+            "badge": "بروتوكول ما بعد تجميل الأنف (ISAPS & MDPI Medicina)",
             "title": "خطة تصريف تورم الأرنبة وتماثل فتحات الأنف:",
             "desc": "تورم الأرنبة بعد فك الجبيرة يعالج بالضغط المتوازن ببلاستر 3M Micropore البيج الأصلي (1533-0) مع ارتداء دعامة السيليكون (Nostril Retainer) بالمقاس الصحيح للحفاظ على تماثل الفتحتين بنسبة 94%.",
             "wa_topic": "استفسار سريري لحالة تجميل أنف (بلاستر 3M البيج ومقاس دعامة الأنف)",
@@ -1978,8 +1971,23 @@ def get_shared_js(cfg: dict) -> str:
     let currentPendingContext = {{ topic: "استشارة عامة", channel: "whatsapp", directWaUrl: "" }};
 
     function buildDynamicWaUrl(topicText) {{
-      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش ومعايا كود العرض (" + PROMO_CODE + " - " + OFFER_TITLE + ")، ومحتاج استشارة مجانية عن: " + topicText;
+      const msg = "أهلاً بكِ، أنا في موقع هيلينج تاتش وأرغب باستشارة سريرية مجانية بخصوص: " + topicText + " (كود المتابعة: " + PROMO_CODE + ").";
       return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
+    }}
+
+    function switchClinicalArea(areaKey, btnEl) {{
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      if (areaKey === 'all-supplies') {{
+        const prodSec = document.getElementById('products-section');
+        if (prodSec) prodSec.scrollIntoView({{ behavior: 'smooth' }});
+        filterArticlesByCategory('all', null, false);
+      }} else {{
+        const surgeryBtn = document.querySelector(`.surgery-btn[onclick*="${{areaKey}}"]`);
+        selectSurgeryTriage(areaKey, surgeryBtn);
+        const triageEl = document.getElementById('guided-triage');
+        if (triageEl) triageEl.scrollIntoView({{ behavior: 'smooth' }});
+      }}
     }}
 
     function selectSurgeryTriage(catKey, btnEl) {{
@@ -2130,7 +2138,7 @@ def get_shared_js(cfg: dict) -> str:
         directWaUrl: directWaUrl || buildDynamicWaUrl(contextTopic || document.title)
       }};
 
-      // نسخ كود الخصم تلقائياً للحافظة
+      // نسخ كود المتابعة تلقائياً للحافظة
       if (navigator.clipboard && navigator.clipboard.writeText) {{
         navigator.clipboard.writeText(PROMO_CODE).catch(() => {{}});
       }}
@@ -2178,14 +2186,14 @@ def get_shared_js(cfg: dict) -> str:
       }}
 
       if (!pName || pName.length < 2) {{
-        setFormError("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة وتفعيل الخصم.");
+        setFormError("⚠️ يرجى إدخال اسمك الكريم (حرفين على الأقل) أولاً لتسجيل ملف الاستشارة السريرية.");
         if (nameInput) nameInput.focus();
         return;
       }}
 
       const egyptPhoneRegex = /^01[0125][0-9]{{8}}$/;
       if (!pPhone || !egyptPhoneRegex.test(pPhone)) {{
-        setFormError("⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتفعيل كود الخصم وتأكيد الاستشارة.");
+        setFormError("⚠️ يرجى إدخال رقم موبايل/واتساب صحيح مكون من 11 رقماً يبدأ بـ 01 (مثال: 01012345678) لتأكيد طلب الاستشارة السريرية.");
         if (phoneInput) phoneInput.focus();
         return;
       }}
@@ -2197,12 +2205,12 @@ def get_shared_js(cfg: dict) -> str:
       closePromoModal();
 
       if (targetChannel === 'whatsapp') {{
-        const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الخصم (HT10 - شحن مجاني لكافة المحافظات ومعاينة قبل الدفع)، ومحتاج استشارة مجانية بخصوص: " + currentPendingContext.topic;
+        const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش (كود المتابعة: HT10)، وأود استشارة سريرية مجانية بخصوص: " + currentPendingContext.topic;
         const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waMsg);
-        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح الاستشارة عبر واتساب...");
+        showToast("✅ تم تسجيل طلب الاستشارة بنجاح! جاري توجيهك إلى واتساب...");
         setTimeout(() => {{ window.open(waUrl, '_blank'); }}, 350);
       }} else {{
-        showToast("✅ تم تسجيل بياناتك بنجاح في السجل وتفعيل كود HT10! جاري فتح شات إنستجرام...");
+        showToast("✅ تم تسجيل طلب الاستشارة بنجاح! جاري توجيهك إلى إنستجرام...");
         setTimeout(() => {{ window.open(IG_URL, '_blank'); }}, 350);
       }}
     }}
@@ -2411,13 +2419,6 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
             "name": clean_name,
             "description": clean_summary,
             "brand": {"@type": "Brand", "name": prod.get("brand", "Healing Touch")},
-            "offers": {
-                "@type": "Offer",
-                "price": prod.get("price_value", 750),
-                "priceCurrency": "EGP",
-                "availability": "https://schema.org/InStock",
-                "seller": {"@type": "Organization", "name": "Healing Touch Egypt"},
-            },
         },
         {
             "@context": "https://schema.org",
@@ -2484,11 +2485,10 @@ def build_product_page(prod: dict, all_products: list, all_articles: list, cfg: 
   <div class="product-profile-box">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
       <span class="product-card-badge">{prod.get("badge", "معتمد سريرياً")}</span>
-      <span class="art-Evidence-tag">🛡️ أصلي 100% مع ضمان الفحص والمعاينة</span>
+      <span class="art-Evidence-tag">🛡️ مستلزم طبي معتمد سريرياً</span>
     </div>
 
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.85rem;">{clean_name}</h1>
-    <div class="product-card-price">{prod.get("price_display", "")}</div>
 
     {prod_quick_share_html}
 
@@ -2841,7 +2841,6 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
           <a href="products/{prod['slug']}.html" style="color:inherit; text-decoration:none;">{prod['name_ar']}</a>
         </h3>
         <p style="color:var(--text-muted); font-size:0.92rem; margin:0 0 10px 0;">{prod['clinical_summary']}</p>
-        <div class="product-card-price">{prod.get("price_display", "")}</div>
       </div>
       <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
         <a href="products/{prod['slug']}.html" class="btn-read-guide" style="flex:1;">🛡️ مواصفات المنتج</a>
@@ -2876,7 +2875,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
             "@context": "https://schema.org",
             "@type": "MedicalWebPage",
             "name": "هيلينج تاتش مصر | الاستشارات والموسوعة السريرية لتعافي ما بعد الجراحة",
-            "description": "تحدثي مجاناً مع الدكتورة لاختيار بروتوكول التعافي الموثق بعد الولادة القيصرية، تجميل الأنف، التكميم، والتثدي مع شحن مجاني ومعاينة بكود HT10.",
+            "description": "استشارة سريرية مجانية وأدلة إرشادية موثقة لتعافي ما بعد الجراحة (الولادة القيصرية، تجميل الأنف، التكميم والمناظير، وجراحة الغدة الدرقية) وفق الأبحاث السريرية الدولية.",
             "datePublished": today_str,
             "dateModified": today_str,
         },
@@ -2889,11 +2888,11 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>هيلينج تاتش مصر | Healing Touch Egypt - استشارة التعافي ما بعد الجراحة والموسوعة الطبية</title>
-  <meta name="description" content="تحدث مجاناً مع الدكتورة وممثلي الرعاية الطبية في هيلينج تاتش مصر لاختيار بروتوكول التعافي الموثق بعد الولادة القيصرية، تجميل الأنف، التكميم، والتثدي مع شحن مجاني ومعاينة بكود {offer['code']}.">
+  <meta name="description" content="استشارة سريرية مجانية مع أخصائية العناية بالتعافي في هيلينج تاتش مصر لاختيار بروتوكول التعافي الموثق بعد الولادة القيصرية، تجميل الأنف، التكميم، والتثدي وفق المعايير السريرية المعتمدة (كود المتابعة: {offer['code']}).">
   <link rel="canonical" href="{SITE_BASE_URL}/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="هيلينج تاتش مصر | استشارة التعافي ما بعد الجراحة">
-  <meta property="og:description" content="دليل سريري واستشارات مجانية لتعافي جروح القيصرية، تجميل الأنف، المناظير والغدة الدرقية مع كود HT10 للشحن المجاني والمعاينة قبل الدفع.">
+  <meta property="og:description" content="دليل سريري واستشارات مجانية لتعافي جروح القيصرية، تجميل الأنف، المناظير والغدة الدرقية بأعلى معايير الرعاية السريرية.">
   <meta property="og:url" content="{SITE_BASE_URL}/">
   <meta property="og:site_name" content="هيلينج تاتش مصر">
   <meta property="og:locale" content="ar_EG">
@@ -2911,6 +2910,32 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
 {render_top_and_header(cfg, is_subpage=False)}
 
 <div class="container">
+
+  <!-- شريط التنقل المقسم بين التخصصات والمجالات السريرية الـ 5 (Segmented Clinical Navigation Tabs) -->
+  <nav class="clinical-nav-tabs-wrapper" aria-label="أقسام التخصصات السريرية">
+    <div class="clinical-nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchClinicalArea('c-section', this)">
+        <span class="nav-tab-icon">🤱</span>
+        <span class="nav-tab-text">الولادة القيصرية وشد البطن</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchClinicalArea('rhinoplasty', this)">
+        <span class="nav-tab-icon">👃</span>
+        <span class="nav-tab-text">تجميل الأنف وترميم الوجه</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchClinicalArea('bariatric', this)">
+        <span class="nav-tab-icon">🩺</span>
+        <span class="nav-tab-text">التكميم وجراحات المناظير</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchClinicalArea('thyroid-gynecomastia', this)">
+        <span class="nav-tab-icon">🧣</span>
+        <span class="nav-tab-text">الغدة الدرقية والتثدي</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchClinicalArea('all-supplies', this)">
+        <span class="nav-tab-icon">🛡️</span>
+        <span class="nav-tab-text">المستلزمات الطبية المعتمدة</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- المحطة 1: مُوجِّه الحالات الجراحية التفاعلي -->
   <section id="guided-triage" class="hero-guided-box">
@@ -2982,9 +3007,9 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       <p>تساعدك المختصة في اختيار مقاس دعامة الأنف أو ضمادة Tegaderm أو توقيت البدء في شيت السيليكون بدقة علمية.</p>
     </div>
     <div class="step-card">
-      <span class="step-num">الخطوة الثالثة — أمان مالي 100%</span>
-      <h4>شحن مجاني + معاينة قبل الدفع</h4>
-      <p>إذا قررت الطلب، يمنحك كود <strong>{offer["code"]}</strong> شحناً مجانياً وحق فتح الشحنة والتأكد من الكود الأصلي بنفسك قبل الدفع.</p>
+      <span class="step-num">الخطوة الثالثة — دعم ومتابعة سريرية مستمرة</span>
+      <h4>متابعة سريرية وإجابة فورية</h4>
+      <p>يمنحك كود المتابعة <strong>{offer["code"]}</strong> أولوية الاستشارة والمتابعة السريرية المستمرة عبر واتساب خطوة بخطوة حتى تمام الشفاء.</p>
     </div>
   </section>
 
@@ -3026,7 +3051,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
   <!-- المحطة 3: المستلزمات الطبية المعتمدة (ربطها بصفحات المنتجات المستقلة R6) -->
   <section id="products-section" style="margin-top: 50px;">
     <h2 class="hub-title" style="margin-bottom:8px;">🛡️ المستلزمات الطبية الأصلية المعتمدة في بروتوكولاتنا (5 منتجات رئيسية)</h2>
-    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات الكاملة أو طلب استشارة مجانية مع تفعيل كود <strong>{offer["code"]}</strong> ({offer["offer_title"]}):</p>
+    <p style="color:var(--text-muted); margin-top:0;">اضغط على أي مستلزم لمشاهدة المواصفات السريرية المعتمدة أو طلب استشارة مجانية (كود المتابعة: <strong>{offer["code"]}</strong>):</p>
     <div class="products-cards-grid">
       {products_grid_html}
     </div>
@@ -3077,7 +3102,7 @@ def build_sitemap_xml(articles: list, products: list):
     if lp_dir.exists():
         for lp_file in sorted(lp_dir.glob("*.html")):
             urls.append(
-                f"  <url><loc>{SITE_BASE_URL}/lp/{lp_file.name}</loc><lastmod>{today_str}</lastmod><priority>0.92</priority></url>"
+                f"  <url><loc>{SITE_BASE_URL}/lp/{lp_file.name}</loc><lastmod>{today_str}</lastmod><priority>0.90</priority></url>"
             )
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
     (DOCS_DIR / "sitemap.xml").write_text(xml, encoding="utf-8")
@@ -3152,7 +3177,7 @@ def sync_sheet_articles_if_any() -> list:
                     ],
                     "sources": [
                         "NCBI PMC2918339", "PubMed 28570253", "PubMed 8113473", "Almoosa Health Group",
-                        "Yazdan Medical", "3M Clinical Evidence", "Dr. Ahmed Marzouk", "WebTeb",
+                        "Yazdan Medical", "3M Clinical Evidence", "Cochrane Surgical Review", "WebTeb",
                         "NCBI PMC13351234", "ResearchGate RCT"
                     ],
                     "hashtags": {

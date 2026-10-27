@@ -275,10 +275,10 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
         <div className="mt-10 p-5 rounded-2xl bg-gradient-to-r from-[#F3F7F5] via-white to-[#F3F7F5] border border-[#D0DBED] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
           <div>
             <div className="text-sm font-bold text-[#003527]">
-              تريدين الحصول على كافة أدوات البروتوكول في حقيبة واحدة معتمدة؟
+              تريدين الحصول على كافة أدوات البروتوكول السريري المعتمدة؟
             </div>
             <div className="text-xs text-[#707974]">
-              تصفحي باقات البروتوكول المجهزة طبياً بأفضل سعر شامل الاستشارة المجانية والتوصيل السريع
+              تصفحي البروتوكولات السريرية المجهزة طبياً وفق الإرشادات الدولية مع الاستشارة السريرية المرافقة
             </div>
           </div>
           <button
@@ -286,7 +286,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             onClick={onScrollToCatalog}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#064E3B] hover:bg-[#003527] text-white text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer active:scale-98 shrink-0"
           >
-            <span>عرض باقات البروتوكول</span>
+            <span>عرض البروتوكولات السريرية المعتمدة</span>
             <ArrowDown className="w-4 h-4" />
           </button>
         </div>

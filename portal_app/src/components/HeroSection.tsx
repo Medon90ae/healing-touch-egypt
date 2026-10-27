@@ -6,31 +6,28 @@ import {
   Sparkles, 
   Play, 
   ArrowLeft,
-  Droplets,
   BookOpen,
   Image as ImageIcon,
   Video,
   MessageSquare,
-  Clock,
-  Layers,
-  Smartphone,
-  Maximize2
+  Clock
 } from 'lucide-react';
-import { Campaign, GalleryProductImage, PlatformFormat } from '../types/campaign';
+import { Campaign, GalleryProductImage } from '../types/campaign';
 
 interface HeroSectionProps {
   campaign: Campaign;
   onOpenLeadModal: (bundleId?: string) => void;
   onScrollToCalculator: () => void;
+  onSelectTab?: (tab: 'article' | 'video' | 'showcase' | 'calculator' | 'faq') => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   campaign,
   onOpenLeadModal,
-  onScrollToCalculator
+  onScrollToCalculator,
+  onSelectTab
 }) => {
   const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'gallery'>('video');
-  const [platformFilter, setPlatformFilter] = useState<'all' | '1:1' | '9:16'>('all');
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
   const allGallery: GalleryProductImage[] = useMemo(() => {
@@ -39,23 +36,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         url: campaign.heroImageUrl,
         title: 'مستلزمات التعافي السريري المعتمدة',
         subtitle: 'منتجات طبية أصلية 100% معقمة ومغلفة لحماية موضع الجراحة',
-        aspectRatio: '1:1' as PlatformFormat,
-        platform: 'feed' as const,
-        platformLabel: 'منشور مربع (1:1) • إنستجرام وفيسبوك'
+        clinicalFunction: 'عزل ميكانيكي وترطيب عميق لموضع الجراحة'
       }
     ];
   }, [campaign.galleryImages, campaign.heroImageUrl]);
 
-  const filteredGallery = useMemo(() => {
-    if (platformFilter === 'all') return allGallery;
-    return allGallery.filter((item) => item.aspectRatio === platformFilter);
-  }, [allGallery, platformFilter]);
-
-  // Safe selected item index
-  const activePhotoIndex = selectedGalleryIdx < filteredGallery.length ? selectedGalleryIdx : 0;
-  const currentPhoto = filteredGallery[activePhotoIndex] || allGallery[0];
+  const activePhotoIndex = selectedGalleryIdx < allGallery.length ? selectedGalleryIdx : 0;
+  const currentPhoto = allGallery[activePhotoIndex] || allGallery[0];
 
   const handleScrollToArticle = () => {
+    if (onSelectTab) {
+      onSelectTab('article');
+    }
     const el = document.getElementById('clinical-article');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -63,7 +55,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F3F7F5] via-[#FBFDFB] to-[#FBFDFB] pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-[#E2ECE6]">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F3F7F5] via-[#FBFDFB] to-[#FBFDFB] pt-6 pb-10 sm:pt-8 sm:pb-14 border-b border-[#E2ECE6]">
       {/* Decorative clinical light accents */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#82F5C1]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 left-10 w-72 h-72 bg-[#95D3BA]/15 rounded-full blur-3xl pointer-events-none" />
@@ -96,7 +88,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {campaign.subtitle}
             </p>
 
-            {/* Quick 3 Clinical Highlights Checklist */}
+            {/* Quick 3-4 Clinical Highlights Checklist */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
               {campaign.heroHighlights.map((highlight, idx) => (
                 <div
@@ -111,13 +103,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               ))}
             </div>
 
-            {/* CTAs: Content & Consultation First */}
+            {/* CTAs: Content & Clinical Guidance First */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <button
                 type="button"
                 onClick={() => onOpenLeadModal()}
                 className="inline-flex items-center justify-center gap-2 bg-[#064E3B] hover:bg-[#003527] text-white px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base shadow-md shadow-[#064E3B]/20 transition-all duration-200 cursor-pointer active:scale-98"
-                aria-label="تأكيد الطلب وحجز الاستشارة مجاناً"
+                aria-label="استشيري أخصائية التعافي مجاناً"
               >
                 <MessageSquare className="w-4 h-4 text-[#82F5C1]" />
                 <span>استشيري أخصائية التعافي مجاناً</span>
@@ -130,12 +122,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 className="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#F3F7F5] text-[#064E3B] border-2 border-[#064E3B] px-5 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer active:scale-98"
               >
                 <BookOpen className="w-4 h-4 text-[#059669]" />
-                <span>قراءة الدليل والشرح التشريحي الكامل</span>
+                <span>الدليل والشرح التشريحي الكامل</span>
               </button>
 
               <button
                 type="button"
-                onClick={onScrollToCalculator}
+                onClick={() => {
+                  if (onSelectTab) onSelectTab('calculator');
+                  onScrollToCalculator();
+                }}
                 className="inline-flex items-center justify-center gap-1.5 bg-[#F3F7F5] hover:bg-[#E6EEFF] text-[#003527] border border-[#D0DBED] px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer active:scale-98"
               >
                 <Calculator className="w-4 h-4 text-[#059669]" />
@@ -147,20 +142,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-wrap items-center gap-2.5 text-xs text-[#707974] pt-1">
               <span className="inline-flex items-center gap-1 text-[#059669] font-semibold">
                 <ShieldCheck className="w-4 h-4" />
-                منتجات طبية أصلية 100% معقمة ومغلفة
+                مستلزمات طبية أصلية 100% معقمة ومحكمة الغلق
               </span>
               <span>•</span>
-              <span>توصيل سريع ومغلف لكافة محافظات مصر</span>
+              <span>متابعة سريرية متخصصة للأمهات والمرضى بمصر</span>
               <span>•</span>
-              <span className="text-[#003527] font-bold">المعاينة قبل الدفع عند الاستلام</span>
+              <span className="text-[#003527] font-bold">حق المعاينة والفحص عند الاستلام</span>
             </div>
           </div>
 
-          {/* Right Column: Embedded Clinical Video Player & Pomelli AI Product Images (5 cols on desktop) */}
+          {/* Right Column: Embedded Clinical Video Player & Medical Supplies Showcase (5 cols on desktop) */}
           <div className="lg:col-span-5 animate-fade-in-up delay-100">
             <div className="relative bg-white rounded-2xl border border-[#E2ECE6] shadow-xl shadow-[#064E3B]/5 overflow-hidden">
               
-              {/* Media Switcher Tabs (فيديو الشرح السريري vs صور المنتجات Pomelli AI) */}
+              {/* Media Switcher Tabs */}
               <div className="flex border-b border-[#E2ECE6] bg-[#F8F9FF]">
                 <button
                   type="button"
@@ -190,7 +185,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   }`}
                 >
                   <ImageIcon className="w-4 h-4 text-[#059669]" />
-                  <span>عرض صور المنتجات (Pomelli 4K)</span>
+                  <span>استعراض المستلزمات الطبية</span>
                   <span className="text-[10px] bg-[#DCFCE7] text-[#006C4A] px-1.5 py-0.2 rounded-full font-semibold">
                     {allGallery.length} صور
                   </span>
@@ -254,78 +249,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               )}
 
-              {/* Tab 2: Pomelli AI Product Images with Platform Aspect Ratio Distinctions */}
+              {/* Tab 2: Clean Product Images Showcase */}
               {activeMediaTab === 'gallery' && (
                 <div className="p-3.5 space-y-3">
                   
-                  {/* Platform & Aspect Ratio Filter Switcher Bar */}
-                  <div className="flex flex-wrap items-center justify-between gap-1.5 pb-1 border-b border-[#E2ECE6]/70">
-                    <div className="text-xs font-bold text-[#003527] flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-                      <span>مقاس المنصة:</span>
-                    </div>
-
-                    <div className="inline-flex items-center gap-1 bg-[#F3F7F5] p-1 rounded-xl border border-[#E2ECE6] text-[11px]">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPlatformFilter('all');
-                          setSelectedGalleryIdx(0);
-                        }}
-                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
-                          platformFilter === 'all'
-                            ? 'bg-[#003527] text-white shadow-2xs'
-                            : 'text-[#404944] hover:bg-white'
-                        }`}
-                      >
-                        الكل ({allGallery.length})
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPlatformFilter('1:1');
-                          setSelectedGalleryIdx(0);
-                        }}
-                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                          platformFilter === '1:1'
-                            ? 'bg-[#003527] text-white shadow-2xs'
-                            : 'text-[#404944] hover:bg-white'
-                        }`}
-                        title="مقاس مربع 1:1 مخصص لمنشورات إنستجرام وفيسبوك والموقع"
-                      >
-                        <Layers className="w-3 h-3" />
-                        <span>📐 1:1 مربع</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPlatformFilter('9:16');
-                          setSelectedGalleryIdx(0);
-                        }}
-                        className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                          platformFilter === '9:16'
-                            ? 'bg-[#003527] text-white shadow-2xs'
-                            : 'text-[#404944] hover:bg-white'
-                        }`}
-                        title="مقاس عمودي 9:16 مخصص لقصص إنستجرام ستوري وريلز وتيك توك"
-                      >
-                        <Smartphone className="w-3 h-3" />
-                        <span>📱 9:16 ستوري</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Adaptive Image Frame: Changes aspect ratio dynamically based on platform format */}
+                  {/* Clean Image Frame */}
                   <div className="w-full flex justify-center bg-[#F8FAF9] rounded-2xl p-2 border border-[#E2ECE6]">
-                    <div
-                      className={`relative overflow-hidden rounded-xl bg-black border border-[#E2ECE6] shadow-sm transition-all duration-300 w-full ${
-                        currentPhoto?.aspectRatio === '9:16'
-                          ? 'max-h-[440px] aspect-[9/16] mx-auto'
-                          : 'max-h-[380px] aspect-square mx-auto'
-                      }`}
-                    >
+                    <div className="relative overflow-hidden rounded-xl bg-white border border-[#E2ECE6] shadow-sm transition-all duration-300 w-full max-h-[380px] aspect-4/3 mx-auto">
                       <img
                         src={currentPhoto?.url}
                         alt={currentPhoto?.title}
@@ -333,24 +263,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         loading="eager"
                       />
 
-                      {/* Top Badges: Platform Format & Dimensions */}
+                      {/* Top Badge: Clinical Status */}
                       <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-                        {currentPhoto?.aspectRatio === '9:16' ? (
-                          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#064E3B]/90 backdrop-blur-md text-[#82F5C1] text-[10px] sm:text-[11px] font-bold border border-[#82F5C1]/40 shadow-xs">
-                            <Smartphone className="w-3 h-3 text-[#FFB77D]" />
-                            <span>ستوري وريلز (9:16)</span>
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#003527]/90 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-bold border border-white/20 shadow-xs">
-                            <Layers className="w-3 h-3 text-[#82F5C1]" />
-                            <span>منشور مربع (1:1)</span>
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-md text-[#003527] text-[10px] font-extrabold border border-[#D0DBED] shadow-xs flex items-center gap-1">
-                        <Sparkles className="w-2.5 h-2.5 text-[#D97706]" />
-                        <span>Pomelli 4K</span>
+                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#003527]/90 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-bold border border-white/20 shadow-xs">
+                          <ShieldCheck className="w-3.5 h-3.5 text-[#82F5C1]" />
+                          <span>{currentPhoto?.tag || 'منتج طبي أصلي'}</span>
+                        </span>
                       </div>
 
                       {/* Bottom Description Overlay */}
@@ -361,24 +279,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="text-[11px] text-white/90 line-clamp-2 mt-0.5">
                           {currentPhoto?.subtitle}
                         </div>
-                        <div className="text-[10px] text-[#82F5C1] font-semibold mt-1">
-                          {currentPhoto?.dimensions ? `📐 أبعاد التصميم: ${currentPhoto.dimensions}` : 'دقة تصوير سريرية فائقة 4K'}
-                        </div>
+                        {currentPhoto?.clinicalFunction && (
+                          <div className="text-[10px] text-[#82F5C1] font-semibold mt-1 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#82F5C1]" />
+                            <span>الوظيفة السريرية: {currentPhoto.clinicalFunction}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Thumbnails Row with Miniature Platform Badges */}
+                  {/* Thumbnails Row */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[11px] text-[#707974]">
-                      <span>انقري على أي صورة لعرض المقاس والتفاصيل:</span>
+                      <span>انقري على أي صورة لمعاينة المستلزمات الطبية:</span>
                       <span className="font-semibold text-[#003527]">
-                        {activePhotoIndex + 1} من {filteredGallery.length}
+                        {activePhotoIndex + 1} من {allGallery.length}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-24 overflow-y-auto p-1">
-                      {filteredGallery.map((item, idx) => {
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-24 overflow-y-auto p-1">
+                      {allGallery.map((item, idx) => {
                         const isSelected = activePhotoIndex === idx;
                         return (
                           <button
@@ -397,10 +318,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                               className="w-full h-full object-cover"
                               loading="lazy"
                             />
-                            {/* Ratio Tag Badge */}
-                            <span className="absolute top-0.5 right-0.5 text-[8px] font-extrabold px-1 rounded bg-black/70 text-white font-mono">
-                              {item.aspectRatio}
-                            </span>
                           </button>
                         );
                       })}
@@ -411,8 +328,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <div className="p-2.5 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-xs text-[#065F46] flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 shrink-0 text-[#059669] mt-0.5" />
                     <div>
-                      <strong>جاهز للنشر والاستخدام: </strong>
-                      <span>{currentPhoto?.platformLabel || 'صور Pomelli AI تم إنشاؤها خصيصاً بنسب الأبعاد الدقيقة لكل منصة وتطبيق.'}</span>
+                      <strong>المعايير السريرية المعتمدة: </strong>
+                      <span>مستلزمات طبية أصلية 100% معقمة ومحكمة الغلق لحماية موضع الجراحة من التلوث وتسهيل التعافي الآمن.</span>
                     </div>
                   </div>
 
@@ -422,15 +339,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Bottom Quick Action Box inside Media Card */}
               <div className="p-3 bg-[#F8F9FF] border-t border-[#E2ECE6] flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 text-xs text-[#003527] font-bold">
-                  <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-                  <span>كود الخصم الفوري HT10</span>
+                  <Sparkles className="w-3.5 h-3.5 text-[#059669]" />
+                  <span>استشارة سريرية مجانية متاحة الآن</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => onOpenLeadModal()}
                   className="bg-[#064E3B] hover:bg-[#003527] text-white py-2 px-3.5 rounded-xl font-bold text-xs shadow-xs transition-all cursor-pointer active:scale-98"
                 >
-                  طلب البروتوكول مع الاستشارة
+                  استشيري أخصائية التعافي
                 </button>
               </div>
 

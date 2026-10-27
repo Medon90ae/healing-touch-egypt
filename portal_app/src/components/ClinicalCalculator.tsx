@@ -197,16 +197,16 @@ export const ClinicalCalculator: React.FC<ClinicalCalculatorProps> = ({
                   onClick={() => onSelectBundleAndOpenModal(recommendation.recommendedBundleId)}
                   className="w-full bg-[#064E3B] hover:bg-[#003527] text-white py-3.5 px-4 rounded-xl font-bold text-sm text-center shadow-md shadow-[#064E3B]/15 transition-all duration-200 cursor-pointer active:scale-98 flex items-center justify-center gap-2"
                 >
-                  <span>تأكيد الطلب وحجز الاستشارة مجاناً</span>
+                  <span>استشيري أخصائية التعافي حول هذه النتيجة</span>
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <p className="text-[11px] text-center text-[#707974]">
                   استشارة هاتفية وطبية مجانية من أخصائية التعافي لتوضيح طريقة الاستخدام
                 </p>
                 <div className="flex items-center justify-center gap-2 text-[11px] text-[#059669] font-medium">
-                  <span>شحن سريع ومغلف لكافة المحافظات</span>
+                  <span>متابعة سريرية متخصصة وإجابة لكافة الاستفسارات</span>
                   <span>•</span>
-                  <span>معاينة وفحص قبل الاستلام</span>
+                  <span>خصوصية تامة لبيانات الاستشارة</span>
                 </div>
               </div>
             </div>

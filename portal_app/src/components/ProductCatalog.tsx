@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PackageCheck, ShieldCheck, Check, Sparkles, ArrowLeft, Tag, Eye } from 'lucide-react';
+import { PackageCheck, ShieldCheck, Check, Sparkles, ArrowLeft } from 'lucide-react';
 import { Campaign } from '../types/campaign';
 import { useInView } from '../hooks/useInView';
 
@@ -28,16 +28,16 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E6EEFF] text-[#003527] text-xs sm:text-sm font-semibold mb-3 border border-[#D0DBED]">
             <PackageCheck className="w-4 h-4 text-[#059669]" />
-            <span>باقات التعافي المعتمدة والأسعار</span>
+            <span>البروتوكولات السريرية والمستلزمات المعتمدة</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#003527] mb-3">
-            اختاري باقة التعافي المناسبة لمرحلة جرحك
+            المستلزمات الطبية المعتمدة وبروتوكولات التعافي
           </h2>
           <p className="text-sm sm:text-base text-[#404944]">
-            جميع المنتجات الطبية معقمة ومحكمة الغلق مصنعياً، خالية من اللاتكس ومسجلة طبياً. الشحن سريع ومغلف لكافة محافظات مصر والدفع عند الاستلام بعد المعاينة.
+            جميع المستلزمات الطبية معقمة ومحكمة الغلق مصنعياً، خالية من اللاتكس ومسجلة طبياً. نوفر استشارات ومتابعة سريرية متخصصة ومجانية عبر واتساب لمساعدتك في اختيار ما يلائم حالتك بدقة.
           </p>
 
-          {/* Toggle between Bundles and Individual Products */}
+          {/* Toggle between Clinical Protocols and Verified Supplies */}
           <div className="mt-6 inline-flex p-1 rounded-xl bg-[#F3F7F5] border border-[#E2ECE6]">
             <button
               type="button"
@@ -48,7 +48,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   : 'text-[#404944] hover:text-[#003527]'
               }`}
             >
-              باقات البروتوكول المتكاملة (الأكثر توفيراً)
+              البروتوكولات السريرية الموصى بها
             </button>
             <button
               type="button"
@@ -59,16 +59,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   : 'text-[#404944] hover:text-[#003527]'
               }`}
             >
-              المنتجات والملحقات الفردية
+              المستلزمات الطبية المعتمدة
             </button>
           </div>
         </div>
 
-        {/* Tab 1: Bundles */}
+        {/* Tab 1: Recommended Clinical Regimens */}
         {activeTab === 'bundles' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
             {campaign.bundles.map((bundle, bIdx) => {
-              const discountAmount = bundle.originalPriceEGP - bundle.priceEGP;
               const delayClass = delayClasses[bIdx % delayClasses.length];
               return (
                 <div
@@ -96,17 +95,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       alt={bundle.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80';
-                      }}
                     />
                     <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-[#003527] text-[11px] font-bold shadow-xs border border-[#D0DBED] flex items-center gap-1">
                       <ShieldCheck className="w-3.5 h-3.5 text-[#059669]" />
-                      <span>غلاف مصنعي محكم</span>
+                      <span>غلاف مصنعي معقم</span>
                     </div>
 
                     <div className="absolute bottom-2.5 right-2.5">
-                      <span className="text-[11px] font-bold text-[#D97706] bg-white/95 backdrop-blur-xs px-2.5 py-0.5 rounded-full border border-[#FFB77D] shadow-xs">
+                      <span className="text-[11px] font-bold text-[#064E3B] bg-white/95 backdrop-blur-xs px-2.5 py-0.5 rounded-full border border-[#82F5C1] shadow-xs">
                         {bundle.badge}
                       </span>
                     </div>
@@ -116,7 +112,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     {/* Badge and Title */}
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <span className="text-xs font-semibold text-[#059669]">
-                        {bundle.savingsText}
+                        {bundle.badge}
                       </span>
                       {!bundle.isPopular && (
                         <span className="text-[11px] text-[#707974] bg-[#F3F7F5] px-2 py-0.5 rounded">
@@ -132,28 +128,20 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       {bundle.subtitle}
                     </p>
 
-                    {/* Pricing */}
-                    <div className="p-4 rounded-xl bg-[#F3F7F5] border border-[#E2ECE6] mb-5">
-                      <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-3xl font-extrabold text-[#003527]">
-                          {bundle.priceEGP}
-                        </span>
-                        <span className="text-sm font-bold text-[#059669]">ج.م</span>
-                        <span className="text-sm text-[#707974] line-through mr-2">
-                          {bundle.originalPriceEGP} ج.م
-                        </span>
+                    {/* Clinical Synergy Explanation */}
+                    <div className="p-3.5 rounded-xl bg-[#F3F7F5] border border-[#E2ECE6] mb-5">
+                      <div className="text-xs font-bold text-[#064E3B] mb-1 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#059669]" />
+                        <span>التكامل والفاعلية السريرية:</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-[#059669] font-semibold">
-                        <span>وفرتِ {discountAmount} ج.م</span>
-                        <span className="text-[11px] text-[#D97706] bg-white px-2 py-0.5 rounded border border-[#FFB77D]">
-                          كود HT10 يخصم 10% إضافية!
-                        </span>
-                      </div>
+                      <p className="text-xs text-[#121C2A] leading-relaxed">
+                        {bundle.clinicalSynergy}
+                      </p>
                     </div>
 
                     {/* Items included */}
                     <div className="space-y-2.5 mb-6">
-                      <div className="text-xs font-bold text-[#003527]">محتويات الباقة:</div>
+                      <div className="text-xs font-bold text-[#003527]">مكونات البروتوكول السريري:</div>
                       {bundle.items.map((item, i) => (
                         <div key={i} className="flex items-start gap-2 text-xs text-[#121C2A]">
                           <Check className="w-4 h-4 text-[#059669] shrink-0 mt-0.5" />
@@ -174,11 +162,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                           : 'bg-[#F3F7F5] hover:bg-[#E2ECE6] text-[#003527] border border-[#E2ECE6]'
                       }`}
                     >
-                      <span>تأكيد الطلب وحجز الاستشارة مجاناً</span>
+                      <span>استشيري أخصائية التعافي حول هذا البروتوكول</span>
                       <ArrowLeft className="w-4 h-4 rtl:rotate-0" />
                     </button>
                     <p className="text-[11px] text-center text-[#707974] mt-2">
-                      شحن سريع ومغلف • فحص الشحنة قبل الدفع
+                      استشارة مجانية عبر واتساب • فحص الشحنة قبل الاستلام
                     </p>
                   </div>
                 </div>
@@ -187,9 +175,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
         )}
 
-        {/* Tab 2: Individual Products */}
+        {/* Tab 2: Verified Medical Supplies */}
         {activeTab === 'individual' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {campaign.products.map((prod, pIdx) => (
               <div
                 key={prod.id}
@@ -204,9 +192,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     alt={prod.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80';
-                    }}
                   />
                   <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-xs text-[11px] font-bold text-[#059669] shadow-xs border border-[#E2ECE6]">
                     {prod.brand}
@@ -229,7 +214,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     </p>
 
                     <div className="p-3 bg-[#F3F7F5] rounded-xl border border-[#E2ECE6] mb-4 text-xs text-[#064E3B] font-medium">
-                      <span className="font-bold">الفائدة السريرية: </span>
+                      <span className="font-bold">الفائدة والوظيفة السريرية: </span>
                       {prod.clinicalBenefit}
                     </div>
 
@@ -245,30 +230,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
 
                   <div className="pt-4 border-t border-[#E2ECE6]">
-                    <div className="flex items-baseline justify-between mb-3">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-2xl font-bold text-[#003527]">
-                          {prod.priceEGP}
-                        </span>
-                        <span className="text-xs font-semibold text-[#059669]">ج.م</span>
-                        <span className="text-xs text-[#707974] line-through mr-1">
-                          {prod.originalPriceEGP} ج.م
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-[#059669] font-bold bg-[#E6EEFF] px-2 py-0.5 rounded">
-                        وفرتِ {prod.originalPriceEGP - prod.priceEGP} ج.م
-                      </span>
-                    </div>
-
                     <button
                       type="button"
                       onClick={() => onOpenLeadModal(campaign.bundles[0]?.id)}
                       className="w-full bg-[#064E3B] hover:bg-[#003527] text-white py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all cursor-pointer active:scale-98"
                     >
-                      تأكيد الطلب وحجز الاستشارة مجاناً
+                      طلب استشارة حول هذا المستلزم
                     </button>
                     <p className="text-[10px] text-center text-[#707974] mt-1.5">
-                      شحن سريع ومغلف بإحكام لكافة المحافظات
+                      مستلزمات طبية أصلية 100% معقمة ومحكمة الغلق
                     </p>
                   </div>
                 </div>
