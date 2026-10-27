@@ -12,3 +12,7 @@ media_assets/generated_reels/
 media_assets/manual_inbox/*.mp4
 media_assets/manual_inbox/*.m4a
 *.pyc
+
+media_assets/ready_to_publish/*.mp4
+media_assets/ready_to_publish/*.m4a
+

@@ -991,6 +991,22 @@ def generate_all_multi_angle_product_lps() -> list:
                 </div>
                 """
 
+            audio_block = ""
+            audio_name = spec.get("audio_fallback", "")
+            if not audio_name and spec.get("category"):
+                audio_name = f"campaign_{spec['category']}_audio.m4a"
+            if audio_name and (DOCS_DIR / "assets" / audio_name).exists():
+                audio_rel_path = f"../assets/{audio_name}"
+                audio_block = f'''
+                <div style="background:#0F172A; border-radius:var(--radius); padding:20px; margin-bottom:32px; color:#fff; text-align:center;">
+                  <div style="color:#6EE7B7; font-weight:800; font-size:0.95rem; margin-bottom:12px;">🎙️ الشرح الصوتي السريري المعتمد</div>
+                  <audio controls style="width:100%; max-width:600px;">
+                    <source src="{audio_rel_path}" type="audio/mp4">
+                    متصفحك لا يدعم تشغيل الصوت المباشر.
+                  </audio>
+                </div>
+                '''
+
             wa_direct_link = f"https://wa.me/{OFFICIAL_WA_PHONE}?text={urllib.parse.quote(f'أهلاً بكِ، قرأت الدليل السريري حول ({spec["title"]}) في موقع هيلينج تاتش، وأود استشارة سريرية مجانية حول حالتي للتعافي (كود المتابعة: {OFFICIAL_PROMO_CODE}).')}"
 
             html_content = f"""<!DOCTYPE html>

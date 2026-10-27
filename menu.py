@@ -69,12 +69,10 @@ def run_option_1():
     except Exception as e:
         print(f"[!] خطأ في رفع GitHub: {e}")
 
-    print("\n[*] [5/5] جاري بث المنشورات والتوجيهات السريرية إلى منصات التواصل الاجتماعي (Facebook, Reddit, Blogger)...")
-    subprocess.run([VENV_PYTHON, "antigravity_social_automation.py", "--mode", "publish"], cwd=str(BASE_DIR))
-
-    # تجهيز حزمة النشر الجاهزة السريعة لريديت وبلوجر
+    print("\n[*] [5/5] جاري تجهيز حزمة النشر الشاملة (YouTube + Blogger + Reddit) وتحديث فهرس الصفحات...")
     try:
         subprocess.run([VENV_PYTHON, "scripts/build_ready_to_publish_pack.py"], cwd=str(BASE_DIR), check=False)
+        subprocess.run([VENV_PYTHON, "scripts/build_landing_pages_directory.py"], cwd=str(BASE_DIR), check=False)
     except Exception:
         pass
 
