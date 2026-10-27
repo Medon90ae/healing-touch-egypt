@@ -1241,31 +1241,25 @@
 
     /* تفعيل الـ Micro-Popup Drawer (R3) */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
-      if (contextTopic === 'whatsapp' || contextTopic === 'instagram') {
-        const tmp = contextTopic;
-        contextTopic = preferredChannel;
-        preferredChannel = tmp;
+      const targetTopic = contextTopic || document.title;
+      const targetWaUrl = directWaUrl || buildDynamicWaUrl(targetTopic);
+      if (preferredChannel === 'whatsapp' || !preferredChannel) {
+        try {
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(TRACKING_ENDPOINT, JSON.stringify({
+              channel: 'whatsapp',
+              topic: targetTopic,
+              lead_type: 'direct_whatsapp_click',
+              timestamp: new Date().toISOString()
+            }));
+          }
+        } catch(e) {}
+        window.open(targetWaUrl, '_blank');
+        return false;
       }
-      currentPendingContext = {
-        topic: contextTopic || document.title,
-        channel: preferredChannel || 'whatsapp',
-        directWaUrl: directWaUrl || buildDynamicWaUrl(contextTopic || document.title)
-      };
-
-      // نسخ كود المتابعة تلقائياً للحافظة
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(PROMO_CODE).catch(() => {});
-      }
-
-      const errEl = document.getElementById('lead-form-error');
-      if (errEl) errEl.style.display = 'none';
-
-      const modal = document.getElementById('promo-lead-modal');
-      if (modal) {
-        modal.style.display = 'flex';
-        const nameInput = document.getElementById('lead-patient-name');
-        if (nameInput) setTimeout(() => nameInput.focus(), 200);
-      } else {
+      window.open(directWaUrl || IG_URL, '_blank');
+      return false;
+    } else {
         // في حالة عدم وجود المودال، يتم توجيهه إلى صفحة تأكيد الاستشارة wa.html لتسجيل البيانات أولاً
         const targetCase = "general";
         window.location.href = "wa.html?case=" + encodeURIComponent(targetCase) + "&topic=" + encodeURIComponent(contextTopic || document.title);
@@ -1407,11 +1401,11 @@
       🌿 هيلينج تاتش مصر | Healing Touch
     </a>
     <nav class="nav-links">
-      <a href="../portal/" style="background:#059669;color:#ffffff;padding:5px 12px;border-radius:20px;font-weight:bold;">🩺 بوابة البروتوكولات والحاسبة</a>
-      <a href="../index.html#guided-triage">🧭 مُوجِّه الحالات</a>
-      <a href="../index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
-      <a href="../index.html#products-section">🛡️ المستلزمات المعتمدة</a>
-      <a href="javascript:void(0)" onclick="openPromoDrawer('استشارة مجانية عامة', 'whatsapp'); return false;" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
+      <a href="../portal/" style="background:#059669;color:#ffffff;padding:6px 14px;border-radius:20px;font-weight:bold;">🩺 دليلك التفاعلي وحاسبة التعافي</a>
+      <a href="../index.html#guided-triage">🧭 استكشف نوع عمليتك</a>
+      <a href="../index.html#knowledge-hub-section">📚 مقالات وأدلة التعافي</a>
+      <a href="../index.html#products-section">🛡️ المنتجات الطبية المعتمدة</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29." target="_blank" rel="noopener" class="nav-cta-chat">💬 تواصل واتساب مجاناً</a>
     </nav>
   </div>
 </header>
@@ -1431,17 +1425,12 @@
     <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.85rem;">شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)</h1>
 
     
-    <div class="quick-social-share-bar">
-      <span class="q-share-label">📤 شارك على منصات التواصل (مع الهاشتاجات تلقائياً):</span>
-      <div class="q-share-buttons">
-        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📘 فيسبوك</button>
-        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">💬 واتساب</button>
-        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📸 إنستجرام</button>
-        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🎵 تيك توك</button>
-        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">✈️ تيليجرام</button>
-        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🐦 إكس</button>
-        <button type="button" class="share-btn share-copy-all" onclick="copyHashtagsToClipboard('شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">📋 نسخ البوست + الهاشتاجات</button>
-        <button type="button" class="share-btn share-copy-tags" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">#️⃣ نسخ الهاشتاجات فقط</button>
+    <div class="patient-share-card" style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:16px 20px; margin:24px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <span style="font-weight:700; color:#065F46; font-size:0.95rem;">💬 شارك هذا الدليل الطبي مع من يهمه الأمر:</span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="https://api.whatsapp.com/send?text=%D8%B4%D8%B1%D9%8A%D8%B7%20%D9%85%D9%8A%D9%83%D8%B1%D9%88%D8%A8%D9%88%D8%B1%20%D8%AA%D8%A7%D9%86%20%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%8A%203M%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%20%283M%20Micropore%20Tan%20Tape%201533-0%29%20https%3A//medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html" target="_blank" rel="noopener" style="background:#25D366; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">واتساب</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html" target="_blank" rel="noopener" style="background:#1877F2; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">فيسبوك</a>
+        <a href="https://t.me/share/url?url=https%3A//medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html&text=%D8%B4%D8%B1%D9%8A%D8%B7%20%D9%85%D9%8A%D9%83%D8%B1%D9%88%D8%A8%D9%88%D8%B1%20%D8%AA%D8%A7%D9%86%20%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%8A%203M%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%20%283M%20Micropore%20Tan%20Tape%201533-0%29" target="_blank" rel="noopener" style="background:#0088cc; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">تيليجرام</a>
       </div>
     </div>
     
@@ -1603,17 +1592,17 @@
       <div class="sibling-links-list">
         
         <a href="../articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html" class="sibling-link-item">
-          📖 الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore
+          📖 تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟
         </a>
         
 
         <a href="../articles/3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html" class="sibling-link-item">
-          📖 بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore
+          📖 الطريقة الصحيحة لإزالة وتغيير بلاستر الأنف دون تهيج الجلد الحساس أو تحريك الغضاريف
         </a>
         
 
         <a href="../articles/3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html" class="sibling-link-item">
-          📖 الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore
+          📖 حماية ندبة الرقبة وتجميل الثدي من أشعة الشمس والتصبغات بالبلاستر المسامي
         </a>
         
       </div>
@@ -1647,49 +1636,6 @@
         
     </div>
 
-    
-    <div class="hashtags-discovery-box">
-      <div class="hashtags-header">
-        <h4>📢 مشاركة على منصات التواصل والهاشتاجات المستهدفة (29 هاشتاج للعملاء المحتملين):</h4>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">
-            📋 نسخ البوست + الرابط + كل الهاشتاجات
-          </button>
-          <button type="button" class="btn-copy-hashtags" style="background:#059669;" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">
-            #️⃣ نسخ الهاشتاجات فقط
-          </button>
-        </div>
-      </div>
-      <p class="hashtags-subtext">اضغط على أي منصة بالأسفل وسيتم <strong>نسخ النص والرابط والهاشتاجات تلقائياً</strong> وفتح المنصة للمشاركة الفورية:</p>
-
-      <div class="q-share-buttons" style="margin-bottom:18px;">
-        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📘 مشاركة على فيسبوك</button>
-        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">💬 مشاركة في واتساب</button>
-        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📸 نسخ ومشاركة إنستجرام</button>
-        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🎵 نسخ ومشاركة تيك توك</button>
-        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">✈️ مشاركة في تيليجرام</button>
-        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)', 'شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/products/3m-micropore-tan-tape-1533-0.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🐦 مشاركة على إكس (X)</button>
-      </div>
-
-      <div class="hashtags-categories-grid">
-        <div class="hashtag-category-group">
-          <strong>🏥 التخصص والجراحة:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#جراحة_تجميل_مصر</span> <span class="tag-pill">#دكتور_تجميل_مصر</span> <span class="tag-pill">#عمليات_مصر</span> <span class="tag-pill">#تجميل_الانف_مصر</span> <span class="tag-pill">#عملية_تجميل_الانف</span> <span class="tag-pill">#جراحة_الانف</span> <span class="tag-pill">#دكتور_تجميل_انف</span> <span class="tag-pill">#غضاريف_الانف</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>🩹 المشكلة والتعافي:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#تورم_الانف_بعد_عملية_التجميل</span> <span class="tag-pill">#تورم_الانف_بعد_ضربه</span> <span class="tag-pill">#تورم_الانف_بعد_السقوط</span> <span class="tag-pill">#تورم_الانف_بعد_العملية</span> <span class="tag-pill">#علاج_الندبات</span> <span class="tag-pill">#اثار_العمليات_الجراحية</span> <span class="tag-pill">#تسطيح_الندبات</span> <span class="tag-pill">#الكلويد</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>👩‍👧 مجتمعات الأمهات والتجميل:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#مامي_جديدة</span> <span class="tag-pill">#تجارب_بنات_مصر</span> <span class="tag-pill">#امهات_مصر</span> <span class="tag-pill">#صحة_المراة_مصر</span> <span class="tag-pill">#تجارب_عمليات_التجميل</span> <span class="tag-pill">#فضفضة_بنات_مصر</span> <span class="tag-pill">#عيادات_مصر</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>🛡️ العلامة والمنتج الأصلي:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#هيلينج_تاتش_مصر</span> <span class="tag-pill">#كود_HT10</span> <span class="tag-pill">#مستلزمات_طبية_مصر</span> <span class="tag-pill">#بلاستر_3m_البيج</span> <span class="tag-pill">#شريط_ميكروبور_الاصلي</span> <span class="tag-pill">#بلاستر_الانف_البيج</span></div>
-        </div>
-      </div>
-    </div>
     
   </div>
 </div>

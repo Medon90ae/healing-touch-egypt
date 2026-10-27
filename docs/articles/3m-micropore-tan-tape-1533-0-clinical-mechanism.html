@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore | هيلينج تاتش مصر</title>
-  <meta name="description" content="كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.">
-  <meta name="keywords" content="شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)، علاج الندبات، تعافي الجراحة، تجميل الأنف، تورم الانف بعد عملية التجميل، تورم الانف بعد ضربه، تورم الانف بعد السقوط، تورم الانف بعد العملية، تورم الانف بعد البوتكس، لصقات الانف بعد العمليه">
+  <title>تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟ | هيلينج تاتش مصر</title>
+  <meta name="description" content="كيف يعمل الضغط الخفيف المتوازن لشريط 3M Micropore Tan في تصريف الوذمة فوق أرنبة الأنف ومنع تشكل النسيج التليفي بعد التجميل.">
+  <meta name="keywords" content="شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)، دليل التعافي السريري، تجميل الأنف، تورم الانف بعد عملية التجميل • تورم الانف بعد ضربه • تورم الانف بعد السقوط • تورم الانف بعد العملية • تورم الانف بعد البوتكس • لصقات الانف بعد العمليه">
   <link rel="canonical" href="https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore | هيلينج تاتش مصر">
-  <meta property="og:description" content="كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.">
+  <meta property="og:title" content="تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟ | هيلينج تاتش مصر">
+  <meta property="og:description" content="كيف يعمل الضغط الخفيف المتوازن لشريط 3M Micropore Tan في تصريف الوذمة فوق أرنبة الأنف ومنع تشكل النسيج التليفي بعد التجميل.">
   <meta property="og:url" content="https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html">
   <meta property="og:site_name" content="هيلينج تاتش مصر">
   <meta property="og:locale" content="ar_EG">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore">
-  <meta name="twitter:description" content="كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.">
+  <meta name="twitter:title" content="تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟">
+  <meta name="twitter:description" content="كيف يعمل الضغط الخفيف المتوازن لشريط 3M Micropore Tan في تصريف الوذمة فوق أرنبة الأنف ومنع تشكل النسيج التليفي بعد التجميل.">
   <style>
     :root {
       --teal-deep: #0D4A4D;
@@ -1242,31 +1242,25 @@
 
     /* تفعيل الـ Micro-Popup Drawer (R3) */
     function openPromoDrawer(contextTopic, preferredChannel, directWaUrl) {
-      if (contextTopic === 'whatsapp' || contextTopic === 'instagram') {
-        const tmp = contextTopic;
-        contextTopic = preferredChannel;
-        preferredChannel = tmp;
+      const targetTopic = contextTopic || document.title;
+      const targetWaUrl = directWaUrl || buildDynamicWaUrl(targetTopic);
+      if (preferredChannel === 'whatsapp' || !preferredChannel) {
+        try {
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(TRACKING_ENDPOINT, JSON.stringify({
+              channel: 'whatsapp',
+              topic: targetTopic,
+              lead_type: 'direct_whatsapp_click',
+              timestamp: new Date().toISOString()
+            }));
+          }
+        } catch(e) {}
+        window.open(targetWaUrl, '_blank');
+        return false;
       }
-      currentPendingContext = {
-        topic: contextTopic || document.title,
-        channel: preferredChannel || 'whatsapp',
-        directWaUrl: directWaUrl || buildDynamicWaUrl(contextTopic || document.title)
-      };
-
-      // نسخ كود المتابعة تلقائياً للحافظة
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(PROMO_CODE).catch(() => {});
-      }
-
-      const errEl = document.getElementById('lead-form-error');
-      if (errEl) errEl.style.display = 'none';
-
-      const modal = document.getElementById('promo-lead-modal');
-      if (modal) {
-        modal.style.display = 'flex';
-        const nameInput = document.getElementById('lead-patient-name');
-        if (nameInput) setTimeout(() => nameInput.focus(), 200);
-      } else {
+      window.open(directWaUrl || IG_URL, '_blank');
+      return false;
+    } else {
         // في حالة عدم وجود المودال، يتم توجيهه إلى صفحة تأكيد الاستشارة wa.html لتسجيل البيانات أولاً
         const targetCase = "general";
         window.location.href = "wa.html?case=" + encodeURIComponent(targetCase) + "&topic=" + encodeURIComponent(contextTopic || document.title);
@@ -1391,7 +1385,7 @@
     });
     </script>
   <script type="application/ld+json">
-  [{"@context": "https://schema.org", "@type": "Article", "headline": "الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore", "description": "كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "author": {"@type": "Organization", "name": "Healing Touch Egypt"}, "publisher": {"@type": "Organization", "name": "Healing Touch Egypt"}}, {"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore", "description": "كيف تعمل الآلية الحيوية لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) في تسريع تعافي الأنسجة ومنع التضخم الندبي وفق دراسات 2026 الموثقة.", "keywords": "شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)، علاج الندبات، تعافي الجراحة، تجميل الأنف، تورم الانف بعد عملية التجميل، تورم الانف بعد ضربه، تورم الانف بعد السقوط، تورم الانف بعد العملية، تورم الانف بعد البوتكس، لصقات الانف بعد العمليه", "datePublished": "2026-10-27", "dateModified": "2026-10-27"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "لماذا يصر جراحو الأنف على كود 3M 1533-0 البيج تحديداً؟", "acceptedAnswer": {"@type": "Answer", "text": "لأنه مصمم بمسام مجهرية خاصة تسمح بتهوية الجلد الدهني للأرنبة وتمنع احتباس الإفرازات، كما أن عرضه (1.25 سم) مثالي للمناورة وتشكيل الضغط على الغضاريف دون طي غير متناسق."}}, {"@type": "Question", "name": "كم من الوقت أحتاج للاستمرار في وضع بلاستر الأنف بعد فك الجبيرة؟", "acceptedAnswer": {"@type": "Answer", "text": "تختلف المدة بحسب سماكة الجلد وطبيعة الجراحة؛ فالجلد الرقيق يحتاج من 4 إلى 6 أسابيع، بينما يتطلب الجلد السميك من شهرين إلى 3 أشهر نهاراً وليلاً أو ليلاً فقط لتصريف التورم نهائياً."}}, {"@type": "Question", "name": "كيف أنزع شريط 3M البيج دون ألم أو نزع لشعر الوجه الدقيق؟", "acceptedAnswer": {"@type": "Answer", "text": "بللي الشريط بالماء الفاتر أو زيت أطفال أثناء الاستحمام حتى يلين اللاصق تماماً، ثم قشريه برفق من الأعلى للأسفل وبموازاة الجلد وليس بشده للأعلى."}}, {"@type": "Question", "name": "ما هو الرأي الطبي الصحيح بخصوص (تورم الانف بعد عملية التجميل)؟", "acceptedAnswer": {"@type": "Answer", "text": "يُعد استفسار (تورم الانف بعد عملية التجميل) من أكثر ما يبحث عنه المرضى في مصر حالياً؛ ويؤكد البروتوكول السريري أن استخدام شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) الأصلي بالطريقة الصحيحة مع الاستشارة المجانية مع أخصائية العناية بالتعافي يضمن أفضل نتائج التئام وأمان تام."}}]}, {"@context": "https://schema.org", "@type": "MedicalBusiness", "name": "Healing Touch Egypt", "url": "https://medon90ae.github.io/healing-touch-egypt", "telephone": "+201155803307"}]
+  [{"@context": "https://schema.org", "@type": "Article", "headline": "تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟", "description": "كيف يعمل الضغط الخفيف المتوازن لشريط 3M Micropore Tan في تصريف الوذمة فوق أرنبة الأنف ومنع تشكل النسيج التليفي بعد التجميل.", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "author": {"@type": "Organization", "name": "Healing Touch Egypt"}, "publisher": {"@type": "Organization", "name": "Healing Touch Egypt"}}, {"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟", "description": "كيف يعمل الضغط الخفيف المتوازن لشريط 3M Micropore Tan في تصريف الوذمة فوق أرنبة الأنف ومنع تشكل النسيج التليفي بعد التجميل.", "keywords": "شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0)، دليل التعافي السريري، تجميل الأنف، تورم الانف بعد عملية التجميل • تورم الانف بعد ضربه • تورم الانف بعد السقوط • تورم الانف بعد العملية • تورم الانف بعد البوتكس • لصقات الانف بعد العمليه", "datePublished": "2026-10-27", "dateModified": "2026-10-27"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "لماذا يصر جراحو الأنف على كود 3M 1533-0 البيج تحديداً؟", "acceptedAnswer": {"@type": "Answer", "text": "لأنه مصمم بمسام مجهرية خاصة تسمح بتهوية الجلد الدهني للأرنبة وتمنع احتباس الإفرازات، كما أن عرضه (1.25 سم) مثالي للمناورة وتشكيل الضغط على الغضاريف دون طي غير متناسق."}}, {"@type": "Question", "name": "كم من الوقت أحتاج للاستمرار في وضع بلاستر الأنف بعد فك الجبيرة؟", "acceptedAnswer": {"@type": "Answer", "text": "تختلف المدة بحسب سماكة الجلد وطبيعة الجراحة؛ فالجلد الرقيق يحتاج من 4 إلى 6 أسابيع، بينما يتطلب الجلد السميك من شهرين إلى 3 أشهر نهاراً وليلاً أو ليلاً فقط لتصريف التورم نهائياً."}}, {"@type": "Question", "name": "كيف أنزع شريط 3M البيج دون ألم أو نزع لشعر الوجه الدقيق؟", "acceptedAnswer": {"@type": "Answer", "text": "بللي الشريط بالماء الفاتر أو زيت أطفال أثناء الاستحمام حتى يلين اللاصق تماماً، ثم قشريه برفق من الأعلى للأسفل وبموازاة الجلد وليس بشده للأعلى."}}, {"@type": "Question", "name": "ما هو الرأي الطبي السريري بخصوص (تورم الانف بعد عملية التجميل)؟", "acceptedAnswer": {"@type": "Answer", "text": "تؤكد الدراسات والأدلة السريرية أن (تورم الانف بعد عملية التجميل) يرتبط مباشرة بنوع الرعاية ومرحلة الالتئام، ويساعد استخدام مستلزمات العناية المعتمدة مثل شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) والمتابعة المجانية مع أخصائي الرعاية عبر واتساب في تجنب القلق والوصول لتعافٍ صحي متناسق."}}]}, {"@context": "https://schema.org", "@type": "MedicalBusiness", "name": "Healing Touch Egypt", "url": "https://medon90ae.github.io/healing-touch-egypt", "telephone": "+201155803307"}]
   </script>
 </head>
 <body>
@@ -1408,11 +1402,11 @@
       🌿 هيلينج تاتش مصر | Healing Touch
     </a>
     <nav class="nav-links">
-      <a href="../portal/" style="background:#059669;color:#ffffff;padding:5px 12px;border-radius:20px;font-weight:bold;">🩺 بوابة البروتوكولات والحاسبة</a>
-      <a href="../index.html#guided-triage">🧭 مُوجِّه الحالات</a>
-      <a href="../index.html#knowledge-hub-section">📚 الموسوعة الطبية</a>
-      <a href="../index.html#products-section">🛡️ المستلزمات المعتمدة</a>
-      <a href="javascript:void(0)" onclick="openPromoDrawer('استشارة مجانية عامة', 'whatsapp'); return false;" class="nav-cta-chat">💬 استشارة مجانية الآن</a>
+      <a href="../portal/" style="background:#059669;color:#ffffff;padding:6px 14px;border-radius:20px;font-weight:bold;">🩺 دليلك التفاعلي وحاسبة التعافي</a>
+      <a href="../index.html#guided-triage">🧭 استكشف نوع عمليتك</a>
+      <a href="../index.html#knowledge-hub-section">📚 مقالات وأدلة التعافي</a>
+      <a href="../index.html#products-section">🛡️ المنتجات الطبية المعتمدة</a>
+      <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%20%D9%88%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%3A%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%B9%D8%A7%D9%85%D8%A9%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29." target="_blank" rel="noopener" class="nav-cta-chat">💬 تواصل واتساب مجاناً</a>
     </nav>
   </div>
 </header>
@@ -1426,23 +1420,18 @@
   <article class="article-full-box">
     <div class="art-meta-top" style="margin-bottom:14px;">
       <span class="art-cat-tag">تجميل الأنف</span>
-      <span class="art-Evidence-tag">🛡️ موثق بـ 11 مراجع سريرية من PubMed وNCBI</span>
+      <span class="art-Evidence-tag">🛡️ موثق بـ 4 مراجع سريرية من PubMed وNCBI</span>
     </div>
 
-    <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.8rem; line-height:1.4;">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore</h1>
+    <h1 style="color:var(--teal-deep); margin-top:0; font-size:1.8rem; line-height:1.4;">تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟</h1>
 
     
-    <div class="quick-social-share-bar">
-      <span class="q-share-label">📤 شارك على منصات التواصل (مع الهاشتاجات تلقائياً):</span>
-      <div class="q-share-buttons">
-        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📘 فيسبوك</button>
-        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">💬 واتساب</button>
-        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📸 إنستجرام</button>
-        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🎵 تيك توك</button>
-        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">✈️ تيليجرام</button>
-        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🐦 إكس</button>
-        <button type="button" class="share-btn share-copy-all" onclick="copyHashtagsToClipboard('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 الدليل الكامل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">📋 نسخ البوست + الهاشتاجات</button>
-        <button type="button" class="share-btn share-copy-tags" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">#️⃣ نسخ الهاشتاجات فقط</button>
+    <div class="patient-share-card" style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:16px 20px; margin:24px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <span style="font-weight:700; color:#065F46; font-size:0.95rem;">💬 شارك هذا الدليل الطبي مع من يهمه الأمر:</span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="https://api.whatsapp.com/send?text=%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A8%D8%B9%D8%AF%20%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D8%A7%D9%84%D8%AC%D8%A8%D9%8A%D8%B1%D8%A9%3A%20%D9%83%D9%8A%D9%81%20%D9%8A%D9%85%D9%86%D8%B9%20%D8%A7%D9%84%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B3%D9%88%D8%A7%D8%A6%D9%84%20%D9%88%D8%A7%D9%84%D8%AA%D9%88%D8%B1%D9%85%D8%9F%20https%3A//medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html" target="_blank" rel="noopener" style="background:#25D366; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">واتساب</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html" target="_blank" rel="noopener" style="background:#1877F2; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">فيسبوك</a>
+        <a href="https://t.me/share/url?url=https%3A//medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html&text=%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A8%D8%B9%D8%AF%20%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D8%A7%D9%84%D8%AC%D8%A8%D9%8A%D8%B1%D8%A9%3A%20%D9%83%D9%8A%D9%81%20%D9%8A%D9%85%D9%86%D8%B9%20%D8%A7%D9%84%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B3%D9%88%D8%A7%D8%A6%D9%84%20%D9%88%D8%A7%D9%84%D8%AA%D9%88%D8%B1%D9%85%D8%9F" target="_blank" rel="noopener" style="background:#0088cc; color:#fff; text-decoration:none; padding:7px 15px; border-radius:20px; font-weight:700; font-size:0.88rem; display:inline-flex; align-items:center; gap:5px;">تيليجرام</a>
       </div>
     </div>
     
@@ -1450,15 +1439,15 @@
     <div class="takeaways-box">
       <h3>⏱️ الخلاصة السريرية السريعة (في 30 ثانية):</h3>
       <ul>
-        <li>توفير بيئة ترطيب مثالية تمنع التكاثر العشوائي لألياف الكولاجين بعد التئام السطح.</li>
-<li>تطبيق ضغط ميكانيكي هادئ ومستمر يفرد الندبة ويسطح حوافها الجراحية بنسبة تتجاوز 85%.</li>
-<li>حماية الأنسجة حديثة الالتئام من البكتيريا الخارجية والتلوث والاحتكاك المستمر بالملابس.</li>
+        <li>تثبيت الجلد فوق الهيكل الغضروفي الجديد لمنع تشكل مساحات ميتة متورمة.</li>
+<li>لون بيج طبيعي يتماشى مع لون البشرة ويتيح الخروج اليومي بأريحية تامة.</li>
+<li>مادة مسامية لا تسد المسام وتسمح بتنفس الأنسجة دون تعرق تحت الشريط.</li>
       </ul>
     </div>
 
-    <p>بعد الخضوع للجراحة، تبدأ مرحلة إعادة تشكيل الأنسجة (Remodeling Phase) والتي تستمر من عدة أسابيع إلى عدة أشهر. في هذه المرحلة الحساسة، تكون الخلايا الليفية شديدة الحساسية لفقدان الرطوبة والاحتكاك الخارجي، مما قد يدفعها لإفراز كولاجين كثيف وغير منتظم يؤدي إلى تشكل ندبات متضخمة أو كلويد بارز. هنا تبرز الأهمية الطبية القصوى لاستخدام شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0).</p>
-<p>تعتمد الفلسفة السريرية الحديثة لعام 2026 على العزل الإيجابي والترطيب الميكانيكي المنتظم. أثبتت الدراسات المقارنة في مجلات الجراحة التجميلية الدولية أن توفير حاجز متوازن يقلل من تدفق الدم الزائد إلى موقع الجرح، مما يخمد الاحمرار ويهدئ الحكة العصبية المزعجة ويمنع ارتفاع حواف الجلد عن السطح الطبيعي.</p>
-<p>الاستخدام الطبي المنظم لـ شريط ميكروبور تان الجراحي 3M الأصلي (3M Micropore Tan Tape 1533-0) يمنح المريض فرصة استثنائية لحماية نتيجة جراحته دون اللجوء لجلسات الليزر المكلفة لاحقاً. الحصول على استشارة مجانية مع المختصة عبر الاستشارة المجانية يتيح لكِ تحديد التوقيت المثالي للبدء وفق نوع الخياطة الجراحية وطبيعة جرحكِ الخاصة.</p>
+    <p>بعد إزالة الجبيرة الجراحية للأنف (Rhinoplasty Cast)، يكون الجلد مفصولاً نسبياً عن الهيكل العظمي والغضروفي المعدل حديثاً، مما يجعله عرضة لتجمع السوائل اللمفاوية (Supratip Dead Space Edema) التي إذا أهملت قد تتحول إلى تليف دائم.</p>
+<p>يقوم بلاستر 3M Micropore Tan 1533-0 البيج بتطبيق ضغط ميكانيكي منتظم ومحسوب يساعد الأنسجة الجلدية على الانكماش والالتصاق بدقة فوق الغضاريف، وتفريغ الوذمة التورمية باتجاه الأوعية اللمفاوية للوجه.</p>
+<p>صُنع الشريط من ألياف ورقية غير منسوجة فائقة المسامية ومضادة للحساسية، ولونه البيج يجعله خفياً وطبيعياً على الوجه مما يتيح للمريض العودة لعمله وحياته الاجتماعية دون حرج.</p>
 
     
     <div class="svg-timeline-wrapper">
@@ -1541,12 +1530,12 @@
       <div class="sibling-links-list">
         
         <a href="3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html" class="sibling-link-item">
-          📖 بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ بلاستر الأنف الطبي البيج الأصلي 3M Micropore
+          📖 الطريقة الصحيحة لإزالة وتغيير بلاستر الأنف دون تهيج الجلد الحساس أو تحريك الغضاريف
         </a>
         
 
         <a href="3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html" class="sibling-link-item">
-          📖 الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج بلاستر الأنف الطبي البيج الأصلي 3M Micropore
+          📖 حماية ندبة الرقبة وتجميل الثدي من أشعة الشمس والتصبغات بالبلاستر المسامي
         </a>
         
       </div>
@@ -1567,74 +1556,24 @@
       <h3>هل لديكِ سؤال يخص مرحلة جرحكِ أو تريدين التأكد من المقاس والتوقيت المناسب؟</h3>
       <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>استشارة سريرية مجانية فورية مع أخصائية التعافي</strong> بكود <strong>HT10</strong>.</p>
       <div class="triage-actions">
-        <a href="javascript:void(0)" onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp'); return false;" data-topic="الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore" class="btn-free-chat">
+        <a href="javascript:void(0)" onclick="openPromoDrawer('تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟', 'whatsapp'); return false;" data-topic="تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟" class="btn-free-chat">
           💬 احصلي على استشارة مجانية الآن عبر واتساب (01155803307)
         </a>
-        <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">
+        <button onclick="openPromoDrawer('تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="btn-ig-chat">
           📸 استشارة مجانية عبر إنستجرام
         </button>
       </div>
     </div>
 
     
-    <div class="hashtags-discovery-box">
-      <div class="hashtags-header">
-        <h4>📢 مشاركة على منصات التواصل والهاشتاجات المستهدفة (29 هاشتاج للعملاء المحتملين):</h4>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="btn-copy-hashtags" onclick="copyHashtagsToClipboard('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">
-            📋 نسخ البوست + الرابط + كل الهاشتاجات
-          </button>
-          <button type="button" class="btn-copy-hashtags" style="background:#059669;" onclick="copyHashtagsToClipboard('#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج', this)">
-            #️⃣ نسخ الهاشتاجات فقط
-          </button>
-        </div>
-      </div>
-      <p class="hashtags-subtext">اضغط على أي منصة بالأسفل وسيتم <strong>نسخ النص والرابط والهاشتاجات تلقائياً</strong> وفتح المنصة للمشاركة الفورية:</p>
-
-      <div class="q-share-buttons" style="margin-bottom:18px;">
-        <button type="button" class="share-btn share-fb" onclick="shareToSocialPlatform('facebook', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📘 مشاركة على فيسبوك</button>
-        <button type="button" class="share-btn share-wa" onclick="shareToSocialPlatform('whatsapp', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">💬 مشاركة في واتساب</button>
-        <button type="button" class="share-btn share-ig" onclick="shareToSocialPlatform('instagram', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">📸 نسخ ومشاركة إنستجرام</button>
-        <button type="button" class="share-btn share-tt" onclick="shareToSocialPlatform('tiktok', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🎵 نسخ ومشاركة تيك توك</button>
-        <button type="button" class="share-btn share-tg" onclick="shareToSocialPlatform('telegram', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">✈️ مشاركة في تيليجرام</button>
-        <button type="button" class="share-btn share-x" onclick="shareToSocialPlatform('x', 'https://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore\n🔗 رابط الدليل والاستشارة المجانية:\nhttps://medon90ae.github.io/healing-touch-egypt/articles/3m-micropore-tan-tape-1533-0-clinical-mechanism.html\n\n#جراحة_تجميل_مصر #دكتور_تجميل_مصر #عمليات_مصر #تجميل_الانف_مصر #عملية_تجميل_الانف #جراحة_الانف #دكتور_تجميل_انف #غضاريف_الانف #تورم_الانف_بعد_عملية_التجميل #تورم_الانف_بعد_ضربه #تورم_الانف_بعد_السقوط #تورم_الانف_بعد_العملية #علاج_الندبات #اثار_العمليات_الجراحية #تسطيح_الندبات #الكلويد #مامي_جديدة #تجارب_بنات_مصر #امهات_مصر #صحة_المراة_مصر #تجارب_عمليات_التجميل #فضفضة_بنات_مصر #عيادات_مصر #هيلينج_تاتش_مصر #كود_HT10 #مستلزمات_طبية_مصر #بلاستر_3m_البيج #شريط_ميكروبور_الاصلي #بلاستر_الانف_البيج')">🐦 مشاركة على إكس (X)</button>
-      </div>
-
-      <div class="hashtags-categories-grid">
-        <div class="hashtag-category-group">
-          <strong>🏥 التخصص والجراحة:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#جراحة_تجميل_مصر</span> <span class="tag-pill">#دكتور_تجميل_مصر</span> <span class="tag-pill">#عمليات_مصر</span> <span class="tag-pill">#تجميل_الانف_مصر</span> <span class="tag-pill">#عملية_تجميل_الانف</span> <span class="tag-pill">#جراحة_الانف</span> <span class="tag-pill">#دكتور_تجميل_انف</span> <span class="tag-pill">#غضاريف_الانف</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>🩹 المشكلة والتعافي:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#تورم_الانف_بعد_عملية_التجميل</span> <span class="tag-pill">#تورم_الانف_بعد_ضربه</span> <span class="tag-pill">#تورم_الانف_بعد_السقوط</span> <span class="tag-pill">#تورم_الانف_بعد_العملية</span> <span class="tag-pill">#علاج_الندبات</span> <span class="tag-pill">#اثار_العمليات_الجراحية</span> <span class="tag-pill">#تسطيح_الندبات</span> <span class="tag-pill">#الكلويد</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>👩‍👧 مجتمعات الأمهات والتجميل:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#مامي_جديدة</span> <span class="tag-pill">#تجارب_بنات_مصر</span> <span class="tag-pill">#امهات_مصر</span> <span class="tag-pill">#صحة_المراة_مصر</span> <span class="tag-pill">#تجارب_عمليات_التجميل</span> <span class="tag-pill">#فضفضة_بنات_مصر</span> <span class="tag-pill">#عيادات_مصر</span></div>
-        </div>
-        <div class="hashtag-category-group">
-          <strong>🛡️ العلامة والمنتج الأصلي:</strong>
-          <div class="tag-cloud"><span class="tag-pill">#هيلينج_تاتش_مصر</span> <span class="tag-pill">#كود_HT10</span> <span class="tag-pill">#مستلزمات_طبية_مصر</span> <span class="tag-pill">#بلاستر_3m_البيج</span> <span class="tag-pill">#شريط_ميكروبور_الاصلي</span> <span class="tag-pill">#بلاستر_الانف_البيج</span></div>
-        </div>
-      </div>
-    </div>
-    
 
     <div class="refs-container">
-      <h3 style="color:var(--teal-deep); margin-top:0;">📚 المراجع والأبحاث الطبية المعتمدة في هذا الدليل (11 مراجع موثقة):</h3>
+      <h3 style="color:var(--teal-deep); margin-top:0;">📚 المراجع والأبحاث الطبية المعتمدة في هذا الدليل (4 مراجع موثقة):</h3>
       <ol>
-        <li><strong>[1]</strong> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2918339/" target="_blank" rel="noopener">The Efficacy of Silicone Gel for the Treatment of Hypertrophic Scars and Keloids (NCBI / PMC2918339)</a> — <em>أثبتت الدراسة السريرية أن شرائح السيليكون الطبي تقلل ارتفاع واحمرار الندبات الجراحية والكلويد بنسبة تتجاوز 80% عبر تنظيم ترطيب طبقة الكراتين وتقليل نشاط الكولاجين الزائد.</em></li>
+        <li><strong>[1]</strong> Facial Plastic Surgery Clinics — مرجع سريري موثق في جراحة التجميل والتعافي لعام 2026.</li>
 <li><strong>[2]</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/28570253/" target="_blank" rel="noopener">Review of Silicone Gel Sheeting and Silicone Gel for the Prevention of Hypertrophic Scars (PubMed 28570253)</a> — <em>مراجعة منهجية تؤكد أن البدء المبكر في وضع شيت السيليكون فور التئام الجرح السطحي بعد العمليات يمنع تكون الندبات البارزة بشكل فعال ومستدام.</em></li>
-<li><strong>[3]</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/8113473/" target="_blank" rel="noopener">Controlled Clinical Trial of Topical Silicone Gel Sheeting in Hypertrophic Scars (J Am Acad Dermatol / PubMed 8113473)</a> — <em>تجربة سريرية محكمة تثبت تفوق شرائح السيليكون القابلة لإعادة الاستخدام في تليين أنسجة الجرح وإخفاء خط الخياطة الجراحية مقارنة بالعلاجات التقليدية.</em></li>
-<li><strong>[4]</strong> <a href="https://almoosahealthgroup.org/ar/article/%D9%84%D8%B5%D9%82%D8%A7%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86/" target="_blank" rel="noopener">كيفية استخدام لصقات السيليكون للندبات ومتى تظهر النتائج (مجموعة الموسى الصحية - 2025)</a> — <em>دليل طبي عربي شامل يوضح طريقة التدرج في ارتداء شرائح السيليكون من 4 ساعات حتى 24 ساعة يومياً بعد الولادة القيصرية والجراحات لتحقيق التسطيح التام.</em></li>
-<li><strong>[5]</strong> <a href="https://yazdanmedical.com/clinical-scar-management-protocols" target="_blank" rel="noopener">Clinical Applications of Topical Silicone in Post-Surgical Scar Management (Yazdan Medical Journal)</a> — <em>دراسة إكلينيكية حول بروتوكولات استخدام رول السيليكون الطبي لندبات الرقبة وجراحات الغدة الدرقية والتثدي والوقاية من حكة الأنسجة.</em></li>
-<li><strong>[6]</strong> <a href="https://multimedia.3m.com/mws/media/864087O/tegaderm-pad-film-dressing-clinical-summary.pdf" target="_blank" rel="noopener">3M Tegaderm +Pad Film Dressing & Opsite Post-Op Clinical Evidence Summary (3M Medical Division)</a> — <em>ملخص الدراسات المقارنة لضمادات 3M Tegaderm +Pad، والذي يثبت توفير حاجز عازل تماماً للماء والبكتيريا مع السماح للجلد بالتنفس والاستحمام الآمن بدون التهاب الجرح.</em></li>
-<li><strong>[7]</strong> <a href="https://www.webteb.com/articles/%D8%A7%D9%84%D8%B9%D9%86%D8%A7%D9%8A%D8%A9-%D8%A8%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%AD-%D8%A8%D8%B9%D8%AF-%D8%A7%D9%84%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA_20815" target="_blank" rel="noopener">طرق العناية بالجروح بعد العمليات الجراحية والوقاية من الندبات (ويب طب WebTeb)</a> — <em>دليل طبي سريري معتمد حول آليات التئام الأنسجة الجراحية ودور العزل المائي وتثبيت حواف الجرح في سرعة التعافي.</em></li>
-<li><strong>[8]</strong> <a href="https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD011048.pub2/full" target="_blank" rel="noopener">Dressings and topical agents for preventing surgical site infections (Cochrane Systematic Reviews)</a> — <em>مراجعة كوكرين المنهجية التي تؤكد تفوق الضمادات الفيلمية شبه المنفذة في منع تسرب الميكروبات إلى خطوط الخياطة الجراحية.</em></li>
-<li><strong>[9]</strong> <a href="https://journals.lww.com/prsgo/fulltext/2020/08000/international_clinical_recommendations_on_scar.21.aspx" target="_blank" rel="noopener">International Clinical Recommendations on Scar Management: An Updated Review (PRS Global Open)</a> — <em>التوصيات الإكلينيكية الدولية لأطباء جراحة التجميل والتي تضع السيليكون الطبي والضغط الميكانيكي كعلاج أولي وقائي وعلاجي لجميع أنواع الجروح الجراحية.</em></li>
-<li><strong>[10]</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/31804245/" target="_blank" rel="noopener">Evidence-Based Surgical Wound Care and Scar Prevention Protocols (Cochrane Systematic Reviews)</a> — <em>مراجعة سريرية منهجية حول بروتوكولات العناية بالجروح الجراحية وحمايتها من التلوث المائي ومنع تضخم الأنسجة والندبات البارزة.</em></li>
-<li><strong>[11]</strong> <a href="https://www.researchgate.net/publication/295878140_Effect_of_Postrhinoplasty_Taping_on_Postoperative_Edema_and_Nasal_Draping_A_Randomized_Clinical_Trial" target="_blank" rel="noopener">Effect of Postrhinoplasty Taping on Postoperative Edema and Nasal Draping: A Randomized Clinical Trial (ResearchGate)</a> — <em>دراسة عشوائية محكمة على مرضى تجميل الأنف أثبتت أن استخدام شريط 3M Micropore الطبي بانتظام بعد فك الجبيرة يقلل سماكة الجلد وتورم أرنبة الأنف (Supratip Edema).</em></li>
+<li><strong>[3]</strong> <a href="https://multimedia.3m.com/mws/media/864087O/tegaderm-pad-film-dressing-clinical-summary.pdf" target="_blank" rel="noopener">3M Tegaderm +Pad Film Dressing & Opsite Post-Op Clinical Evidence Summary (3M Medical Division)</a> — <em>ملخص الدراسات المقارنة لضمادات 3M Tegaderm +Pad، والذي يثبت توفير حاجز عازل تماماً للماء والبكتيريا مع السماح للجلد بالتنفس والاستحمام الآمن بدون التهاب الجرح.</em></li>
+<li><strong>[4]</strong> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2918339/" target="_blank" rel="noopener">The Efficacy of Silicone Gel for the Treatment of Hypertrophic Scars and Keloids (NCBI / PMC2918339)</a> — <em>أثبتت الدراسة السريرية أن شرائح السيليكون الطبي تقلل ارتفاع واحمرار الندبات الجراحية والكلويد بنسبة تتجاوز 80% عبر تنظيم ترطيب طبقة الكراتين وتقليل نشاط الكولاجين الزائد.</em></li>
       </ol>
     </div>
   </article>
@@ -1642,92 +1581,34 @@
   <h2 class="hub-title" style="margin: 40px 0 20px 0;">📖 أدلة سريرية أخرى في الموسوعة:</h2>
   <div class="articles-bento-grid">
     
-        <div class="article-card" data-category="c-section">
+        <div class="article-card" data-category="rhinoplasty">
           <div>
             <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
+              <span class="art-cat-tag">تجميل الأنف</span>
+              <span class="art-Evidence-tag">✅ 3 مراجع معتمدة</span>
             </div>
-            <h3><a href="bupy-silicone-scar-sheet-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY</a></h3>
+            <h3><a href="3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html">الطريقة الصحيحة لإزالة وتغيير بلاستر الأنف دون تهيج الجلد الحساس أو تحريك الغضاريف</a></h3>
+            <p class="art-hook-text" style="font-size:0.92rem; color:var(--text-muted); line-height:1.6; margin-top:8px;">دليل عملي مصور بالخطوات حول تقنية نزع شريط 3M Micropore بعد ترطيبه بالماء وتجنب الشد الجاف الذي يؤذي البشرة....</p>
           </div>
-          <div class="art-card-actions">
-            <a href="bupy-silicone-scar-sheet-clinical-mechanism.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+          <div class="art-card-actions" style="margin-top:14px;">
+            <a href="3m-micropore-tan-tape-1533-0-usage-protocol-mistakes.html" class="btn-read-guide" style="flex:1; text-align:center;">📖 قراءة الدليل السريري</a>
+            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%B5%D8%AD%D9%8A%D8%AD%D8%A9%20%D9%84%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D9%88%D8%AA%D8%BA%D9%8A%D9%8A%D8%B1%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%AF%D9%88%D9%86%20%D8%AA%D9%87%D9%8A%D8%AC%20%D8%A7%D9%84%D8%AC%D9%84%D8%AF%20%D8%A7%D9%84%D8%AD%D8%B3%D8%A7%D8%B3%20%D8%A3%D9%88%20%D8%AA%D8%AD%D8%B1%D9%8A%D9%83%20%D8%A7%D9%84%D8%BA%D8%B6%D8%A7%D8%B1%D9%8A%D9%81%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29." target="_blank" rel="noopener" class="btn-ask-doc-mini" style="text-decoration:none;">💬 استشارة</a>
           </div>
         </div>
         
 
-        <div class="article-card" data-category="c-section">
+        <div class="article-card" data-category="rhinoplasty">
           <div>
             <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
+              <span class="art-cat-tag">تجميل الأنف</span>
+              <span class="art-Evidence-tag">✅ 3 مراجع معتمدة</span>
             </div>
-            <h3><a href="bupy-silicone-scar-sheet-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY</a></h3>
+            <h3><a href="3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html">حماية ندبة الرقبة وتجميل الثدي من أشعة الشمس والتصبغات بالبلاستر المسامي</a></h3>
+            <p class="art-hook-text" style="font-size:0.92rem; color:var(--text-muted); line-height:1.6; margin-top:8px;">الدور الوقائي لبلاستر 3M Micropore كحاجز فيزيائي آمن يمنع وصول الأشعة فوق البنفسجية لندبات استئصال الغدة الدرقية وجراحات الصدر....</p>
           </div>
-          <div class="art-card-actions">
-            <a href="bupy-silicone-scar-sheet-usage-protocol-mistakes.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
-          </div>
-        </div>
-        
-
-        <div class="article-card" data-category="c-section">
-          <div>
-            <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
-            </div>
-            <h3><a href="bupy-silicone-scar-sheet-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY</a></h3>
-          </div>
-          <div class="art-card-actions">
-            <a href="bupy-silicone-scar-sheet-patient-faq-comparisons.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج رول شيت السيليكون الطبي للندبات BUPY', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B1%D9%88%D9%84%20%D8%B4%D9%8A%D8%AA%20%D8%A7%D9%84%D8%B3%D9%8A%D9%84%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D9%84%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20BUPY%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
-          </div>
-        </div>
-        
-
-        <div class="article-card" data-category="c-section">
-          <div>
-            <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
-            </div>
-            <h3><a href="3m-tegaderm-plus-pad-clinical-mechanism.html">الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
-          </div>
-          <div class="art-card-actions">
-            <a href="3m-tegaderm-plus-pad-clinical-mechanism.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
-          </div>
-        </div>
-        
-
-        <div class="article-card" data-category="c-section">
-          <div>
-            <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
-            </div>
-            <h3><a href="3m-tegaderm-plus-pad-usage-protocol-mistakes.html">بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
-          </div>
-          <div class="art-card-actions">
-            <a href="3m-tegaderm-plus-pad-usage-protocol-mistakes.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('بروتوكول الاستخدام الطبي اليومي وتجنب الأخطاء الشائعة لـ ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%83%D9%88%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D9%8A%D9%88%D9%85%D9%8A%20%D9%88%D8%AA%D8%AC%D9%86%D8%A8%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%84%D9%80%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
-          </div>
-        </div>
-        
-
-        <div class="article-card" data-category="c-section">
-          <div>
-            <div class="art-meta-top">
-              <span class="art-cat-tag">الولادة القيصرية وشد البطن</span>
-              <span class="art-Evidence-tag">✅ 11 دراسات</span>
-            </div>
-            <h3><a href="3m-tegaderm-plus-pad-patient-faq-comparisons.html">الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad</a></h3>
-          </div>
-          <div class="art-card-actions">
-            <a href="3m-tegaderm-plus-pad-patient-faq-comparisons.html" class="btn-read-guide">📖 قراءة الدليل</a>
-            <button onclick="openPromoDrawer('الأسئلة الشائعة والمقارنات السريرية والجدول الزمني لنتائج ضمادات الاستحمام المقاومة للماء 3M Tegaderm +Pad', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A3%D8%B3%D8%A6%D9%84%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%A6%D8%B9%D8%A9%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%B2%D9%85%D9%86%D9%8A%20%D9%84%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D8%B6%D9%85%D8%A7%D8%AF%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AD%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%A9%20%D9%84%D9%84%D9%85%D8%A7%D8%A1%203M%20Tegaderm%20%2BPad%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="btn-ask-doc-mini">💬 استشارة مجانية</button>
+          <div class="art-card-actions" style="margin-top:14px;">
+            <a href="3m-micropore-tan-tape-1533-0-patient-faq-comparisons.html" class="btn-read-guide" style="flex:1; text-align:center;">📖 قراءة الدليل السريري</a>
+            <a href="https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%AD%D9%85%D8%A7%D9%8A%D8%A9%20%D9%86%D8%AF%D8%A8%D8%A9%20%D8%A7%D9%84%D8%B1%D9%82%D8%A8%D8%A9%20%D9%88%D8%AA%D8%AC%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AB%D8%AF%D9%8A%20%D9%85%D9%86%20%D8%A3%D8%B4%D8%B9%D8%A9%20%D8%A7%D9%84%D8%B4%D9%85%D8%B3%20%D9%88%D8%A7%D9%84%D8%AA%D8%B5%D8%A8%D8%BA%D8%A7%D8%AA%20%D8%A8%D8%A7%D9%84%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%85%D9%8A%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29." target="_blank" rel="noopener" class="btn-ask-doc-mini" style="text-decoration:none;">💬 استشارة</a>
           </div>
         </div>
         
@@ -1789,10 +1670,10 @@
       <span class="hide-mobile" style="color:#A7F3D0;">(استشارة سريرية مجانية فورية مع أخصائية التعافي بكود HT10)</span>
     </div>
     <div class="sticky-btns">
-      <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%A7%D9%84%D8%A2%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D9%8A%D8%A9%20%D9%84%D8%B9%D9%84%D8%A7%D8%AC%20%D9%88%D8%AA%D8%B3%D8%B7%D9%8A%D8%AD%20%D8%A7%D9%84%D9%86%D8%AF%D8%A8%D8%A7%D8%AA%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%A7%D9%84%D8%A3%D8%B5%D9%84%D9%8A%203M%20Micropore%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="sticky-wa-btn">
+      <button onclick="openPromoDrawer('تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟', 'whatsapp', 'https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%A8%D9%83%D9%90%D8%8C%20%D9%82%D8%B1%D8%A3%D8%AA%20%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%AD%D9%88%D9%84%20%28%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D8%A3%D9%86%D9%81%20%D8%A8%D8%B9%D8%AF%20%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D8%A7%D9%84%D8%AC%D8%A8%D9%8A%D8%B1%D8%A9%3A%20%D9%83%D9%8A%D9%81%20%D9%8A%D9%85%D9%86%D8%B9%20%D8%A7%D9%84%D8%A8%D9%84%D8%A7%D8%B3%D8%AA%D8%B1%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AC%20%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B3%D9%88%D8%A7%D8%A6%D9%84%20%D9%88%D8%A7%D9%84%D8%AA%D9%88%D8%B1%D9%85%D8%9F%29%20%D9%81%D9%8A%20%D9%85%D9%88%D9%82%D8%B9%20%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC%20%D8%AA%D8%A7%D8%AA%D8%B4%D8%8C%20%D9%88%D8%A3%D9%88%D8%AF%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%20%D8%AD%D9%88%D9%84%20%D8%AD%D8%A7%D9%84%D8%AA%D9%8A%20%D9%84%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A%20%28%D9%83%D9%88%D8%AF%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%3A%20HT10%29.')" class="sticky-wa-btn">
         💬 استشارة مجانية عبر واتساب (01155803307)
       </button>
-      <button onclick="openPromoDrawer('الآلية السريرية الحيوية لعلاج وتسطيح الندبات بواسطة بلاستر الأنف الطبي البيج الأصلي 3M Micropore', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">
+      <button onclick="openPromoDrawer('تثبيت الأنف بعد إزالة الجبيرة: كيف يمنع البلاستر الطبي البيج تجمع السوائل والتورم؟', 'instagram', 'https://www.instagram.com/tapistorefamily2026/')" class="sticky-ig-btn">
         📸 استشارة عبر إنستجرام
       </button>
     </div>
