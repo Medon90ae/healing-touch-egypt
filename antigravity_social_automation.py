@@ -763,6 +763,33 @@ PRODUCT_PROMPT_CONFIGS = {
         "category": "c-section",
         "category_badge": "عزل مائي وحماية الجروح",
         "clinical_focus": "الاستحمام الآمن دون بلل للجرح، عزل ميكروبي 100% مع نفاذية لبخار العرق والغازات، حماية جروح القيصرية والعمليات الجراحية والقساطر",
+        "target_keywords_egypt": [
+            "لزقة تيجاديرم ضد الميه",
+            "ضمادة 3M تيجاديرم",
+            "الاستحمام بعد القيصرية",
+            "بلاستر جروح العمليات ضد الماء",
+            "غيار الجرح بعد العملية",
+            "الاستحمام بعد الولادة القيصرية",
+            "حماية جرح العملية من الماء",
+            "لاصقة تيجاديرم في مصر"
+        ],
+        "long_tail_queries_egypt": [
+            "امتى اقدر اخد شاور بعد عملية القيصرية بامان",
+            "ازاي احمي جرح العملية من مية الشاور والصابون",
+            "لزقة ضد المية للجروح في الصيدليات مصر",
+            "شكل جرح القيصرية بعد اسبوع وطريقة تغييره",
+            "علاج حساسية والتهاب الجلد من بلاستر الجروح العادي",
+            "طريقة نزع ضمادة تيجاديرم بدون الم او شد للجلد"
+        ],
+        "egypt_hashtags": [
+            "#الولادة_القيصرية_مصر",
+            "#جرح_القيصرية",
+            "#استحمام_بعد_العملية",
+            "#تيجاديرم",
+            "#صحة_المرأة_مصر",
+            "#تعافي_الجروح_مصر",
+            "#مستلزمات_طبية_مصر"
+        ],
         "gemini_research_queries": [
             "3M Tegaderm waterproof dressing post-surgical wound showering protocol Cochrane guidelines",
             "Transepidermal water vapor transmission rate semipermeable film dressings surgical site infection",
@@ -784,6 +811,33 @@ PRODUCT_PROMPT_CONFIGS = {
         "category": "c-section",
         "category_badge": "علاج وتسطيح الندبات",
         "clinical_focus": "تسطيح ندبات القيصرية والجراحة، منع وعلاج الكيلويد والندبات المتضخمة، ترطيب ألياف الكولاجين وإزالة الحكة والاحمرار",
+        "target_keywords_egypt": [
+            "شيت سيليكون للندبات",
+            "شيت سيليكون بوبي BUPY",
+            "علاج ندبة القيصرية",
+            "ازالة اثار الجروح والعمليات",
+            "لاصقات سيليكون للندبات في مصر",
+            "تسطيح الكلويد بعد الجراحة",
+            "سيليكون شيت مصر",
+            "علاج اثر خياطة القيصرية"
+        ],
+        "long_tail_queries_egypt": [
+            "امتى ابدأ احط شيت السيليكون على جرح القيصرية",
+            "ازاي اتخلص من خط القيصرية البارز والاحمر",
+            "شيت سيليكون قابل للغسيل والاستخدام المتكرر",
+            "افضل علاج للندبات البارزة والكيلويد في مصر",
+            "ازاي اقلل الحكة والنغز في مكان جرح العملية",
+            "الفرق بين جل السيليكون وشيت السيليكون للندبات"
+        ],
+        "egypt_hashtags": [
+            "#علاج_الندبات_مصر",
+            "#شيت_سيليكون",
+            "#ندبة_القيصرية",
+            "#تجميل_الجروح_مصر",
+            "#كلويد",
+            "#هيلينج_تاتش_مصر",
+            "#ندبات_العمليات"
+        ],
         "gemini_research_queries": [
             "Medical grade silicone gel sheeting hypertrophic scar keloid clinical trials PubMed",
             "Mechanism of action silicone sheet stratum corneum hydration collagen downregulation",
@@ -805,6 +859,33 @@ PRODUCT_PROMPT_CONFIGS = {
         "category": "rhinoplasty",
         "category_badge": "دعم الأنف وجروح الرقبة",
         "clinical_focus": "تثبيت الأنف بعد عمليات التجميل وتصريف التورم اللمفاوي، حماية ندبات الرقبة وجراحة الغدة من أشعة الشمس، شريط ورقي طبي مسامي مضاد للحساسية",
+        "target_keywords_egypt": [
+            "بلاستر 3M بيج",
+            "شريط ميكروبور تان 1533-0",
+            "لصقات الانف بعد التجميل",
+            "تثبيت الانف بعد العمليه",
+            "حماية ندبة الغدة الدرقية من الشمس",
+            "بلاستر طبي مضاد للحساسية",
+            "بلاستر تجميل الانف 3m مصر",
+            "شريط ورقي طبي مسامي"
+        ],
+        "long_tail_queries_egypt": [
+            "طريقة وضع بلاستر تجميل الانف لتصريف التورم",
+            "لصقات الانف بعد العملية 3m الاصلية في مصر",
+            "ازاي احمي جرح الرقبة والغدة من الاسمرار والشمس",
+            "حل الحبوب والبثور تحت بلاستر الانف في الصيف",
+            "الفرق بين البلاستر الورقي العادي وبلاستر 3M المسامي",
+            "كم مدة وضع بلاستر الانف بعد فك الجبيرة"
+        ],
+        "egypt_hashtags": [
+            "#تجميل_الانف_مصر",
+            "#بلاستر_الانف",
+            "#تورم_الانف_بعد_التجميل",
+            "#جراحة_الغدة_الدرقية",
+            "#تجميل_مصر",
+            "#راينوبلاستي_مصر",
+            "#بلاستك_سيرجري_مصر"
+        ],
         "gemini_research_queries": [
             "Post-rhinoplasty taping with microporous surgical tape supratip edema reduction clinical study",
             "Rayon microporous surgical tape skin irritation hypoallergenic properties randomized trial",
@@ -826,6 +907,30 @@ PRODUCT_PROMPT_CONFIGS = {
         "category": "rhinoplasty",
         "category_badge": "تناسق فتحات الأنف",
         "clinical_focus": "الحفاظ على تماثل وتناسق فتحات الأنف بعد عمليات التجميل، مقاومة قوى الانكماش الندبي للغضاريف، دعم مجرى التنفس بعد قص جناح الأنف",
+        "target_keywords_egypt": [
+            "دعامات الانف السيليكون",
+            "نوستريل ريتينر مصر",
+            "تماثل فتحات الانف بعد التجميل",
+            "منع انكماش فتحات الانف",
+            "دعامات السيليكون بعد تصغير الانف",
+            "مجرى التنفس بعد تجميل الانف",
+            "مقاسات دعامات الانف السيليكونية"
+        ],
+        "long_tail_queries_egypt": [
+            "ازاي احافظ على تماثل فتحات الانف بعد عملية التجميل",
+            "امتى البس دعامة الانف السيليكون وكم ساعة في اليوم",
+            "طريقة تنظيف وتعقيم دعامات فتحات الانف في البيت",
+            "علاج انسداد وصعوبة التنفس بعد قص جناح الانف",
+            "ازاي اختار مقاس دعامة الانف السيليكونية المناسب لحالتي"
+        ],
+        "egypt_hashtags": [
+            "#تجميل_الانف_مصر",
+            "#فتحات_الانف",
+            "#دعامات_الانف",
+            "#جراحة_التجميل_مصر",
+            "#تنفس_افضل",
+            "#عمليات_التجميل_مصر"
+        ],
         "gemini_research_queries": [
             "Silicone nostril retainer post-rhinoplasty alar base symmetry clinical evaluation",
             "Prevention of nostril stenosis and cicatricial contraction after cosmetic rhinoplasty",
@@ -847,6 +952,30 @@ PRODUCT_PROMPT_CONFIGS = {
         "category": "bariatric",
         "category_badge": "عزل ثقوب المناظير",
         "clinical_focus": "عزل فوري لثقوب مناظير جراحات السمنة والتكميم، حاجز ميكروبي شفاف مقاوم للماء يتيح الاستحمام، يتيح تنفس الجلد وتبخر العرق دون غيارات لاصقة مؤلمة",
+        "target_keywords_egypt": [
+            "سبراي اوبسايت للجروح",
+            "بخاخ opsite بعد التكميم",
+            "عزل ثقوب منظار التكميم",
+            "الاستحمام بعد عملية التكميم",
+            "سبراي عازل للماء للجروح",
+            "علاج التهاب الجلد من بلاستر المنظار",
+            "بخاخ اوبسايت في مصر"
+        ],
+        "long_tail_queries_egypt": [
+            "ازاي اخد شاور بعد عملية التكميم بثقوب المنظار بامان",
+            "طريقة رش سبراي اوبسايت على ثقوب المنظار",
+            "بديل البلاستر اللاصق لثقوب منظار المرارة والتكميم",
+            "متى تلتئم جروح وثقوب منظار التكميم في البطن",
+            "حماية ثقوب المنظار من العرق والتلوث في الصيف بمصر"
+        ],
+        "egypt_hashtags": [
+            "#تكميم_المعدة_مصر",
+            "#جراحة_السمنة_مصر",
+            "#ثقوب_المنظار",
+            "#سبراي_اوبسايت",
+            "#شاور_بعد_العملية",
+            "#تعافي_التكميم_مصر"
+        ],
         "gemini_research_queries": [
             "Smith Nephew Opsite spray transparent dressing laparoscopic port site infection Cochrane",
             "Waterproof spray-on dressing bariatric sleeve gastrectomy recovery showering protocol",
@@ -860,6 +989,48 @@ PRODUCT_PROMPT_CONFIGS = {
             "المعاناة من ألم نزع البلاستر المتكرر من جلد البطن الحساس والتهابه بعد التكميم",
             "الخوف من التهاب ثقوب المنظار أو تلوثها بمياه الاستحمام",
             "الحاجة لحل سريع وعازل يسمح بحرية الحركة والاستحمام دون الحاجة لغيارات معقدة"
+        ]
+    },
+    "6": {
+        "id": "all-clinical-solutions",
+        "name_ar": "المحفظة السريرية الشاملة - كافة المنتجات الخمسة المعتمدة لهيلينج تاتش مصر",
+        "category": "all",
+        "category_badge": "بروتوكولات التعافي الجراحي المتكاملة",
+        "clinical_focus": "الحلول السريرية المتكاملة لمنع الندبات، عزل الجروح المقاوم للماء، تثبيت تجميل الأنف، وتأمين ثقوب المناظير بعد العمليات الجراحية في مصر",
+        "target_keywords_egypt": [
+            "مستلزمات التعافي بعد الجراحة في مصر",
+            "شيت سيليكون للندبات مصر",
+            "ضمادات تيجاديرم ضد الماء",
+            "بلاستر 3M تجميل الانف",
+            "دعامات الانف السيليكونية",
+            "سبراي اوبسايت للجروح",
+            "بروتوكول هيلينج تاتش مصر"
+        ],
+        "long_tail_queries_egypt": [
+            "افضل روتين للعناية بالجروح بعد العمليات الجراحية في مصر",
+            "ازاي احمي جرح العملية من التلوث والماء بعد الخروج من المستشفى",
+            "طرق منع تكون الندبات البارزة والكلويد بعد العمليات",
+            "مستلزمات طبية معتمدة للتعافي بعد التجميل والقيصرية والتكميم"
+        ],
+        "egypt_hashtags": [
+            "#جراحة_مصر",
+            "#تعافي_الجروح_مصر",
+            "#الولادة_القيصرية_مصر",
+            "#تجميل_الانف_مصر",
+            "#تكميم_المعدة_مصر",
+            "#هيلينج_تاتش_مصر"
+        ],
+        "gemini_research_queries": [
+            "Comprehensive post-operative wound care and scar prevention evidence-based guidelines",
+            "Comparative efficacy of modern silicone dressings vs traditional wound dressings",
+            "Best clinical practices for outpatient surgical recovery in warm climates"
+        ],
+        "pomelli_prompt_1_1": "Luxury pharmaceutical commercial flatlay photograph of Healing Touch Egypt surgical recovery collection: 3M Tegaderm dressing, BUPY silicone scar sheet roll, 3M Micropore tan tape, silicone nostril retainers, and Opsite spray arranged elegantly on clean white marble, soft natural morning clinic lighting, pristine sterile aesthetic, 8k resolution, documentary medical photography.",
+        "pomelli_prompt_9_16": "Vertical 9:16 clinical editorial photograph showcasing the complete surgical recovery essentials kit by Healing Touch Egypt on a frosted glass tray, soft teal medical background, warm clinical lighting, conveying total recovery reassurance and sterile excellence, 8k.",
+        "patient_anxieties": [
+            "الحيرة والتشتت في اختيار المستلزمات الطبية الأصلية بعد الخروج من المستشفى",
+            "الخوف من حدوث مضاعفات أو تلوث الجرح بسبب سوء العناية في المنزل",
+            "الحاجة لتوجيه سريري موثوق من أخصائيين يفهمون طبيعة الجرح وتوقيت كل خطوة"
         ]
     }
 }
@@ -895,7 +1066,7 @@ def prompt_user_for_product_selection() -> str:
 
 
 def export_notebooklm_master_source(product_choice: str = None, interactive: bool = False) -> str:
-    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Pomelli و Deep Research."""
+    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات مخصصة لكل منصة ومصادر PubMed وسيو مصر."""
     if product_choice is None:
         if interactive and sys.stdin and sys.stdin.isatty():
             product_choice = prompt_user_for_product_selection()
@@ -904,92 +1075,143 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
             
     is_all = product_choice == "6"
     selected_cfg = PRODUCT_PROMPT_CONFIGS.get(product_choice, PRODUCT_PROMPT_CONFIGS["1"])
-    prod_name = "كافة المستلزمات الطبية المعتمدة" if is_all else selected_cfg["name_ar"]
-
-    registry_path = BASE_DIR / "products_registry.json"
-    products_data = []
-    if registry_path.exists():
-        try:
-            products_data = json.loads(registry_path.read_text(encoding="utf-8")).get("products", [])
-        except Exception:
-            pass
+    prod_name = selected_cfg["name_ar"]
 
     now = datetime.now()
     date_display = now.strftime("%Y-%m-%d %I:%M %p")
     timestamp_filename = now.strftime("%Y-%m-%d_%H-%M-%S")
 
-    # جلب أسئلة الترند الحي من جوجل مصر
+    # 1. جلب رادار ترندات بحث جوجل مصر الصاعدة والكلمات الأكثر بحثاً
     live_trend_queries = []
+    rising_breakouts = []
     try:
         from github_seo_trend_engine import harvest_live_egypt_trends
         live_map = harvest_live_egypt_trends()
         cat_key = selected_cfg["category"]
-        live_trend_queries = live_map.get(cat_key, [])
-    except Exception:
-        pass
+        if cat_key == "all":
+            for c, q_list in live_map.items():
+                for q in q_list:
+                    if q not in live_trend_queries:
+                        live_trend_queries.append(q)
+        else:
+            live_trend_queries = live_map.get(cat_key, [])
 
-    # 🔬 استكشاف أحدث الأبحاث السريرية من PubMed / NCBI لنمو الموسوعة والمصادر
+        live_reg_path = BASE_DIR / "media_assets" / "live_trends_registry.json"
+        if live_reg_path.exists():
+            try:
+                reg_json = json.loads(live_reg_path.read_text(encoding="utf-8"))
+                rising_breakouts = [rb.get("query", "") for rb in reg_json.get("rising_breakouts", []) if rb.get("query")]
+            except Exception:
+                pass
+    except Exception as e:
+        print(f"[!] تنبيه جلب ترندات مصر: {e}")
+
+    # 2. استكشاف أحدث الأبحاث السريرية الحقيقية من PubMed / NCBI لهذا المنتج
     discovered_studies = []
     try:
-        from clinical_research_harvester import harvest_pubmed_studies, format_evidence_for_notebooklm_and_prompts
-        print("\n[*] 🔬 جاري استكشاف أحدث الأبحاث والدراسات السريرية من PubMed / NCBI لهذا المنتج...")
-        discovered_studies = harvest_pubmed_studies(product_choice, max_results=3)
+        from clinical_research_harvester import harvest_pubmed_studies
+        print(f"\n[*] 🔬 جاري استكشاف أحدث الأبحاث والدراسات السريرية من PubMed / NCBI لـ ({prod_name})...")
+        search_target = "1" if is_all else product_choice
+        discovered_studies = harvest_pubmed_studies(search_target, max_results=3)
         if discovered_studies:
             print(f"[+] 📚 تم رصد وتوثيق {len(discovered_studies)} أبحاث طبية جديدة في الموسوعة وسجل الأبحاث:")
             for s in discovered_studies:
-                print(f"    • [{s['pub_year']}] {s['title'][:75]}...")
+                print(f"    • [{s['pub_year']}] {s['title'][:70]}...")
                 print(f"      🔗 {s['url']}")
     except Exception as e:
         print(f"[!] تنبيه استكشاف PubMed: {e}")
 
-    # تجهيز ملف البرومبتات القابل للنسخ المباشر PROMPTS_PACK_TODAY.txt
+    # تحضير الكلمات الدلالية والأسئلة والهاشتاجات لمصر
+    target_kws = selected_cfg.get("target_keywords_egypt", [])
+    long_tails = selected_cfg.get("long_tail_queries_egypt", [])
+    hashtags_list = selected_cfg.get("egypt_hashtags", [])
+
+    kws_joined = "، ".join(target_kws[:6])
+    long_tails_formatted = "\n".join([f"• {lt}" for lt in long_tails[:5]])
+    live_trends_formatted = "\n".join([f"• {tq}" for tq in live_trend_queries[:6]]) if live_trend_queries else "• جرح العملية وطرق الاستحمام\n• منع الندبات بعد الجراحة"
+    hashtags_joined = " ".join(hashtags_list)
+
+    pubmed_refs_text = ""
+    if discovered_studies:
+        pubmed_refs_text = "\n".join([f"• [{s['pub_year']}] {s['title']} -> {s['url']}" for s in discovered_studies])
+    else:
+        pubmed_refs_text = "• [NCBI/PMC2918339] The Efficacy of Silicone Gel for Treatment of Scars -> https://pmc.ncbi.nlm.nih.gov/articles/PMC2918339/\n• [PubMed 28570253] Review of Silicone Gel Sheeting for Scar Prevention -> https://pubmed.ncbi.nlm.nih.gov/28570253/"
+
+    # 3. بناء ملف البرومبتات الشامل PROMPTS_PACK_TODAY.txt و .md
     prompts_pack_lines = [
         "=====================================================================",
-        f"🌿 هيلينج تاتش مصر | حزمة البرومبتات والأوامر السريرية الجاهزة للنسخ",
+        "🌿 هيلينج تاتش مصر | حزمة البرومبتات وأوامر السيو للمنصات (SEO EGYPT 2026)",
         f"🎯 المنتج ومحور التركيز: {prod_name}",
-        f"📅 تاريخ التوليد: {date_display}",
+        f"📅 تاريخ ووقت التوليد: {date_display}",
+        "📍 النطاق الجغرافي المستهدف: جمهورية مصر العربية (Local SEO & Audience - Egypt)",
         "=====================================================================",
         "",
         "---------------------------------------------------------------------",
-        "1️⃣ برومبت البحث المعمق في Gemini Deep Research (انسخه وضعه في شات Gemini):",
+        "🔥 رادار ترندات بحث جوجل مصر والكلمات الصاعدة (Google Search Trends Egypt):",
         "---------------------------------------------------------------------",
+        "📌 الكلمات المفتاحية الأساسية المستهدفة بمصر (Focus Keywords):",
+    ]
+    for kw in target_kws:
+        prompts_pack_lines.append(f"  • {kw}")
+    prompts_pack_lines.extend([
+        "",
+        "📌 الجمل والأسئلة البحثية الطويلة الأكثر تداولاً في مصر (Long-Tail Patient Inquiries):",
+    ])
+    for lt in long_tails:
+        prompts_pack_lines.append(f"  • {lt}")
+    if live_trend_queries:
+        prompts_pack_lines.extend([
+            "",
+            "📌 تساؤلات ومصطلحات بحث جوجل مصر الصاعدة هذا الأسبوع (Google Suggest gl=eg):",
+        ])
+        for tq in live_trend_queries[:8]:
+            prompts_pack_lines.append(f"  • {tq}")
+    if rising_breakouts:
+        prompts_pack_lines.extend([
+            "",
+            "⚡ كلمات صاعدة حديثاً برادار الترندات (Rising Breakouts):",
+        ])
+        for rb in rising_breakouts[:4]:
+            prompts_pack_lines.append(f"  • {rb}")
+    prompts_pack_lines.extend([
+        "",
+        f"📌 الهاشتاجات السريرية المقترحة للمنصات داخل مصر: {hashtags_joined}",
+        "",
+        "=====================================================================",
+        "1️⃣ برومبت البحث المعمق في Gemini Deep Research (أبحاث سريرية وترندات مصر):",
+        "=====================================================================",
         "```text",
-        f"بصفتك باحثاً إكلينيكياً واستشارياً في جراحة التعافي وعلاج الندبات في مصر:",
+        "بصفتك باحثاً إكلينيكياً واستشارياً في جراحة التعافي وعلاج الندبات في مصر:",
         f"أريد بحثاً سريرياً دقيقاً وموثقاً حول: {selected_cfg['clinical_focus']}.",
         "",
         "الأسئلة السريرية والبحثية المحددة المطلوب الإجابة عليها تفصيلياً:",
-    ]
+    ])
     for q in selected_cfg["gemini_research_queries"]:
         prompts_pack_lines.append(f"• {q}")
     prompts_pack_lines.extend([
         "",
-        "مخاوف وتساؤلات المرضى المقلقة المطلوب طمأنتهم علمياً بشأنها:",
+        "مخاوف وتساؤلات المرضى المقلقة في مصر المطلوب طمأنتهم علمياً بشأنها:",
     ])
     for anz in selected_cfg["patient_anxieties"]:
         prompts_pack_lines.append(f"• {anz}")
-    if live_trend_queries:
-        prompts_pack_lines.append("")
-        prompts_pack_lines.append("تساؤلات وترندات بحث جوجل مصر الصاعدة هذا الأسبوع للإجابة عليها:")
-        for tq in live_trend_queries[:4]:
-            prompts_pack_lines.append(f"• {tq}")
     prompts_pack_lines.extend([
+        "",
+        "تساؤلات وترندات بحث جوجل مصر الصاعدة هذا الأسبوع للإجابة عليها:",
+        live_trends_formatted,
         "",
         "الشروط الصارمة للمحتوى الناتج:",
         "1. نبرة طبية توجيهية هادئة تشرح فسيولوجيا التئام الأنسجة وتبدد المخاوف دون تهويل.",
-        "2. منع تام لأي عروض تسويقية أو خصومات أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.",
-        "3. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 لأي متابعة للحالة.",
-    ])
-    if discovered_studies:
-        prompts_pack_lines.append("")
-        prompts_pack_lines.append("روابط أحدث أبحاث PubMed السريرية المعتمدة للاستشهاد بها ودعم المحتوى:")
-        for s in discovered_studies:
-            prompts_pack_lines.append(f"• [{s['pub_year']}] {s['title']} -> {s['url']}")
-    prompts_pack_lines.extend([
+        "2. استهداف الجمهور المصري وتقديم إجابات تناسب الظروف البيئية والصحية في مصر (كالصيف والعرق وطريقة الغيار المنزلي).",
+        "3. منع تام لأي عروض تسويقية أو خصومات أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.",
+        "4. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 بكود الأولوية السريرية HT10.",
+        "",
+        "روابط أحدث أبحاث PubMed السريرية المعتمدة للاستشهاد بها ودعم المحتوى:",
+        pubmed_refs_text,
         "```",
         "",
-        "---------------------------------------------------------------------",
-        "2️⃣ برومبتات توليد الصور الطبية في Google Pomelli (صور واقعية سريرية جاهزة للموقع):",
-        "---------------------------------------------------------------------",
+        "=====================================================================",
+        "2️⃣ برومبتات توليد الصور الطبية في Google Pomelli (صور واقعية سريرية 4K):",
+        "=====================================================================",
         "📌 [أولاً: مقاس البوست المربع 1:1 - مخصص للموقع وفيسبوك وإنستجرام Feed]:",
         "```text",
         selected_cfg["pomelli_prompt_1_1"],
@@ -1000,22 +1222,147 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
         selected_cfg["pomelli_prompt_9_16"],
         "```",
         "",
-        "---------------------------------------------------------------------",
+        "=====================================================================",
         "3️⃣ برومبتات استوديو Google NotebookLM (أدوات Video Overview و Audio Overview):",
-        "---------------------------------------------------------------------",
+        "=====================================================================",
         "📌 [أمر الفيديو التوضيحي Video Overview]:",
         "```text",
-        f"أنشئ فيديو شارحاً تفاعلياً (Explainer Video) لحالة التعافي باستخدام {selected_cfg['name_ar']} يركز على بيولوجيا التئام الأنسجة وطريقة العناية السليمة بالخطوات، بنبرة طمأنينة علمية راقية تجيب على قلق المريض من الندبات والالتهاب.",
+        f"أنشئ فيديو شارحاً تفاعلياً (Explainer Video) لحالة التعافي باستخدام {prod_name} يركز على بيولوجيا التئام الأنسجة وطريقة العناية السليمة بالخطوات، بنبرة طمأنينة علمية راقية تجيب على قلق المريض المصري من الندبات والالتهاب ومخاوف الاستحمام، مع التنويه لحق معاينة الشحنة قبل الاستلام والتواصل واتساب 01155803307 بكود HT10.",
         "```",
         "",
-        "📌 [أمر البودكاست الصوتي Audio Overview (حوار استشاري)]:",
+        "📌 [أمر البودكاست الصوتي Audio Overview (حوار استشاري سريري)]:",
         "```text",
-        f"قم بتوليد حوار صوتي بين اثنين من استشاريي التعافي الطبي باللهجة المصرية الراقية يشرحان فيه بأسلوب ودي مريح للمريض أهمية {selected_cfg['name_ar']} في مرحلة التعافي، وكيفية التغلب على الحكة أو القلق بعد العملية وتصحيح المفاهيم الخاطئة الشائعة.",
+        f"قم بتوليد حوار صوتي بين اثنين من استشاريي التعافي الطبي باللهجة المصرية الراقية يشرحان فيه بأسلوب ودي مريح للمريض أهمية {prod_name} في مرحلة التعافي، وكيفية التغلب على الحكة أو القلق بعد العملية وتصحيح المفاهيم الخاطئة الشائعة في مصر.",
         "```",
         "",
-        "---------------------------------------------------------------------",
-        "4️⃣ أحدث الأبحاث والمراجع الطبية الحقيقية المستكشفة من PubMed / NCBI (جاهزة للاستشهاد):",
-        "---------------------------------------------------------------------",
+        "=====================================================================",
+        "4️⃣ برومبت إنتاج محتوى وسيو يوتيوب مصر (YouTube Long-form Video + Shorts SEO):",
+        "=====================================================================",
+        "```text",
+        "بصفتك كبير استشاريي إنتاج الفيديو الطبي والسيو السريري في مصر (Clinical Video SEO Specialist - Egypt):",
+        f"نحن نطبق استراتيجية سيو متقدمة موجهة لمحركات بحث يوتيوب وجوجل في جمهورية مصر العربية (Local Video SEO Egypt) لمساعدة المرضى بعد العمليات الجراحية والتجميلية.",
+        f"الموضوع السريري: {prod_name} - {selected_cfg['clinical_focus']}.",
+        "",
+        "الكلمات المفتاحية الإلزامية التي يجب تضمينها بشكل طبيعي في العنوان والوصف والسكريبت:",
+        f"• {kws_joined}",
+        "",
+        "الأسئلة الأكثر بحثاً في مصر المطلوب الإجابة عليها بالفيديو:",
+        long_tails_formatted,
+        "",
+        "المطلوب إنتاجه تفصيلياً وبدقة تامة:",
+        "1. [العنوان السريري الجذاب]: عنوان أقل من 60 حرفاً يدمج الكلمة المفتاحية الأولى ويثير الطمأنينة بدون أي تهويل أو كليك بيت تجاري.",
+        "2. [سكريبت الفيديو الكامل 16:9 (مدته 3 إلى 5 دقائق)]:",
+        "   • أول 15 ثانية (Hook): مخاطبة مباشرة لأكبر خوف يقلق المريض المصري بعد العملية (كالاستحمام أو شكل الجرح).",
+        "   • الدقيقة 1-2 (فسيولوجيا الأنسجة): شرح مبسط لكيفية تعافي الجرح ولماذا الطرق التقليدية المتبعة في البيوت تضر بالأنسجة.",
+        "   • الدقيقة 2-4 (البروتوكول السريري العملي): خطوات العناية العملية بالترتيب باستخدام المستلزم الطبي الأصلي بأمان.",
+        "   • الخاتمة (CTA): طمأنة المريض والتوجيه الهادئ لطلب استشارة سريرية مجانية من أخصائي التعافي عبر واتساب 01155803307 مع كود المعاينة والشحن المجاني HT10.",
+        "3. [سكريبت شورتس عمودي 9:16 (أقل من 59 ثانية)]: سكريبت سريع، مركز، يعالج سؤالاً واحداً ملحاً بصورة مكثفة.",
+        "4. [وصف الفيديو المهيأ لسيو يوتيوب مصر SEO Description]:",
+        "   • فقرة افتتاحية غنية بالكلمات المفتاحية.",
+        "   • الطوابع الزمنية والفصول (Timestamps / Chapters).",
+        "   • روابط المراجع الطبية المرفقة أدناه ورابط البوابة (https://medon90ae.github.io/healing-touch-egypt/portal/).",
+        "5. [قائمة التاغات الدلالية Tags]: 20 تاغ بحثي نشط في يوتيوب مصر مفصولة بفواصل.",
+        "",
+        "القواعد الإلزامية: منع تام لذكر أي أسعار أو خصومات؛ كود HT10 يمنح حق المعاينة وفتح الشحنة قبل الاستلام مع شحن مجاني؛ النبرة طبية توجيهية وقورة.",
+        "```",
+        "",
+        "=====================================================================",
+        "5️⃣ برومبت فيديو تيك توك مصر (TikTok Egypt SEO Script & Viral Hook):",
+        "=====================================================================",
+        "```text",
+        "بصفتك صانع محتوى طبي رقمي متخصص في خوارزميات تيك توك في مصر (TikTok Medical SEO - Egypt):",
+        f"نحن نستهدف خوارزمية تيك توك والجمهور المصري المهتم بالتعافي بعد العمليات (القيصرية / التجميل / المناظير).",
+        f"الموضوع السريري: {prod_name} - {selected_cfg['clinical_focus']}.",
+        f"الكلمات والعبارات المستهدفة بمصر: {kws_joined}",
+        "",
+        "المطلوب إنتاجه بدقة تامة:",
+        "1. [الهوك البصري والنفسي في أول ثانيتين]: جملة افتتاحية قوية تظهر على الشاشة وتنطق فوراً لتوقف التمرير (مثلاً: 'لو لسه خارج من العمليات في مصر ومرعوب من مية الشاور.. ركز في الكام ثانية دول').",
+        "2. [سكريبت الفيديو (مدة 45 إلى 55 ثانية)]:",
+        "   • اللهجة: لهجة مصرية بيضاء راقية ومحترمة (تجمع بين الوقار الطبي واللغة القريبة من المريض المصري).",
+        "   • توجيهات المشاهد (Visual & B-roll Cues): كتابة ما يظهر في الكادر وما يقوم به مقدم الفيديو بالتفصيل بين أقواس.",
+        "   • النص المكتوب على الشاشة (On-Screen Text): العبارات الرئيسية التي تظهر أثناء الحديث لتثبيت المعلومة السريرية.",
+        "   • تقديم المعلومة السريرية المنقذة والحل الصحيح بهدوء دون استعجال.",
+        "3. [الكابشن والهاشتاجات]:",
+        "   • كابشن تيك توك قصير ومحفز يحث على حفظ الفيديو (Save).",
+        f"   • هاشتاجات سيو تيك توك في مصر: {hashtags_joined}",
+        "```",
+        "",
+        "=====================================================================",
+        "6️⃣ برومبت إنستجرام مصر (Instagram Reels & Clinical Carousel Guide):",
+        "=====================================================================",
+        "```text",
+        "بصفتك مصمم محتوى سريري واستراتيجي إنستجرام في مصر (Instagram Medical Content & SEO Egypt):",
+        f"المحتوى مخصص للجمهور المصري على إنستجرام مع مراعاة السيو الداخلي لإنستجرام (Instagram Search SEO - Egypt).",
+        f"الموضوع السريري: {prod_name} - {selected_cfg['clinical_focus']}.",
+        f"الكلمات المستهدفة: {kws_joined}",
+        "",
+        "المطلوب إنتاجه:",
+        "1. [دليل الكاروسيل السريري (Clinical Carousel - 7 شرائح توعوية)]:",
+        "   • الشريحة 1 (الغلاف): عنوان عريض يبرز الخطأ الشائع في رعاية الجروح بعد العمليات في مصر.",
+        "   • الشريحة 2 (المشكلة الحقيقية): مخاوف المرضى الواقعية (التهاب، عرق في الصيف، بقع داكنة، ألم نزع الغيار).",
+        "   • الشريحة 3 (الفسيولوجيا): ماذا يحدث لطبقات الجلد وألياف الكولاجين علمياً؟",
+        "   • الشريحة 4 و 5 (الحل العملي خطوة بخطوة): كيف تطبق المستلزم الطبي بصورة صحيحة وبأمان؟",
+        "   • الشريحة 6 (الدليل العلمي): استشهاد سريع بإحدى دراسات PubMed المرفقة أدناه لتعزيز الثقة الطبية.",
+        "   • الشريحة 7 (الخاتمة): بطاقة التوجيه السريري المجاني عبر واتساب 01155803307 بكود HT10 وحق المعاينة قبل الاستلام.",
+        "2. [سكريبت ريلز عمودي 9:16 (50 ثانية)]: نص مريح للعين مع توجيه بصري واضح.",
+        f"3. [كابشن إنستجرام المهيأ للسيو]: نص منسق بالرموز التعبيرية الطبية وهاشتاجات إنستجرام مصر: {hashtags_joined}.",
+        "```",
+        "",
+        "=====================================================================",
+        "7️⃣ برومبت مقال مدونة بلوجر (Blogger Medical Blog Post - Google Search Egypt SEO):",
+        "=====================================================================",
+        "```text",
+        "بصفتك كبير كتاب المحتوى الطبي واستشاري السيو المتخصص في محرك بحث جوجل مصر (Google Search SEO gl=eg & Medical E-E-A-T):",
+        "نريد كتابة مقال طبي استشاري شامل ومطول (1200 إلى 1500 كلمة) مهيأ للتصدر في المرتبة الأولى بنتائج بحث جوجل في جمهورية مصر العربية.",
+        f"الكلمة المفتاحية الرئيسية (Focus Keyword): {target_kws[0] if target_kws else prod_name}",
+        f"الكلمات المفتاحية الثانوية (Secondary Keywords): {kws_joined}",
+        "الأسئلة الطويلة وتساؤلات محرك البحث في مصر (Long-tail Inquiries):",
+        long_tails_formatted,
+        "",
+        "الهيكل الإلزامي للمقال:",
+        "1. [عنوان المقال الرئيسي H1]: مدمج فيه الكلمة المفتاحية الرئيسية والهدف الجغرافي (مصر) مع وعد سريري واضح وموثوق.",
+        "2. [المقدمة السريرية]: كسر المخاوف وشرح فسيولوجيا مرحلة التعافي بأسلوب مطمئن وموجه للقارئ المصري.",
+        "3. [عناوين فرعية H2 و H3]: تجيب مباشرة وبدقة على الأسئلة الشائعة التي يبحث عنها المصريون في جوجل.",
+        "4. [جدول مقارنة سريري (HTML Table)]: مقارنة موضوعية بين 'العناية التقليدية (الشاش والبلاستر العادي)' و 'البروتوكول السريري المعتمد'.",
+        "5. [قسم الأدلة السريرية والدراسات]: الاستشهاد المباشر بدراسات PubMed المرفقة أدناه مع أرقام PMID.",
+        "6. [قسم الأسئلة الشائعة FAQ بتنسيق Schema]: 4 أسئلة حيوية وإجاباتها السريرية المباشرة (مثل: الاستحمام، العرق في الصيف، مدة العلاج، طريقة إزالة الغيار).",
+        "7. [الروابط الداخلية ودعوة اتخاذ الإجراء CTA]: التوجيه لزيارة البوابة التفاعلية (https://medon90ae.github.io/healing-touch-egypt/portal/) والتواصل السريري المجاني عبر واتساب 01155803307 مع كود الفحص قبل الاستلام HT10.",
+        "8. [الوصف التعريفي Meta Description]: 155 حرفاً جذاباً ومحفزاً للنقر على نتائج بحث جوجل مصر.",
+        "```",
+        "",
+        "=====================================================================",
+        "8️⃣ برومبت مجتمعات ريديت (Reddit - r/Egypt & r/AskEgypt Discussion Post):",
+        "=====================================================================",
+        "```text",
+        "بصفتك أخصائي رعاية صحية تشارك خبرتك السريرية في مجتمعات ريديت المصرية (r/Egypt و r/AskEgypt):",
+        "نريد كتابة منشور نقاشي استشاري غير دعائي تماماً (Non-promotional Clinical Discussion) يهدف لتثقيف المرضى بعد العمليات وتصحيح المفاهيم الخاطئة الشائعة في مصر.",
+        f"الموضوع: نصائح عملية وإكلينيكية للتعامل مع الجروح بعد العمليات في مصر وتفادي الندبات ومضاعفات الماء والالتهاب الخاصة بـ ({prod_name}).",
+        "الأسلوب: نقاش أخوي راقٍ مبني على أحدث الأبحاث الطبية، يفكك خرافات شائعة (مثل: منع الاستحمام لأسابيع، وضع بودرة أو كحول على الجروح، أو استخدام بلاستر يسلخ الجلد الحساس).",
+        "المخرجات:",
+        "1. عنوان منشور ريديت يثير التساؤل الطبي ويدعو للنقاش.",
+        "2. نص المنشور بصيغة Markdown، مدعوم بأدلة علمية وملاحظات سريرية واقعية.",
+        "3. خاتمة تفتح باب النقاش: 'لو حد عنده استفسار عن مرحلة تعافي جرحه بعد عمليته، يكتب في التعليقات وسأساعده بما أثبتته الدراسات العلمية'.",
+        "```",
+        "",
+        "=====================================================================",
+        "9️⃣ برومبت فيسبوك مصر (Facebook Post - Empathetic Medical Storytelling):",
+        "=====================================================================",
+        "```text",
+        "بصفتك استشاري التواصل السريري في مصر:",
+        "نريد كتابة منشور فيسبوك مؤثر موجه للأمهات والمرضى بعد العمليات في مصر مع استهداف خوارزميات فيسبوك في مصر.",
+        f"الموضوع السريري: {prod_name} - {selected_cfg['clinical_focus']}.",
+        f"الكلمات والاهتمامات: {kws_joined}",
+        "",
+        "المطلوب إنتاجه:",
+        "1. بوست مكتوب بنبرة تعاطف سريري إنسانية راقية تلامس مشاعر المريض وأسرته عند العودة للمنزل بعد العملية وقلق الأيام الأولى.",
+        "2. إجابة حاسمة على مخاوف شائعة في البيوت المصرية (الخوف من بلل الجرح، الحكة الشديدة، التورم، أو تحسس الجلد من اللصقات الرديئة).",
+        "3. إرشاد المريض لحقه في فحص ومعاينة مستلزماته الطبية قبل الاستلام مع شحن مجاني بكود HT10، والتواصل مع أخصائي التعافي عبر واتساب 01155803307.",
+        f"4. هاشتاجات فيسبوك مصرية مناسبة: {hashtags_joined}",
+        "```",
+        "",
+        "=====================================================================",
+        "🔟 أحدث الأبحاث والمراجع الطبية الحقيقية المستكشفة من PubMed / NCBI:",
+        "=====================================================================",
     ])
     if discovered_studies:
         for idx, s in enumerate(discovered_studies, 1):
@@ -1023,24 +1370,39 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
             prompts_pack_lines.append(f"    • المجلة وسنة النشر: {s['journal']} ({s['pub_year']}) | PMID: {s['pmid']}")
             prompts_pack_lines.append(f"    • الرابط المباشر للدراسة: {s['url']}")
             prompts_pack_lines.append(f"    • الأهمية السريرية: {s['summary_ar']}\n")
+    else:
+        prompts_pack_lines.append("• دراسة ترطيب الأنسجة وتسكين الندبات (NCBI PMC2918339): https://pmc.ncbi.nlm.nih.gov/articles/PMC2918339/")
+        prompts_pack_lines.append("• دراسة الوقاية من الكيلويد وتسطيح الندبات (PubMed 28570253): https://pubmed.ncbi.nlm.nih.gov/28570253/\n")
+
     prompts_pack_lines.extend([
         "---------------------------------------------------------------------",
         "📥 الخطوة التالية ببساطة:",
         "---------------------------------------------------------------------",
-        "1. انسخ البرومبتات أعلاه واستخدمها في المنصات المفتوحة أمامك الآن.",
-        "2. احفظ مخرجاتك (الصور، الفيديوهات، النصوص) وضعها في مجلد الاستقبال:",
+        "1. انسخ البرومبت المخصص لكل منصة أعلاه واستخدمه في شات الذكاء الاصطناعي (Gemini, Claude, ChatGPT, NotebookLM).",
+        "2. احفظ مخرجاتك (الفيديوهات .mp4، الصوتيات، النصوص .txt، الصور) وضعها في مجلد الاستقبال:",
         f"   👉 {MANUAL_INBOX_DIR}",
         "3. بعد وضع الملفات، شغّل run_project.bat واضغط [1]؛ سيتولى النظام آلياً:",
         "   • قراءة وتصنيف كافة الملفات التي رفعتها.",
         "   • بناء وتحديث صفحات الهبوط المتعددة (Multi-Angle LPs) الخاصة بهذا المنتج.",
-        "   • تحديث الموقع الكامل وخريطة السيو sitemap.xml ورفعها لـ GitHub Pages.",
-        "   • نشر وتوزيع المنشورات على منصات التواصل مع الروابط الحية!",
+        "   • تحديث الموقع الكامل وتطبيق البوابة ونشر التغييرات مباشرة إلى GitHub Pages.",
+        "   • تجهيز وفصل مخرجات كل منصة في مجلد مؤرخ داخل ready_to_publish وفتحه أمامك فوراً!",
         "=====================================================================",
     ])
 
     prompts_pack_txt = "\n".join(prompts_pack_lines)
+
+    # حفظ في manual_inbox بصيغتي TXT و MD
     prompts_pack_file = MANUAL_INBOX_DIR / "PROMPTS_PACK_TODAY.txt"
     prompts_pack_file.write_text(prompts_pack_txt, encoding="utf-8")
+
+    prompts_pack_md = MANUAL_INBOX_DIR / "PROMPTS_PACK_TODAY.md"
+    prompts_pack_md.write_text(prompts_pack_txt, encoding="utf-8")
+
+    # حفظ في notebooklm_hub
+    (NOTEBOOKLM_DIR / "PROMPTS_PACK_TODAY.md").write_text(prompts_pack_txt, encoding="utf-8")
+    hub_archive = NOTEBOOKLM_DIR / "archive"
+    hub_archive.mkdir(parents=True, exist_ok=True)
+    (hub_archive / f"Prompts_Pack_{timestamp_filename}.md").write_text(prompts_pack_txt, encoding="utf-8")
 
     # تجهيز ملف المعرفة المصدر لـ NotebookLM
     md_lines = [
@@ -1050,20 +1412,25 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
         "**المهمة الأساسية:** التوجيه السريري والدعم التثقيفي للمرضى بعد العمليات الجراحية وتبديد المخاوف وإرشادهم لبروتوكولات التعافي المعتمدة 2026 دون أي ضغط تجاري أو أسعار.",
         "**رابط الاستشارة المجانية المباشر:** `https://medon90ae.github.io/healing-touch-egypt/wa.html` | واتساب: `01155803307`",
         "\n" + "=" * 60,
-        "## 🎯 توجيهات استوديو Google NotebookLM:",
+        "## 🎯 توجيهات استوديو Google NotebookLM وسيو مصر:",
         "=" * 60,
         "1. اعتمد حصرياً على الحقائق السريرية الموثقة في هذا الملف والمراجع العلمية.",
-        "2. أجب على كافة استفسارات وتساؤلات المرضى بنبرة علمية داعمة وهادئة.",
+        "2. أجب على كافة استفسارات وتساؤلات المرضى بنبرة علمية داعمة وهادئة وموجهة للجمهور في مصر.",
         "3. استخدم أدوات الاستوديو (Video Overview, Audio Overview, Study Guide) لإنتاج محتوى غني.",
         "\n## 🩺 أولاً: تفاصيل المنتج ومحور الحل السريري:",
-        f"### {selected_cfg['name_ar']}",
+        f"### {prod_name}",
         f"- **التصنيف:** {selected_cfg['category_badge']}",
         f"- **التركيز السريري:** {selected_cfg['clinical_focus']}",
         "",
-        "### التساؤلات والمخاوف السريرية للمرضى:",
+        "### الكلمات المفتاحية الأكثر بحثاً في مصر:",
     ]
+    for kw in target_kws:
+        md_lines.append(f"- {kw}")
+    md_lines.append("\n### التساؤلات والمخاوف السريرية للمرضى في مصر:")
     for anz in selected_cfg["patient_anxieties"]:
         md_lines.append(f"- {anz}")
+    for lt in long_tails:
+        md_lines.append(f"- {lt}")
 
     md_lines.append("\n## 📚 ثانياً: المراجع السريرية والأبحاث المعتمدة:")
     if discovered_studies:
@@ -1082,7 +1449,7 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
     timestamp_file = NOTEBOOKLM_DIR / f"Healing_Touch_Brief_{timestamp_filename}.md"
     timestamp_file.write_text("\n".join(md_lines), encoding="utf-8")
 
-    print(f"[+] 🎯 تم توليد وتجهيز حزمة البرومبتات للمنتج ({prod_name}) بنجاح!")
+    print(f"[+] 🎯 تم توليد وتجهيز حزمة البرومبتات وسيو مصر للمنتج ({prod_name}) بنجاح!")
     print(f"    👉 ملف البرومبتات المباشر: {prompts_pack_file}")
     print(f"    👉 ملف المعرفة لـ NotebookLM: {master_file}")
     
