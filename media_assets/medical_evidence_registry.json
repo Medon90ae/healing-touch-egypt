@@ -1,6 +1,6 @@
 {
-  "total_studies": 9,
-  "last_updated": "2026-10-27 23:31:05",
+  "total_studies": 12,
+  "last_updated": "2026-10-28 13:17:16",
   "studies": [
     {
       "pmid": "40459590",
@@ -109,6 +109,42 @@
       "product_name": "شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)",
       "summary_ar": "دراسة سريرية محكمة منشورة في (Ann Plast Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (شريط ميكروبور الطبي الملون (3M Micropore Tan Tape)).",
       "discovered_at": "2026-10-27T23:31:05.049852"
+    },
+    {
+      "pmid": "42853803",
+      "title": "The L-Shaped Lateral Crural Graft: A Single-Graft Technique for the Correction of Alar Concavity and Nasal Valve Insufficiency",
+      "journal": "J Craniofac Surg",
+      "pub_year": "2026",
+      "doi": "10.1097/SCS.0000000000013483",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42853803/",
+      "product_choice": "4",
+      "product_name": "دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (J Craniofac Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)).",
+      "discovered_at": "2026-10-28T13:17:16.259526"
+    },
+    {
+      "pmid": "42825331",
+      "title": "An Integrated Silicone Splint and Nostril Retainer for Postoperative Rhinoplasty Care: The Tezel Splinting Technique",
+      "journal": "J Craniofac Surg",
+      "pub_year": "2026",
+      "doi": "10.1097/SCS.0000000000013439",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42825331/",
+      "product_choice": "4",
+      "product_name": "دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (J Craniofac Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)).",
+      "discovered_at": "2026-10-28T13:17:16.259570"
+    },
+    {
+      "pmid": "42554673",
+      "title": "Sequential Alar Base Resection in Primary and Secondary Rhinoplasty",
+      "journal": "Plast Reconstr Surg",
+      "pub_year": "2026",
+      "doi": "10.1097/PRS.0000000000013363",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42554673/",
+      "product_choice": "4",
+      "product_name": "دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Plast Reconstr Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)).",
+      "discovered_at": "2026-10-28T13:17:16.259589"
     }
   ]
 }
