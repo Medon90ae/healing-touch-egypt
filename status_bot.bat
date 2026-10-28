@@ -10,6 +10,16 @@ if exist "%PID_FILE%" (
     set /p BOT_PID=<"%PID_FILE%"
 )
 
+:: Self-healing: if PID_FILE was missing, search for running process
+if not defined BOT_PID (
+    for /f "tokens=2 delims=," %%i in ('wmic process where "CommandLine like '%%telegram_control_bot.py%%' and Name='python.exe'" get ProcessId /format:csv 2^>nul ^| findstr /r "[0-9]"') do (
+        set BOT_PID=%%i
+        if defined BOT_PID (
+            echo !BOT_PID!>"%PID_FILE%"
+        )
+    )
+)
+
 set IS_RUNNING=0
 if defined BOT_PID (
     for /f "tokens=1" %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul') do (

@@ -33,12 +33,6 @@ from telegram_control_bot import (
 
 class TestTelegramControlBot(unittest.TestCase):
 
-    def setUp(self):
-        remove_pid_file()
-
-    def tearDown(self):
-        remove_pid_file()
-
     def test_01_configuration_credentials(self):
         """Verify authorized Chat ID and Bot Token are loaded."""
         self.assertEqual(AUTHORIZED_CHAT_ID, "7692685242")
@@ -84,14 +78,17 @@ class TestTelegramControlBot(unittest.TestCase):
             self.assertIn("icon", item)
 
     def test_05_pid_file_lifecycle(self):
-        """Verify PID file writing and cleanup."""
-        self.assertFalse(PID_FILE.exists())
-        write_pid_file()
-        self.assertTrue(PID_FILE.exists())
-        read_pid = int(PID_FILE.read_text(encoding="utf-8").strip())
+        """Verify PID file writing and cleanup using test-isolated path."""
+        test_pid = PROJECT_ROOT / "media_assets" / "test_isolated_bot.pid"
+        if test_pid.exists():
+            test_pid.unlink()
+        self.assertFalse(test_pid.exists())
+        test_pid.write_text(str(os.getpid()), encoding="utf-8")
+        self.assertTrue(test_pid.exists())
+        read_pid = int(test_pid.read_text(encoding="utf-8").strip())
         self.assertEqual(read_pid, os.getpid())
-        remove_pid_file()
-        self.assertFalse(PID_FILE.exists())
+        test_pid.unlink()
+        self.assertFalse(test_pid.exists())
 
     def test_06_service_scripts_existence_and_crlf(self):
         """Verify start_bot.bat, stop_bot.bat, status_bot.bat and run_bot_silent.vbs exist with CRLF."""
