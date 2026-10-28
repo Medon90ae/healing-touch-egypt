@@ -29,3 +29,7 @@ media_assets/ready_to_publish/LATEST_PACK_PATH.txt
 media_assets/notebooklm_hub/Healing_Touch_Brief_*.md
 media_assets/notebooklm_hub/archive/**
 
+
+cloudflared.exe
+*.exe
+media_assets/crm_leads/*.db

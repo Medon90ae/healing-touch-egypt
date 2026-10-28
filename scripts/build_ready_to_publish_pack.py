@@ -240,6 +240,17 @@ def generate_pack(category: str = None) -> Path:
     if assets["vertical_img"]:
         shutil.copy2(str(assets["vertical_img"]), str(ig_dir / "صورة_ستوري_Story_9x16.png"))
 
+    # حفظ باقي صور المعرض السريري والكاروسيل
+    active_files_list = assets.get("active_files", [])
+    active_imgs = [f for f in active_files_list if f.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"]]
+    if len(active_imgs) > 1:
+        for idx, g_img in enumerate(active_imgs[1:]):
+            try:
+                shutil.copy2(str(g_img), str(ig_dir / f"صورة_كاروسيل_{idx+2}.png"))
+                shutil.copy2(str(g_img), str(fb_dir / f"صورة_ألبوم_{idx+2}.png"))
+            except Exception:
+                pass
+
     # =========================================================================
     # 📝 4. قوالب ونصوص يوتيوب (ديناميكية 100%)
     # =========================================================================

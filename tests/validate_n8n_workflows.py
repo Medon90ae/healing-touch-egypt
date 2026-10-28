@@ -237,6 +237,41 @@ class TestN8nWorkflows(unittest.TestCase):
         resp_node = nodes_by_name["Respond to Python Webhook"]
         self.assertEqual(resp_node["type"], "n8n-nodes-base.respondToWebhook")
 
+        # 8. 6-Platform Omnichannel Modalities Validation (Milestone 2 / R2)
+        # Facebook Reels
+        self.assertIn("Publish Facebook Reels", nodes_by_name)
+        fb_reels = nodes_by_name["Publish Facebook Reels"]
+        self.assertTrue(fb_reels.get("retryOnFail"))
+
+        # Instagram Carousel
+        self.assertIn("Create Instagram Carousel Container", nodes_by_name)
+        self.assertIn("Publish Instagram Carousel Container", nodes_by_name)
+        ig_carousel = nodes_by_name["Create Instagram Carousel Container"]
+        self.assertIn("CAROUSEL", str(ig_carousel.get("parameters", {})))
+
+        # YouTube Channel Video (16:9)
+        self.assertIn("Publish YouTube Channel Video", nodes_by_name)
+        yt_video = nodes_by_name["Publish YouTube Channel Video"]
+        self.assertTrue(yt_video.get("retryOnFail"))
+
+        # TikTok Direct Video
+        self.assertIn("Publish TikTok Direct Video", nodes_by_name)
+        tt_direct = nodes_by_name["Publish TikTok Direct Video"]
+        self.assertTrue(tt_direct.get("retryOnFail"))
+
+        # Reddit Clinical Discussion Post
+        self.assertIn("Publish Reddit Clinical Post", nodes_by_name)
+        rd_post = nodes_by_name["Publish Reddit Clinical Post"]
+        self.assertTrue(rd_post.get("retryOnFail"))
+        self.assertIn("Format Reddit Result", nodes_by_name)
+
+        # Blogger Formatted Clinical Article
+        self.assertIn("Publish Blogger Clinical Article", nodes_by_name)
+        bl_post = nodes_by_name["Publish Blogger Clinical Article"]
+        self.assertTrue(bl_post.get("retryOnFail"))
+        self.assertIn("Format Blogger Result", nodes_by_name)
+
+
     def test_06_ai_content_factory_hitl_specifics(self):
         """Verify AI Content Factory with Human-in-the-Loop review workflow."""
         wf = self.workflows["ai_content_factory_hitl.json"]
@@ -314,13 +349,13 @@ class TestN8nWorkflows(unittest.TestCase):
         resp_400 = nodes_by_name["Respond 400 · Invalid Lead Data"]
         self.assertEqual(resp_400["parameters"]["options"]["responseCode"], 400)
 
-        # 4. Google Sheets Tab gid=513215731 Append
+        # 4. Google Sheets CRM Append via Zero-GCP Apps Script Web App Bypass
         self.assertIn("Append Lead to Google Sheets Tab 513215731", nodes_by_name)
         sheets_node = nodes_by_name["Append Lead to Google Sheets Tab 513215731"]
-        self.assertEqual(sheets_node["type"], "n8n-nodes-base.googleSheets")
-        self.assertEqual(sheets_node["parameters"].get("operation"), "append")
-        self.assertEqual(sheets_node["parameters"]["documentId"]["value"], "12yAqzm-pSykfv7nRlvgocAHmwIYD_NPxqcNxrRKzA8k")
-        self.assertEqual(sheets_node["parameters"]["sheetName"]["value"], "gid=513215731")
+        self.assertEqual(sheets_node["type"], "n8n-nodes-base.httpRequest")
+        self.assertEqual(sheets_node["parameters"].get("method"), "POST")
+        self.assertIn("AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr", sheets_node["parameters"].get("url", ""))
+        self.assertTrue(sheets_node["parameters"].get("options", {}).get("redirect", {}).get("redirect", {}).get("followRedirects", False))
         self.assertEqual(sheets_node.get("onError"), "continueErrorOutput")
 
         # 5. 3x Retry Loop with Exponential Backoff

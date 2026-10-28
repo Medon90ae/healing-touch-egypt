@@ -33,8 +33,9 @@ BRANDED_DIR = MEDIA_DIR / "branded_designs"
 NOTEBOOKLM_DIR = MEDIA_DIR / "notebooklm_hub"
 NOTEBOOK_PIC_DIR = NOTEBOOKLM_DIR / "pic"
 NOTEBOOK_ARCHIVE_DIR = NOTEBOOKLM_DIR / "daily_sources_archive"
+POMELLI_LIB_DIR = MEDIA_DIR / "pomelli_library"
 
-for d in (LP_DIR, MANUAL_INBOX_DIR, BRANDED_DIR, NOTEBOOKLM_DIR, NOTEBOOK_PIC_DIR, NOTEBOOK_ARCHIVE_DIR):
+for d in (LP_DIR, MANUAL_INBOX_DIR, BRANDED_DIR, NOTEBOOKLM_DIR, NOTEBOOK_PIC_DIR, NOTEBOOK_ARCHIVE_DIR, POMELLI_LIB_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 SITE_BASE_URL = "https://medon90ae.github.io/healing-touch-egypt"
@@ -222,27 +223,132 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     lp_file = LP_DIR / f"{slug}.html"
     page_public_url = f"{SITE_BASE_URL}/lp/{slug}.html"
 
-    # البحث عن أحدث فيديو وصور في manual_inbox أو branded_designs
-    video_rel_path = ""
-    # فحص manual_inbox أولاً
-    mp4_inbox = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
-    if mp4_inbox:
-        # نسخ الفيديو إلى docs/assets/ لدعمه على GitHub Pages
-        dest_video = DOCS_DIR / "assets" / f"campaign_{cat}_video.mp4"
+    # فحص أصول الميديا المتعددة (R1: Multi-Asset Ingestion)
+    hero_path = ""
+    gallery_paths = []
+    video_h_path = ""
+    video_v_path = ""
+    audio_custom_path = ""
+
+    if media_assets:
+        hero_path = media_assets.get("hero_path") or media_assets.get("square_path") or media_assets.get("story_path") or ""
+        gallery_paths = media_assets.get("gallery_paths") or []
+        video_h_path = media_assets.get("video_horizontal") or media_assets.get("video_path") or ""
+        video_v_path = media_assets.get("video_vertical") or ""
+        audio_custom_path = media_assets.get("audio_path") or ""
+
+    # فحص ومعالجة صورة الغلاف (Hero)
+    image_rel_path = "../assets/og-image.jpg"
+    if hero_path and os.path.isfile(hero_path):
+        dest_img = DOCS_DIR / "assets" / f"campaign_{cat}_hero.png"
         try:
-            shutil.copy2(mp4_inbox[0], dest_video)
-            video_rel_path = f"../assets/{dest_video.name}"
+            shutil.copy2(hero_path, dest_img)
+            image_rel_path = f"../assets/{dest_img.name}"
         except Exception:
             pass
 
-    # فحص الصور
-    image_rel_path = "../assets/og-image.jpg"
-    square_pic = media_assets.get("square_path") if media_assets else ""
-    if square_pic and os.path.isfile(square_pic):
-        dest_img = DOCS_DIR / "assets" / f"campaign_{cat}_hero.png"
+    # فحص ومعالجة معرض الحالات السريرية (Clinical Cases Gallery / Carousel)
+    gallery_dir = DOCS_DIR / "assets" / "gallery"
+    gallery_dir.mkdir(parents=True, exist_ok=True)
+    
+    active_gallery_imgs = []
+    if gallery_paths:
+        active_gallery_imgs = [Path(p) for p in gallery_paths if os.path.isfile(p)]
+    
+    if not active_gallery_imgs:
+        inbox_cand_imgs = [
+            f for f in MANUAL_INBOX_DIR.iterdir()
+            if f.is_file() and f.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"] and not f.name.startswith("PROMPTS")
+        ]
+        if len(inbox_cand_imgs) > 1:
+            active_gallery_imgs = inbox_cand_imgs[1:]
+        elif POMELLI_LIB_DIR.exists():
+            pomelli_cand = sorted(list(POMELLI_LIB_DIR.glob("*.png")), key=lambda x: x.name)
+            if pomelli_cand:
+                active_gallery_imgs = pomelli_cand[:4]
+
+    gallery_items_html = []
+    clinical_step_titles = [
+        "الفحص السريري الأولي وتقييم حواف الجرح",
+        "تطبيق بروتوكول العزل المائي وتثبيت الضمادة",
+        "مرحلة تنظيم ألياف الكولاجين ومنع التضخم",
+        "متابعة تسطيح الندبة وتماثل النتيجة النهائية",
+        "العناية الوقائية المستمرة ودعم مرونة الأنسجة"
+    ]
+    for idx, g_img in enumerate(active_gallery_imgs[:8]):
+        dest_gallery_file = gallery_dir / f"campaign_{cat}_case_{idx+1}.png"
         try:
-            shutil.copy2(square_pic, dest_img)
-            image_rel_path = f"../assets/{dest_img.name}"
+            shutil.copy2(str(g_img), str(dest_gallery_file))
+            rel_src = f"../assets/gallery/{dest_gallery_file.name}"
+        except Exception:
+            rel_src = image_rel_path
+
+        step_title = clinical_step_titles[idx % len(clinical_step_titles)]
+        gallery_items_html.append(f"""
+        <div class="gallery-card" onclick="openGalleryModal('{rel_src}', '{step_title}');">
+          <div class="gallery-img-wrapper">
+            <img src="{rel_src}" alt="{step_title}" loading="lazy" class="gallery-img">
+            <div class="gallery-zoom-badge">🔍 تكبير وفحص الحالة</div>
+          </div>
+          <div class="gallery-info">
+            <span class="case-step-pill">توثيق سريري #{idx+1}</span>
+            <p class="case-desc">{step_title}</p>
+          </div>
+        </div>
+        """)
+
+    gallery_block = ""
+    if gallery_items_html:
+        gallery_block = f"""
+        <section class="clinical-cases-gallery">
+          <div class="gallery-header">
+            <span class="gallery-badge">📸 التوثيق السريري المصور</span>
+            <h2 class="gallery-title">معرض التوثيق السريري ومراحل تعافي الحالة</h2>
+            <p class="gallery-subtitle">توثيق حي ومصور لمراحل التئام الأنسجة والعناية بالندبات خطوة بخطوة</p>
+          </div>
+          
+          <div class="gallery-carousel-wrapper">
+            <button type="button" class="carousel-nav-btn prev" onclick="scrollGallery(-1)" aria-label="السابق">❮</button>
+            <div class="gallery-carousel-track" id="galleryTrack">
+              {"".join(gallery_items_html)}
+            </div>
+            <button type="button" class="carousel-nav-btn next" onclick="scrollGallery(1)" aria-label="التالي">❯</button>
+          </div>
+
+          <!-- نافذة تكبير وفحص الصورة السريرية Lightbox Modal -->
+          <div id="galleryModal" class="gallery-modal" onclick="if(event.target.id === 'galleryModal') closeGalleryModal();">
+            <div class="gallery-modal-content">
+              <button type="button" class="gallery-modal-close" onclick="closeGalleryModal()">✕</button>
+              <img id="galleryModalImg" src="" alt="فحص سريري مكبر" class="gallery-modal-image">
+              <p id="galleryModalCaption" class="gallery-modal-caption"></p>
+            </div>
+          </div>
+        </section>
+        """
+
+    # فحص ومعالجة الفيديو
+    video_rel_path = ""
+    if video_h_path and os.path.isfile(video_h_path):
+        dest_video = DOCS_DIR / "assets" / f"campaign_{cat}_video.mp4"
+        try:
+            shutil.copy2(video_h_path, dest_video)
+            video_rel_path = f"../assets/{dest_video.name}"
+        except Exception:
+            pass
+    elif not video_rel_path:
+        mp4_inbox = sorted(list(MANUAL_INBOX_DIR.glob("*.mp4")), key=lambda x: x.stat().st_mtime, reverse=True)
+        if mp4_inbox:
+            dest_video = DOCS_DIR / "assets" / f"campaign_{cat}_video.mp4"
+            try:
+                shutil.copy2(mp4_inbox[0], dest_video)
+                video_rel_path = f"../assets/{dest_video.name}"
+            except Exception:
+                pass
+
+    if video_v_path and os.path.isfile(video_v_path):
+        dest_v_video = DOCS_DIR / "assets" / f"campaign_{cat}_video_vertical.mp4"
+        try:
+            shutil.copy2(video_v_path, dest_v_video)
         except Exception:
             pass
 
@@ -299,11 +405,19 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 
     # فحص وجود تعليق صوتي وبودكاست سريري
     audio_rel_path = ""
-    for ext in [".m4a", ".mp3", ".wav"]:
-        cand_a = DOCS_DIR / "assets" / f"campaign_{cat}_audio{ext}"
-        if cand_a.exists():
-            audio_rel_path = f"../assets/{cand_a.name}"
-            break
+    if audio_custom_path and os.path.isfile(audio_custom_path):
+        dest_audio = DOCS_DIR / "assets" / f"campaign_{cat}_audio{Path(audio_custom_path).suffix}"
+        try:
+            shutil.copy2(audio_custom_path, dest_audio)
+            audio_rel_path = f"../assets/{dest_audio.name}"
+        except Exception:
+            pass
+    if not audio_rel_path:
+        for ext in [".m4a", ".mp3", ".wav"]:
+            cand_a = DOCS_DIR / "assets" / f"campaign_{cat}_audio{ext}"
+            if cand_a.exists():
+                audio_rel_path = f"../assets/{cand_a.name}"
+                break
 
     audio_block = ""
     if audio_rel_path:
@@ -453,6 +567,41 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     .sticky-promo-info {{ font-weight: 800; font-size: 0.88rem; color: var(--teal-deep); }}
     .btn-sticky-cta {{ background: #059669; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; }}
 
+    /* معرض التوثيق السريري والكاروسيل التفاعلي */
+    .clinical-cases-gallery {{ background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 32px; box-shadow: var(--shadow); }}
+    .gallery-header {{ text-align: center; margin-bottom: 24px; }}
+    .gallery-badge {{ display: inline-block; background: var(--mint-light); color: var(--teal-deep); font-weight: 800; font-size: 0.85rem; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #A7F3D0; }}
+    .gallery-title {{ font-size: 1.6rem; font-weight: 900; color: var(--teal-deep); margin-bottom: 6px; }}
+    .gallery-subtitle {{ font-size: 0.95rem; color: var(--text-muted); }}
+    
+    .gallery-carousel-wrapper {{ position: relative; display: flex; align-items: center; }}
+    .gallery-carousel-track {{ display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding: 12px 4px; width: 100%; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }}
+    .gallery-carousel-track::-webkit-scrollbar {{ height: 6px; }}
+    .gallery-carousel-track::-webkit-scrollbar-thumb {{ background: #CBD5E1; border-radius: 4px; }}
+    
+    .gallery-card {{ flex: 0 0 280px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }}
+    .gallery-card:hover {{ transform: translateY(-4px); box-shadow: 0 10px 20px rgba(6, 78, 59, 0.12); border-color: var(--mint); }}
+    .gallery-img-wrapper {{ position: relative; width: 100%; height: 260px; overflow: hidden; background: #0F172A; }}
+    .gallery-img {{ width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }}
+    .gallery-card:hover .gallery-img {{ transform: scale(1.04); }}
+    .gallery-zoom-badge {{ position: absolute; bottom: 8px; left: 8px; background: rgba(6, 78, 59, 0.85); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; backdrop-filter: blur(4px); }}
+    .gallery-info {{ padding: 14px; text-align: right; }}
+    .case-step-pill {{ display: inline-block; background: #F1F5F9; color: var(--teal-deep); font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }}
+    .case-desc {{ font-size: 0.88rem; color: #334155; line-height: 1.5; font-weight: 600; }}
+
+    .carousel-nav-btn {{ position: absolute; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: var(--teal-deep); color: #fff; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 1.1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }}
+    .carousel-nav-btn:hover {{ background: var(--emerald); }}
+    .carousel-nav-btn.prev {{ right: -16px; }}
+    .carousel-nav-btn.next {{ left: -16px; }}
+
+    /* نافذة تكبير وفحص الصورة السريرية Lightbox Modal */
+    .gallery-modal {{ display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); z-index: 999999; justify-content: center; align-items: center; padding: 20px; direction: rtl; }}
+    .gallery-modal-content {{ position: relative; max-width: 800px; width: 100%; max-height: 90vh; background: #fff; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; }}
+    .gallery-modal-close {{ position: absolute; top: 12px; left: 12px; z-index: 10; background: rgba(0,0,0,0.6); color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }}
+    .gallery-modal-close:hover {{ background: #DC2626; }}
+    .gallery-modal-image {{ width: 100%; max-height: 70vh; object-fit: contain; background: #000; }}
+    .gallery-modal-caption {{ padding: 14px 20px; font-size: 1rem; font-weight: 700; color: #1E293B; text-align: center; width: 100%; }}
+
     /* مودال تسجيل العميل الإجباري Zero-Bypass */
     #promo-lead-modal {{ display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6, 78, 59, 0.65); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center; padding: 16px; direction: rtl; }}
     .lead-modal-card {{ background: #fff; border-radius: 20px; max-width: 460px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 2px solid #6EE7B7; text-align: center; position: relative; }}
@@ -515,6 +664,9 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     <!-- مشغل الفيديو الشارح إن وجد -->
     {video_block}
     {audio_block}
+
+    <!-- معرض التوثيق السريري ومراحل تعافي الحالة (Clinical Cases Gallery / Carousel) -->
+    {gallery_block}
 
     <!-- السرد الإكلينيكي وحل المشكلة -->
     <section class="clinical-narrative-card">
@@ -651,6 +803,29 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       const waMsg = "أهلاً بكِ، أنا (" + pName + ") مسجل في موقع هيلينج تاتش بكود الأولوية السريرية (HT10)، ومحتاج استشارة سريرية مجانية بخصوص: " + currentTopic;
       const waUrl = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(waMsg);
       setTimeout(() => {{ window.open(waUrl, '_blank'); }}, 250);
+    }}
+
+    function scrollGallery(direction) {{
+      const track = document.getElementById('galleryTrack');
+      if (track) {{
+        track.scrollBy({{ left: 300 * direction, behavior: 'smooth' }});
+      }}
+    }}
+
+    function openGalleryModal(src, caption) {{
+      const modal = document.getElementById('galleryModal');
+      const img = document.getElementById('galleryModalImg');
+      const cap = document.getElementById('galleryModalCaption');
+      if (modal && img) {{
+        img.src = src;
+        if (cap) cap.textContent = caption || '';
+        modal.style.display = 'flex';
+      }}
+    }}
+
+    function closeGalleryModal() {{
+      const modal = document.getElementById('galleryModal');
+      if (modal) modal.style.display = 'none';
     }}
   </script>
 </body>

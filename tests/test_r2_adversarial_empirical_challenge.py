@@ -222,7 +222,7 @@ class TestR2AdversarialInstagramPollingBoundedness(unittest.TestCase):
 
 
 class TestR2AdversarialMultiBranchFanIn(unittest.TestCase):
-    """Adversarial testing of 4-branch fan-in and synchronization via Merge node."""
+    """Adversarial testing of 6-platform fan-in and synchronization via Merge node."""
 
     @classmethod
     def setUpClass(cls):
@@ -251,7 +251,9 @@ class TestR2AdversarialMultiBranchFanIn(unittest.TestCase):
             "Format Instagram Result",
             "Format Instagram Error Result",
             "Format YouTube Result",
-            "Format TikTok Result"
+            "Format TikTok Result",
+            "Format Reddit Result",
+            "Format Blogger Result",
         }
         self.assertEqual(set(incoming_to_merge), expected_sources)
 
@@ -268,6 +270,27 @@ class TestR2AdversarialMultiBranchFanIn(unittest.TestCase):
                         agg_incoming.append(src)
         self.assertEqual(agg_incoming, ["Merge Omnichannel Results"])
 
+    def test_six_platform_omnichannel_architecture(self):
+        """Verify presence and configuration of 6-platform nodes across all modalities."""
+        required_nodes = [
+            "Publish Facebook Photo Post",
+            "Publish Facebook Reels",
+            "Create Instagram Media Container",
+            "Create Instagram Carousel Container",
+            "Publish Instagram Carousel Container",
+            "Publish YouTube Shorts",
+            "Publish YouTube Channel Video",
+            "Stage TikTok Assets & Package",
+            "Publish TikTok Direct Video",
+            "Publish Reddit Clinical Post",
+            "Publish Blogger Clinical Article",
+        ]
+        for name in required_nodes:
+            self.assertIn(name, self.nodes_by_name, f"Missing required 6-platform node: {name}")
+            node = self.nodes_by_name[name]
+            self.assertTrue(node.get("id"), f"Node {name} missing id")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

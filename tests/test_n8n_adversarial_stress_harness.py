@@ -17,6 +17,11 @@ import sys
 import unittest
 from collections import defaultdict, deque
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 WORKFLOWS_DIR = os.path.join(ROOT_DIR, "n8n_workflows")
 

@@ -42,6 +42,11 @@ from smart_intake_classifier import (
 )
 from pathlib import Path
 
+try:
+    from scripts.dispatch_n8n_bridge import dispatch_to_n8n_webhook, build_omnichannel_payload
+except ImportError:
+    from dispatch_n8n_bridge import dispatch_to_n8n_webhook, build_omnichannel_payload
+
 import pandas as pd
 import requests
 from dotenv import load_dotenv, set_key
@@ -615,7 +620,11 @@ def generate_branded_card(case_info: dict, raw_img_path: str) -> dict:
     key_tip = tips_map.get(cat, tips_map["general"])
 
     date_str = datetime.now().strftime("%Y-%m-%d")
-    raw_path = Path(raw_img_path).resolve()
+    if raw_img_path and Path(raw_img_path).is_file():
+        raw_path = Path(raw_img_path).resolve()
+    else:
+        fallback_file = (BASE_DIR / "docs" / "assets" / "og-image.jpg").resolve()
+        raw_path = fallback_file if fallback_file.is_file() else Path(raw_img_path).resolve()
     b64_data = base64.b64encode(raw_path.read_bytes()).decode("ascii")
     bg_uri = f"data:image/jpeg;base64,{b64_data}"
     
@@ -1879,33 +1888,69 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         if isinstance(p_file, Path) and p_file not in used_inbox_files:
             used_inbox_files.append(p_file)
 
-    # 1. معالجة الفيديو المرفوع
-    uploaded_video_rel = ""
-    if inbox_videos:
-        from smart_intake_classifier import CATEGORY_KEYWORDS
-        cat_keywords = CATEGORY_KEYWORDS.get(tmpl['category'], [])
-        matching_vids = [v for v in inbox_videos if tmpl['category'] in v.name.lower() or any(kw.lower() in v.name.lower() for kw in cat_keywords)]
-        chosen_vid = matching_vids[0] if matching_vids else inbox_videos[0]
-        used_inbox_files.append(chosen_vid)
-        dest_vid = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
-        dest_portal_vid = BASE_DIR / "portal_app" / "public" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
-        dest_docs_portal_vid = BASE_DIR / "docs" / "portal" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
-        try:
-            shutil.copy2(str(chosen_vid), str(dest_vid))
-            dest_portal_vid.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(str(chosen_vid), str(dest_portal_vid))
-            dest_docs_portal_vid.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(str(chosen_vid), str(dest_docs_portal_vid))
-            video_path = str(dest_vid)
-            uploaded_video_rel = f"../assets/{dest_vid.name}"
-            print(f"[+] 🎬 تم اعتماد ونشر الفيديو المرفوع: {chosen_vid.name} ({chosen_vid.stat().st_size / (1024*1024):.1f} MB)")
-        except Exception as e:
-            print(f"[!] تنبيه نسخ الفيديو: {e}")
-            video_path = str(chosen_vid)
-    else:
-        video_path = ""
+    # 1. معالجة الفيديوهات المرفوعة وفرز الأبعاد (R1: Multi-Video Aspect Ratio Routing)
+    from smart_intake_classifier import CATEGORY_KEYWORDS, probe_media_dimensions, is_video_silent, merge_silent_video_with_audio
+    cat_keywords = CATEGORY_KEYWORDS.get(tmpl['category'], [])
+    
+    vertical_vids = []
+    horizontal_vids = []
+    for v in inbox_videos:
+        dim = probe_media_dimensions(v)
+        if dim.get("is_vertical_9_16"):
+            vertical_vids.append(v)
+        else:
+            horizontal_vids.append(v)
 
-    # 2. معالجة الصوت المرفوع
+    def match_cat_vid(vids_list):
+        matches = [v for v in vids_list if tmpl['category'] in v.name.lower() or any(kw.lower() in v.name.lower() for kw in cat_keywords)]
+        return matches[0] if matches else (vids_list[0] if vids_list else None)
+
+    chosen_v_vid = match_cat_vid(vertical_vids)
+    chosen_h_vid = match_cat_vid(horizontal_vids)
+
+    dest_h_vid = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+    dest_v_vid = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_video_9x16.mp4"
+    dest_portal_vid = BASE_DIR / "portal_app" / "public" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+    dest_docs_portal_vid = BASE_DIR / "docs" / "portal" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
+
+    video_path = ""
+    uploaded_video_rel = ""
+
+    if chosen_h_vid:
+        used_inbox_files.append(chosen_h_vid)
+        try:
+            shutil.copy2(str(chosen_h_vid), str(dest_h_vid))
+            dest_portal_vid.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(str(chosen_h_vid), str(dest_portal_vid))
+            dest_docs_portal_vid.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(str(chosen_h_vid), str(dest_docs_portal_vid))
+            video_path = str(dest_h_vid)
+            uploaded_video_rel = f"../assets/{dest_h_vid.name}"
+            print(f"[+] 🎬 تم اعتماد ونشر الفيديو العرضي (16:9 لليوتيوب واللاندنج): {chosen_h_vid.name}")
+        except Exception as e:
+            print(f"[!] تنبيه نسخ الفيديو العرضي: {e}")
+            video_path = str(chosen_h_vid)
+
+    if chosen_v_vid:
+        used_inbox_files.append(chosen_v_vid)
+        try:
+            shutil.copy2(str(chosen_v_vid), str(dest_v_vid))
+            if not video_path:
+                video_path = str(dest_v_vid)
+                uploaded_video_rel = f"../assets/{dest_v_vid.name}"
+            print(f"[+] 📱 تم اعتماد ونشر الفيديو الطولي (9:16 للريلز وتيك توك وشورتس): {chosen_v_vid.name}")
+        except Exception as e:
+            print(f"[!] تنبيه نسخ الفيديو الطولي: {e}")
+            if not video_path:
+                video_path = str(chosen_v_vid)
+
+    # إضافة باقي الفيديوهات المرفوعة للملفات المعالجة لمنع أي تراكم
+    for v in inbox_videos:
+        if v not in used_inbox_files:
+            used_inbox_files.append(v)
+
+    # 2. معالجة الصوت المرفوع ودعم الدمج مع الفيديو الصامت
+    dest_docs_aud = None
     if inbox_audios:
         chosen_aud = inbox_audios[0]
         used_inbox_files.append(chosen_aud)
@@ -1918,8 +1963,22 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         except Exception as e:
             print(f"[!] تنبيه نسخ الصوت: {e}")
 
+        # دمج الصوت مع أي فيديو صامت مرفوع
+        for v_cand in [chosen_h_vid, chosen_v_vid]:
+            if v_cand and is_video_silent(v_cand):
+                merged_dest = BASE_DIR / "docs" / "assets" / f"merged_{v_cand.name}"
+                if merge_silent_video_with_audio(v_cand, chosen_aud, merged_dest):
+                    print(f"[+] 🎧 تم بنجاح دمج الصوت السريري مع الفيديو الصامت المرفوع: {merged_dest.name}")
+                    if v_cand == chosen_h_vid:
+                        shutil.copy2(str(merged_dest), str(dest_h_vid))
+                    elif v_cand == chosen_v_vid:
+                        shutil.copy2(str(merged_dest), str(dest_v_vid))
+
+        for a in inbox_audios:
+            if a not in used_inbox_files:
+                used_inbox_files.append(a)
+
     # 3. استيعاب المتن السريري للحالة
-    # إذا توفر ملف فيسبوك أو مقال عام، نستخرج منه المتن الإنساني والسريري
     src_text_file = platform_routed.get("facebook") or platform_routed.get("blogger") or (inbox_texts[0] if inbox_texts else None)
     if src_text_file:
         custom_extracted = extract_clean_content(src_text_file, "facebook")
@@ -1928,23 +1987,38 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
             tmpl["story_text"] = clean_body_sanitized
             print(f"[+] 📝 تم استيعاب وصياغة المتن السريري المرفوع من ({src_text_file.name}) بدون أي ترويسات تقنية!")
 
-    # 4. معالجة الصور المرفوعة من Pomelli
+    # 4. معالجة الصور المرفوعة (R1: Multi-Image Ingestion & Clinical Gallery Carousel)
+    gallery_paths = []
     if inbox_images:
-        # تفضيل الصور ذات الحجم الأنسب للويب (مثل 1-2 ميجابايت بدلاً من 20 ميجابايت)
+        # الصورة الأولى هي Hero Cover
         sorted_imgs = sorted(inbox_images, key=lambda x: (abs(x.stat().st_size - 1.5 * 1024 * 1024)))
         chosen_img = sorted_imgs[0]
-        for img in inbox_images:
-            used_inbox_files.append(img)
-            
+        used_inbox_files.append(chosen_img)
+        
         dest_hero_img = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_hero.png"
         try:
             shutil.copy2(str(chosen_img), str(dest_hero_img))
             square_img_path = str(dest_hero_img)
             story_img_path = str(dest_hero_img)
-            print(f"[+] 🎨 تم اعتماد صور Pomelli السريرية المرفوعة ({chosen_img.name})!")
+            print(f"[+] 🎨 تم اعتماد صورة الغلاف الرئيسية Hero Cover ({chosen_img.name})!")
         except Exception:
             square_img_path = str(chosen_img)
             story_img_path = str(chosen_img)
+
+        # باقي الصور تُوزع كمعرض سريري وكاروسيل للمنصات وصفحة الهبوط
+        gallery_dir = BASE_DIR / "docs" / "assets" / "gallery"
+        gallery_dir.mkdir(parents=True, exist_ok=True)
+        remaining_imgs = [im for im in inbox_images if im != chosen_img]
+        for g_idx, g_img in enumerate(remaining_imgs):
+            used_inbox_files.append(g_img)
+            dest_g = gallery_dir / f"campaign_{tmpl['category']}_case_{g_idx+1}.png"
+            try:
+                shutil.copy2(str(g_img), str(dest_g))
+                gallery_paths.append(str(dest_g))
+            except Exception:
+                gallery_paths.append(str(g_img))
+        if gallery_paths:
+            print(f"[+] 📸 تم توجيه {len(gallery_paths)} صور سريرية إضافية إلى معرض الحالات السريرية (Clinical Cases Carousel)!")
     else:
         photo_info = get_clinical_case_photo(tmpl["title"], tmpl["category"])
         raw_img = photo_info.get("local_path", "")
@@ -1976,7 +2050,15 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
     lp_res = cle.build_campaign_landing_page(
         case_data=tmpl,
-        media_assets={"square_path": square_img_path, "story_path": story_img_path},
+        media_assets={
+            "hero_path": square_img_path,
+            "square_path": square_img_path,
+            "story_path": story_img_path,
+            "gallery_paths": gallery_paths,
+            "video_horizontal": str(dest_h_vid) if chosen_h_vid else video_path,
+            "video_vertical": str(dest_v_vid) if chosen_v_vid else "",
+            "audio_path": str(dest_docs_aud) if dest_docs_aud else ""
+        },
         custom_stitch_html=custom_stitch_html
     )
     lp_url = lp_res["public_url"]
@@ -2082,6 +2164,35 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         "row_index": -1,
     }
 
+    # تجهيز حزمة النشر الآلي الشامل لـ 6 منصات لمحرك n8n
+    n8n_payload = build_omnichannel_payload(
+        campaign_id=tmpl.get("category", "post_op_care"),
+        theme="surgical_wound_and_scar_care",
+        product_name=tmpl.get("title", "BUPY Silicone Scar Sheets 4cm x 3m"),
+        promo_code="HT10",
+        promo_text="كود الخصم: HT10 (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)",
+        wa_link=wa_direct_url,
+        landing_url=lp_url,
+        hero_image=str(square_img_path),
+        gallery_images=[str(square_img_path), str(story_img_path)],
+        video_vertical=str(video_path),
+        video_horizontal=str(video_path),
+        copywriting={
+            "facebook": facebook_caption,
+            "instagram": instagram_caption,
+            "tiktok": tiktok_caption,
+            "youtube_title": f"{tmpl['title']} | هيلينج تاتش مصر #Shorts",
+            "youtube_description": f"الدليل الطبي المعتمد لتعافي الجروح والندبات الجراحية في المنزل بدون مضاعفات\n\n🎁 كود الخصم: HT10 (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)\n🩺 استشارة مجانية مع أخصائية العناية بالتعافي: {wa_direct_url}\n\n{tmpl['hashtags']}",
+            "reddit_title": blogger_post.get("title", tmpl["title"]),
+            "reddit_markdown": reddit_text,
+            "blogger_title": blogger_post.get("title", tmpl["title"]),
+            "blogger_html": blogger_text
+        },
+        hashtags=tmpl.get("hashtags", "")
+    )
+    payload_file = BRANDED_DIR / f"{date_str}_[n8n_omnichannel_payload].json"
+    payload_file.write_text(json.dumps(n8n_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
     if dry_run:
         record_post_history(chosen_idx, tmpl["title"])
         print("\n" + "=" * 65)
@@ -2093,6 +2204,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"4. مقال مدونة جوجل (Blogger): {blogger_post['file_path']}")
         print(f"5. حزمة Google NotebookLM: {notebook_file}")
         print(f"6. سجل الترندات الصاعدة الحية: {BASE_DIR / 'media_assets' / 'live_trends_registry.json'}")
+        print(f"7. حزمة الـ 6 منصات لمحرك n8n: {payload_file}")
         print("\nالنص السريري لفيسبوك:")
         print(facebook_caption[:400] + "...")
         print("=" * 65)
@@ -2108,6 +2220,13 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"[+] 🚀 تم نشر وتفعيل الـ Landing Page بنجاح على الرابط:\n   👉 {lp_url}")
     except Exception as e:
         print(f"[!] تنبيه رفع GitHub: {e}")
+
+    # إرسال حزمة الـ 6 منصات لمحرك n8n عبر Webhook
+    n8n_ok, n8n_res = dispatch_to_n8n_webhook(n8n_payload)
+    if n8n_ok:
+        print(f"[+] 🚀 [n8n Omnichannel Engine]: تم إرسال حزمة الـ 6 منصات بنجاح إلى n8n!")
+    else:
+        print(f"[!] ⚠️ [n8n Omnichannel Engine]: تنبيه إرسال الويب هوك: {n8n_res.get('error')}")
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{tmpl['category']}_hero.png"

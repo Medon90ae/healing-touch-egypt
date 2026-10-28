@@ -92,40 +92,24 @@
     },
     {
       "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "12yAqzm-pSykfv7nRlvgocAHmwIYD_NPxqcNxrRKzA8k"
-        },
-        "sheetName": {
-          "__rl": true,
-          "mode": "name",
-          "value": "gid=513215731"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Timestamp": "={{ $('Validate & Normalize Patient Lead').first().json.timestamp }}",
-            "Lead ID": "={{ $('Validate & Normalize Patient Lead').first().json.lead_id }}",
-            "Patient Name": "={{ $('Validate & Normalize Patient Lead').first().json.patient_name }}",
-            "Phone Number": "={{ $('Validate & Normalize Patient Lead').first().json.patient_phone }}",
-            "Normalized Phone": "={{ $('Validate & Normalize Patient Lead').first().json.normalized_phone }}",
-            "Surgical Case": "={{ $('Validate & Normalize Patient Lead').first().json.context_topic }}",
-            "Promo Code": "={{ $('Validate & Normalize Patient Lead').first().json.promo_code }}",
-            "Source Channel": "={{ $('Validate & Normalize Patient Lead').first().json.source }}",
-            "Page URL": "={{ $('Validate & Normalize Patient Lead').first().json.page_url }}",
-            "CRM Status": "NEW"
-          }
-        },
+        "method": "POST",
+        "url": "https://script.google.com/macros/s/AKfycbwDYeWbB9SjUqX1RXH7DaZ8yqG6V5Ay7yAiJ9L27Du1pJ8zb-NVgXzw6oz_0wJVp8Fr/exec",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"timestamp\": $('Validate & Normalize Patient Lead').first().json.timestamp,\n  \"lead_id\": $('Validate & Normalize Patient Lead').first().json.lead_id,\n  \"patient_name\": $('Validate & Normalize Patient Lead').first().json.patient_name,\n  \"patient_phone\": $('Validate & Normalize Patient Lead').first().json.patient_phone,\n  \"normalized_phone\": $('Validate & Normalize Patient Lead').first().json.normalized_phone,\n  \"context_topic\": $('Validate & Normalize Patient Lead').first().json.context_topic,\n  \"promo_code\": $('Validate & Normalize Patient Lead').first().json.promo_code,\n  \"source\": $('Validate & Normalize Patient Lead').first().json.source,\n  \"page_url\": $('Validate & Normalize Patient Lead').first().json.page_url,\n  \"notes\": \"مسجل عبر n8n HTTP Request (Apps Script Bypass)\",\n  \"crm_status\": \"NEW\"\n}",
         "options": {
-          "cellFormat": "RAW"
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          },
+          "timeout": 15000
         }
       },
       "id": "wf3-node-5",
       "name": "Append Lead to Google Sheets Tab 513215731",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         960,
         200

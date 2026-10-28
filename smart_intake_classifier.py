@@ -15,10 +15,17 @@
 
 import os
 import re
+import json
 import shutil
+import subprocess
 import urllib.parse
 from pathlib import Path
 from datetime import datetime
+
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
 
 # الكلمات الدلالية السريرية لكل تخصص جراحي (عربي + إنجليزي)
 CATEGORY_KEYWORDS = {
@@ -68,7 +75,7 @@ def read_resilient_text(target: Path | str) -> str:
 def find_active_inbox_files(inbox_dir: Path) -> list[Path]:
     """
     العثور على الملفات المرفوعة الحالية في manual_inbox.
-    إذا كان الصندوق فارغاً، يتم فحص مجلد archive واختيار ملفات أحدث حملة مؤرخة تلقائياً.
+    إذا كان الصندوق فارغاً، يتم فحص مجلدات archive واختيار ملفات أحدث حملة مؤرخة تلقائياً.
     """
     if not inbox_dir.exists():
         return []
@@ -80,18 +87,142 @@ def find_active_inbox_files(inbox_dir: Path) -> list[Path]:
     if current_files:
         return current_files
 
-    # فحص الأرشيف
-    archive_dir = inbox_dir / "archive"
-    if archive_dir.exists():
-        arch_subdirs = sorted([d for d in archive_dir.iterdir() if d.is_dir()], key=lambda x: x.name, reverse=True)
-        for sdir in arch_subdirs:
-            arch_files = [
-                f for f in sdir.iterdir()
-                if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]
-            ]
-            if arch_files:
-                return arch_files
+    # فحص الأرشيف في media_assets/archive أو manual_inbox/archive
+    arch_dirs_to_check = []
+    for candidate_root in [inbox_dir.parent / "archive", inbox_dir / "archive"]:
+        if candidate_root.exists() and candidate_root.is_dir():
+            for sdir in candidate_root.iterdir():
+                if sdir.is_dir():
+                    arch_dirs_to_check.append(sdir)
+    arch_subdirs = sorted(arch_dirs_to_check, key=lambda x: x.name, reverse=True)
+    for sdir in arch_subdirs:
+        arch_files = [
+            f for f in sdir.iterdir()
+            if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]
+        ]
+        if arch_files:
+            return arch_files
     return []
+
+
+def probe_media_dimensions(file_path: Path | str) -> dict:
+    """
+    فحص أبعاد الوسائط (صورة أو فيديو) وحساب نسبة العرض للارتفاع:
+    - 9:16 طولي (Reels, Shorts, TikTok)
+    - 16:9 عرضي (YouTube Main, Blogger, Landing Page)
+    - 1:1 مربع
+    """
+    p = Path(file_path)
+    default_res = {
+        "width": 1080,
+        "height": 1920,
+        "aspect_ratio": 9 / 16,
+        "is_vertical_9_16": True,
+        "is_horizontal_16_9": False,
+        "orientation": "vertical"
+    }
+    if not p.exists() or not p.is_file():
+        return default_res
+
+    ext = p.suffix.lower()
+    # 1. إذا كان صورة
+    if ext in [".png", ".jpg", ".jpeg", ".webp", ".bmp"]:
+        if Image:
+            try:
+                with Image.open(p) as img:
+                    w, h = img.size
+                    ratio = w / h if h else 1.0
+                    is_vert = (h > w)
+                    return {
+                        "width": w,
+                        "height": h,
+                        "aspect_ratio": ratio,
+                        "is_vertical_9_16": is_vert,
+                        "is_horizontal_16_9": (w >= h),
+                        "orientation": "vertical" if is_vert else ("horizontal" if w > h else "square")
+                    }
+            except Exception:
+                pass
+        return default_res
+
+    # 2. إذا كان فيديو
+    if ext in [".mp4", ".mov", ".mkv", ".webm", ".avi"]:
+        cmd = [
+            "ffprobe", "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=width,height",
+            "-of", "json",
+            str(p)
+        ]
+        try:
+            res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            if res.returncode == 0 and res.stdout:
+                data = json.loads(res.stdout)
+                streams = data.get("streams", [])
+                if streams:
+                    w = int(streams[0].get("width", 1080))
+                    h = int(streams[0].get("height", 1920))
+                    ratio = w / h if h else 1.0
+                    is_vert = (h > w)
+                    return {
+                        "width": w,
+                        "height": h,
+                        "aspect_ratio": ratio,
+                        "is_vertical_9_16": is_vert,
+                        "is_horizontal_16_9": (w >= h),
+                        "orientation": "vertical" if is_vert else "horizontal"
+                    }
+        except Exception:
+            pass
+
+    return default_res
+
+
+def is_video_silent(video_path: Path | str) -> bool:
+    """فحص ما إذا كان ملف الفيديو صامتاً بدون مسار صوتي."""
+    p = Path(video_path)
+    if not p.exists() or not p.is_file():
+        return False
+    cmd = [
+        "ffprobe", "-v", "error",
+        "-select_streams", "a:0",
+        "-show_entries", "stream=codec_type",
+        "-of", "json",
+        str(p)
+    ]
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if res.returncode == 0 and res.stdout:
+            data = json.loads(res.stdout)
+            streams = data.get("streams", [])
+            return len(streams) == 0
+    except Exception:
+        pass
+    return False
+
+
+def merge_silent_video_with_audio(video_path: Path | str, audio_path: Path | str, output_path: Path | str) -> bool:
+    """دمج ملف صوتي سريري مع فيديو صامت باستخدام FFmpeg فائق السرعة."""
+    vp = Path(video_path)
+    ap = Path(audio_path)
+    out_p = Path(output_path)
+    if not vp.exists() or not ap.exists():
+        return False
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        "ffmpeg", "-y",
+        "-i", str(vp),
+        "-i", str(ap),
+        "-c:v", "copy",
+        "-c:a", "aac",
+        "-shortest",
+        str(out_p)
+    ]
+    try:
+        res = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        return res.returncode == 0 and out_p.exists() and out_p.stat().st_size > 0
+    except Exception:
+        return False
 
 
 def classify_file_category(file_path: Path) -> str:
@@ -143,16 +274,20 @@ def route_platform_text_files(files_or_dir) -> dict:
                 if f.is_file() and f.suffix.lower() in [".txt", ".md"] and not f.name.startswith("PROMPTS")
             ]
             if not candidates:
-                arch_dir = p / "archive"
-                if arch_dir.exists():
-                    subdirs = sorted([d for d in arch_dir.iterdir() if d.is_dir()], key=lambda x: x.name, reverse=True)
-                    for sdir in subdirs:
-                        candidates = [
-                            f for f in sdir.iterdir()
-                            if f.is_file() and f.suffix.lower() in [".txt", ".md"] and not f.name.startswith("PROMPTS")
-                        ]
-                        if candidates:
-                            break
+                arch_candidates = []
+                for candidate_root in [p.parent / "archive", p / "archive"]:
+                    if candidate_root.exists() and candidate_root.is_dir():
+                        for sdir in candidate_root.iterdir():
+                            if sdir.is_dir():
+                                arch_candidates.append(sdir)
+                arch_subdirs = sorted(arch_candidates, key=lambda x: x.name, reverse=True)
+                for sdir in arch_subdirs:
+                    candidates = [
+                        f for f in sdir.iterdir()
+                        if f.is_file() and f.suffix.lower() in [".txt", ".md"] and not f.name.startswith("PROMPTS")
+                    ]
+                    if candidates:
+                        break
         else:
             candidates = [p] if p.suffix.lower() in [".txt", ".md"] else []
     else:
@@ -719,7 +854,7 @@ def _extract_clean_reddit(raw_text: str, landing_url: str = "", whatsapp_url: st
 def scan_and_triage_manual_inbox(inbox_dir: Path) -> dict:
     """
     مسح شامل لصندوق manual_inbox وتصنيف كافة الملفات حسب التخصص ونوع الميديا،
-    بالإضافة لفرز وتوجيه ملفات المنصات تلقائياً (R1).
+    مع فرز دقيق لنسبة أبعاد الفيديوهات (9:16 مقابل 16:9) وتوزيع الصور المتعددة (Hero + Gallery).
     """
     results = {
         "detected_category": None,
@@ -732,6 +867,20 @@ def scan_and_triage_manual_inbox(inbox_dir: Path) -> dict:
             "blogger": None,
             "reddit": None,
             "general": []
+        },
+        "media_triage": {
+            "images": {
+                "hero": None,
+                "gallery": [],
+                "all": []
+            },
+            "videos": {
+                "vertical_9_16": [],
+                "horizontal_16_9": [],
+                "all": []
+            },
+            "audios": [],
+            "silent_videos": []
         },
         "all_files_count": 0,
         "recommended_template_index": None
@@ -747,18 +896,25 @@ def scan_and_triage_manual_inbox(inbox_dir: Path) -> dict:
 
     category_activity = {cat: 0 for cat in CATEGORY_KEYWORDS}
 
+    inbox_images = []
+    inbox_videos = []
+    inbox_audios = []
+
     for f in valid_files:
         cat = classify_file_category(f)
         ext = f.suffix.lower()
 
         if ext in [".mp4", ".mov", ".mkv", ".webm"]:
             results["matched_files"][cat]["videos"].append(f)
+            inbox_videos.append(f)
             category_activity[cat] += 4
         elif ext in [".jpg", ".jpeg", ".png", ".webp"]:
             results["matched_files"][cat]["images"].append(f)
+            inbox_images.append(f)
             category_activity[cat] += 1
         elif ext in [".m4a", ".mp3", ".wav", ".aac"]:
             results["matched_files"][cat]["audios"].append(f)
+            inbox_audios.append(f)
             category_activity[cat] += 2
         elif ext in [".txt", ".md"]:
             results["matched_files"][cat]["texts"].append(f)
@@ -771,6 +927,27 @@ def scan_and_triage_manual_inbox(inbox_dir: Path) -> dict:
     text_files = [f for f in valid_files if f.suffix.lower() in [".txt", ".md"]]
     results["platform_texts"] = route_platform_text_files(text_files)
 
+    # تصنيف الميديا المتعددة:
+    # 1. الصور: الأولى Hero والباقي Gallery
+    if inbox_images:
+        results["media_triage"]["images"]["all"] = inbox_images
+        results["media_triage"]["images"]["hero"] = inbox_images[0]
+        results["media_triage"]["images"]["gallery"] = inbox_images[1:]
+
+    # 2. الفيديوهات: 9:16 رأسي مقابل 16:9 أفقي وفحص الصمت
+    for v in inbox_videos:
+        results["media_triage"]["videos"]["all"].append(v)
+        dim = probe_media_dimensions(v)
+        if dim.get("is_vertical_9_16"):
+            results["media_triage"]["videos"]["vertical_9_16"].append(v)
+        else:
+            results["media_triage"]["videos"]["horizontal_16_9"].append(v)
+        if is_video_silent(v):
+            results["media_triage"]["silent_videos"].append(v)
+
+    # 3. الصوتيات
+    results["media_triage"]["audios"] = inbox_audios
+
     # اختيار التخصص الأكثر نشاطاً من المدخلات الحالية
     most_active = max(category_activity, key=category_activity.get)
     if category_activity[most_active] > 0:
@@ -780,26 +957,38 @@ def scan_and_triage_manual_inbox(inbox_dir: Path) -> dict:
 
 
 def archive_used_inbox_files(inbox_dir: Path, files_to_archive: list) -> int:
-    """أرشفة الملفات المستخدمة تلقائياً في مجلد مؤرخ لحفظ نظافة الصندوق."""
+    """
+    أرشفة الملفات المستخدمة تلقائياً في مجلد مؤرخ لحفظ نظافة الصندوق:
+    media_assets/archive/YYYY-MM-DD_HHMMSS/
+    تترك media_assets/manual_inbox/ نظيفة وفارغة 100%.
+    """
     if not files_to_archive:
         return 0
-    now_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    archive_folder = inbox_dir / "archive" / now_str
+    now_str = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    # توجيه الأرشيف إلى media_assets/archive/YYYY-MM-DD_HHMMSS/
+    archive_folder = inbox_dir.parent / "archive" / now_str
     archive_folder.mkdir(parents=True, exist_ok=True)
     count = 0
     for f in files_to_archive:
         try:
             if isinstance(f, (str, Path)):
                 f_path = Path(f)
-                if f_path.exists() and f_path.is_file() and f_path.parent.resolve() == inbox_dir.resolve():
-                    dest = archive_folder / f_path.name
-                    shutil.copy2(str(f_path), str(dest))
-                    # حذف الملف الأصلي من الصندوق بعد نسخه بنجاح للأرشيف
+                if f_path.exists() and f_path.is_file():
+                    # التحقق من أن الملف ينتمي لـ inbox_dir
                     try:
-                        f_path.unlink()
+                        f_path.resolve().relative_to(inbox_dir.resolve())
+                        is_inbox = True
                     except Exception:
-                        pass
-                    count += 1
+                        is_inbox = (f_path.parent.resolve() == inbox_dir.resolve())
+
+                    if is_inbox:
+                        dest = archive_folder / f_path.name
+                        shutil.copy2(str(f_path), str(dest))
+                        try:
+                            f_path.unlink()
+                        except Exception:
+                            pass
+                        count += 1
         except Exception:
             pass
     return count

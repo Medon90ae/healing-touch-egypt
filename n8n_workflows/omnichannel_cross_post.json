@@ -14,13 +14,13 @@
       "typeVersion": 2,
       "position": [
         200,
-        300
+        450
       ],
       "webhookId": "publish-post-trigger"
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\n\nconst campaign_id = body.campaign_id || \"post_op_care\";\nconst product_name = body.product_name || \"BUPY Silicone Scar Sheets 4cm x 3m\";\nconst promo_code = body.promo_code || \"HT10\";\nconst promo_text = `كود الخصم: ${promo_code} (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)`;\nconst wa_link = `https://medon90ae.github.io/healing-touch-egypt/wa.html?case=${encodeURIComponent(campaign_id)}`;\n\nconst raw_hashtags = body.hashtags || \"#ولادة_قيصرية_مصر #جرح_القيصرية #علاج_الندبات #شيت_سيليكون_بوبي #ضمادات_تيجاديرم #هيلينج_تاتش_مصر\";\n\n// Platform-tailored copy\nconst fb_caption = `${body.copywriting?.facebook || body.copywriting?.text || 'بروتوكول العناية الجراحية بالندبات وتأمين الاستحمام الآمن بعد الجراحة'}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: ${wa_link}\\n\\n${raw_hashtags}`;\nconst ig_caption = `${body.copywriting?.instagram || body.copywriting?.text || 'خطوات سريرية معتمدة للتعافي بعد الجراحة وتسطيح الندبات'}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: الرابط في البايو أو زوري ${wa_link}\\n\\n${raw_hashtags}`;\nconst yt_title = `${body.copywriting?.youtube_title || 'بروتوكول تسطيح وتجميل الندبات بعد الجراحة | هيلينج تاتش مصر'} #Shorts`;\nconst yt_description = `${body.copywriting?.youtube_description || 'الدليل الطبي المعتمد لتعافي الجروح والندبات الجراحية في المنزل بدون مضاعفات'}\\n\\n🎁 ${promo_text}\\n🩺 استشارة مجانية مع أخصائية العناية بالتعافي: ${wa_link}\\n\\n${raw_hashtags}`;\n\nreturn [{\n  json: {\n    campaign_id,\n    product_name,\n    promo_code,\n    promo_text,\n    wa_link,\n    fb_page_id: body.fb_page_id || \"1371809382684781\",\n    ig_user_id: body.ig_user_id || \"27911522148524499\",\n    fb_caption,\n    ig_caption,\n    yt_title,\n    yt_description,\n    media_image_url: body.media?.square_card_url || \"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg\",\n    media_video_url: body.media?.video_vertical_url || \"https://medon90ae.github.io/healing-touch-egypt/assets/video_vertical.mp4\",\n    video_vertical_path: body.media?.video_vertical_path || \"media_assets/branded_designs/latest_reel.mp4\",\n    target_platforms: body.target_platforms || [\"facebook\", \"instagram\", \"youtube\", \"tiktok\"],\n    timestamp: new Date().toISOString()\n  }\n}];"
+        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\n\nconst campaign_id = body.campaign_id || \"post_op_care\";\nconst product_name = body.product_name || \"BUPY Silicone Scar Sheets 4cm x 3m\";\nconst promo_code = body.promo_code || \"HT10\";\nconst promo_text = `كود الخصم: ${promo_code} (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)`;\nconst wa_link = body.wa_link || `https://medon90ae.github.io/healing-touch-egypt/wa.html?case=${encodeURIComponent(campaign_id)}`;\nconst landing_url = body.landing_url || `https://medon90ae.github.io/healing-touch-egypt/lp/${encodeURIComponent(campaign_id)}.html`;\n\nconst raw_hashtags = body.hashtags || \"#ولادة_قيصرية_مصر #جرح_القيصرية #علاج_الندبات #شيت_سيليكون_بوبي #ضمادات_تيجاديرم #هيلينج_تاتش_مصر\";\n\n// Meta Platforms (Facebook Photo + Facebook Reels)\nconst fb_photo_caption = body.meta_platforms?.facebook_photo?.caption || body.copywriting?.facebook || body.copywriting?.text || 'بروتوكول العناية الجراحية بالندبات وتأمين الاستحمام الآمن بعد الجراحة';\nconst fb_caption = `${fb_photo_caption}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: ${wa_link}\\n\\n${raw_hashtags}`;\n\n// Instagram Platforms (Reels + Carousels)\nconst ig_text = body.meta_platforms?.instagram_reels?.caption || body.copywriting?.instagram || body.copywriting?.text || 'خطوات سريرية معتمدة للتعافي بعد الجراحة وتسطيح الندبات';\nconst ig_caption = `${ig_text}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: الرابط في البايو أو زوري ${wa_link}\\n\\n${raw_hashtags}`;\nconst ig_carousel_item_ids = body.meta_platforms?.instagram_carousel?.media_urls?.join(',') || (body.media?.gallery_image_urls ? body.media.gallery_image_urls.join(',') : \"ig_carousel_item_1,ig_carousel_item_2\");\n\n// YouTube Platforms (Shorts 9:16 + Channel Videos 16:9)\nconst yt_title_raw = body.youtube_platforms?.youtube_shorts?.title || body.copywriting?.youtube_title || 'بروتوكول تسطيح وتجميل الندبات بعد الجراحة | هيلينج تاتش مصر';\nconst yt_title = yt_title_raw.includes(\"#Shorts\") ? yt_title_raw : `${yt_title_raw} #Shorts`;\nconst yt_channel_video_title = body.youtube_platforms?.youtube_video?.title || yt_title_raw.replace(/#Shorts/gi, '').trim() || 'الدليل الطبي المفصل لتعافي الجروح والندبات الجراحية | هيلينج تاتش مصر';\nconst yt_desc_raw = body.youtube_platforms?.youtube_shorts?.description || body.youtube_platforms?.youtube_video?.description || body.copywriting?.youtube_description || 'الدليل الطبي المعتمد لتعافي الجروح والندبات الجراحية في المنزل بدون مضاعفات';\nconst yt_description = `${yt_desc_raw}\\n\\n🎁 ${promo_text}\\n🩺 استشارة مجانية مع أخصائية العناية بالتعافي: ${wa_link}\\n\\n${raw_hashtags}`;\n\n// TikTok Platform (Direct Auto-Posting / Staged Asset Package)\nconst tiktok_caption = body.tiktok_platform?.caption || body.copywriting?.tiktok || `${fb_caption.slice(0, 150)} #fyp #foryou #تيك_توك_مصر #تعافي_جراحي`;\n\n// Reddit Platform (Clinical discussion post with Markdown formatting & PubMed references)\nconst reddit_subreddit = body.reddit_platform?.subreddit || \"r/Egypt\";\nconst reddit_title = body.reddit_platform?.title || body.copywriting?.reddit_title || `الدليل السريري الموثق للتعافي بعد الجراحة والعناية بالندبات | هيلينج تاتش مصر`;\nconst default_reddit_markdown = `# الدليل السريري للتعافي الجراحي والعناية بالندبات\\n\\nتعتبر فترة ما بعد العمليات الجراحية مرحلة دقيقة تتطلب الالتزام بالتوجيهات السريرية المعتمدة لضمان التئام الجرح دون مضاعفات أو تشكل ندبات متضخمة.\\n\\n## الإرشادات السريرية الأساسية:\\n1. الحفاظ على بيئة جرح نظيفة ورطبة باستخدام ضمادات السيليكون الطبية المعتمدة فور التئام حواف الجرح.\\n2. تجنب تعريض الجرح للشد الميكانيكي أو أشعة الشمس المباشرة خلال الأشهر الأولى.\\n3. الاستعانة بالضمادات المانعة للماء لتأمين الاستحمام الصحي بدون رطوبة مباشرة على الجرح.\\n\\n🎁 **${promo_text}**\\n\\n🩺 **للحصول على استشارة مجانية مباشرة مع أخصائية العناية بالتعافي:**\\n👉 [اضغط هنا لفتح المحادثة المباشرة](${wa_link})\\n\\n---\\\\n**المراجع والدراسات السريرية المعتمدة:**\\n- PubMed Central & International Wound Journal Standards\\n\\n${raw_hashtags}`;\nconst reddit_markdown = body.reddit_platform?.content_markdown || body.copywriting?.reddit_markdown || default_reddit_markdown;\n\n// Blogger Platform (Formatted clinical article with HTML tables & SEO tags)\nconst blogger_title = body.blogger_platform?.title || body.copywriting?.blogger_title || `الدليل الطبي الشامل: بروتوكول التعافي والعناية بالندبات الجراحية`;\nconst default_blogger_html = `<article class=\"clinical-article\" dir=\"rtl\">\\n<h1>${blogger_title}</h1>\\n<p class=\"lead-paragraph\">بروتوكول سريري استرشادي متقدم يهدف لتوجيه المرضى خلال مراحل التعافي بعد العمليات الجراحية والولادة القيصرية لضمان التئام مثالي ومنع تضخم الندبات.</p>\\n\\n<table border=\"1\" cellpadding=\"10\" style=\"width:100%; border-collapse:collapse; margin:20px 0; border:1px solid #d1d5db; font-family:sans-serif;\">\\n  <thead>\\n    <tr style=\"background-color:#ecfdf5; color:#065f46;\">\\n      <th style=\"text-align:right;\">الفترة الزمنية للتعافي</th>\\n      <th style=\"text-align:right;\">التوجيه السريري المعتمد</th>\\n      <th style=\"text-align:right;\">المنتج الطبي الموصى به</th>\\n    </tr>\\n  </thead>\\n  <tbody>\\n    <tr>\\n      <td>الأسبوع 1 إلى 2</td>\\n      <td>تأمين الحماية الكاملة من الماء والبكتيريا أثناء الاستحمام</td>\\n      <td>ضمادات 3M Tegaderm +Pad الطبية المقاومة للماء</td>\\n    </tr>\\n    <tr>\\n      <td>الأسبوع 3 إلى 12</td>\\n      <td>تسطيح الندبة وتوحيد ملمس الجلد بالترطيب الهيدراتي المستمر</td>\\n      <td>شرائح السيليكون الطبية BUPY Silicone Scar Sheets</td>\\n    </tr>\\n  </tbody>\\n</table>\\n\\n<div class=\"cta-panel\" style=\"background:#f0fdf4; border-right:4px solid #10b981; padding:16px; border-radius:8px; margin:24px 0;\">\\n  <h3 style=\"color:#047857; margin-top:0;\">🎁 استشارة مجانية وعرض خاص</h3>\\n  <p>${promo_text}</p>\\n  <p><a href=\"${wa_link}\" style=\"color:#059669; font-weight:bold; text-decoration:underline;\">اضغطي هنا للتواصل المباشر مع أخصائية العناية بالتعافي عبر واتساب</a></p>\\n</div>\\n\\n<footer style=\"margin-top:25px; padding-top:15px; border-top:1px solid #e5e7eb; font-size:0.9em; color:#4b5563;\">\\n  <p>الكلمات الدلالية ومحركات البحث السريرية: ${raw_hashtags}</p>\\n</footer>\\n</article>`;\nconst blogger_html = body.blogger_platform?.content_html || body.copywriting?.blogger_html || default_blogger_html;\nconst blogger_labels = body.blogger_platform?.labels || [\"العناية بالجروح\", \"ندبات القيصرية\", \"سيو مصر\", \"HT10\", \"هيلينج تاتش مصر\"];\n\n// Media URLs & local paths\nconst media_image_url = body.meta_platforms?.facebook_photo?.image_url_or_path || body.media?.square_card_url || body.media?.hero_image_url || \"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg\";\nconst media_video_url = body.meta_platforms?.facebook_reels?.video_url_or_path || body.media?.video_vertical_url || \"https://medon90ae.github.io/healing-touch-egypt/assets/video_vertical.mp4\";\nconst media_video_horizontal_url = body.youtube_platforms?.youtube_video?.video_path || body.media?.video_horizontal_url || \"https://medon90ae.github.io/healing-touch-egypt/assets/video_horizontal.mp4\";\nconst video_vertical_path = body.tiktok_platform?.video_path || body.media?.video_vertical_path || \"media_assets/branded_designs/latest_reel.mp4\";\n\nreturn [{\n  json: {\n    campaign_id,\n    product_name,\n    promo_code,\n    promo_text,\n    wa_link,\n    landing_url,\n    fb_page_id: body.fb_page_id || \"1371809382684781\",\n    ig_user_id: body.ig_user_id || \"27911522148524499\",\n    fb_caption,\n    ig_caption,\n    ig_carousel_item_ids,\n    yt_title,\n    yt_channel_video_title,\n    yt_description,\n    tiktok_caption,\n    reddit_subreddit,\n    reddit_title,\n    reddit_markdown,\n    blogger_title,\n    blogger_html,\n    blogger_labels,\n    media_image_url,\n    media_video_url,\n    media_video_horizontal_url,\n    video_vertical_path,\n    target_platforms: body.target_platforms || [\"facebook\", \"instagram\", \"youtube\", \"tiktok\"],\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "id": "wf1-node-2",
       "name": "Validate & Format Payloads",
@@ -28,7 +28,7 @@
       "typeVersion": 2,
       "position": [
         440,
-        300
+        450
       ]
     },
     {
@@ -68,14 +68,53 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    platform: \"facebook\",\n    success: true,\n    post_id: $json.id || $json.post_id || \"fb_demo_101\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Validate & Format Payloads').first().json.fb_page_id }}/videos",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_url",
+              "value": "={{ $('Validate & Format Payloads').first().json.media_video_url }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $('Validate & Format Payloads').first().json.fb_caption }}"
+            },
+            {
+              "name": "published",
+              "value": "true"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.facebookToken || 'FB_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-23",
+      "name": "Publish Facebook Reels",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        100
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const photo_id = $('Publish Facebook Photo Post').first()?.json?.id || $('Publish Facebook Photo Post').first()?.json?.post_id || \"fb_demo_photo_101\";\nconst reels_id = $('Publish Facebook Reels').first()?.json?.id || \"fb_demo_reel_102\";\nreturn [{\n  json: {\n    platform: \"facebook\",\n    success: true,\n    post_id: photo_id,\n    photo_post_id: photo_id,\n    reels_video_id: reels_id,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "id": "wf1-node-4",
       "name": "Format Facebook Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        940,
+        1180,
         100
       ]
     },
@@ -234,14 +273,84 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    platform: \"instagram\",\n    success: true,\n    media_id: $json.id || \"ig_demo_reel_202\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Validate & Format Payloads').first().json.ig_user_id }}/media",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "CAROUSEL"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Validate & Format Payloads').first().json.ig_caption }}"
+            },
+            {
+              "name": "children",
+              "value": "={{ $('Validate & Format Payloads').first().json.ig_carousel_item_ids }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.instagramToken || 'IG_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-24",
+      "name": "Create Instagram Carousel Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1840,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Validate & Format Payloads').first().json.ig_user_id }}/media_publish",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Create Instagram Carousel Container').first().json.id || 'ig_carousel_creation_demo' }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.instagramToken || 'IG_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-25",
+      "name": "Publish Instagram Carousel Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2060,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const reel_id = $('Publish Instagram Container').first()?.json?.id || \"ig_demo_reel_202\";\nconst carousel_id = $('Publish Instagram Carousel Container').first()?.json?.id || \"ig_demo_carousel_203\";\nreturn [{\n  json: {\n    platform: \"instagram\",\n    success: true,\n    media_id: reel_id,\n    reel_id,\n    carousel_id,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "id": "wf1-node-11",
       "name": "Format Instagram Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1840,
+        2280,
         260
       ]
     },
@@ -281,20 +390,54 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    platform: \"youtube\",\n    success: true,\n    video_id: $json.id || \"yt_demo_shorts_303\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.googleOAuthToken || 'GOOGLE_ACCESS_TOKEN' }}"
+            },
+            {
+              "name": "X-Upload-Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"snippet\": {\n    \"title\": $('Validate & Format Payloads').first().json.yt_channel_video_title,\n    \"description\": $('Validate & Format Payloads').first().json.yt_description,\n    \"tags\": [\"HealingTouchEgypt\", \"الدليل_الجراحي\", \"العناية_بالجروح\", \"تجميل_مصر\", \"HT10\"],\n    \"categoryId\": \"22\"\n  },\n  \"status\": {\n    \"privacyStatus\": \"public\",\n    \"selfDeclaredMadeForKids\": false\n  }\n}",
+        "options": {}
+      },
+      "id": "wf1-node-26",
+      "name": "Publish YouTube Channel Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        480
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "jsCode": "const shorts_id = $('Publish YouTube Shorts').first()?.json?.id || \"yt_demo_shorts_303\";\nconst channel_vid_id = $('Publish YouTube Channel Video').first()?.json?.id || \"yt_demo_video_304\";\nreturn [{\n  json: {\n    platform: \"youtube\",\n    success: true,\n    video_id: shorts_id,\n    shorts_id,\n    channel_video_id: channel_vid_id,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "id": "wf1-node-13",
       "name": "Format YouTube Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        940,
+        1180,
         480
       ]
     },
     {
       "parameters": {
-        "jsCode": "const payload = $('Validate & Format Payloads').first().json;\nconst stagingManifest = {\n  platform: \"tiktok\",\n  status: \"STAGED_READY_FOR_UPLOAD\",\n  video_file: payload.video_vertical_path,\n  aspect_ratio: \"9:16\",\n  max_duration: \"59s\",\n  caption: `${payload.fb_caption.slice(0, 150)} #fyp #foryou #تيك_توك_مصر #تعافي_جراحي`,\n  promo_code: payload.promo_code,\n  staged_at: new Date().toISOString(),\n  upload_url: \"https://www.tiktok.com/creator-center/upload?from=upload\"\n};\nreturn [{ json: stagingManifest }];"
+        "jsCode": "const payload = $('Validate & Format Payloads').first().json;\nconst stagingManifest = {\n  platform: \"tiktok\",\n  status: \"STAGED_READY_FOR_UPLOAD\",\n  video_file: payload.video_vertical_path,\n  aspect_ratio: \"9:16\",\n  max_duration: \"59s\",\n  caption: payload.tiktok_caption,\n  promo_code: payload.promo_code,\n  staged_at: new Date().toISOString(),\n  upload_url: \"https://www.tiktok.com/creator-center/upload?from=upload\"\n};\nreturn [{ json: stagingManifest }];"
       },
       "id": "wf1-node-14",
       "name": "Stage TikTok Assets & Package",
@@ -307,8 +450,42 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.tiktokAccessToken || 'TIKTOK_ACCESS_TOKEN' }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=UTF-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post_info\": {\n    \"title\": $('Validate & Format Payloads').first().json.tiktok_caption,\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"disable_duet\": false,\n    \"disable_stitch\": false,\n    \"disable_comment\": false,\n    \"video_cover_timestamp_ms\": 1000\n  },\n  \"source_info\": {\n    \"source\": \"PULL_FROM_URL\",\n    \"video_url\": $('Validate & Format Payloads').first().json.media_video_url\n  }\n}",
+        "options": {}
+      },
+      "id": "wf1-node-27",
+      "name": "Publish TikTok Direct Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        660
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
         "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
-        "text": "=\"📱 **تيك توك: تم تجهيز باقة النشر والفيديو الرأسي بنجاح!**\\n\\n🎬 الملف: \" + $json.video_file + \"\\n📝 الكابشن: \" + $json.caption + \"\\n🎟️ كود الخصم: \" + $json.promo_code + \"\\n\\n🔗 تفضل بالدخول إلى TikTok Creator Center:\\n\" + $json.upload_url",
+        "text": "=\"📱 **تيك توك: تم تجهيز باقة النشر والفيديو الرأسي بنجاح!**\\n\\n🎬 الملف: \" + $('Stage TikTok Assets & Package').first().json.video_file + \"\\n📝 الكابشن: \" + $('Stage TikTok Assets & Package').first().json.caption + \"\\n🎟️ كود الخصم: \" + $('Stage TikTok Assets & Package').first().json.promo_code + \"\\n\\n🔗 تفضل بالدخول إلى TikTok Creator Center:\\n\" + $('Stage TikTok Assets & Package').first().json.upload_url",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -318,59 +495,115 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        940,
+        1180,
         660
       ]
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    platform: \"tiktok\",\n    success: true,\n    status: $('Stage TikTok Assets & Package').first().json.status,\n    timestamp: new Date().toISOString()\n  }\n}];"
+        "jsCode": "const direct_res = $('Publish TikTok Direct Video').first()?.json;\nconst stage_res = $('Stage TikTok Assets & Package').first()?.json;\nreturn [{\n  json: {\n    platform: \"tiktok\",\n    success: true,\n    status: direct_res?.data?.publish_id ? \"PUBLISHED_DIRECT\" : stage_res?.status || \"STAGED\",\n    publish_id: direct_res?.data?.publish_id || \"tt_demo_direct_404\",\n    staged_pack: stage_res,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "id": "wf1-node-16",
       "name": "Format TikTok Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1160,
+        1400,
         660
       ]
     },
     {
       "parameters": {
-        "jsCode": "const fb = $('Format Facebook Result').first()?.json || { success: false, status: 'skipped' };\nconst ig = $('Format Instagram Result').first()?.json || $('Format Instagram Error Result').first()?.json || { success: false, status: 'skipped' };\nconst yt = $('Format YouTube Result').first()?.json || { success: false, status: 'skipped' };\nconst tt = $('Format TikTok Result').first()?.json || { success: true, status: 'STAGED' };\n\nreturn [{\n  json: {\n    success: true,\n    event: \"omnichannel_cross_post_completed\",\n    campaign_id: $('Validate & Format Payloads').first().json.campaign_id,\n    promo_code: $('Validate & Format Payloads').first().json.promo_code,\n    published_at: new Date().toISOString(),\n    results: {\n      facebook: fb,\n      instagram: ig,\n      youtube: yt,\n      tiktok: tt\n    }\n  }\n}];"
+        "method": "POST",
+        "url": "https://oauth.reddit.com/api/submit",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.redditToken || 'REDDIT_OAUTH_TOKEN' }}"
+            },
+            {
+              "name": "User-Agent",
+              "value": "HealingTouchEgypt/2026.1 (by /u/HealingTouchEG)"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"sr\": $('Validate & Format Payloads').first().json.reddit_subreddit,\n  \"kind\": \"self\",\n  \"title\": $('Validate & Format Payloads').first().json.reddit_title,\n  \"text\": $('Validate & Format Payloads').first().json.reddit_markdown\n}",
+        "options": {}
       },
-      "id": "wf1-node-17",
-      "name": "Aggregate Omnichannel Results",
+      "id": "wf1-node-28",
+      "name": "Publish Reddit Clinical Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        820
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"reddit\",\n    success: true,\n    post_id: $json.id || $json.json?.data?.id || \"rd_demo_505\",\n    url: $json.url || $json.json?.data?.url || \"https://reddit.com/r/Egypt/comments/demo_505\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-29",
+      "name": "Format Reddit Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2280,
-        380
+        940,
+        820
       ]
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify($json) }}",
-        "options": {
-          "responseCode": 200,
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              }
-            ]
-          }
-        }
+        "method": "POST",
+        "url": "=https://www.googleapis.com/blogger/v3/blogs/{{ $credentials?.bloggerBlogId || 'BLOGGER_BLOG_ID' }}/posts/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.googleOAuthToken || 'GOOGLE_ACCESS_TOKEN' }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"kind\": \"blogger#post\",\n  \"title\": $('Validate & Format Payloads').first().json.blogger_title,\n  \"content\": $('Validate & Format Payloads').first().json.blogger_html,\n  \"labels\": $('Validate & Format Payloads').first().json.blogger_labels\n}",
+        "options": {}
       },
-      "id": "wf1-node-18",
-      "name": "Respond to Python Webhook",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
+      "id": "wf1-node-30",
+      "name": "Publish Blogger Clinical Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        2500,
-        380
+        700,
+        980
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"blogger\",\n    success: true,\n    post_id: $json.id || \"bg_demo_606\",\n    url: $json.url || \"https://healingtouchegypt.blogspot.com/2026/post.html\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-31",
+      "name": "Format Blogger Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        980
       ]
     },
     {
@@ -444,8 +677,46 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2.1,
       "position": [
-        2060,
-        380
+        2500,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fb = $('Format Facebook Result').first()?.json || { success: false, status: 'skipped' };\nconst ig = $('Format Instagram Result').first()?.json || $('Format Instagram Error Result').first()?.json || { success: false, status: 'skipped' };\nconst yt = $('Format YouTube Result').first()?.json || { success: false, status: 'skipped' };\nconst tt = $('Format TikTok Result').first()?.json || { success: true, status: 'STAGED' };\nconst rd = $('Format Reddit Result').first()?.json || { success: false, status: 'skipped' };\nconst bl = $('Format Blogger Result').first()?.json || { success: false, status: 'skipped' };\n\nreturn [{\n  json: {\n    success: true,\n    event: \"omnichannel_cross_post_completed\",\n    campaign_id: $('Validate & Format Payloads').first().json.campaign_id,\n    promo_code: $('Validate & Format Payloads').first().json.promo_code,\n    published_at: new Date().toISOString(),\n    results: {\n      facebook: fb,\n      instagram: ig,\n      youtube: yt,\n      tiktok: tt,\n      reddit: rd,\n      blogger: bl\n    }\n  }\n}];"
+      },
+      "id": "wf1-node-17",
+      "name": "Aggregate Omnichannel Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2720,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "wf1-node-18",
+      "name": "Respond to Python Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2940,
+        450
       ]
     }
   ],
@@ -483,11 +754,32 @@
             "node": "Stage TikTok Assets & Package",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Publish Reddit Clinical Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Publish Blogger Clinical Article",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
     "Publish Facebook Photo Post": {
+      "main": [
+        [
+          {
+            "node": "Publish Facebook Reels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Facebook Reels": {
       "main": [
         [
           {
@@ -604,6 +896,28 @@
       "main": [
         [
           {
+            "node": "Create Instagram Carousel Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Instagram Carousel Container": {
+      "main": [
+        [
+          {
+            "node": "Publish Instagram Carousel Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Instagram Carousel Container": {
+      "main": [
+        [
+          {
             "node": "Format Instagram Result",
             "type": "main",
             "index": 0
@@ -637,6 +951,17 @@
       "main": [
         [
           {
+            "node": "Publish YouTube Channel Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish YouTube Channel Video": {
+      "main": [
+        [
+          {
             "node": "Format YouTube Result",
             "type": "main",
             "index": 0
@@ -659,6 +984,17 @@
       "main": [
         [
           {
+            "node": "Publish TikTok Direct Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish TikTok Direct Video": {
+      "main": [
+        [
+          {
             "node": "Notify Staff of TikTok Pack",
             "type": "main",
             "index": 0
@@ -678,6 +1014,50 @@
       ]
     },
     "Format TikTok Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Publish Reddit Clinical Post": {
+      "main": [
+        [
+          {
+            "node": "Format Reddit Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Reddit Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Blogger Clinical Article": {
+      "main": [
+        [
+          {
+            "node": "Format Blogger Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Blogger Result": {
       "main": [
         [
           {

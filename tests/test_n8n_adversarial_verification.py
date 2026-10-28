@@ -84,6 +84,10 @@ class TestN8nAdversarialVerification(unittest.TestCase):
                     max_tries = node.get("maxTries")
                     wait_time = node.get("waitBetweenTries")
 
+                    # If node uses graph-based retry loop (e.g. CRM retry loop with continueErrorOutput), it is verified in test_02
+                    if node.get("onError") == "continueErrorOutput":
+                        continue
+
                     # Check inside parameters.options fallback if applicable
                     opts = node.get("parameters", {}).get("options", {})
                     if retry is None:
@@ -274,9 +278,18 @@ class TestN8nAdversarialVerification(unittest.TestCase):
         true_targets = [t["node"] for t in if_conns[0]]
         self.assertIn("Publish Instagram Container", true_targets)
 
-        # Step 6: False Branch (Output 1) -> Retry Delay
+        # Step 6: False Branch (Output 1) -> Loop Counter -> Retry Delay
         false_targets = [t["node"] for t in if_conns[1]]
-        self.assertIn("Container Polling Retry Delay", false_targets)
+        if "Container Polling Retry Delay" in false_targets:
+            pass
+        else:
+            self.assertIn("IG Polling Loop · Increment Counter", false_targets)
+            counter_targets = [t["node"] for t in conns.get("IG Polling Loop · Increment Counter", {}).get("main", [[]])[0]]
+            self.assertIn("IG Polling · Attempts Left?", counter_targets)
+            attempts_conns = conns.get("IG Polling · Attempts Left?", {}).get("main", [])
+            self.assertGreaterEqual(len(attempts_conns), 1)
+            attempts_targets = [t["node"] for t in attempts_conns[0]]
+            self.assertIn("Container Polling Retry Delay", attempts_targets)
 
         # Step 7: Retry Delay Wait -> Loop Back to Status Check
         wait_2 = nodes_by_name.get("Container Polling Retry Delay")
