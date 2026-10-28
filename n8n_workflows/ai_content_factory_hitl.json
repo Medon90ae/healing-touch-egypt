@@ -1,0 +1,451 @@
+{
+  "name": "Healing Touch Egypt - AI Content Factory & Human-in-the-Loop Review",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "wf2-node-1",
+      "name": "Daily Morning Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-content-intake",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "wf2-node-2",
+      "name": "Manual Webhook Intake Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        320
+      ],
+      "webhookId": "ai-content-intake-trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://pubmed.ncbi.nlm.nih.gov/rss/search/1yQj6u_wound_healing/",
+        "options": {}
+      },
+      "id": "wf2-node-3",
+      "name": "PubMed Medical Research RSS Intake",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\n\nconst topic = body.topic || item.title || \"البروتوكول السريري لتأمين الاستحمام والعناية بجرح الولادة القيصرية وتسطيح الندبة\";\nconst surgery_type = body.surgery_type || \"جراحة ولادة قيصرية\";\nconst product_target = body.product_target || \"BUPY Silicone Scar Sheets & 3M Tegaderm\";\nconst promo_code = \"HT10\";\n\nreturn [{\n  json: {\n    campaign_id: `HT-CAMP-${Date.now()}`,\n    topic,\n    surgery_type,\n    product_target,\n    promo_code,\n    promo_benefit: \"شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع\",\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf2-node-4",
+      "name": "Normalize Content Intake Topic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.openAiApiKey || 'OPENAI_API_KEY' }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o\",\n  \"temperature\": 0.3,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"أنتِ خبيرة متخصصة في صياغة المحتوى الطبي الموجه لمرضى التعافي الجراحي في مصر (Healing Touch Egypt). المبادئ الصارمة الواجب اتباعها:\\n1. لغة عربية مطمئنة، راقية، وإنسانية موجهة مباشرة للمريضة.\\n2. الامتثال التام للوائح الرعاية الصحية المصرية: لا تدّعي أبداً لقب (طبيبة) أو (الدكتورة)؛ استخدمي دائماً (أخصائية العناية بالتعافي).\\n3. منع بات لجميع مصطلحات التسويق الداخلي والمفاهيم الهندسية، بما في ذلك: المرحلة 1، طمأنة المريض، مفاتيح الإقناع، E-E-A-T، Social Hook، Persuasion Triggers.\\n4. تضمين كود الخصم الحصري HT10 وميزاته (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع).\\n5. تقديم بروتوكول العناية بالمنتجات السريرية (BUPY Silicone Sheets، 3M Micropore، 3M Tegaderm، Opsite Spray).\\n6. إضافة 15-20 هاشتاج مصري موجه للمريضات المؤهلات.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"اكتبي منشوراً متكاملاً حول الموضوع الجراحي التالي:\\nالموضوع: \" + $json.topic + \"\\nنوع الجراحة: \" + $json.surgery_type + \"\\nالمنتج الموصى به: \" + $json.product_target + \"\\nكود التفعيل: \" + $json.promo_code\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "wf2-node-5",
+      "name": "LLM Arabic Clinical Copy Generator",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        320
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawAiResponse = $json.choices?.[0]?.message?.content || \"\";\nconst meta = $('Normalize Content Intake Topic').item?.json || $('Normalize Content Intake Topic').first()?.json || {};\n\n// Sanitize and ensure no forbidden marketing jargon leaked\nlet cleanText = rawAiResponse\n  .replace(/المرحلة\\s*[12]/g, \"\")\n  .replace(/طمأنة المريض/g, \"رعاية المريضة\")\n  .replace(/Persuasion Triggers/gi, \"\")\n  .replace(/Social Hook/gi, \"\")\n  .replace(/E-E-A-T/gi, \"\")\n  .trim();\n\nif (!cleanText) {\n  cleanText = `لكل أم بتستعد للتعافي بعد الولادة القيصرية، الاهتمام بجرح العملية من أول يوم بيفرق جداً في شكل الندبة وسرعة التئامها بدون ألم أو التهابات.\\n\\nالبروتوكول السريري الموصى به:\\n1. تأمين نظافة الجرح واستخدام ضمادة الاستحمام المقاومة للماء (3M Tegaderm +Pad).\\n2. بعد التئام السطح الخارجي وسقوط القشور، البدء في تطبيق شيت السيليكون الطبي (BUPY Silicone Sheets) يومياً لترطيب الأنسجة وتسطيح الندبة.\\n\\n🎁 كود الخصم المعتمد HT10 يمنحكِ شحن مجاني وحق فتح ومعاينة الشحنة بالكامل قبل الدفع.\\n🩺 للاستشارة المجانية والمتابعة خطوة بخطوة مع أخصائية العناية بالتعافي، تواصلي معنا عبر واتساب.`;\n}\n\nconst hashtags = \"#ولادة_قيصرية_مصر #جرح_القيصرية #علاج_الندبات #شيت_سيليكون_بوبي #ضمادات_تيجاديرم #هيلينج_تاتش_مصر #تعافي_ما_بعد_الولادة\";\n\nconst preview_text = `🩺 **مسودة محتوى جديدة جاهزة للمراجعة والاعتماد (Healing Touch Egypt)**\\n\\n📌 **الموضوع الجراحي:** ${meta.topic}\\n📦 **المنتج الموصى به:** ${meta.product_target}\\n🎟️ **كود الخصم:** ${meta.promo_code}\\n\\n📄 **نص المنشور المقترح:**\\n${cleanText}\\n\\n🏷️ **الهاشتاجات:**\\n${hashtags}\\n\\n👇 يرجى اتخاذ القرار عبر الأزرار التفاعلية أدناه:`;\n\nreturn [{\n  json: {\n    campaign_id: meta.campaign_id,\n    topic: meta.topic,\n    product_target: meta.product_target,\n    promo_code: meta.promo_code,\n    clean_text: cleanText,\n    hashtags,\n    preview_text,\n    copywriting: {\n      facebook: cleanText,\n      instagram: cleanText,\n      text: cleanText\n    }\n  }\n}];"
+      },
+      "id": "wf2-node-6",
+      "name": "Parse & Format Copy Variants",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
+        "message": "={{ $json.preview_text }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "✅ نشر فوري",
+            "disapproveLabel": "❌ إلغاء"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "limitType": "afterTimeInterval",
+              "resumeAmount": 24,
+              "resumeUnit": "hours"
+            }
+          },
+          "appendAttribution": false
+        }
+      },
+      "id": "wf2-node-7",
+      "name": "Telegram Interactive Approval Gate",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1160,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-approval-state",
+              "leftValue": "={{ $json.data?.approved === true || $json.approved === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wf2-node-8",
+      "name": "Check Approval Decision",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1400,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
+        "text": "=\"🚀 **تم تأكيد الاعتماد بنجاح!**\\n\\nجاري إرسال المنشور إلى محرك النشر متعدد المنصات (Facebook, Instagram, YouTube Shorts, TikTok)...\"",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "wf2-node-9",
+      "name": "Telegram Notify Approval Confirmed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/publish-post",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaign_id",
+              "value": "={{ $('Parse & Format Copy Variants').item.json.campaign_id }}"
+            },
+            {
+              "name": "topic",
+              "value": "={{ $('Parse & Format Copy Variants').item.json.topic }}"
+            },
+            {
+              "name": "product_name",
+              "value": "={{ $('Parse & Format Copy Variants').item.json.product_target }}"
+            },
+            {
+              "name": "copywriting",
+              "value": "={{ JSON.stringify($('Parse & Format Copy Variants').item.json.copywriting) }}"
+            },
+            {
+              "name": "hashtags",
+              "value": "={{ $('Parse & Format Copy Variants').item.json.hashtags }}"
+            },
+            {
+              "name": "promo_code",
+              "value": "HT10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf2-node-10",
+      "name": "Dispatch to Omnichannel Publisher Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1880,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "12yAqzm-pSykfv7nRlvgocAHmwIYD_NPxqcNxrRKzA8k"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "محرك التريند والمقالات الطبية (GitHub SEO)"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.toISO() }}",
+            "Campaign ID": "={{ $('Parse & Format Copy Variants').item.json.campaign_id }}",
+            "Topic": "={{ $('Parse & Format Copy Variants').item.json.topic }}",
+            "Product": "={{ $('Parse & Format Copy Variants').item.json.product_target }}",
+            "Content": "={{ $('Parse & Format Copy Variants').item.json.clean_text }}",
+            "Status": "APPROVED_AND_DISPATCHED",
+            "Promo Code": "HT10"
+          }
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "wf2-node-11",
+      "name": "Log Approved Post to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
+        "text": "=\"❌ **تم إلغاء نشر المسودة بطلب من المسؤول.**\\n\\nتم أرشفة المحتوى بنجاح ولم يتم إرسال أي منشورات إلى المنصات.\"",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "wf2-node-12",
+      "name": "Telegram Notify Cancellation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    status: \"CANCELLED_BY_REVIEWER\",\n    campaign_id: $('Parse & Format Copy Variants').item?.json?.campaign_id || $('Parse & Format Copy Variants').first()?.json?.campaign_id,\n    archived_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf2-node-13",
+      "name": "Archive Cancelled Draft",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1880,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "Daily Morning Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Content Intake Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Webhook Intake Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Content Intake Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PubMed Medical Research RSS Intake": {
+      "main": [
+        [
+          {
+            "node": "Normalize Content Intake Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Content Intake Topic": {
+      "main": [
+        [
+          {
+            "node": "LLM Arabic Clinical Copy Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Arabic Clinical Copy Generator": {
+      "main": [
+        [
+          {
+            "node": "Parse & Format Copy Variants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Format Copy Variants": {
+      "main": [
+        [
+          {
+            "node": "Telegram Interactive Approval Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Interactive Approval Gate": {
+      "main": [
+        [
+          {
+            "node": "Check Approval Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Approval Decision": {
+      "main": [
+        [
+          {
+            "node": "Telegram Notify Approval Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Notify Cancellation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Notify Approval Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Dispatch to Omnichannel Publisher Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dispatch to Omnichannel Publisher Webhook": {
+      "main": [
+        [
+          {
+            "node": "Log Approved Post to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Notify Cancellation": {
+      "main": [
+        [
+          {
+            "node": "Archive Cancelled Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ht-ai-content-factory-hitl-v1"
+  }
+}

@@ -1,0 +1,411 @@
+{
+  "name": "Healing Touch Egypt - WhatsApp Sheets CRM & Staff Dispatcher",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-capture",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf3-node-1",
+      "name": "Consultation Lead Webhook Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "lead-capture-trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\n\nconst raw_name = String(body.patient_name || body.name || \"\").trim();\n\n// 1. Transliterate Eastern Arabic-Indic numerals (٠-٩) to ASCII (0-9)\nlet raw_phone = String(body.patient_phone || body.phone || \"\").trim();\nraw_phone = raw_phone.replace(/[٠-٩]/g, d => \"٠١٢٣٤٥٦٧٨٩\".indexOf(d));\n\n// 2. Strip whitespace, hyphens, periods, parentheses\nraw_phone = raw_phone.replace(/[\\s\\-\\(\\)\\.]/g, '');\n\n// 3. Normalize international Egyptian prefixes (+20, 0020, leading 20) to standard local format 01...\nif (raw_phone.startsWith('+20')) {\n  raw_phone = raw_phone.slice(3);\n  if (!raw_phone.startsWith('0')) raw_phone = '0' + raw_phone;\n} else if (raw_phone.startsWith('0020')) {\n  raw_phone = raw_phone.slice(4);\n  if (!raw_phone.startsWith('0')) raw_phone = '0' + raw_phone;\n} else if (raw_phone.startsWith('+')) {\n  raw_phone = raw_phone.slice(1);\n} else if (raw_phone.startsWith('200') && raw_phone.length === 13) {\n  raw_phone = '0' + raw_phone.slice(3);\n} else if (raw_phone.startsWith('20') && raw_phone.length === 12) {\n  raw_phone = '0' + raw_phone.slice(2);\n}\n\nconst context_topic = String(body.context_topic || body.topic || body.case || \"استشارة عامة لعناية الجروح والندبات\").trim();\nconst channel = String(body.channel || \"whatsapp\").trim();\nconst promo_code = \"HT10\";\nconst source = String(body.source || \"صفحة الاستشارة wa.html\").trim();\nconst page_url = String(body.page_url || \"https://medon90ae.github.io/healing-touch-egypt/wa.html\").trim();\n\n// Egyptian phone regex validation: strictly 11 digits starting with 010, 011, 012, or 015\nconst egyptian_phone_regex = /^01[0125][0-9]{8}$/;\nconst is_valid_phone = egyptian_phone_regex.test(raw_phone);\nconst is_valid_name = raw_name.length >= 2;\n\nlet normalized_phone = \"\";\nif (is_valid_phone) {\n  normalized_phone = \"20\" + raw_phone.slice(1); // converts 01xxxxxxxxx to E.164 201xxxxxxxxx\n}\n\nconst is_valid = is_valid_phone && is_valid_name;\nconst validation_error = !is_valid_name ? \"الاسم يجب أن يتكون من حرفين على الأقل\" : (!is_valid_phone ? \"رقم الهاتف غير صحيح، يجب أن يتكون من 11 رقماً مصرياً يبدأ بـ 01\" : null);\n\nreturn [{\n  json: {\n    is_valid,\n    validation_error,\n    patient_name: raw_name,\n    patient_phone: raw_phone,\n    normalized_phone,\n    context_topic,\n    channel,\n    promo_code,\n    promo_benefit: \"شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع\",\n    source,\n    page_url,\n    lead_id: `HT-LEAD-${Date.now()}`,\n    timestamp: new Date().toISOString(),\n    retry_attempt: 0,\n    wa_direct_url: normalized_phone ? `https://wa.me/201155803307?text=${encodeURIComponent(`أهلاً بحضرتك، أنا ${raw_name} وسجلت استشارة بخصوص (${context_topic}) بكود خصم HT10`)}` : \"\"\n  }\n}];"
+      },
+      "id": "wf3-node-2",
+      "name": "Validate & Normalize Patient Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-valid-lead",
+              "leftValue": "={{ $json.is_valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wf3-node-3",
+      "name": "Is Lead Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\",\n  \"message\": $json.validation_error || \"Invalid patient name or phone number\",\n  \"code\": 400\n}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "wf3-node-4",
+      "name": "Respond 400 · Invalid Lead Data",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "12yAqzm-pSykfv7nRlvgocAHmwIYD_NPxqcNxrRKzA8k"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "gid=513215731"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Validate & Normalize Patient Lead').first().json.timestamp }}",
+            "Lead ID": "={{ $('Validate & Normalize Patient Lead').first().json.lead_id }}",
+            "Patient Name": "={{ $('Validate & Normalize Patient Lead').first().json.patient_name }}",
+            "Phone Number": "={{ $('Validate & Normalize Patient Lead').first().json.patient_phone }}",
+            "Normalized Phone": "={{ $('Validate & Normalize Patient Lead').first().json.normalized_phone }}",
+            "Surgical Case": "={{ $('Validate & Normalize Patient Lead').first().json.context_topic }}",
+            "Promo Code": "={{ $('Validate & Normalize Patient Lead').first().json.promo_code }}",
+            "Source Channel": "={{ $('Validate & Normalize Patient Lead').first().json.source }}",
+            "Page URL": "={{ $('Validate & Normalize Patient Lead').first().json.page_url }}",
+            "CRM Status": "NEW"
+          }
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "wf3-node-5",
+      "name": "Append Lead to Google Sheets Tab 513215731",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        200
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst attempt = (item.retry_attempt || 0) + 1;\nconst max_retries = 3;\nreturn [{\n  json: {\n    ...item,\n    retry_attempt: attempt,\n    max_retries,\n    has_retries_left: attempt <= max_retries\n  }\n}];"
+      },
+      "id": "wf3-node-6",
+      "name": "CRM Retry Loop · Increment Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-retries-left",
+              "leftValue": "={{ $json.has_retries_left }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wf3-node-7",
+      "name": "CRM Retry Loop · Attempts Left?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1460,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wf3-node-8",
+      "name": "CRM Retry Loop · Exponential Backoff Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1220,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    status: \"CRM_APPEND_FAILED_AFTER_RETRIES\",\n    lead_id: $('Validate & Normalize Patient Lead').first().json.lead_id,\n    patient_name: $('Validate & Normalize Patient Lead').first().json.patient_name,\n    patient_phone: $('Validate & Normalize Patient Lead').first().json.patient_phone,\n    escalated_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf3-node-9",
+      "name": "Log CRM Write Failure & Escalate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
+        "text": "=\"🚨 **استشارة عاجلة جديدة — هيلينج تاتش مصر 🩺**\\n\\n👤 **المريضة:** \" + $('Validate & Normalize Patient Lead').first().json.patient_name + \"\\n📞 **الهاتف:** \" + $('Validate & Normalize Patient Lead').first().json.patient_phone + \"\\n🏥 **الحالة الجراحية:** \" + $('Validate & Normalize Patient Lead').first().json.context_topic + \"\\n🎟️ **كود الخصم:** HT10 (شحن مجاني + معاينة قبل الدفع)\\n🌐 **المصدر:** \" + $('Validate & Normalize Patient Lead').first().json.source + \"\\n⏰ **التوقيت:** \" + $('Validate & Normalize Patient Lead').first().json.timestamp + \"\\n\\n💬 **رابط التواصل الفوري عبر واتساب:**\\nhttps://wa.me/\" + $('Validate & Normalize Patient Lead').first().json.normalized_phone + \"?text=\" + encodeURIComponent(\"أهلاً بحضرتك مع أخصائية العناية بالتعافي من هيلينج تاتش مصر، بخصوص استشارتك لكود HT10...\")",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "wf3-node-10",
+      "name": "Send Instant Telegram Staff Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1300,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "recipientPhoneNumber": "201155803307",
+        "textBody": "=\"🚨 استشارة جديدة من \" + $('Validate & Normalize Patient Lead').first().json.patient_name + \" (\" + $('Validate & Normalize Patient Lead').first().json.patient_phone + \") - كود HT10 - حالة: \" + $('Validate & Normalize Patient Lead').first().json.context_topic",
+        "options": {}
+      },
+      "id": "wf3-node-11",
+      "name": "Send WhatsApp Staff Notification",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"lead_id\": $('Validate & Normalize Patient Lead').first().json.lead_id,\n  \"promo_code\": \"HT10\",\n  \"redirect_url\": $('Validate & Normalize Patient Lead').first().json.wa_direct_url,\n  \"message\": \"تم تسجيل الاستشارة بنجاح وتفعيل كود الخصم HT10\"\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "wf3-node-12",
+      "name": "Respond 200 · Lead Registered",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        260
+      ]
+    }
+  ],
+  "connections": {
+    "Consultation Lead Webhook Intake": {
+      "main": [
+        [
+          {
+            "node": "Validate & Normalize Patient Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Normalize Patient Lead": {
+      "main": [
+        [
+          {
+            "node": "Is Lead Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Lead Valid?": {
+      "main": [
+        [
+          {
+            "node": "Append Lead to Google Sheets Tab 513215731",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400 · Invalid Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Lead to Google Sheets Tab 513215731": {
+      "main": [
+        [
+          {
+            "node": "Send Instant Telegram Staff Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Retry Loop · Increment Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM Retry Loop · Increment Counter": {
+      "main": [
+        [
+          {
+            "node": "CRM Retry Loop · Attempts Left?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM Retry Loop · Attempts Left?": {
+      "main": [
+        [
+          {
+            "node": "CRM Retry Loop · Exponential Backoff Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log CRM Write Failure & Escalate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM Retry Loop · Exponential Backoff Wait": {
+      "main": [
+        [
+          {
+            "node": "Append Lead to Google Sheets Tab 513215731",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log CRM Write Failure & Escalate": {
+      "main": [
+        [
+          {
+            "node": "Send Instant Telegram Staff Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Instant Telegram Staff Alert": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Staff Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Staff Notification": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 · Lead Registered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ht-whatsapp-sheets-crm-v1"
+  }
+}

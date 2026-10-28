@@ -1,0 +1,721 @@
+{
+  "name": "Healing Touch Egypt - Omnichannel Cross-Posting Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "publish-post",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf1-node-1",
+      "name": "Python Webhook Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "publish-post-trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\n\nconst campaign_id = body.campaign_id || \"post_op_care\";\nconst product_name = body.product_name || \"BUPY Silicone Scar Sheets 4cm x 3m\";\nconst promo_code = body.promo_code || \"HT10\";\nconst promo_text = `كود الخصم: ${promo_code} (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)`;\nconst wa_link = `https://medon90ae.github.io/healing-touch-egypt/wa.html?case=${encodeURIComponent(campaign_id)}`;\n\nconst raw_hashtags = body.hashtags || \"#ولادة_قيصرية_مصر #جرح_القيصرية #علاج_الندبات #شيت_سيليكون_بوبي #ضمادات_تيجاديرم #هيلينج_تاتش_مصر\";\n\n// Platform-tailored copy\nconst fb_caption = `${body.copywriting?.facebook || body.copywriting?.text || 'بروتوكول العناية الجراحية بالندبات وتأمين الاستحمام الآمن بعد الجراحة'}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: ${wa_link}\\n\\n${raw_hashtags}`;\nconst ig_caption = `${body.copywriting?.instagram || body.copywriting?.text || 'خطوات سريرية معتمدة للتعافي بعد الجراحة وتسطيح الندبات'}\\n\\n🎁 ${promo_text}\\n🩺 استشيري أخصائية العناية بالتعافي مجاناً: الرابط في البايو أو زوري ${wa_link}\\n\\n${raw_hashtags}`;\nconst yt_title = `${body.copywriting?.youtube_title || 'بروتوكول تسطيح وتجميل الندبات بعد الجراحة | هيلينج تاتش مصر'} #Shorts`;\nconst yt_description = `${body.copywriting?.youtube_description || 'الدليل الطبي المعتمد لتعافي الجروح والندبات الجراحية في المنزل بدون مضاعفات'}\\n\\n🎁 ${promo_text}\\n🩺 استشارة مجانية مع أخصائية العناية بالتعافي: ${wa_link}\\n\\n${raw_hashtags}`;\n\nreturn [{\n  json: {\n    campaign_id,\n    product_name,\n    promo_code,\n    promo_text,\n    wa_link,\n    fb_page_id: body.fb_page_id || \"1371809382684781\",\n    ig_user_id: body.ig_user_id || \"27911522148524499\",\n    fb_caption,\n    ig_caption,\n    yt_title,\n    yt_description,\n    media_image_url: body.media?.square_card_url || \"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg\",\n    media_video_url: body.media?.video_vertical_url || \"https://medon90ae.github.io/healing-touch-egypt/assets/video_vertical.mp4\",\n    video_vertical_path: body.media?.video_vertical_path || \"media_assets/branded_designs/latest_reel.mp4\",\n    target_platforms: body.target_platforms || [\"facebook\", \"instagram\", \"youtube\", \"tiktok\"],\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-2",
+      "name": "Validate & Format Payloads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $json.fb_page_id }}/photos",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.media_image_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.fb_caption }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.facebookToken || 'FB_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-3",
+      "name": "Publish Facebook Photo Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        100
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"facebook\",\n    success: true,\n    post_id: $json.id || $json.post_id || \"fb_demo_101\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-4",
+      "name": "Format Facebook Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $json.ig_user_id }}/media",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "REELS"
+            },
+            {
+              "name": "video_url",
+              "value": "={{ $json.media_video_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.ig_caption }}"
+            },
+            {
+              "name": "share_to_feed",
+              "value": "true"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.instagramToken || 'IG_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-5",
+      "name": "Create Instagram Media Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "amount": 15,
+        "unit": "seconds"
+      },
+      "id": "wf1-node-6",
+      "name": "Wait For Container Processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Create Instagram Media Container').first().json.id }}?fields=status_code,status&access_token={{ $credentials?.instagramToken || 'IG_PERMANENT_PAGE_TOKEN' }}",
+        "options": {}
+      },
+      "id": "wf1-node-7",
+      "name": "Check Container Processing Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1160,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-ig-finished",
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wf1-node-8",
+      "name": "Is IG Container Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1380,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "wf1-node-9",
+      "name": "Container Polling Retry Delay",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Validate & Format Payloads').first().json.ig_user_id }}/media_publish",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Create Instagram Media Container').first().json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $credentials?.instagramToken || 'IG_PERMANENT_PAGE_TOKEN' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wf1-node-10",
+      "name": "Publish Instagram Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"instagram\",\n    success: true,\n    media_id: $json.id || \"ig_demo_reel_202\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-11",
+      "name": "Format Instagram Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials?.googleOAuthToken || 'GOOGLE_ACCESS_TOKEN' }}"
+            },
+            {
+              "name": "X-Upload-Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"snippet\": {\n    \"title\": $('Validate & Format Payloads').first().json.yt_title,\n    \"description\": $('Validate & Format Payloads').first().json.yt_description,\n    \"tags\": [\"Shorts\", \"HealingTouchEgypt\", \"ندبات_القيصرية\", \"تجميل_الجروح\"],\n    \"categoryId\": \"22\"\n  },\n  \"status\": {\n    \"privacyStatus\": \"public\",\n    \"selfDeclaredMadeForKids\": false\n  }\n}",
+        "options": {}
+      },
+      "id": "wf1-node-12",
+      "name": "Publish YouTube Shorts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        480
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"youtube\",\n    success: true,\n    video_id: $json.id || \"yt_demo_shorts_303\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-13",
+      "name": "Format YouTube Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $('Validate & Format Payloads').first().json;\nconst stagingManifest = {\n  platform: \"tiktok\",\n  status: \"STAGED_READY_FOR_UPLOAD\",\n  video_file: payload.video_vertical_path,\n  aspect_ratio: \"9:16\",\n  max_duration: \"59s\",\n  caption: `${payload.fb_caption.slice(0, 150)} #fyp #foryou #تيك_توك_مصر #تعافي_جراحي`,\n  promo_code: payload.promo_code,\n  staged_at: new Date().toISOString(),\n  upload_url: \"https://www.tiktok.com/creator-center/upload?from=upload\"\n};\nreturn [{ json: stagingManifest }];"
+      },
+      "id": "wf1-node-14",
+      "name": "Stage TikTok Assets & Package",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials?.telegramChatId || 'CLINIC_STAFF_CHAT_ID' }}",
+        "text": "=\"📱 **تيك توك: تم تجهيز باقة النشر والفيديو الرأسي بنجاح!**\\n\\n🎬 الملف: \" + $json.video_file + \"\\n📝 الكابشن: \" + $json.caption + \"\\n🎟️ كود الخصم: \" + $json.promo_code + \"\\n\\n🔗 تفضل بالدخول إلى TikTok Creator Center:\\n\" + $json.upload_url",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "wf1-node-15",
+      "name": "Notify Staff of TikTok Pack",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    platform: \"tiktok\",\n    success: true,\n    status: $('Stage TikTok Assets & Package').first().json.status,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-16",
+      "name": "Format TikTok Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fb = $('Format Facebook Result').first()?.json || { success: false, status: 'skipped' };\nconst ig = $('Format Instagram Result').first()?.json || $('Format Instagram Error Result').first()?.json || { success: false, status: 'skipped' };\nconst yt = $('Format YouTube Result').first()?.json || { success: false, status: 'skipped' };\nconst tt = $('Format TikTok Result').first()?.json || { success: true, status: 'STAGED' };\n\nreturn [{\n  json: {\n    success: true,\n    event: \"omnichannel_cross_post_completed\",\n    campaign_id: $('Validate & Format Payloads').first().json.campaign_id,\n    promo_code: $('Validate & Format Payloads').first().json.promo_code,\n    published_at: new Date().toISOString(),\n    results: {\n      facebook: fb,\n      instagram: ig,\n      youtube: yt,\n      tiktok: tt\n    }\n  }\n}];"
+      },
+      "id": "wf1-node-17",
+      "name": "Aggregate Omnichannel Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "wf1-node-18",
+      "name": "Respond to Python Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2500,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst poll_count = (item.poll_count || 0) + 1;\nconst max_polls = 10;\nconst status_code = String(item.status_code || \"IN_PROGRESS\").toUpperCase();\nconst is_terminal_error = status_code === 'ERROR' || status_code === 'EXPIRED';\nconst has_retries_left = poll_count < max_polls && !is_terminal_error;\n\nreturn [{\n  json: {\n    ...item,\n    poll_count,\n    max_polls,\n    status_code,\n    is_terminal_error,\n    has_retries_left,\n    error_message: is_terminal_error\n      ? `Instagram container failed with terminal status: ${status_code}`\n      : (poll_count >= max_polls ? \"Instagram container polling timed out after 10 attempts (100 seconds)\" : null)\n  }\n}];"
+      },
+      "id": "wf1-node-19",
+      "name": "IG Polling Loop · Increment Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-has-retries-left",
+              "leftValue": "={{ $json.has_retries_left }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wf1-node-20",
+      "name": "IG Polling · Attempts Left?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nreturn [{\n  json: {\n    platform: \"instagram\",\n    success: false,\n    status: item.is_terminal_error ? \"FAILED\" : \"TIMED_OUT\",\n    status_code: item.status_code,\n    error: item.error_message || \"Instagram container processing failed\",\n    poll_count: item.poll_count,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf1-node-21",
+      "name": "Format Instagram Error Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "wf1-node-22",
+      "name": "Merge Omnichannel Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2060,
+        380
+      ]
+    }
+  ],
+  "connections": {
+    "Python Webhook Intake": {
+      "main": [
+        [
+          {
+            "node": "Validate & Format Payloads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Format Payloads": {
+      "main": [
+        [
+          {
+            "node": "Publish Facebook Photo Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Instagram Media Container",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Publish YouTube Shorts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Stage TikTok Assets & Package",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Facebook Photo Post": {
+      "main": [
+        [
+          {
+            "node": "Format Facebook Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Facebook Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Instagram Media Container": {
+      "main": [
+        [
+          {
+            "node": "Wait For Container Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait For Container Processing": {
+      "main": [
+        [
+          {
+            "node": "Check Container Processing Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Container Processing Status": {
+      "main": [
+        [
+          {
+            "node": "Is IG Container Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is IG Container Ready?": {
+      "main": [
+        [
+          {
+            "node": "Publish Instagram Container",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IG Polling Loop · Increment Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Polling Loop · Increment Counter": {
+      "main": [
+        [
+          {
+            "node": "IG Polling · Attempts Left?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Polling · Attempts Left?": {
+      "main": [
+        [
+          {
+            "node": "Container Polling Retry Delay",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Instagram Error Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Container Polling Retry Delay": {
+      "main": [
+        [
+          {
+            "node": "Check Container Processing Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Instagram Container": {
+      "main": [
+        [
+          {
+            "node": "Format Instagram Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Instagram Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Instagram Error Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish YouTube Shorts": {
+      "main": [
+        [
+          {
+            "node": "Format YouTube Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format YouTube Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Stage TikTok Assets & Package": {
+      "main": [
+        [
+          {
+            "node": "Notify Staff of TikTok Pack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Staff of TikTok Pack": {
+      "main": [
+        [
+          {
+            "node": "Format TikTok Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format TikTok Result": {
+      "main": [
+        [
+          {
+            "node": "Merge Omnichannel Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Omnichannel Results": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Omnichannel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Omnichannel Results": {
+      "main": [
+        [
+          {
+            "node": "Respond to Python Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ht-omnichannel-cross-post-v1"
+  }
+}
