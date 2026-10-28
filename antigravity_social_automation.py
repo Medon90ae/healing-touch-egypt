@@ -30,8 +30,16 @@ import time
 import urllib.parse
 import webbrowser
 import campaign_landing_engine as cle
-from smart_intake_classifier import scan_and_triage_manual_inbox, archive_used_inbox_files
 from datetime import datetime
+from smart_intake_classifier import (
+    scan_and_triage_manual_inbox,
+    archive_used_inbox_files,
+    route_platform_text_files,
+    extract_clean_content,
+    find_active_inbox_files,
+    read_resilient_text,
+    classify_file_category
+)
 from pathlib import Path
 
 import pandas as pd
@@ -1856,7 +1864,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"[!] تنبيه سحب الترندات الحية: {e}")
 
     # 📥 فحص واستيعاب كافة ملفات manual_inbox فورياً وتوجيهها للمشروع
-    inbox_files = [f for f in MANUAL_INBOX_DIR.iterdir() if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]]
+    inbox_files = find_active_inbox_files(MANUAL_INBOX_DIR)
     
     inbox_videos = [f for f in inbox_files if f.suffix.lower() in [".mp4", ".mov", ".mkv", ".webm"]]
     inbox_audios = [f for f in inbox_files if f.suffix.lower() in [".m4a", ".mp3", ".wav", ".aac"]]
@@ -1864,10 +1872,20 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     inbox_texts = [f for f in inbox_files if f.suffix.lower() in [".txt", ".md"]]
     inbox_htmls = [f for f in inbox_files if f.suffix.lower() in [".html", ".htm"]]
 
+    # توجيه ملفات المنصات المرفوعة (R1) المطابقة لتخصص الحملة الحالية
+    cat_inbox_texts = [f for f in inbox_texts if classify_file_category(f) == tmpl['category']]
+    platform_routed = route_platform_text_files(cat_inbox_texts if cat_inbox_texts else inbox_texts) if (inbox_triage.get("detected_category") == tmpl['category'] or cat_inbox_texts) else {}
+    for p_plat, p_file in platform_routed.items():
+        if isinstance(p_file, Path) and p_file not in used_inbox_files:
+            used_inbox_files.append(p_file)
+
     # 1. معالجة الفيديو المرفوع
     uploaded_video_rel = ""
     if inbox_videos:
-        chosen_vid = inbox_videos[0]
+        from smart_intake_classifier import CATEGORY_KEYWORDS
+        cat_keywords = CATEGORY_KEYWORDS.get(tmpl['category'], [])
+        matching_vids = [v for v in inbox_videos if tmpl['category'] in v.name.lower() or any(kw.lower() in v.name.lower() for kw in cat_keywords)]
+        chosen_vid = matching_vids[0] if matching_vids else inbox_videos[0]
         used_inbox_files.append(chosen_vid)
         dest_vid = BASE_DIR / "docs" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
         dest_portal_vid = BASE_DIR / "portal_app" / "public" / "assets" / f"campaign_{tmpl['category']}_video.mp4"
@@ -1900,24 +1918,15 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         except Exception as e:
             print(f"[!] تنبيه نسخ الصوت: {e}")
 
-    # 3. معالجة النص والمقال السريري المرفوع
-    if inbox_texts:
-        chosen_txt = inbox_texts[0]
-        used_inbox_files.append(chosen_txt)
-        custom_raw = read_resilient_text(chosen_txt).strip()
-        if custom_raw and len(custom_raw) > 50:
-            # استخراج ملخص سريري غني يوضح المشكلة والحل بدون بتر عشوائي
-            paragraphs = [p.strip() for p in custom_raw.split("\n") if len(p.strip()) > 30 and not p.strip().startswith("#")]
-            if paragraphs:
-                top_paragraphs = []
-                current_len = 0
-                for p in paragraphs[:4]:
-                    if current_len + len(p) < 1400:
-                        top_paragraphs.append(p)
-                        current_len += len(p)
-                if top_paragraphs:
-                    tmpl["story_text"] = "\n\n".join(top_paragraphs)
-            print(f"[+] 📝 تم استيعاب وصياغة التقرير السريري المرفوع ({chosen_txt.name})!")
+    # 3. استيعاب المتن السريري للحالة
+    # إذا توفر ملف فيسبوك أو مقال عام، نستخرج منه المتن الإنساني والسريري
+    src_text_file = platform_routed.get("facebook") or platform_routed.get("blogger") or (inbox_texts[0] if inbox_texts else None)
+    if src_text_file:
+        custom_extracted = extract_clean_content(src_text_file, "facebook")
+        if custom_extracted.get("body") and len(custom_extracted["body"]) > 50:
+            clean_body_sanitized = custom_extracted["body"].replace("كود الخصم والمعاينة", "كود المعاينة والشحن المجاني").replace("كود الخصم", "كود المعاينة")
+            tmpl["story_text"] = clean_body_sanitized
+            print(f"[+] 📝 تم استيعاب وصياغة المتن السريري المرفوع من ({src_text_file.name}) بدون أي ترويسات تقنية!")
 
     # 4. معالجة الصور المرفوعة من Pomelli
     if inbox_images:
@@ -1984,11 +1993,15 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     wa_msg = category_messages.get(tmpl.get("category", "general"), "أهلاً بحضرتك في هيلينج تاتش مصر، محتاج استشارة بخصوص التعافي بعد عمليتي، وتفعيل كود (HT10) للشحن المجاني وحق معاينة الشحنة قبل الاستلام.")
     wa_direct_url = f"https://wa.me/201155803307?text={urllib.parse.quote(wa_msg)}" 
     
-    clean_story_text = tmpl['story_text'].strip()
-    if len(clean_story_text) > 1200:
-        clean_story_text = clean_story_text[:1200].rsplit(" ", 1)[0] + "..."
-        
-    full_caption = f"""🌿 {tmpl['title']}
+    # 1. إعداد نصوص كل منصة بالموجه الذكي ومستخرج المحتوى السريري النظيف (R1 + R2)
+    fb_file = platform_routed.get("facebook")
+    if fb_file:
+        fb_res = extract_clean_content(fb_file, "facebook", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        facebook_caption = fb_res["caption"]
+        print(f"[+] 📘 [المصنف الذكي]: تم توجيه ملف ({fb_file.name}) حصرياً لفيسبوك واستخراج المتن السريري الكامل الخالي من الترويسات!")
+    else:
+        clean_story_text = tmpl['story_text'].strip()
+        facebook_caption = f"""🌿 {tmpl['title']}
 
 {clean_story_text}
 
@@ -2001,16 +2014,52 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
 {tmpl['hashtags']}"""
 
-    blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n<p style='background:#ECFDF5;padding:12px;border-radius:10px;font-weight:bold;'>👉 <strong>رابط الدليل السريري وحجز الاستشارة المباشر:</strong> <a href='{lp_url}'>{lp_url}</a></p>\n\n{blogger_post['html_content']}"
-    reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**\n\n**للتوجيه السريري والاستشارة المجانية عبر واتساب:** 01155803307\n\n{tmpl['hashtags']}"
-    
-    (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(full_caption, encoding="utf-8")
-    (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(full_caption, encoding="utf-8")
-    (BRANDED_DIR / f"{date_str}_[نص_منشور_فيسبوك].txt").write_text(full_caption, encoding="utf-8")
+    # كابشن إنستجرام المخصص
+    ig_file = platform_routed.get("instagram")
+    if ig_file:
+        ig_res = extract_clean_content(ig_file, "instagram", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        instagram_caption = ig_res["caption"]
+        print(f"[+] 📸 [المصنف الذكي]: تم توجيه ملف ({ig_file.name}) حصرياً لإنستجرام واستخراج الكابشن المعتمد!")
+    else:
+        instagram_caption = facebook_caption
+
+    # كابشن تيك توك المخصص
+    tt_file = platform_routed.get("tiktok")
+    if tt_file:
+        tt_res = extract_clean_content(tt_file, "tiktok", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        tiktok_caption = tt_res["caption"]
+        print(f"[+] 📱 [المصنف الذكي]: تم توجيه ملف ({tt_file.name}) لحزمة وسيناريو تيك توك!")
+    else:
+        tiktok_caption = facebook_caption
+
+    # مقال بلوجر المخصص
+    bl_file = platform_routed.get("blogger")
+    if bl_file:
+        bl_res = extract_clean_content(bl_file, "blogger", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        blogger_post["title"] = bl_res["title"]
+        blogger_post["html_content"] = bl_res["html_content"]
+        blogger_text = f"<h1>{bl_res['title']}</h1>\n\n<p style='background:#ECFDF5;padding:12px;border-radius:10px;font-weight:bold;'>👉 <strong>رابط الدليل السريري وحجز الاستشارة المباشر:</strong> <a href='{lp_url}'>{lp_url}</a></p>\n\n{bl_res['html_content']}"
+        print(f"[+] 📰 [المصنف الذكي]: تم توجيه ملف ({bl_file.name}) لمقال بلوجر وتوليد HTML المتكامل!")
+    else:
+        blogger_text = f"<h1>{blogger_post['title']}</h1>\n\n<p style='background:#ECFDF5;padding:12px;border-radius:10px;font-weight:bold;'>👉 <strong>رابط الدليل السريري وحجز الاستشارة المباشر:</strong> <a href='{lp_url}'>{lp_url}</a></p>\n\n{blogger_post['html_content']}"
+
+    # مقال ريديت المخصص
+    rd_file = platform_routed.get("reddit")
+    if rd_file:
+        rd_res = extract_clean_content(rd_file, "reddit", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        reddit_text = rd_res["markdown"]
+        print(f"[+] 🔴 [المصنف الذكي]: تم توجيه ملف ({rd_file.name}) لمنشور ومقال ريديت الموثق!")
+    else:
+        reddit_text = f"**{tmpl['title']}**\n\n{tmpl['story_text']}\n\n---\n🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**\n\n**للتوجيه السريري والاستشارة المجانية عبر واتساب:** 01155803307\n\n{tmpl['hashtags']}"
+
+    # حفظ ملفات النصوص المخصصة لكل منصة في branded_designs
+    (BRANDED_DIR / f"{date_str}_[نص_بوست_وستوري_إنستجرام].txt").write_text(instagram_caption, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt").write_text(tiktok_caption, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[نص_منشور_فيسبوك].txt").write_text(facebook_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[مقال_مدونة_جوجل_Blogger].txt").write_text(blogger_text, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[منشور_ومقال_Reddit].txt").write_text(reddit_text, encoding="utf-8")
     
-    copy_to_windows_clipboard(full_caption)
+    copy_to_windows_clipboard(facebook_caption)
     print(f"\n📄 [تم إنشاء ملفات النصوص المستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs]:")
     print(f"   • {date_str}_[نص_منشور_فيسبوك].txt")
     print(f"   • {date_str}_[نص_بوست_وستوري_إنستجرام].txt")
@@ -2028,7 +2077,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
     post_data = {
         "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
-        "caption": full_caption,
+        "caption": facebook_caption,
         "hashtags": "",
         "row_index": -1,
     }
@@ -2044,12 +2093,9 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         print(f"4. مقال مدونة جوجل (Blogger): {blogger_post['file_path']}")
         print(f"5. حزمة Google NotebookLM: {notebook_file}")
         print(f"6. سجل الترندات الصاعدة الحية: {BASE_DIR / 'media_assets' / 'live_trends_registry.json'}")
-        print("\nالنص السريري (مدمج بالترندات الصاعدة):")
-        print(tmpl["story_text"])
-        print("\nالهاشتاجات (مدمجة بهاشتاجات الترند الحي):")
-        print(tmpl["hashtags"])
+        print("\nالنص السريري لفيسبوك:")
+        print(facebook_caption[:400] + "...")
         print("=" * 65)
-        # فتح تبويبات المتصفح المطلوبة حتى في وضع المعاينة
         open_tabs_in_default_windows_browser(fb_post_url="", blogger_post_file=blogger_post['file_path'])
         return True, ""
 
@@ -2065,11 +2111,19 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
 
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{tmpl['category']}_hero.png"
-    publish_instagram_graph_api(full_caption, image_url=ig_image_url)
+    publish_instagram_graph_api(instagram_caption, image_url=ig_image_url)
     publish_to_blogger_webhook(blogger_post)
-    publish_to_reddit_api(tmpl["title"], reddit_text)
+    publish_to_reddit_api(blogger_post.get("title", tmpl["title"]), reddit_text)
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
+
+    # 📦 بناء وتجهيز حزمة ready_to_publish المؤرخة فورياً لنفس الحملة
+    try:
+        from scripts.build_ready_to_publish_pack import generate_pack
+        pack_dir = generate_pack(category=tmpl['category'])
+        print(f"[+] 📦 تم بناء وتحديث حزمة ready_to_publish المؤرخة للحملة بنجاح: {pack_dir.name}")
+    except Exception as e:
+        print(f"[!] تنبيه توليد حزمة ready_to_publish: {e}")
 
     # 🧹 تفريغ وأرشفة كافة الملفات المعالجة من manual_inbox لحفظ نظافة الصندوق بالكامل
     all_inbox_remaining = [
