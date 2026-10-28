@@ -8,13 +8,14 @@ echo              Healing Touch Egypt - Master Control Center
 echo ======================================================================
 echo.
 echo   [1] التشغيل الشامل بضغطة واحدة (Single-Click Master Pipeline)
-echo   [2] معاينة وتجهيز الأصول واللاندنج بيدج بدون نشر (Dry Run)
-echo   [3] فحص حالة خدمة n8n الخلفية الدائمة (n8n Service Status)
-echo   [4] فتح صندوق الاستقبال manual_inbox وملف البرومبتات
-echo   [5] تحديث الموسوعة وخريطة السيو ورفع التحديثات لـ GitHub Pages
-echo   [6] فحص ومزامنة سجل العملاء المحلي مع Google Sheet
-echo   [7] فتح أحدث حزمة نشر جاهزة للمنصات (Ready-to-Publish Pack)
-echo   [8] لوحة التحكم التفاعلية الشاملة (menu.py)
+echo   [2] اختيار منتج وتجهيز برومبتات ومصادر الأبحاث (PubMed + NotebookLM + Pomelli)
+echo   [3] معاينة وتجهيز الأصول واللاندنج بيدج بدون نشر (Dry Run)
+echo   [4] فحص حالة خدمة n8n الخلفية الدائمة (n8n Service Status)
+echo   [5] فتح صندوق الاستقبال manual_inbox وملف البرومبتات
+echo   [6] تحديث الموسوعة وخريطة السيو ورفع التحديثات لـ GitHub Pages
+echo   [7] فحص ومزامنة سجل العملاء المحلي مع Google Sheet
+echo   [8] فتح أحدث حزمة نشر جاهزة للمنصات (Ready-to-Publish Pack)
+echo   [9] لوحة التحكم التفاعلية المتقدمة (menu.py)
 echo.
 echo ======================================================================
 set choice=1
@@ -28,6 +29,7 @@ if "%choice%"=="5" goto opt5
 if "%choice%"=="6" goto opt6
 if "%choice%"=="7" goto opt7
 if "%choice%"=="8" goto opt8
+if "%choice%"=="9" goto opt9
 goto opt1
 
 :opt1
@@ -45,17 +47,26 @@ goto end
 
 :opt2
 echo.
+echo [*] اختيار منتج وتجهيز برومبتات اليوم ومصادر الأبحاث الطبية المعتمدة (PubMed + NotebookLM + Pomelli)...
+".venv\Scripts\python.exe" antigravity_social_automation.py --mode notebooklm
+if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
+    start notepad "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt"
+)
+goto end
+
+:opt3
+echo.
 echo [*] جاري تشغيل المعاينة الكاملة بدون نشر شبكي (Dry Run Mode)...
 ".venv\Scripts\python.exe" single_click_master_pipeline.py --dry-run
 goto end
 
-:opt3
+:opt4
 echo.
 echo [*] جاري فحص حالة خدمة n8n الدائمة في الخلفية...
 call status_n8n.bat
 goto end
 
-:opt4
+:opt5
 echo.
 echo [*] فتح مجلد manual_inbox وملف البرومبتات...
 if not exist "media_assets\manual_inbox" mkdir "media_assets\manual_inbox"
@@ -65,7 +76,7 @@ if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
 )
 goto end
 
-:opt5
+:opt6
 echo.
 echo [*] [1/3] جاري تحديث صفحات الموقع ومقالات السيو وخريطة الموقع...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
@@ -82,22 +93,22 @@ git commit -m "feat(deploy): live site, portal, and seo sync"
 git push origin main
 goto end
 
-:opt6
+:opt7
 echo.
 echo [*] فحص ومزامنة قاعدة بيانات العملاء المحلية وسجل SQLite مع Google Sheet...
 ".venv\Scripts\python.exe" scripts\crm_sync_engine.py --sync
 ".venv\Scripts\python.exe" scripts\crm_sync_engine.py --stats
 goto end
 
-:opt7
+:opt8
 echo.
 echo [*] فتح أحدث حزمة نشر مفرزة للمنصات (Ready-to-Publish Pack)...
 ".venv\Scripts\python.exe" -c "import menu; menu.run_option_4()"
 goto end
 
-:opt8
+:opt9
 echo.
-echo [*] فتح لوحة التحكم التفاعلية الشاملة (menu.py)...
+echo [*] فتح لوحة التحكم التفاعلية المتقدمة (menu.py)...
 ".venv\Scripts\python.exe" menu.py
 goto end
 
