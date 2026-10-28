@@ -11,11 +11,12 @@ echo   [1] التشغيل الشامل بضغطة واحدة (Single-Click Maste
 echo   [2] اختيار منتج وتجهيز برومبتات ومصادر الأبحاث (PubMed + NotebookLM + Pomelli)
 echo   [3] معاينة وتجهيز الأصول واللاندنج بيدج بدون نشر (Dry Run)
 echo   [4] فحص حالة خدمة n8n الخلفية الدائمة (n8n Service Status)
-echo   [5] فتح صندوق الاستقبال manual_inbox وملف البرومبتات
-echo   [6] تحديث الموسوعة وخريطة السيو ورفع التحديثات لـ GitHub Pages
-echo   [7] فحص ومزامنة سجل العملاء المحلي مع Google Sheet
-echo   [8] فتح أحدث حزمة نشر جاهزة للمنصات (Ready-to-Publish Pack)
-echo   [9] لوحة التحكم التفاعلية المتقدمة (menu.py)
+echo   [5] فحص وتشغيل مركز القيادة على تيليجرام (Telegram Bot Service)
+echo   [6] فتح صندوق الاستقبال manual_inbox وملف البرومبتات
+echo   [7] تحديث الموسوعة وخريطة السيو ورفع التحديثات لـ GitHub Pages
+echo   [8] فحص ومزامنة سجل العملاء المحلي مع Google Sheet
+echo   [9] فتح أحدث حزمة نشر جاهزة للمنصات (Ready-to-Publish Pack)
+echo   [10] لوحة التحكم التفاعلية المتقدمة (menu.py)
 echo.
 echo ======================================================================
 set choice=1
@@ -30,6 +31,7 @@ if "%choice%"=="6" goto opt6
 if "%choice%"=="7" goto opt7
 if "%choice%"=="8" goto opt8
 if "%choice%"=="9" goto opt9
+if "%choice%"=="10" goto opt10
 goto opt1
 
 :opt1
@@ -68,6 +70,16 @@ goto end
 
 :opt5
 echo.
+echo [*] جاري فحص وتشغيل مركز القيادة السريري على تيليجرام...
+call status_bot.bat
+if %errorlevel% neq 0 (
+    echo [*] إطلاق البوت كخدمة خلفية...
+    call start_bot.bat
+)
+goto end
+
+:opt6
+echo.
 echo [*] فتح مجلد manual_inbox وملف البرومبتات...
 if not exist "media_assets\manual_inbox" mkdir "media_assets\manual_inbox"
 explorer "media_assets\manual_inbox"
@@ -76,7 +88,7 @@ if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
 )
 goto end
 
-:opt6
+:opt7
 echo.
 echo [*] [1/3] جاري تحديث صفحات الموقع ومقالات السيو وخريطة الموقع...
 ".venv\Scripts\python.exe" github_seo_trend_engine.py --build-site
@@ -93,20 +105,20 @@ git commit -m "feat(deploy): live site, portal, and seo sync"
 git push origin main
 goto end
 
-:opt7
+:opt8
 echo.
 echo [*] فحص ومزامنة قاعدة بيانات العملاء المحلية وسجل SQLite مع Google Sheet...
 ".venv\Scripts\python.exe" scripts\crm_sync_engine.py --sync
 ".venv\Scripts\python.exe" scripts\crm_sync_engine.py --stats
 goto end
 
-:opt8
+:opt9
 echo.
 echo [*] فتح أحدث حزمة نشر مفرزة للمنصات (Ready-to-Publish Pack)...
 ".venv\Scripts\python.exe" -c "import menu; menu.run_option_4()"
 goto end
 
-:opt9
+:opt10
 echo.
 echo [*] فتح لوحة التحكم التفاعلية المتقدمة (menu.py)...
 ".venv\Scripts\python.exe" menu.py

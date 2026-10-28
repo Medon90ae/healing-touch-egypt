@@ -1,0 +1,39 @@
+@echo off
+setlocal enabledelayedexpansion
+chcp 65001 >nul
+
+cd /d "%~dp0"
+set PID_FILE=%~dp0media_assets\telegram_bot.pid
+set BOT_PID=
+
+if exist "%PID_FILE%" (
+    set /p BOT_PID=<"%PID_FILE%"
+)
+
+set IS_RUNNING=0
+if defined BOT_PID (
+    for /f "tokens=1" %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul') do (
+        set IS_RUNNING=1
+    )
+)
+
+echo ======================================================================
+echo       🌿 هيلينج تاتش مصر - حالة مركز القيادة التفاعلي على تيليجرام
+echo           Healing Touch Egypt - Telegram Bot Status Check
+echo ======================================================================
+
+if "%IS_RUNNING%"=="1" (
+    echo   الحالة:             🟢 قيد التشغيل ونشط (ONLINE)
+    echo   معرف العملية (PID): !BOT_PID!
+    echo   المعرف:             @ArgentoSpeedaf_bot
+    echo   المشرف المعتمد:     7692685242
+    echo   الأوامر التفاعلية:  /start , /menu , /run , /products
+    echo ======================================================================
+    echo [+] البوت يستقبل الأوامر والقوائم التفاعلية والوسائط على مدار الساعة.
+    exit /b 0
+) else (
+    echo   الحالة:             🔴 متوقف حالياً (OFFLINE)
+    echo ======================================================================
+    echo [*] لتشغيل الخدمة: شغل ملف start_bot.bat
+    exit /b 1
+)
