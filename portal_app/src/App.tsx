@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Video, Layers, Calculator, HelpCircle } from 'lucide-react';
+import { BookOpen, Video, Layers, HelpCircle } from 'lucide-react';
 import { CampaignId } from './types/campaign';
 import { CAMPAIGNS } from './data/campaignConfig';
 import { Header } from './components/Header';
@@ -8,16 +8,14 @@ import { TrustAndSafety } from './components/TrustAndSafety';
 import { ClinicalArticle } from './components/ClinicalArticle';
 import { ScientificEvidence } from './components/ScientificEvidence';
 import { VisualStepGuide } from './components/VisualStepGuide';
-import { ClinicalCalculator } from './components/ClinicalCalculator';
 import { ProductCatalog } from './components/ProductCatalog';
-import { ProtocolTimeline } from './components/ProtocolTimeline';
 import { ReviewsAndDoctorEndorsement } from './components/ReviewsAndDoctorEndorsement';
 import { ClinicalFaq } from './components/ClinicalFaq';
 import { LeadGateModal } from './components/LeadGateModal';
 import { StickyMobileBar } from './components/StickyMobileBar';
 import { Footer } from './components/Footer';
 
-export type ActiveTab = 'article' | 'video' | 'showcase' | 'calculator' | 'faq';
+export type ActiveTab = 'article' | 'video' | 'showcase' | 'faq';
 
 interface TabDefinition {
   id: ActiveTab;
@@ -44,12 +42,6 @@ const TABS: TabDefinition[] = [
     label: 'صور واستعراض المنتجات المعتمدة',
     shortLabel: 'المنتجات المعتمدة',
     icon: Layers,
-  },
-  {
-    id: 'calculator',
-    label: 'حاسبة مراحل التعافي السريري',
-    shortLabel: 'حاسبة التعافي',
-    icon: Calculator,
   },
   {
     id: 'faq',
@@ -136,14 +128,6 @@ export default function App() {
     }, 50);
   };
 
-  const handleScrollToCalculator = () => {
-    setActiveTab('calculator');
-    setTimeout(() => {
-      const el = document.getElementById('clinical-calculator') || document.getElementById('main-tab-content');
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
-
   const handleScrollToCatalog = () => {
     setActiveTab('showcase');
     setTimeout(() => {
@@ -166,8 +150,6 @@ export default function App() {
     // 2. Select corresponding tab based on target element
     if (typeof params.faqIndex === 'number' || params.targetElementId.startsWith('faq-')) {
       setActiveTab('faq');
-    } else if (params.targetElementId === 'clinical-calculator') {
-      setActiveTab('calculator');
     } else if (params.targetElementId === 'product-catalog') {
       setActiveTab('showcase');
     } else if (params.targetElementId === 'visual-step-guide') {
@@ -214,11 +196,11 @@ export default function App() {
         <HeroSection
           campaign={activeCampaign}
           onOpenLeadModal={handleOpenLeadModal}
-          onScrollToCalculator={handleScrollToCalculator}
+          onScrollToCatalog={handleScrollToCatalog}
           onSelectTab={handleSwitchTab}
         />
 
-        {/* 5-Tab Segmented UI Navigation Bar */}
+        {/* 4-Tab Segmented UI Navigation Bar */}
         <nav
           id="portal-tab-navigation"
           aria-label="أقسام المنظومة السريرية"
@@ -366,23 +348,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Tab 4: [🧮 حاسبة مراحل التعافي السريري] */}
-          {activeTab === 'calculator' && (
-            <div
-              id="panel-calculator"
-              role="tabpanel"
-              aria-labelledby="tab-calculator"
-              className="animate-fade-in"
-            >
-              <ClinicalCalculator
-                campaign={activeCampaign}
-                onSelectBundleAndOpenModal={handleOpenLeadModal}
-              />
-              <ProtocolTimeline campaign={activeCampaign} />
-            </div>
-          )}
-
-          {/* Tab 5: [❓ الأسئلة الشائعة والأخطاء الحرجة] */}
+          {/* Tab 4: [❓ الأسئلة الشائعة والأخطاء الحرجة] */}
           {activeTab === 'faq' && (
             <div
               id="panel-faq"
@@ -394,7 +360,7 @@ export default function App() {
                 faqs={activeCampaign.faqs}
                 highlightFaqIndex={highlightFaqIndex}
               />
-              <ReviewsAndDoctorEndorsement campaign={activeCampaign} />
+              {/* <ReviewsAndDoctorEndorsement campaign={activeCampaign} /> */}
             </div>
           )}
         </div>

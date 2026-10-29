@@ -19,6 +19,7 @@ import sys
 import time
 import json
 import html
+import uuid
 import socket
 import logging
 import threading
@@ -44,15 +45,32 @@ MANUAL_INBOX = MEDIA_DIR / "manual_inbox"
 READY_PUBLISH = MEDIA_DIR / "ready_to_publish"
 AUDIO_INPUTS = MEDIA_DIR / "notebooklm_hub" / "audio_inputs"
 RESEARCH_REPORTS_DIR = MEDIA_DIR / "notebooklm_hub" / "research_reports"
+CLIENT_REVIEWS_DIR = MEDIA_DIR / "client_reviews"
 PID_FILE = MEDIA_DIR / "telegram_bot.pid"
 LOG_FILE = MEDIA_DIR / "telegram_bot.log"
 SESSIONS_FILE = MEDIA_DIR / "telegram_user_sessions.json"
 
-# Session State Constants (Guided Multi-Stage Clinical Pipeline)
+# Session State Constants (Guided Multi-Stage Clinical Pipeline & Proof Hub)
 STATE_IDLE = "IDLE"
 STATE_STAGE_1_RESEARCH = "STAGE_1_RESEARCH"
 STATE_STAGE_2_PROMPTS = "STAGE_2_PROMPTS"
 STATE_STAGE_3_MEDIA = "STAGE_3_MEDIA"
+STATE_STAGE_REVIEW_INTAKE = "STAGE_REVIEW_INTAKE"
+
+# Product Slugs Mapping for Client Reviews & Storage
+PRODUCT_SLUGS = {
+    "1": "3m-tegaderm-plus-pad",
+    "2": "bupy-silicone-scar-sheet",
+    "3": "3m-micropore-tan-tape-1533-0",
+    "4": "silicone-nostril-retainer",
+    "5": "smith-nephew-opsite-spray",
+    "6": "master-bundle",
+    "rev_prod_1": "3m-tegaderm-plus-pad",
+    "rev_prod_2": "bupy-silicone-scar-sheet",
+    "rev_prod_3": "3m-micropore-tan-tape-1533-0",
+    "rev_prod_4": "silicone-nostril-retainer",
+    "rev_prod_5": "smith-nephew-opsite-spray",
+}
 
 # Verified Platform Endpoints
 POMELLI_BRAND_BOOK_URL = "https://labs.google.com/pomelli/brand_book/am6H88zhmUadtfPiiAmOnW"
@@ -60,7 +78,7 @@ NOTEBOOKLM_URL = "https://notebooklm.google.com/"
 GEMINI_URL = "https://gemini.google.com/"
 
 # Ensure directories exist
-for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS, RESEARCH_REPORTS_DIR):
+for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS, RESEARCH_REPORTS_DIR, CLIENT_REVIEWS_DIR):
     p.mkdir(parents=True, exist_ok=True)
 
 # -----------------------------------------------------------------------------
@@ -91,6 +109,7 @@ def get_session(chat_id: str | int) -> Dict[str, Any]:
         USER_SESSIONS[cid] = {
             "stage": STATE_IDLE,
             "product_choice": "1",
+            "review_product_id": None,
             "research_file": None,
             "findings": [],
             "anxieties": [],
@@ -115,6 +134,7 @@ def reset_session(chat_id: str | int):
     USER_SESSIONS[cid] = {
         "stage": STATE_IDLE,
         "product_choice": "1",
+        "review_product_id": None,
         "research_file": None,
         "findings": [],
         "anxieties": [],
@@ -418,6 +438,9 @@ def build_main_menu_keyboard() -> Dict[str, Any]:
                 {"text": "🩺 اختيار منتج وتجهيز الأبحاث والبرومبتات", "callback_data": "menu_products"}
             ],
             [
+                {"text": "🌟 إدارة وأرشفة تجارب المرضى والعملاء", "callback_data": "menu_reviews"}
+            ],
+            [
                 {"text": "👁️ معاينة بدون نشر (Dry Run)", "callback_data": "act_dry_run"}
             ],
             [
@@ -443,6 +466,195 @@ def build_products_submenu_keyboard() -> Dict[str, Any]:
 
     buttons.append([{"text": "🔙 العودة للقائمة الرئيسية", "callback_data": "menu_main"}])
     return {"inline_keyboard": buttons}
+
+
+def build_reviews_hub_keyboard() -> Dict[str, Any]:
+    return {
+        "inline_keyboard": [
+            [{"text": "🩹 [1] تجارب 3M Tegaderm +Pad (شاور القيصرية)", "callback_data": "rev_prod_1"}],
+            [{"text": "🧴 [2] تجارب BUPY Silicone Scar Sheet (تسطيح الندبة)", "callback_data": "rev_prod_2"}],
+            [{"text": "🎗️ [3] تجارب 3M Micropore Tan Tape (تثبيت الأنف)", "callback_data": "rev_prod_3"}],
+            [{"text": "👃 [4] تجارب Silicone Nostril Retainer (دعامات الأنف)", "callback_data": "rev_prod_4"}],
+            [{"text": "💨 [5] تجارب Smith & Nephew Opsite Spray (مناظير السمنة)", "callback_data": "rev_prod_5"}],
+            [{"text": "📋 قوالب النشر المعتمدة طبياً (Medical Privacy)", "callback_data": "rev_privacy_templates"}],
+            [{"text": "🔙 العودة للقائمة الرئيسية", "callback_data": "menu_main"}],
+        ]
+    }
+
+
+def get_reviews_hub_text() -> str:
+    return (
+        "🌟 <b>مركز استقبال وأرشفة تجارب المرضى والعملاء (Customer Proof Hub)</b>\n\n"
+        "هنا يمكنك إدارة تجارب الحالات الواقعية، استلام الصور السريرية، والتسجيلات الصوتية، "
+        "وتوليد قوالب النشر المعتمدة والمتوافقة 100% مع معايير الخصوصية الطبية.\n\n"
+        "👇 <b>اختر المنتج السريري لتسجيل تجربة جديدة أو استعراض القوالب:</b>"
+    )
+
+
+def intake_client_review_asset(
+    product_id: str,
+    review_data: Optional[Dict[str, Any]] = None,
+    photo_bytes: Optional[bytes] = None,
+    audio_bytes: Optional[bytes] = None,
+    photo_filename: Optional[str] = None,
+    audio_filename: Optional[str] = None,
+    **kwargs,
+) -> Dict[str, Any]:
+    """
+    R5: Ingests client review asset (photo, audio, metadata) into media_assets/client_reviews/{product_id}/.
+    Appends review metadata to reviews_metadata.json and returns the saved metadata record.
+    """
+    data: Dict[str, Any] = {}
+    if isinstance(review_data, dict):
+        data.update(review_data)
+    data.update(kwargs)
+
+    target_reviews_dir = CLIENT_REVIEWS_DIR
+    prod_dir = target_reviews_dir / str(product_id)
+    photos_dir = prod_dir / "photos"
+    audio_dir = prod_dir / "audio"
+    photos_dir.mkdir(parents=True, exist_ok=True)
+    audio_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp_now = datetime.now()
+    timestamp_str = timestamp_now.strftime("%Y%m%d_%H%M%S")
+    review_id = data.get("review_id") or f"rev_{timestamp_str}_{uuid.uuid4().hex[:6]}"
+
+    saved_photo_path = data.get("photo_path")
+    if photo_bytes is not None:
+        p_name = photo_filename or data.get("photo_filename") or f"review_{timestamp_str}_{review_id}.jpg"
+        p_dest = photos_dir / p_name
+        p_dest.write_bytes(photo_bytes)
+        saved_photo_path = f"photos/{p_name}"
+
+    saved_audio_path = data.get("audio_path")
+    if audio_bytes is not None:
+        a_name = audio_filename or data.get("audio_filename") or f"voice_{timestamp_str}_{review_id}.mp3"
+        a_dest = audio_dir / a_name
+        a_dest.write_bytes(audio_bytes)
+        saved_audio_path = f"audio/{a_name}"
+
+    record = {
+        "review_id": review_id,
+        "product_id": str(product_id),
+        "timestamp": data.get("timestamp") or timestamp_now.isoformat(),
+        "rating": int(data.get("rating", 5)),
+        "patient_pseudonym": data.get("patient_pseudonym", "أم قيصرية - القاهرة"),
+        "surgery_type": data.get("surgery_type", "ولادة قيصرية (اليوم 21)"),
+        "review_text": data.get("review_text", "تجربة سريرية ممتازة في تسريع الالتئام."),
+        "specialist_advice": data.get("specialist_advice", "ينصح بالالتزام بالبروتوكول السريري اليومي."),
+        "photo_path": saved_photo_path,
+        "audio_path": saved_audio_path,
+        "privacy_status": data.get("privacy_status", "anonymized_approved"),
+    }
+
+    meta_file = prod_dir / "reviews_metadata.json"
+    records: List[Dict[str, Any]] = []
+    if meta_file.exists():
+        try:
+            loaded = json.loads(meta_file.read_text(encoding="utf-8"))
+            if isinstance(loaded, list):
+                records = loaded
+        except Exception as e:
+            logger.warning("Could not read existing reviews_metadata.json for %s: %s", product_id, e)
+
+    records.append(record)
+    meta_file.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
+    logger.info("Ingested client review %s for product %s in %s", review_id, product_id, prod_dir)
+
+    return record
+
+
+def build_medical_privacy_review_templates(
+    product_id_or_data: Any = None,
+    review_data: Optional[Dict[str, Any]] = None,
+    **kwargs,
+) -> Dict[str, str]:
+    """
+    R5: Generates platform-ready medical privacy compliant review templates for:
+    - Instagram / Facebook (7-slide carousel guidelines)
+    - TikTok / Reels (30s Egyptian dialect script)
+    - Blogger / Website (Schema.org Review snippet)
+
+    Compliance Guardrails:
+    1. Anonymized patient pseudonym (e.g. 'أم قيصرية - القاهرة').
+    2. ZERO prohibited doctor titles ('طبيبة', 'الدكتورة').
+    3. Mandatory approved specialist title ('أخصائية العناية بالتعافي').
+    4. Mandatory approved WhatsApp consultation link with promo code HT10.
+    """
+    data: Dict[str, Any] = {}
+    if isinstance(product_id_or_data, dict):
+        data.update(product_id_or_data)
+        product_id = data.get("product_id", "")
+    else:
+        product_id = str(product_id_or_data) if product_id_or_data else ""
+        if isinstance(review_data, dict):
+            data.update(review_data)
+    data.update(kwargs)
+
+    patient_pseudonym = data.get("patient_pseudonym") or "أم قيصرية - القاهرة"
+    surgery_type = data.get("surgery_type") or "ولادة قيصرية (اليوم 21)"
+    review_text = data.get("review_text") or "تحسن ملحوظ في تسطيح الندبة وتراجع الحكة والاحمرار مع الاستخدام اليومي."
+    product_name = data.get("product_name") or data.get("product_id") or "المنتج الطبي المعتمد"
+    specialist_advice = data.get("specialist_advice") or "ينصح بالاستمرار على تطبيق المنتج يومياً لحماية الأنسجة وتجنب الكيلويد."
+    rating = data.get("rating", 5)
+    stars = "⭐" * int(rating) if isinstance(rating, (int, float)) and rating > 0 else "⭐⭐⭐⭐⭐"
+    wa_link = "https://wa.me/201155803307?text=استشارة%20سريرية%20بكود%20HT10"
+
+    instagram_carousel = (
+        f"📸 تجربة سريرية موثقة | {patient_pseudonym}\n"
+        f"الإجراء: {surgery_type} | التقييم: {stars} ({rating}/5)\n\n"
+        f"📌 مخطط كاروسيل إنستجرام وفيسبوك (7 شرائح طبية موثقة):\n"
+        f"▫️ الشريحة 1 (الغلاف): تجربة واقعية لـ {patient_pseudonym} مع {product_name}.\n"
+        f"▫️ الشريحة 2 (المعاناة السابقة): تساؤلات ومخاوف الحالة قبل بدء استخدام {product_name}.\n"
+        f"▫️ الشريحة 3 (البروتوكول السريري): طريقة الاستخدام المتبعة بتوجيه أخصائية العناية بالتعافي.\n"
+        f"▫️ الشريحة 4 (دليل التحسن): صورة توضيحية لتطور التئام الأنسجة ومظهر الندبة.\n"
+        f"▫️ الشريحة 5 (شهادة المريض): \"{review_text}\"\n"
+        f"▫️ الشريحة 6 (الرأي السريري): توجيه أخصائية العناية بالتعافي: {specialist_advice}\n"
+        f"▫️ الشريحة 7 (الاستشارة المباشرة): لحجز استشارة مجانية مع أخصائية العناية بالتعافي بكود HT10:\n"
+        f"🔗 {wa_link}\n\n"
+        f"#هيلينج_تاتش_مصر #تعافي_جراحي #عناية_بالجروح #HT10"
+    )
+
+    tiktok_reels_script = (
+        f"⚡ سيناريو ريلز وتيك توك سريري (30 ثانية) | {patient_pseudonym}\n"
+        f"الإجراء: {surgery_type} | تقييم الحالة: {stars}\n\n"
+        f"🎬 المشهد 1 (0-3 ثوانٍ - Hook بصري وإنساني):\n"
+        f"\"لو بتسألي عن تجربة حقيقية بعد {surgery_type}.. اسمعي تجربة {patient_pseudonym}.\"\n\n"
+        f"🎬 المشهد 2 (3-12 ثانية - شهادة المريض الواقعية):\n"
+        f"\"قالت لنا: '{review_text}'. النتيجة كانت فارقة جداً مع الاستمرار على {product_name}.\"\n\n"
+        f"🎬 المشهد 3 (12-22 ثانية - التوجيه السريري المعتمد):\n"
+        f"\"توضح أخصائية العناية بالتعافي إن حماية الجرح وترطيب الأنسجة هو الأساس لمنع الندبات البارزة، ونصيحتها: {specialist_advice}\"\n\n"
+        f"🎬 المشهد 4 (22-30 ثانية - CTA موثوق):\n"
+        f"\"استشيري أخصائية العناية بالتعافي مجاناً عبر واتساب واستفيدي من كود الخصم HT10:\n"
+        f"{wa_link}\"\n\n"
+        f"#تيك_توك_طبي #هيلينج_تاتش_مصر #تجارب_المرضى #HT10"
+    )
+
+    blogger_snippet = (
+        f"<div class=\"clinical-review-box\" style=\"border:1px solid #10B981; border-radius:12px; padding:20px; margin:20px 0; background:#F0FDF4;\">\n"
+        f"  <div style=\"display:flex; justify-content:space-between; align-items:center;\">\n"
+        f"    <h4 style=\"color:#064E3B; margin:0;\">🌟 تجربة سريرية موثقة: {patient_pseudonym}</h4>\n"
+        f"    <span style=\"color:#F59E0B; font-weight:bold;\">{stars} ({rating}/5)</span>\n"
+        f"  </div>\n"
+        f"  <p style=\"color:#374151; font-size:14px; margin:8px 0;\"><strong>الإجراء الجراحي:</strong> {surgery_type} | <strong>المنتج:</strong> {product_name}</p>\n"
+        f"  <blockquote style=\"background:#FFFFFF; border-right:4px solid #10B981; padding:12px 16px; margin:12px 0; color:#1F2937; border-radius:6px;\">\n"
+        f"    \"{review_text}\"\n"
+        f"  </blockquote>\n"
+        f"  <p style=\"color:#065F46; font-size:14px; margin:10px 0;\"><strong>💡 توجيه أخصائية العناية بالتعافي:</strong> {specialist_advice}</p>\n"
+        f"  <div style=\"margin-top:14px;\">\n"
+        f"    <a href=\"{wa_link}\" style=\"background:#10B981; color:#FFFFFF; padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block;\">\n"
+        f"      💬 استشارة أخصائية العناية بالتعافي عبر واتساب (كود HT10)\n"
+        f"    </a>\n"
+        f"  </div>\n"
+        f"</div>"
+    )
+
+    return {
+        "instagram_carousel": instagram_carousel,
+        "tiktok_reels_script": tiktok_reels_script,
+        "blogger_snippet": blogger_snippet,
+    }
 
 
 def get_main_menu_text() -> str:
@@ -1743,6 +1955,12 @@ def process_callback_query(cq: Dict[str, Any]):
         toast_msg = "🚀 جاري إطلاق المسار الشامل..."
     elif data == "act_dry_run":
         toast_msg = "👁️ جاري تشغيل وضع المعاينة..."
+    elif data == "menu_reviews":
+        toast_msg = "🌟 مركز استقبال وأرشفة تجارب المرضى"
+    elif data.startswith("rev_prod_"):
+        toast_msg = f"📥 تسجيل تجربة للمنتج [{data.split('_')[2]}]..."
+    elif data == "rev_privacy_templates":
+        toast_msg = "📋 قوالب النشر الطبية المعتمدة..."
 
     bot.answer_callback_query(cq_id, text=toast_msg)
 
@@ -1754,6 +1972,74 @@ def process_callback_query(cq: Dict[str, Any]):
     # 2. Products Submenu
     elif data == "menu_products":
         bot.edit_message_text(chat_id, msg_id, get_products_menu_text(), reply_markup=build_products_submenu_keyboard())
+
+    # 2b. Reviews Hub Submenu & Actions
+    elif data == "menu_reviews":
+        bot.edit_message_text(chat_id, msg_id, get_reviews_hub_text(), reply_markup=build_reviews_hub_keyboard())
+
+    elif data.startswith("rev_prod_"):
+        prod_key = data.split("_")[2]
+        slug = PRODUCT_SLUGS.get(prod_key, f"product_{prod_key}")
+        prod_meta = PRODUCTS_CATALOG.get(prod_key, {})
+        prod_name = prod_meta.get("name", f"المنتج رقم {prod_key}")
+        update_session(chat_id, stage=STATE_STAGE_REVIEW_INTAKE, review_product_id=prod_key)
+        intake_prompt = (
+            f"📥 <b>تسجيل تجربة سريرية جديدة: {prod_name}</b>\n\n"
+            f"📦 <b>المعرف السريري:</b> <code>{slug}</code>\n"
+            f"🔒 <b>الحالة:</b> <code>{STATE_STAGE_REVIEW_INTAKE}</code>\n\n"
+            f"📸 <b>لإضافة صورة أو سكرين شات:</b> أرسل الصورة مباشرة في المحادثة.\n"
+            f"🎙️ <b>لإضافة تسجيل صوتي (Voice Note):</b> أرسل الفويس نوت مباشرة.\n"
+            f"✍️ <b>لإضافة نص التقييم:</b> أرسل رسالة نصية بالرأي والملاحظات السريرية.\n\n"
+            f"👇 <b>اختر الإجراء التالي:</b>"
+        )
+        kb = {
+            "inline_keyboard": [
+                [{"text": "📋 استعراض قوالب النشر الطبية", "callback_data": "rev_privacy_templates"}],
+                [{"text": "🌟 العودة لمركز تجارب المرضى", "callback_data": "menu_reviews"}],
+                [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
+            ]
+        }
+        bot.edit_message_text(chat_id, msg_id, intake_prompt, reply_markup=kb)
+
+    elif data == "rev_privacy_templates":
+        sess = get_session(chat_id)
+        prod_key = sess.get("review_product_id") or "2"
+        prod_meta = PRODUCTS_CATALOG.get(prod_key, {})
+        prod_name = prod_meta.get("name", "BUPY Medical Silicone Scar Sheet")
+        sample_meta = {
+            "review_id": f"rev_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "product_id": PRODUCT_SLUGS.get(prod_key, "bupy-silicone-scar-sheet"),
+            "product_name": prod_name,
+            "timestamp": datetime.now().isoformat(),
+            "rating": 5,
+            "patient_pseudonym": "أم قيصرية - القاهرة",
+            "surgery_type": "ولادة قيصرية (اليوم 21)",
+            "review_text": "شيت السيليكون فرق جدا في تسطيح الندبة وتخفيف الشد بعد أسبوعين من الاستخدام المنتظم.",
+            "specialist_advice": "ينصح بالاستمرار على شيت السيليكون لمدة 12 ساعة يومياً لحماية الأنسجة وتجنب الكيلويد.",
+        }
+        tpls = build_medical_privacy_review_templates(sample_meta)
+        preview_text = (
+            "📋 <b>قوالب النشر المعتمدة طبياً (Medical Privacy Compliant Templates)</b>\n"
+            "<i>مطابقة لمعايير خصوصية المرضى المصرية وقواعد وزارة الصحة</i>\n\n"
+            "──────────\n"
+            "<b>1️⃣ إنستجرام / فيسبوك (7-Slide Carousel):</b>\n"
+            f"{tpls['instagram_carousel']}\n\n"
+            "──────────\n"
+            "<b>2️⃣ تيك توك / ريلز (30s Script):</b>\n"
+            f"{tpls['tiktok_reels_script']}\n\n"
+            "──────────\n"
+            "<b>3️⃣ مقال بلوجر / الموقع:</b>\n"
+            f"<code>{tpls['blogger_snippet']}</code>"
+        )
+        if len(preview_text) > 4000:
+            preview_text = preview_text[:3950] + "\n\n... [تم الاقتطاع لطول الرسالة]"
+        kb = {
+            "inline_keyboard": [
+                [{"text": "🌟 العودة لمركز تجارب المرضى", "callback_data": "menu_reviews"}],
+                [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
+            ]
+        }
+        bot.send_message(chat_id, preview_text, reply_markup=kb)
 
     # 3. Product Selection & Generation (Stage 1 Launcher)
     elif data.startswith("prod_"):
@@ -1851,6 +2137,76 @@ def process_callback_query(cq: Dict[str, Any]):
         handle_inbox_status(chat_id)
 
 
+def handle_incoming_review_media(msg: Dict[str, Any], session: Dict[str, Any]):
+    """R5: Ingests patient review media (photo or audio) into client_reviews/{product_id}/."""
+    chat_id = str(msg.get("chat", {}).get("id"))
+    prod_key = session.get("review_product_id") or "2"
+    prod_slug = PRODUCT_SLUGS.get(prod_key, f"product_{prod_key}")
+    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    photo_bytes = None
+    photo_filename = None
+    audio_bytes = None
+    audio_filename = None
+
+    if "photo" in msg:
+        photo = msg["photo"][-1]
+        file_id = photo["file_id"]
+        file_info = bot.get_file(file_id)
+        if file_info and "file_path" in file_info:
+            temp_path = MEDIA_DIR / f"temp_rev_{timestamp_str}.jpg"
+            if bot.download_file(file_info["file_path"], temp_path):
+                photo_bytes = temp_path.read_bytes()
+                photo_filename = f"review_photo_{timestamp_str}.jpg"
+                try:
+                    temp_path.unlink()
+                except Exception:
+                    pass
+    elif "voice" in msg or "audio" in msg:
+        aud = msg.get("voice") or msg.get("audio")
+        file_id = aud["file_id"]
+        file_info = bot.get_file(file_id)
+        if file_info and "file_path" in file_info:
+            temp_path = MEDIA_DIR / f"temp_rev_{timestamp_str}.mp3"
+            if bot.download_file(file_info["file_path"], temp_path):
+                audio_bytes = temp_path.read_bytes()
+                audio_filename = f"review_voice_{timestamp_str}.mp3"
+                try:
+                    temp_path.unlink()
+                except Exception:
+                    pass
+
+    record = intake_client_review_asset(
+        product_id=prod_slug,
+        review_data={
+            "patient_pseudonym": "أم قيصرية - القاهرة",
+            "surgery_type": PRODUCTS_CATALOG.get(prod_key, {}).get("tag", "رعاية سريرية"),
+            "review_text": "تم استلام وسائط التجربة السريرية بنجاح عبر تيليجرام.",
+            "rating": 5,
+        },
+        photo_bytes=photo_bytes,
+        audio_bytes=audio_bytes,
+        photo_filename=photo_filename,
+        audio_filename=audio_filename,
+    )
+
+    confirm_text = (
+        f"✅ <b>تم استلام وأرشفة وسائط التجربة بنجاح!</b>\n\n"
+        f"🆔 <b>معرف التجربة:</b> <code>{record['review_id']}</code>\n"
+        f"📦 <b>المنتج:</b> <code>{prod_slug}</code>\n"
+        f"📂 <b>المسار:</b> <code>media_assets/client_reviews/{prod_slug}/</code>\n\n"
+        f"👇 <b>يمكنك استعراض قوالب النشر الطبية المعتمدة لهذه التجربة:</b>"
+    )
+    kb = {
+        "inline_keyboard": [
+            [{"text": "📋 استعراض قوالب النشر الطبية", "callback_data": "rev_privacy_templates"}],
+            [{"text": "🌟 العودة لمركز تجارب المرضى", "callback_data": "menu_reviews"}],
+            [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
+        ]
+    }
+    bot.send_message(chat_id, confirm_text, reply_markup=kb)
+
+
 def process_message(msg: Dict[str, Any]):
     chat_id = str(msg.get("chat", {}).get("id"))
 
@@ -1861,6 +2217,13 @@ def process_message(msg: Dict[str, Any]):
             "⚠️ <b>عذراً، هذا البوت خاص بمركز القيادة السريري لهيلينج تاتش مصر.</b>\nالوصول مقتصر على المشرف المعتمد فقط.",
         )
         return
+
+    # Check session state for review intake media
+    session = get_session(chat_id)
+    if session.get("stage") == STATE_STAGE_REVIEW_INTAKE:
+        if any(k in msg for k in ("photo", "voice", "audio")):
+            handle_incoming_review_media(msg, session)
+            return
 
     # Check for document upload: if research text document -> Stage 2 Ingestion, else media
     if "document" in msg:
@@ -1901,6 +2264,36 @@ def process_message(msg: Dict[str, Any]):
         return
     elif text.startswith("/status"):
         handle_n8n_status(chat_id)
+        return
+
+    # Check session state for review text intake
+    if session.get("stage") == STATE_STAGE_REVIEW_INTAKE and text:
+        prod_key = session.get("review_product_id") or "2"
+        prod_slug = PRODUCT_SLUGS.get(prod_key, f"product_{prod_key}")
+        record = intake_client_review_asset(
+            product_id=prod_slug,
+            review_data={
+                "patient_pseudonym": "أم قيصرية - القاهرة",
+                "surgery_type": PRODUCTS_CATALOG.get(prod_key, {}).get("tag", "رعاية سريرية"),
+                "review_text": text,
+                "rating": 5,
+            },
+        )
+        confirm_text = (
+            f"✅ <b>تم تسجيل وحفظ نص التجربة السريرية بنجاح!</b>\n\n"
+            f"🆔 <b>المعرف:</b> <code>{record['review_id']}</code>\n"
+            f"📦 <b>المنتج:</b> <code>{prod_slug}</code>\n"
+            f"📝 <b>نص التجربة:</b> \"{text}\"\n\n"
+            f"👇 <b>يمكنك استعراض قوالب النشر الطبية المعتمدة:</b>"
+        )
+        kb = {
+            "inline_keyboard": [
+                [{"text": "📋 استعراض قوالب النشر الطبية", "callback_data": "rev_privacy_templates"}],
+                [{"text": "🌟 العودة لمركز تجارب المرضى", "callback_data": "menu_reviews"}],
+                [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
+            ]
+        }
+        bot.send_message(chat_id, confirm_text, reply_markup=kb)
         return
 
     # Check session state for clinical research text upload

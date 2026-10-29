@@ -19,9 +19,9 @@ import {
 // 1. STRESS-TEST: 5 INTERACTIVE TABS & COMPONENT COMPLETENESS ACROSS ALL CAMPAIGNS
 // ==============================================================================
 
-test('TABS STRESS-TEST: All 4 campaigns support all 5 interactive tab panels without missing data', () => {
+test('TABS STRESS-TEST: All 4 campaigns support all 4 interactive tab panels without missing data', () => {
   const campaignKeys: CampaignId[] = ['c-section', 'rhinoplasty', 'bariatric', 'thyroid'];
-  const expectedTabs = ['article', 'video', 'showcase', 'calculator', 'faq'] as const;
+  const expectedTabs = ['article', 'video', 'showcase', 'faq'] as const;
 
   for (const campId of campaignKeys) {
     const campaign = CAMPAIGNS[campId];
@@ -68,20 +68,7 @@ test('TABS STRESS-TEST: All 4 campaigns support all 5 interactive tab panels wit
       assert.equal((p as any).price, undefined, `Product ${p.id} must NOT have price`);
     }
 
-    // Tab 4: [🧮 حاسبة مراحل التعافي السريري]
-    assert.ok(campaign.calculator, `Campaign ${campId} missing calculator`);
-    assert.ok(campaign.calculator.questions.length >= 2, `Calculator ${campId} must have >= 2 questions`);
-    for (const q of campaign.calculator.questions) {
-      assert.ok(q.id, `Question missing ID`);
-      assert.ok(q.label, `Question missing label`);
-      assert.ok(q.options.length >= 2, `Question ${q.id} must have >= 2 options`);
-      for (const opt of q.options) {
-        assert.ok(typeof opt.score === 'number', `Option score must be a number`);
-        assert.ok(opt.advice, `Option missing clinical advice`);
-      }
-    }
-
-    // Tab 5: [❓ الأسئلة الشائعة والأخطاء الحرجة]
+    // Tab 4: [❓ الأسئلة الشائعة والأخطاء الحرجة]
     assert.ok(campaign.faqs.length >= 2, `Campaign ${campId} must have >= 2 FAQs`);
     for (const faq of campaign.faqs) {
       assert.ok(faq.question, `FAQ missing question`);
@@ -90,34 +77,10 @@ test('TABS STRESS-TEST: All 4 campaigns support all 5 interactive tab panels wit
   }
 });
 
-test('CALCULATOR PERMUTATION STRESS-TEST: getRecommendation returns valid protocol for all question choices across all campaigns', () => {
+test('PATIENT SAFETY: Clinical calculators and fixed timelines are permanently eradicated across all campaigns', () => {
   for (const [campId, campaign] of Object.entries(CAMPAIGNS)) {
-    const { questions, getRecommendation } = campaign.calculator;
-
-    // Helper to generate Cartesian product of all options
-    function cartesianOptions(qIdx: number, currentAnswers: Record<string, number>) {
-      if (qIdx === questions.length) {
-        // Evaluate recommendation
-        const rec = getRecommendation(currentAnswers);
-        assert.ok(rec, `Recommendation must be returned for answers ${JSON.stringify(currentAnswers)}`);
-        assert.ok(rec.badge, `Recommendation missing badge in ${campId}`);
-        assert.ok(rec.headline, `Recommendation missing headline in ${campId}`);
-        assert.ok(rec.clinicalAdvice, `Recommendation missing clinicalAdvice in ${campId}`);
-        assert.ok(rec.protocolSteps.length >= 2, `Recommendation missing protocolSteps in ${campId}`);
-        assert.ok(
-          campaign.bundles.some((b) => b.id === rec.recommendedBundleId),
-          `recommendedBundleId ${rec.recommendedBundleId} not found in bundles of ${campId}`
-        );
-        return;
-      }
-
-      const q = questions[qIdx];
-      for (const opt of q.options) {
-        cartesianOptions(qIdx + 1, { ...currentAnswers, [q.id]: opt.score });
-      }
-    }
-
-    cartesianOptions(0, {});
+    assert.equal(campaign.calculator, undefined, `Campaign ${campId} must NOT have calculator`);
+    assert.equal((campaign as any).timeline, undefined, `Campaign ${campId} must NOT have timeline`);
   }
 });
 

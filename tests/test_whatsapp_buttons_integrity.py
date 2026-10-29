@@ -95,12 +95,16 @@ def run_checks():
         return False
     else:
         print("✅ جميع أزرار ونوافذ الواتساب في المشروع متصلة وموحدة ومفحوصة بنجاح بنسبة 100%!")
-        print(f"   • الرقم الموحد المعتمد: +{OFFICIAL_PHONE} (01155803307)")
+        print(f"   • الرقم الموحد المعتمد: +{OFFICIAL_PHONE}")
         print(f"   • المتغير العالمي: window.HEALING_TOUCH_WHATSAPP")
         print(f"   • النموذج الموحد: window.openClinicalConsultation(topic)")
         print("=" * 70)
         return True
 
+def test_whatsapp_buttons_integrity():
+    assert run_checks() is True
+
 if __name__ == "__main__":
     success = run_checks()
     sys.exit(0 if success else 1)
+

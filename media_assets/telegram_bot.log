@@ -4,3 +4,49 @@
 [2026-10-29 13:32:34] [INFO] Target Chat ID: 7692685242
 [2026-10-29 13:33:51] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 6852]
 [2026-10-29 13:33:51] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:38:19] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 6708]
+[2026-10-29 13:38:19] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:39:02] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 5420]
+[2026-10-29 13:39:02] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:39:49] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 10608]
+[2026-10-29 13:39:49] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:41:15] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 14360]
+[2026-10-29 13:41:15] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:41:26] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 10392]
+[2026-10-29 13:41:26] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:41:49] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 15168]
+[2026-10-29 13:41:49] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:42:48] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 15784]
+[2026-10-29 13:42:48] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:50:48] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 968]
+[2026-10-29 13:50:48] [INFO] Target Chat ID: 7692685242
+[2026-10-29 13:50:57] [WARNING] Another instance of TelegramControlBot is already active on 127.0.0.1:48199. Exiting cleanly.
+[2026-10-29 13:53:50] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 9732]
+[2026-10-29 13:53:50] [INFO] Target Chat ID: 7692685242
+[2026-10-29 14:00:39] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:00:43] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:00:45] [INFO] Button clicked: data='act_n8n_status', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:00:50] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:00:53] [INFO] Button clicked: data='act_crm_sync', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:01:07] [INFO] Button clicked: data='act_inbox_status', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:01:13] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:01:18] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:03:34] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:03:37] [INFO] Button clicked: data='prod_2', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:19:35] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 8844]
+[2026-10-29 14:19:35] [INFO] Target Chat ID: 7692685242
+[2026-10-29 14:37:06] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:37:09] [INFO] Button clicked: data='prod_2', from_user=7692685242, chat_id=7692685242
+[2026-10-29 14:37:41] [INFO] Button clicked: data='prompt_pomelli_2', from_user=7692685242, chat_id=7692685242
+[2026-10-29 15:45:12] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 2220]
+[2026-10-29 15:45:12] [INFO] Target Chat ID: 7692685242
+[2026-10-29 17:49:36] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-29 17:49:39] [INFO] Button clicked: data='prod_2', from_user=7692685242, chat_id=7692685242
+[2026-10-29 19:28:09] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-29 19:28:09] [WARNING] getUpdates network warning: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-29 19:33:40] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242
+[2026-10-29 19:33:55] [INFO] Button clicked: data='act_dry_run', from_user=7692685242, chat_id=7692685242
+[2026-10-29 19:40:19] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-29 19:40:20] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-29 22:06:36] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 11076]
+[2026-10-29 22:06:36] [INFO] Target Chat ID: 7692685242

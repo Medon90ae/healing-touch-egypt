@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { 
   ShieldCheck, 
   CheckCircle2, 
-  Calculator, 
+  Layers, 
   Sparkles, 
   Play, 
   ArrowLeft,
@@ -17,14 +17,14 @@ import { Campaign, GalleryProductImage } from '../types/campaign';
 interface HeroSectionProps {
   campaign: Campaign;
   onOpenLeadModal: (bundleId?: string) => void;
-  onScrollToCalculator: () => void;
-  onSelectTab?: (tab: 'article' | 'video' | 'showcase' | 'calculator' | 'faq') => void;
+  onScrollToCatalog?: () => void;
+  onSelectTab?: (tab: 'article' | 'video' | 'showcase' | 'faq') => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   campaign,
   onOpenLeadModal,
-  onScrollToCalculator,
+  onScrollToCatalog,
   onSelectTab
 }) => {
   const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'gallery'>('video');
@@ -128,13 +128,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (onSelectTab) onSelectTab('calculator');
-                  onScrollToCalculator();
+                  if (onSelectTab) onSelectTab('showcase');
+                  if (onScrollToCatalog) {
+                    onScrollToCatalog();
+                  } else {
+                    const el = document.getElementById('product-catalog');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }
                 }}
                 className="inline-flex items-center justify-center gap-1.5 bg-[#F3F7F5] hover:bg-[#E6EEFF] text-[#003527] border border-[#D0DBED] px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer active:scale-98"
               >
-                <Calculator className="w-4 h-4 text-[#059669]" />
-                <span>حاسبة التعافي</span>
+                <Layers className="w-4 h-4 text-[#059669]" />
+                <span>المنتجات المعتمدة</span>
               </button>
             </div>
 

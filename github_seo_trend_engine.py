@@ -166,7 +166,7 @@ def get_active_offer_details(cfg: dict) -> dict:
         "whatsapp_phone": doc.get("whatsapp_phone", "201155803307"),
         "whatsapp_display": doc.get("whatsapp_display", "01155803307"),
         "instagram_url": doc.get("instagram_url", "https://www.instagram.com/tapistorefamily2026/"),
-        "doctor_name": doc.get("doctor_name", "الدكتورة"),
+        "doctor_name": doc.get("doctor_name", "أخصائية العناية بالتعافي"),
         "tracking_endpoint": tracking_endpoint,
     }
 
@@ -743,63 +743,8 @@ def get_all_hashtags_flat(hashtags_dict: dict) -> list:
 # المخططات الزمنية البصرية SVG والجداول السريرية (R2 Visual Polish)
 # -----------------------------------------------------------------------------
 def build_svg_healing_timeline(context: str = "general") -> str:
-    """توليد مخطط زمني ببيئة سريرية متجاوبة 100% SVG من الأسبوع الأول حتى الشهر الثالث."""
-    svg_html = """
-    <div class="svg-timeline-wrapper">
-      <h4 class="timeline-title">📊 الجدول الزمني السريري للتعافي والتئام الأنسجة (من الأسبوع 1 حتى الشهر 3):</h4>
-      <div class="timeline-svg-container">
-        <svg viewBox="0 0 840 210" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#0D4A4D" />
-              <stop offset="50%" stop-color="#059669" />
-              <stop offset="100%" stop-color="#10B981" />
-            </linearGradient>
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#059669" flood-opacity="0.3"/>
-            </filter>
-          </defs>
-
-          <!-- شريط المسار الأساسي -->
-          <line x1="740" y1="90" x2="100" y2="90" stroke="url(#lineGrad)" stroke-width="6" stroke-linecap="round" />
-
-          <!-- المحطة 1: الأسبوع الأول -->
-          <g transform="translate(720, 90)" filter="url(#glow)">
-            <circle cx="0" cy="0" r="18" fill="#0D4A4D" stroke="#fff" stroke-width="4" />
-            <text x="0" y="5" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">1</text>
-            <text x="0" y="-30" font-size="13" font-weight="800" fill="#0D4A4D" text-anchor="middle">الأسبوع 1</text>
-            <text x="0" y="45" font-size="11" font-weight="700" fill="#374151" text-anchor="middle">الإغلاق السطحي</text>
-            <text x="0" y="65" font-size="10" fill="#6B7280" text-anchor="middle">عزل الماء والميكروبات</text>
-          </g>
-
-          <!-- سهم تدفق سريري -->
-          <polygon points="560,86 545,90 560,94" fill="#059669" />
-
-          <!-- المحطة 2: الأسبوع 2 إلى 4 -->
-          <g transform="translate(420, 90)" filter="url(#glow)">
-            <circle cx="0" cy="0" r="18" fill="#059669" stroke="#fff" stroke-width="4" />
-            <text x="0" y="5" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">2-4</text>
-            <text x="0" y="-30" font-size="13" font-weight="800" fill="#059669" text-anchor="middle">الأسبوع 2 - 4</text>
-            <text x="0" y="45" font-size="11" font-weight="700" fill="#374151" text-anchor="middle">تنظيم الكولاجين</text>
-            <text x="0" y="65" font-size="10" fill="#6B7280" text-anchor="middle">بدء السيليكون والضغط</text>
-          </g>
-
-          <!-- سهم تدفق سريري -->
-          <polygon points="260,86 245,90 260,94" fill="#10B981" />
-
-          <!-- المحطة 3: الشهر 2 إلى 3 -->
-          <g transform="translate(120, 90)" filter="url(#glow)">
-            <circle cx="0" cy="0" r="18" fill="#10B981" stroke="#fff" stroke-width="4" />
-            <text x="0" y="5" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">2-3</text>
-            <text x="0" y="-30" font-size="13" font-weight="800" fill="#10B981" text-anchor="middle">الشهر 2 - 3</text>
-            <text x="0" y="45" font-size="11" font-weight="700" fill="#374151" text-anchor="middle">النضج السريري النهائي</text>
-            <text x="0" y="65" font-size="10" fill="#6B7280" text-anchor="middle">تسطيح وتوحيد لون الندبة</text>
-          </g>
-        </svg>
-      </div>
-    </div>
-    """
-    return svg_html
+    """إلغاء المخطط الزمني السريري الثابت نهائياً لسلامة المريض."""
+    return ""
 
 
 def generate_comparison_table_data(product: dict) -> dict:
@@ -2393,7 +2338,7 @@ def render_top_and_header(cfg: dict, is_subpage: bool = False, depth: int = 1) -
       🌿 هيلينج تاتش مصر | Healing Touch
     </a>
     <nav class="nav-links">
-      <a href="{prefix}portal/" style="background:#059669;color:#ffffff;padding:6px 14px;border-radius:20px;font-weight:bold;">🩺 دليلك التفاعلي وحاسبة التعافي</a>
+      <a href="{prefix}portal/" style="background:#059669;color:#ffffff;padding:6px 14px;border-radius:20px;font-weight:bold;">🩺 دليلك التفاعلي والدليل السريري المعتمد</a>
       <a href="{prefix}index.html#guided-triage">🧭 استكشف نوع عمليتك</a>
       <a href="{prefix}index.html#knowledge-hub-section">📚 مقالات وأدلة التعافي</a>
       <a href="{prefix}index.html#products-section">🛡️ المنتجات الطبية المعتمدة</a>
@@ -2418,7 +2363,7 @@ def render_sticky_bottom_bar(cfg: dict, context_topic: str) -> str:
     </div>
     <div class="sticky-btns">
       <button onclick="openPromoDrawer('{clean_topic}', 'whatsapp', '{wa_url}')" class="sticky-wa-btn">
-        💬 استشارة مجانية عبر واتساب ({offer["whatsapp_display"]})
+        💬 استشارة سريرية مجانية عبر واتساب (كود HT10: شحن مجاني وحق المعاينة قبل الدفع)
       </button>
       <button onclick="openPromoDrawer('{clean_topic}', 'instagram', '{offer['instagram_url']}')" class="sticky-ig-btn">
         📸 استشارة عبر إنستجرام
@@ -2438,7 +2383,7 @@ def render_footer(cfg: dict) -> str:
     <p style="font-size:1.15rem; font-weight:800; color:#fff; margin-top:0;">🌿 هيلينج تاتش مصر (Healing Touch Egypt 2026)</p>
     <p>المنصة التوعوية والاستشارية المعتمدة لرعاية ما بعد العمليات الجراحية والتجميلية في مصر. مهمتنا إرشادك علمياً والإجابة على أسئلتك مجاناً مع ضمان حق فحص ومعاينة المنتج الأصلي قبل الدفع.</p>
     <p style="margin-top:16px;">
-      <a href="javascript:void(0)" onclick="openPromoDrawer('استفسار طبي من الفوتر', 'whatsapp'); return false;">💬 محادثة مجانية على واتساب ({offer["whatsapp_display"]})</a> |
+      <a href="javascript:void(0)" onclick="openPromoDrawer('استفسار طبي من الفوتر', 'whatsapp'); return false;">💬 محادثة مجانية على واتساب (كود HT10: شحن مجاني وحق المعاينة قبل الدفع)</a> |
       <a href="{offer['instagram_url']}" target="_blank" rel="noopener">📸 حساب إنستجرام</a> |
       <a href="https://www.facebook.com/61596009772486" target="_blank" rel="noopener">📘 صفحتنا على فيسبوك</a>
     </p>
@@ -2898,7 +2843,7 @@ def build_article_page(art: dict, all_articles: list, all_products: list, cfg: d
       <p>احصلي الآن على <strong>استشارة مجانية</strong> مع أخصائية العناية بالتعافي للإجابة علمياً عن حالتكِ، وعند طلبكِ ستحصلين على <strong>{offer["offer_title"]}</strong> بكود <strong>{offer["code"]}</strong>.</p>
       <div class="triage-actions">
         <a href="javascript:void(0)" onclick="openPromoDrawer('{clean_title}', 'whatsapp'); return false;" data-topic="{clean_title}" class="btn-free-chat">
-          💬 احصلي على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
+          💬 احصلي على استشارة مجانية الآن عبر واتساب (كود HT10: شحن مجاني وحق المعاينة قبل الدفع)
         </a>
         <button onclick="openPromoDrawer('{clean_title}', 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
           📸 استشارة مجانية عبر إنستجرام
@@ -3128,7 +3073,7 @@ def build_index_page(all_articles: list, all_products: list, cfg: dict) -> str:
       </p>
       <div class="triage-actions">
         <a id="triage-wa-btn" href="javascript:void(0)" onclick="openPromoDrawer(this.getAttribute('data-topic') || 'استشارة سريرية', 'whatsapp'); return false;" data-topic="استفسار سريري لحالة ولادة قيصرية / شد بطن" class="btn-free-chat">
-          💬 احصل على استشارة مجانية الآن عبر واتساب ({offer["whatsapp_display"]})
+          💬 احصل على استشارة مجانية الآن عبر واتساب (كود HT10: شحن مجاني وحق المعاينة قبل الدفع)
         </a>
         <button onclick="openPromoDrawer(document.getElementById('triage-title-text').innerText, 'instagram', '{offer['instagram_url']}')" class="btn-ig-chat">
           📸 استشارة مجانية عبر إنستجرام
@@ -3311,12 +3256,12 @@ def sync_sheet_articles_if_any() -> list:
                     "quick_takeaways": [
                         "الالتزام بالبروتوكول الطبي المعتمد يسرع من التعافي بنسبة تتجاوز 75%.",
                         "العناية بنظافة الجرح وتجنب الاحتكاك بالملابس يمنع تكون الندبات المتضخمة.",
-                        "استشارة الدكتورة مجاناً تضمن لك معرفة التوقيت الدقيق للبدء وتفادي أي أخطاء شائعة.",
+                        "استشارة أخصائية التعافي مجاناً تضمن لك معرفة التوقيت الدقيق للبدء وتفادي أي أخطاء شائعة.",
                     ],
                     "content_paragraphs": [
                         f"تعتبر الرعاية السريرية لجرح {clean_title} ركيزة أساسية لمنع المضاعفات وتوفير بيئة مثالية لالتئام الأنسجة وفق أحدث الأبحاث الجراحية لعام 2026.",
                         "تؤكد الدراسات السريرية المنشورة في PubMed وNCBI أن الحفاظ على التوازن المائي للجلد واستخدام المنتجات المعتمدة يقلل من تشكل الكولاجين العشوائي.",
-                        "بروتوكول الرعاية المخصصة: لأن كل حالة جراحية لها خصوصيتها الدقيقة وطبيعة التئام أنسجتها، فإن التحدث المباشر مع الدكتورة يتيح لكِ خطة تعافٍ مخصصة وآمنة.",
+                        "بروتوكول الرعاية المخصصة: لأن كل حالة جراحية لها خصوصيتها الدقيقة وطبيعة التئام أنسجتها، فإن التواصل المباشر مع أخصائية التعافي يتيح لكِ خطة تعافٍ مخصصة وآمنة.",
                     ],
                     "sources": [
                         "NCBI PMC2918339", "PubMed 28570253", "PubMed 8113473", "Almoosa Health Group",
@@ -3339,7 +3284,7 @@ def sync_sheet_articles_if_any() -> list:
                         ],
                     },
                     "faqs": [
-                        {"question": f"متى أبدأ في العناية بعد {clean_title}؟", "answer": "يُوصى بالبدء فور التئام السطح وفك الغرز بعد مراجعة الدكتورة المختصة مجاناً."}
+                        {"question": f"متى أبدأ في العناية بعد {clean_title}؟", "answer": "يُوصى بالبدء فور التئام السطح وفك الغرز بعد مراجعة أخصائية العناية بالتعافي مجاناً."}
                     ],
                 })
     except Exception:

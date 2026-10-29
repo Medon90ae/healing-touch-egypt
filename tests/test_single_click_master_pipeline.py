@@ -279,6 +279,118 @@ class TestMilestone4SingleClickPipeline(unittest.TestCase):
         self.assertIn("Single-Click Master Pipeline", res.stdout)
         self.assertIn("كود الخروج: 0 (SUCCESS)", res.stdout)
 
+    def test_10_clinical_cleanup_calculator_and_timeline_absence(self):
+        """R1 Guardrail: Verify generated campaign landing pages and pipeline copy have ZERO calculator and timeline occurrences."""
+        mock_step1 = {
+            "status": "success",
+            "has_custom_inbox": False,
+            "category": "c-section",
+            "case_data": {
+                "title": "بروتوكول تعافي جرح القيصرية والشاور الطبي الآمن",
+                "category": "c-section",
+                "story_text": "إرشادات طبية سريرية لحماية الجرح من الماء ومنع تشكل الندبات.",
+                "hashtags": "#ولادة_قيصرية #جرح_القيصرية #علاج_الندبات"
+            },
+            "hero_image": PROJECT_ROOT / "docs" / "assets" / "og-image.jpg",
+            "gallery_images": [],
+            "video_vertical": None,
+            "video_horizontal": None,
+            "audio_path": None
+        }
+
+        step2 = scmp.step_2_build_campaign_landing_page(mock_step1)
+        lp_file = Path(step2["local_file"])
+        self.assertTrue(lp_file.exists())
+        lp_content = lp_file.read_text(encoding="utf-8")
+
+        self.assertNotIn(
+            "حاسبة جاهزية الاستحمام", lp_content,
+            "Generated campaign landing page must not contain 'حاسبة جاهزية الاستحمام'."
+        )
+        self.assertNotIn(
+            "الجدول الزمني السريري للتعافي والتئام الأنسجة", lp_content,
+            "Generated campaign landing page must not contain 'الجدول الزمني السريري للتعافي والتئام الأنسجة'."
+        )
+
+    def test_11_phone_number_purity_guardrail(self):
+        """R1 Guardrail: Verify Step 3 copywriting does not leak raw phone digits (01155803307)."""
+        mock_step1 = {
+            "status": "success",
+            "category": "c-section",
+            "template_index": 0,
+            "case_data": {
+                "title": "تعافي جرح القيصرية والشاور الطبي الآمن",
+                "category": "c-section",
+                "story_text": "حماية الجرح ومنع تشكل الندبات المتضخمة بعد القيصرية.",
+                "hashtags": "#قيصرية #HT10"
+            },
+            "hero_image": PROJECT_ROOT / "docs" / "assets" / "campaign_c-section_hero.png",
+            "gallery_images": [],
+            "video_vertical": None,
+            "video_horizontal": None,
+            "platform_texts": {}
+        }
+        mock_step2 = {
+            "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/c-section-recovery-protocol.html"
+        }
+
+        step3 = scmp.step_3_generate_creatives_and_packages(mock_step1, mock_step2)
+        pack_dir = step3["pack_dir"]
+        self.assertTrue(pack_dir.exists())
+
+        raw_phone_parens = "(01155803307)"
+        violations = []
+        for text_file in pack_dir.rglob("*.txt"):
+            content = text_file.read_text(encoding="utf-8", errors="ignore")
+            if raw_phone_parens in content:
+                violations.append(f"{text_file.relative_to(pack_dir)} contains '{raw_phone_parens}'")
+
+        self.assertEqual(
+            len(violations), 0,
+            f"Step 3 generated raw phone digits in ready_to_publish texts:\n" + "\n".join(violations)
+        )
+
+    def test_12_ready_to_publish_all_platforms_coverage(self):
+        """R4 Guardrail: Verify Step 3 pack_dir contains all 6 platforms with complete SEO script assets."""
+        mock_step1 = {
+            "status": "success",
+            "category": "thyroid",
+            "template_index": 0,
+            "case_data": {
+                "title": "حماية وتسطيح ندبة استئصال الغدة الدرقية",
+                "category": "thyroid",
+                "story_text": "حماية الندبة من أشعة الشمس ومنع التصبغات بالسيليكون الطبي.",
+                "hashtags": "#غدة_درقية #HT10"
+            },
+            "hero_image": PROJECT_ROOT / "docs" / "assets" / "campaign_thyroid_hero.png",
+            "gallery_images": [],
+            "video_vertical": None,
+            "video_horizontal": None,
+            "platform_texts": {}
+        }
+        mock_step2 = {
+            "public_url": "https://medon90ae.github.io/healing-touch-egypt/lp/thyroid-recovery-protocol.html"
+        }
+
+        step3 = scmp.step_3_generate_creatives_and_packages(mock_step1, mock_step2)
+        pack_dir = step3["pack_dir"]
+
+        # Platform folders existence
+        expected_platforms = {
+            "01_يوتيوب_YouTube": ["بيانات_الفيديو_عنوان_ووصف_وهاشتاجات.txt", "بيانات_الشورتس.txt"],
+            "02_تيكتوك_TikTok": ["كابشن_وهاشتاجات_تيكتوك.txt"],
+            "03_إنستجرام_Instagram": ["كابشن_وهاشتاجات_إنستجرام.txt"],
+            "04_بلوجر_Blogger": ["مقال_بلوجر_جاهز_للنشر.html"],
+            "05_ريديت_Reddit": ["منشور_ومقال_ريديت_Markdown.md"],
+            "06_فيسبوك_Facebook": ["منشور_فيسبوك_السريري_والإنساني.txt"]
+        }
+        for plat, required_files in expected_platforms.items():
+            sub = pack_dir / plat
+            self.assertTrue(sub.exists(), f"Platform folder missing: {plat}")
+            for req_file in required_files:
+                fpath = sub / req_file
+                self.assertTrue(fpath.exists(), f"File {req_file} missing in {plat}")
+
 
 if __name__ == "__main__":
     unittest.main()

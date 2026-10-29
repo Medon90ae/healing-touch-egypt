@@ -20,7 +20,9 @@ import datetime as dt
 import json
 import logging
 import os
+import re
 import shutil
+import subprocess
 import sys
 import urllib.parse
 from pathlib import Path
@@ -130,6 +132,9 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
 
     tmpl = dict(templates[chosen_idx])
     final_category = tmpl.get("category", "c-section")
+    # R1 Guardrail: Sanitize raw phone numbers from story_text
+    tmpl["story_text"] = re.sub(r'\(?أو مباشرة عبر واتساب:\s*01155803307\)?', '', tmpl.get("story_text", "")).strip()
+    tmpl["story_text"] = re.sub(r'\(?\s*01155803307\s*\)?', '', tmpl["story_text"]).strip()
 
     used_inbox_files: List[Path] = []
     hero_image: Optional[Path] = None
@@ -156,6 +161,25 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
     except Exception as e:
         logger.warning(f"تنبيه سحب ترندات جوجل: {e}")
 
+    # استكشاف دراسات PubMed السريرية للتخصص النشط
+    pubmed_studies: List[Dict[str, Any]] = []
+    try:
+        from clinical_research_harvester import harvest_pubmed_studies
+        pubmed_choices = {
+            "c-section": "2",
+            "rhinoplasty": "4",
+            "bariatric": "5",
+            "thyroid": "3",
+            "keloid": "2",
+        }
+        prod_choice = pubmed_choices.get(final_category, "6")
+        pubmed_studies = harvest_pubmed_studies(prod_choice, max_results=3)
+        if pubmed_studies:
+            logger.info(f"🔬 تم استكشاف {len(pubmed_studies)} دراسة سريرية من PubMed لتخصص ({final_category}).")
+    except Exception as e:
+        logger.warning(f"تنبيه استكشاف أبحاث PubMed: {e}")
+
+    step_images: Dict[int, Path] = {}
     if has_custom_inbox:
         logger.info(f"📥 تم اكتشاف {len(inbox_files)} ملفات مرفوعة في manual_inbox. جاري التوزيع السريري:")
         
@@ -164,14 +188,38 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
         inbox_audios = [f for f in inbox_files if f.suffix.lower() in [".m4a", ".mp3", ".wav", ".aac"]]
         inbox_texts = [f for f in inbox_files if f.suffix.lower() in [".txt", ".md"]]
 
+        # فحص وجود صور مخصصة لخطوات الدليل العملي (step_1, step_2, step_3 أو خطوة1، خطوة2، خطوة3)
+        for img in inbox_images:
+            nm = img.stem.lower()
+            for s in [1, 2, 3]:
+                if s not in step_images and any(k in nm for k in [f"step_{s}", f"step{s}", f"خطوة_{s}", f"خطوة{s}", f"خطوه_{s}", f"خطوه{s}"]):
+                    step_images[s] = img
+                    if img not in used_inbox_files:
+                        used_inbox_files.append(img)
+                    logger.info(f"   • تم استيعاب صورة الدليل العملي الخطوة {s}: {img.name}")
+                    break
+
         # 1. توزيع الصور (Hero + Carousel)
-        if inbox_images:
-            hero_image = inbox_images[0]
-            gallery_images = inbox_images[1:]
-            used_inbox_files.extend(inbox_images)
+        non_step_images = [img for img in inbox_images if img not in step_images.values()]
+        if non_step_images:
+            hero_image = non_step_images[0]
+            gallery_images = non_step_images[1:]
+            used_inbox_files.extend(non_step_images)
             logger.info(f"   • صورة الغلاف الرئيسية (Hero Cover): {hero_image.name}")
             if gallery_images:
                 logger.info(f"   • معرض الحالات السريرية (Carousel): {len(gallery_images)} صور إضافية.")
+        elif inbox_images:
+            hero_image = inbox_images[0]
+            used_inbox_files.append(hero_image)
+
+        # استكمال خطوات الدليل العملي المتبقية من أي صور غير مستخدمة
+        unused_imgs = [img for img in inbox_images if img != hero_image and img not in step_images.values()]
+        for s in [1, 2, 3]:
+            if s not in step_images and unused_imgs:
+                step_images[s] = unused_imgs.pop(0)
+                if step_images[s] not in used_inbox_files:
+                    used_inbox_files.append(step_images[s])
+                logger.info(f"   • توجيه صورة الصندوق للدليل العملي خطوة {s}: {step_images[s].name}")
 
         # 2. فرز الفيديوهات حسب الأبعاد (9:16 مقابل 16:9)
         for v in inbox_videos:
@@ -204,6 +252,23 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
             used_inbox_files.extend(inbox_texts)
             logger.info(f"   • تم فرز {len(inbox_texts)} ملفات نصوص وتوجيهها للمنصات.")
 
+    # توفير بدائل سريرية محلية موثوقة لصور الخطوات غير المتوفرة
+    for s in [1, 2, 3]:
+        if s not in step_images or not step_images[s].exists():
+            cand_gallery = DOCS_DIR / "assets" / "gallery" / f"campaign_{final_category}_case_{s}.png"
+            cand_hero = DOCS_DIR / "assets" / f"campaign_{final_category}_hero.png"
+            cand_branded = sorted(list(BRANDED_DIR.glob(f"*{final_category}*.png")))
+            cand_og = DOCS_DIR / "assets" / "og-image.jpg"
+
+            if cand_gallery.exists():
+                step_images[s] = cand_gallery
+            elif cand_hero.exists():
+                step_images[s] = cand_hero
+            elif cand_branded:
+                step_images[s] = cand_branded[(s - 1) % len(cand_branded)]
+            else:
+                step_images[s] = cand_og
+
     if not hero_image:
         logger.info("ℹ️ لم يتم العثور على صورة غلاف في manual_inbox (أو الصندوق فارغ) — تفعيل المسار الاحتياطي عبر الأبحاث السريرية ومكتبة Pomelli.")
         photo_info = asa.get_clinical_case_photo(tmpl["title"], final_category)
@@ -224,12 +289,14 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
         "case_data": tmpl,
         "hero_image": hero_image,
         "gallery_images": gallery_images,
+        "step_images": step_images,
         "video_vertical": video_vertical,
         "video_horizontal": video_horizontal,
         "audio_path": audio_path,
         "platform_texts": platform_texts,
         "used_inbox_files": used_inbox_files,
-        "live_trends": live_trends
+        "live_trends": live_trends,
+        "pubmed_studies": pubmed_studies
     }
 
 
@@ -295,6 +362,38 @@ def step_2_build_campaign_landing_page(step1_data: Dict[str, Any]) -> Dict[str, 
         "video_vertical": str(dest_v_vid) if dest_v_vid.exists() else str(video_v_p or ""),
         "audio_path": str(audio_p or "")
     }
+
+    # استيعاب وتوزيع صور الخطوات العملية للدليل السريري
+    guide_docs_dir = DOCS_DIR / "assets" / "guide"
+    guide_portal_dir = BASE_DIR / "portal_app" / "public" / "assets" / "guide"
+    guide_docs_dir.mkdir(parents=True, exist_ok=True)
+    guide_portal_dir.mkdir(parents=True, exist_ok=True)
+
+    step_imgs = step1_data.get("step_images", {})
+    for s_idx in [1, 2, 3]:
+        src_step = step_imgs.get(s_idx)
+        if not src_step or not Path(src_step).exists():
+            cand_gal = DOCS_DIR / "assets" / "gallery" / f"campaign_{cat}_case_{s_idx}.png"
+            cand_hero = DOCS_DIR / "assets" / f"campaign_{cat}_hero.png"
+            src_step = cand_gal if cand_gal.exists() else (cand_hero if cand_hero.exists() else DOCS_DIR / "assets" / "og-image.jpg")
+
+        dest_d = guide_docs_dir / f"{cat}_step_{s_idx}.png"
+        dest_p = guide_portal_dir / f"{cat}_step_{s_idx}.png"
+        try:
+            if Path(src_step).exists():
+                if Path(src_step).resolve() != dest_d.resolve():
+                    shutil.copy2(str(src_step), str(dest_d))
+                if Path(src_step).resolve() != dest_p.resolve():
+                    shutil.copy2(str(src_step), str(dest_p))
+                logger.info(f"   • تم حفظ وتحديث صورة الدليل العملي (خطوة {s_idx}): {dest_d.name}")
+        except Exception as e:
+            logger.warning(f"تنبيه نسخ صورة الدليل العملي {s_idx}: {e}")
+
+    # تمرير ترندات جوجل وأبحاث PubMed لحقن الأسئلة الشائعة ديناميكياً
+    if "live_trends" in step1_data and "live_trends" not in tmpl:
+        tmpl["live_trends"] = step1_data["live_trends"]
+    if "pubmed_studies" in step1_data and "pubmed_studies" not in tmpl:
+        tmpl["pubmed_studies"] = step1_data["pubmed_studies"]
 
     # تحديث وتوليد صفحات المنتجات متعددة الزوايا
     try:
@@ -372,10 +471,10 @@ def step_3_generate_creatives_and_packages(step1_data: Dict[str, Any], step2_dat
 {tmpl['story_text'].strip()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-🔗 رابط الدليل السريري وحاسبة التعافي المتخصصة:
+🔗 رابط الدليل السريري لبروتوكول التعافي:
 👉 {lp_url}
 
-💬 للتوجيه السريري المجاني والاستشارة عبر واتساب (01155803307):
+💬 للتوجيه السريري المجاني والاستشارة المباشرة عبر واتساب:
 👉 {wa_direct_url}
 
 {tmpl['hashtags']}"""
@@ -417,7 +516,7 @@ def step_3_generate_creatives_and_packages(step1_data: Dict[str, Any], step2_dat
 ---
 🔗 **[رابط الدليل السريري وحجز الاستشارة المباشر]({lp_url})**
 
-**للتوجيه السريري والاستشارة المجانية عبر واتساب:** [01155803307]({wa_direct_url})
+**للتوجيه السريري والاستشارة المجانية عبر واتساب:** [استشارة سريرية بكود HT10]({wa_direct_url})
 
 {tmpl['hashtags']}"""
 
@@ -667,6 +766,54 @@ def step_6_archive_and_clean_inbox(
 
 
 # =============================================================================
+# الخطوة الإضافية: بناء ومزامنة البوابة التفاعلية (portal_app -> docs/portal)
+# =============================================================================
+def build_and_sync_portal() -> Dict[str, Any]:
+    """
+    Automated portal build step in master execution:
+    Runs 'npm --prefix portal_app run build' and copies portal_app/dist/* to docs/portal/.
+    """
+    logger.info("━" * 60)
+    logger.info("⚛️ [بناء ومزامنة البوابة التفاعلية]: تشغيل npm run build ونقل dist إلى docs/portal/...")
+
+    portal_dir = BASE_DIR / "portal_app"
+    dist_dir = portal_dir / "dist"
+    dest_portal = DOCS_DIR / "portal"
+    dest_portal.mkdir(parents=True, exist_ok=True)
+
+    if not portal_dir.exists():
+        logger.warning(f"مجلد portal_app غير موجود في {portal_dir}")
+        return {"status": "skipped", "reason": "portal_app_not_found"}
+
+    try:
+        cmd = ["npm", "--prefix", "portal_app", "run", "build"]
+        logger.info(f"   • تنفيذ الأمر: {' '.join(cmd)}")
+        res = subprocess.run(
+            cmd,
+            cwd=str(BASE_DIR),
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if res.returncode != 0:
+            logger.warning(f"تنبيه بناء portal_app: {res.stderr or res.stdout}")
+        else:
+            logger.info("   • تم بناء البوابة بنجاح (Exit code 0).")
+
+        if dist_dir.exists():
+            shutil.copytree(str(dist_dir), str(dest_portal), dirs_exist_ok=True)
+            logger.info(f"   • تم نسخ مخرجات البوابة بنجاح إلى: {dest_portal}")
+            return {"status": "success", "synced": True}
+        else:
+            logger.warning(f"مجلد dist غير موجود في {dist_dir}")
+            return {"status": "warning", "reason": "dist_not_found"}
+    except Exception as e:
+        logger.warning(f"تنبيه أثناء بناء ومزامنة البوابة: {e}")
+        return {"status": "error", "error": str(e)}
+
+
+# =============================================================================
 # المشغل الموحد بضغطة زر واحدة (Single-Click Master Pipeline Orchestrator)
 # =============================================================================
 def run_single_click_master_pipeline(
@@ -696,6 +843,9 @@ def run_single_click_master_pipeline(
 
     # الخطوة 2: بناء صفحة الهبوط
     step2 = step_2_build_campaign_landing_page(step1)
+
+    # بناء ومزامنة البوابة التفاعلية آلياً
+    portal_res = build_and_sync_portal()
 
     # الخطوة 3: توليد الكروت والتصميمات وحزم النشر
     step3 = step_3_generate_creatives_and_packages(step1, step2)
@@ -733,6 +883,7 @@ def run_single_click_master_pipeline(
         "duration_seconds": duration,
         "step1": step1,
         "step2": step2,
+        "portal_build": portal_res,
         "step3": step3,
         "step4": step4,
         "step5": step5,

@@ -136,14 +136,15 @@ export interface Campaign {
   bundles: Bundle[];
   article: ClinicalArticleData;
   scientificStudies: EvidenceStudy[];
-  calculator: {
+  calculator?: {
     title: string;
     subtitle: string;
     metricName: string;
     questions: CalculatorQuestion[];
     getRecommendation: (answers: Record<string, number>) => CalculatorRecommendation;
   };
-  timeline: {
+  /** @deprecated Eradicated per clinical safety guidelines (R1) */
+  timeline?: {
     phase: string;
     weekRange: string;
     title: string;

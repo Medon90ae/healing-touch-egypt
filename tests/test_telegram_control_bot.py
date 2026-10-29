@@ -8,15 +8,19 @@ Verifies:
 - Service management scripts exist and follow CRLF conventions.
 """
 
+import json
 import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+import telegram_control_bot
 from telegram_control_bot import (
     build_main_menu_keyboard,
     build_products_submenu_keyboard,
@@ -218,6 +222,150 @@ class TestTelegramControlBot(unittest.TestCase):
         finally:
             if test_txt.exists():
                 test_txt.unlink()
+
+    def test_13_reviews_menu_button_exists_in_main_menu(self):
+        """R5: Verify menu_reviews button exists in build_main_menu_keyboard()."""
+        kb = build_main_menu_keyboard()
+        self.assertIn("inline_keyboard", kb)
+        rows = kb["inline_keyboard"]
+        callbacks = [btn["callback_data"] for row in rows for btn in row if "callback_data" in btn]
+        self.assertIn(
+            "menu_reviews", callbacks,
+            "Main menu inline keyboard must include callback 'menu_reviews' for [🌟 إدارة وأرشفة تجارب المرضى والعملاء]."
+        )
+        review_btn = next((btn for row in rows for btn in row if btn.get("callback_data") == "menu_reviews"), None)
+        self.assertIsNotNone(review_btn)
+        self.assertTrue(
+            any(k in review_btn["text"] for k in ["تجارب", "المرضى", "العملاء"]),
+            f"Review button text '{review_btn['text']}' must mention patient reviews."
+        )
+
+    def test_14_reviews_intake_callbacks_and_submenu_keyboard(self):
+        """R5: Verify review intake callbacks (rev_prod_1 .. rev_prod_5, rev_privacy_templates)."""
+        import telegram_control_bot as bot
+        build_hub = getattr(bot, "build_reviews_hub_keyboard", None)
+        self.assertIsNotNone(
+            build_hub,
+            "telegram_control_bot must define 'build_reviews_hub_keyboard()' for R5 review intake hub."
+        )
+        kb = build_hub()
+        self.assertIn("inline_keyboard", kb)
+        rows = kb["inline_keyboard"]
+        callbacks = [btn["callback_data"] for row in rows for btn in row if "callback_data" in btn]
+
+        for i in range(1, 6):
+            self.assertIn(
+                f"rev_prod_{i}", callbacks,
+                f"Reviews submenu must contain callback 'rev_prod_{i}' for product {i}."
+            )
+        self.assertIn(
+            "rev_privacy_templates", callbacks,
+            "Reviews submenu must contain callback 'rev_privacy_templates'."
+        )
+
+    def test_15_reviews_session_state_transitions(self):
+        """R5: Verify session state transitions into STATE_STAGE_REVIEW_INTAKE."""
+        import telegram_control_bot as bot
+        state_intake = getattr(bot, "STATE_STAGE_REVIEW_INTAKE", None)
+        self.assertIsNotNone(
+            state_intake,
+            "telegram_control_bot must define 'STATE_STAGE_REVIEW_INTAKE' state constant."
+        )
+        test_chat = "777666555"
+        reset_session(test_chat)
+        sess = get_session(test_chat)
+        self.assertEqual(sess["stage"], STATE_IDLE)
+
+        # Transition into STATE_STAGE_REVIEW_INTAKE
+        updated = update_session(test_chat, stage=state_intake, review_product_id="2")
+        self.assertEqual(updated["stage"], state_intake)
+        self.assertEqual(updated.get("review_product_id"), "2")
+
+        # Verify persistence and retrieval
+        current = get_session(test_chat)
+        self.assertEqual(current["stage"], state_intake)
+
+        # Reset back to IDLE
+        reset_session(test_chat)
+        resetted = get_session(test_chat)
+        self.assertEqual(resetted["stage"], STATE_IDLE)
+
+    def test_16_reviews_directory_intake_schema(self):
+        """R5: Verify reviews directory intake schema (media_assets/client_reviews/{product_id}/ and reviews_metadata.json)."""
+        import telegram_control_bot as bot
+        intake_fn = getattr(bot, "intake_client_review_asset", None)
+        self.assertIsNotNone(
+            intake_fn,
+            "telegram_control_bot must define 'intake_client_review_asset' for storing patient reviews."
+        )
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            with patch.object(bot, "CLIENT_REVIEWS_DIR", tmp_path / "client_reviews", create=True):
+                meta = intake_fn(
+                    product_id="bupy-silicone-scar-sheet",
+                    rating=5,
+                    patient_pseudonym="أم قيصرية - القاهرة",
+                    surgery_type="ولادة قيصرية (اليوم 21)",
+                    review_text="شيت السيليكون ممتاز جداً في تسطيح الندبة بعد أسبوعين من الالتزام.",
+                    photo_bytes=b"fake-jpeg-photo",
+                    audio_bytes=b"fake-mp3-voice",
+                    photo_filename="csection_scar_day21.jpg",
+                    audio_filename="voice_feedback.mp3"
+                )
+                self.assertIsNotNone(meta)
+                self.assertEqual(meta["product_id"], "bupy-silicone-scar-sheet")
+                self.assertEqual(meta["rating"], 5)
+                self.assertEqual(meta["patient_pseudonym"], "أم قيصرية - القاهرة")
+                self.assertEqual(meta["privacy_status"], "anonymized_approved")
+
+                # Verify directory structure
+                prod_dir = tmp_path / "client_reviews" / "bupy-silicone-scar-sheet"
+                self.assertTrue(prod_dir.exists())
+                self.assertTrue((prod_dir / "photos").exists())
+                self.assertTrue((prod_dir / "audio").exists())
+
+                # Verify metadata file
+                meta_file = prod_dir / "reviews_metadata.json"
+                self.assertTrue(meta_file.exists())
+                records = json.loads(meta_file.read_text(encoding="utf-8"))
+                self.assertIsInstance(records, list)
+                self.assertEqual(len(records), 1)
+                self.assertEqual(records[0]["review_id"], meta["review_id"])
+
+    def test_17_medical_privacy_compliant_review_templates(self):
+        """R5: Verify medical privacy compliant review templates (anonymized patient details, zero prohibited titles, approved HT10 link)."""
+        import telegram_control_bot as bot
+        tpl_fn = getattr(bot, "build_medical_privacy_review_templates", None)
+        self.assertIsNotNone(
+            tpl_fn,
+            "telegram_control_bot must define 'build_medical_privacy_review_templates' for generating compliant posts."
+        )
+        sample_meta = {
+            "review_id": "rev_test_001",
+            "product_id": "bupy-silicone-scar-sheet",
+            "product_name": "BUPY Silicone Scar Sheets",
+            "timestamp": "2026-10-29T17:30:00",
+            "rating": 5,
+            "patient_pseudonym": "أم قيصرية - القاهرة",
+            "surgery_type": "ولادة قيصرية (اليوم 21)",
+            "review_text": "شيت السيليكون فرق جدا في تسطيح الندبة بعد أسبوعين من الاستخدام المنتظم.",
+            "specialist_advice": "ينصح بالاستمرار على شيت السيليكون لمدة 12 ساعة يومياً لحماية الأنسجة."
+        }
+        templates = tpl_fn(sample_meta)
+        self.assertIn("instagram_carousel", templates)
+        self.assertIn("tiktok_reels_script", templates)
+        self.assertIn("blogger_snippet", templates)
+
+        # 1. Anonymized patient details: Patient pseudonym present, no leaked full name
+        for k, text in templates.items():
+            self.assertIn(sample_meta["patient_pseudonym"], text, f"Template {k} must include anonymized patient pseudonym.")
+            # 2. Healthcare compliance: ZERO prohibited doctor titles
+            self.assertNotIn("طبيبة", text, f"Template {k} must not use prohibited title 'طبيبة'.")
+            self.assertNotIn("الدكتورة", text, f"Template {k} must not use prohibited title 'الدكتورة'.")
+            self.assertIn("أخصائية العناية بالتعافي", text, f"Template {k} must use approved title 'أخصائية العناية بالتعافي'.")
+            # 3. Approved WhatsApp consultation link with HT10
+            self.assertIn("https://wa.me/201155803307", text, f"Template {k} must include official WhatsApp link.")
+            self.assertIn("HT10", text, f"Template {k} must include promo code HT10.")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 {
-  "total_studies": 12,
-  "last_updated": "2026-10-28 13:17:16",
+  "total_studies": 15,
+  "last_updated": "2026-10-29 15:42:15",
   "studies": [
     {
       "pmid": "40459590",
@@ -145,6 +145,42 @@
       "product_name": "دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)",
       "summary_ar": "دراسة سريرية محكمة منشورة في (Plast Reconstr Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (دعامات الأنف السيليكونية الطبية (Silicone Nostril Retainer)).",
       "discovered_at": "2026-10-28T13:17:16.259589"
+    },
+    {
+      "pmid": "40307600",
+      "title": "The Effectiveness of PELNAC(TM) Combined with Physical Antibacterial Spray in Repairing Secondary Wounds of Facial Bumps: A Pilot Randomized Clinical Trial",
+      "journal": "Aesthetic Plast Surg",
+      "pub_year": "2025",
+      "doi": "10.1007/s00266-025-04882-0",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40307600/",
+      "product_choice": "5",
+      "product_name": "سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Aesthetic Plast Surg) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)).",
+      "discovered_at": "2026-10-29T14:10:45.666216"
+    },
+    {
+      "pmid": "40070522",
+      "title": "Comparative efficacy of advanced and traditional wound dressings in post-operative orthopaedic care for hip and knee surgeries: A randomized controlled trial",
+      "journal": "J Clin Orthop Trauma",
+      "pub_year": "2025",
+      "doi": "10.1016/j.jcot.2025.102933",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40070522/",
+      "product_choice": "5",
+      "product_name": "سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (J Clin Orthop Trauma) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)).",
+      "discovered_at": "2026-10-29T14:10:45.666231"
+    },
+    {
+      "pmid": "39393119",
+      "title": "Negative Pressure Dressing Versus Conventional Passive Dressing in Pilonidal Surgery: A Randomized Controlled Trial",
+      "journal": "J Surg Res",
+      "pub_year": "2024",
+      "doi": "10.1016/j.jss.2024.09.016",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39393119/",
+      "product_choice": "5",
+      "product_name": "سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (J Surg Res) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)).",
+      "discovered_at": "2026-10-29T15:42:15.005178"
     }
   ]
 }

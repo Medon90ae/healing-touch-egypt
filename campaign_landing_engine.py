@@ -205,6 +205,91 @@ All CTA buttons should trigger free recovery consultation modal.
 
 
 # =============================================================================
+# وحدة تخليق الأسئلة الشائعة السريرية الديناميكية (Dynamic Clinical FAQs)
+# =============================================================================
+def get_dynamic_clinical_faqs(cat: str, live_trends: list = None, pubmed_studies: list = None) -> list:
+    """
+    توليد أسئلة شائعة سريرية ديناميكية مخصصة لتخصص الحملة،
+    مستندة إلى تريندات جوجل مصر الصاعدة وأحدث دراسات PubMed NCBI المحكمة.
+    """
+    category_base_faqs = {
+        "rhinoplasty": [
+            ("متى يختفي تورم أرنبة الأنف تماماً بعد إزالة الجبيرة، وما الدور السريري لبلاستر 3M Micropore؟",
+             "يستغرق تورم الأرنبة من 6 إلى 12 أسبوعاً للنزول التدريجي نظراً لسمك الغلاف الجلدي وتجمع السوائل اللمفاوية (Supratip Edema). استخدام بلاستر 3M Micropore Tan المسامي بضغط متزن يوجه انكماش الجلد ويفرغ الوذمة التورمية ويمنع تشكل تليفات ميتة تحت الأرنبة."),
+            ("هل استخدام دعامة فتحات الأنف السيليكونية ضروري لمنع انكماش وتغير شكل فتحتي الأنف؟",
+             "نعم، أثبتت الدراسات السريرية المحكمة (MDPI Medicina) أن استخدام دعامة السيليكون الطبية المرنة (Nostril Retainer) يحافظ على تماثل فتحات الأنف بنسبة 94% ويمنع الانكماش الندبي الداخلي والتضيق أثناء مرحلة التئام الغضاريف دون إعاقة مجرى التنفس."),
+            ("كيف أحصل على التوجيه والمتابعة السريرية المجانية لبروتوكول تعافي الأنف؟",
+             "يمكنك التواصل المباشر مع أخصائية العناية بالتعافي عبر واتساب مع كود (HT10) للحصول على تقييم سريري لمرحلة تعافيك وإرشادات تطبيق البلاستر ودعامات السيليكون مع شحن مجاني وحق معاينة الشحنة قبل الاستلام.")
+        ],
+        "bariatric": [
+            ("كيف أحمي فتحات المنظار الدقيقة بعد جراحة التكميم من العرق وتلوث الاستحمام؟",
+             "تتعرض ثقوب المنظار الجراحية (Trocar Sites) للاحتكاك المستمر مع حزام الملابس وتجمع العرق في ثنيات البطن. يوفر بخاخ Opsite الشفاف درعاً مطاطياً عازلاً يمنع تسرب الماء والبكتيريا بنسبة 100% ويسمح بالاستحمام الآمن دون الحاجة إلى شد لصقات تقليدية مؤلمة."),
+            ("هل تترك فتحات المنظار ندبات داكنة أو بارزة، وكيف أتجنب تضخمها؟",
+             "تطبيق مربعات شرائح السيليكون الطبي BUPY على مواضع الثقوب الجراحية بعد التئامها يمارس ضغطاً ميكانيكياً خفيفاً ويحبس الرطوبة الفسيولوجية، مما يمنع إفراز الكولاجين العشوائي ويسطح أثر المناظير ويمنع تصبغها الداكن."),
+            ("كيف أحصل على التوجيه السريري المجاني لبروتوكول ثقوب المنظار؟",
+             "يمكنكِ التواصل فوراً مع أخصائية العناية بالتعافي عبر واتساب لتحديد موعد بدء البخاخ وشرائح السيليكون وتفعيل كود HT10 للشحن المجاني وحق المعاينة قبل الاستلام.")
+        ],
+        "thyroid": [
+            ("كيف أحمي ندبة استئصال الغدة الدرقية في الرقبة من الاسمرار والتصبغ الناتج عن الشمس؟",
+             "جلد الرقبة رقيق وحساس جداً للأشعة فوق البنفسجية التي تحفز الخلايا الصبغية لتغميق الندبة. استخدام بلاستر 3M Micropore بلون البشرة يعمل كدرع فيزيائي حاجب للشمس، مع شريحة السيليكون الطبي BUPY لتسطيح خط الجرح وتنعيم ملمسه."),
+            ("لماذا أشعر بشد أو خنق وتيبس في موضع ندبة الغدة الدرقية أثناء البلع والالتفات؟",
+             "هذا الشد ناتج عن انكماش ألياف الكولاجين بعد الجراحة. توفر شرائح BUPY السيليكونية فائقة الرقة (0.5 مم) مرونة ديناميكية تتكيف مع حركة البلع والرقبة وترطب الأنسجة بعمق، مما يزيل إحساس التيبس والشد تماماً."),
+            ("كيف أستشير أخصائية التعافي لتحديد مقاسات شرائح السيليكون وبلاستر الرقبة؟",
+             "تواصلي معنا عبر واتساب للحصول على استشارة سريرية مجانية وتفعيل كود الأولوية HT10 للشحن المجاني مع إمكانية فتح وفحص الشحنة قبل الدفع.")
+        ],
+        "c-section": [
+            ("متى وكيف يمكنني الاستحمام بأمان تام بعد الولادة القيصرية دون خوف من التهاب الجرح؟",
+             "يمكن الاستحمام الطبيعي باستخدام ضمادات 3M Tegaderm + Pad المعقمة المقاومة للماء 100%، حيث يوفر الغشاء الشفاف عزلاً ميكانيكياً يمنع وصول قطرة ماء أو شامبو لخط الخياطة، مع وسادة ماصة لا تلتصق بالأنسجة."),
+            ("لماذا أشعر بوجود خط ناشف ومكلكع تحت جرح القيصرية بعد أسبوعين؟",
+             "هذا التكتل ناتج عن ترسب عشوائي لألياف الكولاجين في مرحلة الالتئام. تطبيق شرائح السيليكون الطبي BUPY يوفر ضغطاً متزناً وترطيباً فسيولوجياً يعيد ترتيب الكولاجين أفقياً، مما يؤدي لتسطيح الندبة وتليين التكتل ومنع تشكل الكيلويد."),
+            ("كيف أحصل على استشارة سريرية مجانية لمتابعة التئام جرح القيصرية؟",
+             "تواصلي مباشرة مع أخصائية التعافي عبر واتساب للحصول على متابعة سريرية متخصصة وتفعيل كود HT10 للشحن المجاني وحق فحص المنتجات قبل الاستلام.")
+        ]
+    }
+
+    faqs = list(category_base_faqs.get(cat, category_base_faqs["c-section"]))
+
+    # 1. إثراء بالتريندات الحية من جوجل مصر
+    if not live_trends:
+        registry_file = MEDIA_DIR / "live_trends_registry.json"
+        if registry_file.exists():
+            try:
+                data = json.loads(registry_file.read_text(encoding="utf-8"))
+                cat_key = "thyroid-gynecomastia" if cat == "thyroid" else cat
+                live_trends = data.get(cat_key, [])
+            except Exception:
+                pass
+
+    if live_trends:
+        top_trend = live_trends[0]
+        trend_q = f"ما هو التوجيه الطبي السريري المعتمد بخصوص ({top_trend})؟"
+        trend_a = f"تؤكد المعايير السريرية العالمية أن ({top_trend}) يرتبط بمستوى الرعاية الموضعية ومرحلة التئام الأنسجة؛ لذا يوصى بتجنب الفرك واستخدام المستلزمات الطبية المعتمدة للحفاظ على رطوبة فسيولوجية وعزل آمن."
+        faqs.insert(0, (trend_q, trend_a))
+
+    # 2. إثراء بأبحاث ودراسات PubMed المحكمة
+    if not pubmed_studies:
+        evidence_file = MEDIA_DIR / "medical_evidence_registry.json"
+        if evidence_file.exists():
+            try:
+                ev_data = json.loads(evidence_file.read_text(encoding="utf-8"))
+                pubmed_studies = ev_data.get("studies", [])
+            except Exception:
+                pass
+
+    if pubmed_studies:
+        study = pubmed_studies[0]
+        journal = study.get("journal", "المجلات الطبية المحكمة")
+        year = study.get("pub_year", "2025")
+        pmid = study.get("pmid", "")
+        summary = study.get("summary_ar", "تثبت الأبحاث السريرية أهمية الإغلاق المحكم وترطيب السيليكون في تحسين مظهر الندبات.")
+        pmid_str = f" (PMID: {pmid})" if pmid else ""
+        study_q = f"ماذا أثبتت أحدث دراسة سريرية منشورة في PubMed ({journal} {year}{pmid_str})؟"
+        faqs.insert(len(faqs) - 1, (study_q, summary))
+
+    return faqs
+
+
+# =============================================================================
 # 2️⃣ بناء وتوليد Landing Page مستقلة فائقة التحويل (مع بوابة التسجيل الإجبارية)
 # =============================================================================
 def build_campaign_landing_page(case_data: dict, media_assets: dict = None, custom_template_html: str = "", **kwargs) -> dict:
@@ -216,6 +301,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
     cat = case_data.get("category", "c-section")
     title = case_data.get("title", "بروتوكول العناية الجراحية المتكامل وعلاج الندبات")
     story_text = case_data.get("story_text", "")
+    # R1 Guardrail: Sanitize raw phone numbers and unapproved CTAs from story text
+    story_text = re.sub(r'\(?أو مباشرة عبر واتساب:\s*01155803307\)?', '', story_text)
+    story_text = re.sub(r'\(?\s*01155803307\s*\)?', '', story_text)
+    story_text = re.sub(r'\s*\n\s*\n\s*\n+', '\n\n', story_text).strip()
     hashtags = case_data.get("hashtags", "")
     date_slug = datetime.now().strftime("%Y-%m-%d")
 
@@ -432,12 +521,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
         </div>
         """
 
-    # أسئلة شائعة مطابقة لترندات بحث جوجل مصر
-    faq_items = [
-        ("هو ينفع أستحمى بأمان بعد الجراحة بدون ما الجرح يلتهب؟", "نعم، باستخدام الضمادات شبه المنفذة مثل 3M Tegaderm أو بخاخ أوبسايت العازل Smith & Nephew Opsite، يتم عزل الماء بنسبة 100% مع السماح للجلد بالتنفس وطرد بخار العرق، مما يتيح لك الاستحمام بحرية تامة دون رطوبة متبقية على خط الخياطة."),
-        ("ليه حاسة بخط ناشف ومكلكع تحت مكان الجرح بعد أسبوعين؟", "هذا تكتل طبيعي ناتج عن إفراز مكثف وعشوائي لألياف الكولاجين خلال مرحلة الالتئام. تطبيق رول السيليكون الطبي BUPY يمارس ضغطاً ميكانيكياً خفيفاً ويحبس الرطوبة الفسيولوجية، مما يعيد ترتيب ألياف الكولاجين في مسار مسطح وناعم ويمنع تحول الخط إلى كلويد دائم."),
-        ("كيف أحصل على التوجيه والاستشارة السريرية المجانية لمرحلة تعافي جرحي؟", "يمكنك التواصل المباشر مع استشاري العناية بالتعافي عبر واتساب من خلال الرابط أو الزر المباشر بالصفحة؛ لتحصل على إرشادات علمية دقيقة تناسب نوع عمليتك وتاريخ إجرائها ومعدل التئام الأنسجة لديك.")
-    ]
+    # أسئلة شائعة ديناميكية مطابقة للتخصص السريري وترندات بحث جوجل مصر وأبحاث PubMed
+    live_trends = case_data.get("live_trends") or kwargs.get("live_trends") or []
+    pubmed_studies = case_data.get("pubmed_studies") or kwargs.get("pubmed_studies") or []
+    faq_items = get_dynamic_clinical_faqs(cat, live_trends=live_trends, pubmed_studies=pubmed_studies)
 
     faq_html = "\n".join([f"""
     <details class="faq-accordion-item">
@@ -445,6 +532,24 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       <div class="faq-answer">{a}</div>
     </details>
     """ for q, a in faq_items])
+
+    # تجهيز بنية Schema.org FAQPage JSON-LD
+    faq_schema_dict = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": a
+                }
+            }
+            for q, a in faq_items
+        ]
+    }
+    faq_jsonld_str = json.dumps(faq_schema_dict, ensure_ascii=False, indent=2)
 
     full_html = f"""<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -462,7 +567,7 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <meta property="og:image" content="{image_rel_path}">
   <meta property="og:url" content="{page_public_url}">
 
-  <!-- Schema.org JSON-LD -->
+  <!-- Schema.org MedicalWebPage JSON-LD -->
   <script type="application/ld+json">
   {{
     "@context": "https://schema.org",
@@ -476,6 +581,11 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       "url": "{SITE_BASE_URL}"
     }}
   }}
+  </script>
+
+  <!-- Schema.org FAQPage JSON-LD -->
+  <script type="application/ld+json">
+  {faq_jsonld_str}
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1153,6 +1263,23 @@ def generate_all_multi_angle_product_lps() -> list:
             </details>
             """ for q, a in spec["faqs"]])
 
+            spec_faq_dict = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": a
+                        }
+                    }
+                    for q, a in spec.get("faqs", [])
+                ]
+            }
+            spec_faq_jsonld_str = json.dumps(spec_faq_dict, ensure_ascii=False, indent=2)
+
             video_block = ""
             if video_rel_path:
                 video_block = f"""
@@ -1198,6 +1325,11 @@ def generate_all_multi_angle_product_lps() -> list:
   <meta property="og:description" content="{spec['lead']}">
   <meta property="og:image" content="../assets/og-image.jpg">
   <meta property="og:url" content="{page_public_url}">
+
+  <!-- Schema.org FAQPage JSON-LD -->
+  <script type="application/ld+json">
+  {spec_faq_jsonld_str}
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1315,7 +1447,7 @@ def generate_all_multi_angle_product_lps() -> list:
           💬 استشارة سريرية مجانية عبر واتساب
         </a>
         <a href="{SITE_BASE_URL}/portal/" class="btn-hero-secondary">
-          🩺 دليلك التفاعلي وحاسبة التعافي
+          🩺 دليلك التفاعلي لبروتوكول التعافي
         </a>
       </div>
     </section>

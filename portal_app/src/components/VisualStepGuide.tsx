@@ -47,7 +47,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'دقيقة واحدة صباحاً ومساءً',
             description: 'امسحي جلد الأنف بمحلول ملحي معقم (Saline) أو كحول طبي 70% وجففيه تماماً بقطنة طبية خالية من الوبر. جفاف الجلد التام هو سر ثبات اللاصق الطبي.',
             proTip: 'تجنبي استخدام المرطبات أو الزيوت قبل اللصق لأنها تمنع التصاق الميكروبور بالبشرة.',
-            imageUrl: 'https://images.unsplash.com/photo-1512290900672-1f5539d91fbd?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_1.png`,
             badges: ['تطهير معقم', 'خالي من الزيوت']
           },
           {
@@ -57,7 +57,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'يومياً خلال ساعات النوم',
             description: 'مرري دعامة الأنف الطبية المصنوعة من السيليكون النقي برفق داخل فتحات الأنف مع تليينها بنقطة سيروم طبي لمنع تضيق فتحات التنفس أثناء التئام الغضاريف.',
             proTip: 'نظفي الدعامة يومياً بالماء الفاتر والصابون الطبي غير المعطر قبل إعادة ارتدائها.',
-            imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_2.png`,
             badges: ['سيليكون نقي 100%', 'مجرى هواء آمن']
           },
           {
@@ -67,7 +67,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'من 6 إلى 8 أسابيع متواصلة',
             description: 'قصي 3 إلى 4 شرائح من شريط 3M البيج وثبتيها بنمط متقاطع على جسر الأرنبة مع ضغط متوازن من الأسفل للأعلى لطرد السوائل اللمفاوية المحتبسة.',
             proTip: 'انزعي البلاستر دائماً بتبليله بالماء الدافئ دون شده بقوة لحماية الغضاريف الملتحمة حديثاً.',
-            imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_3.png`,
             badges: ['3M أصلي بلون البشرة', 'تصريف السوائل']
           }
         ];
@@ -80,7 +80,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'اليوم 7 إلى 10 بعد العملية',
             description: 'اغسلي مواضع الثقوب الجراحية بلطف بماء فاتر ورغوة طبية مضادة للبكتيريا، ثم جففي بمنديل معقم بلمسات خفيفة جداً بدون أي فرك.',
             proTip: 'تأكدي من سقوط القشور السطحية الجافة تلقائياً قبل تغطية الجرح بأي مادة حاجزة.',
-            imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_1.png`,
             badges: ['تعقيم جراحي', 'بدون احتكاك']
           },
           {
@@ -90,7 +90,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'قبل الاستحمام مباشرة',
             description: 'رجي عبوة سبراي Opsite ورشي طبقة رقيقة على مسافة 15 سم فوق فتحات المناظير. تجف خلال 40 ثانية مشكلة درعاً عازلاً غير مرئي يمنع تسرب المياه نهائياً.',
             proTip: 'السبراي يسمح للجلد بالتنفس الطبيعي ويتساقط تدريجياً مع تجدد خلايا الجلد دون أي ألم.',
-            imageUrl: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_2.png`,
             badges: ['درع سائل فوري', 'مقاوم للماء 100%']
           },
           {
@@ -100,7 +100,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: '12 ساعة يومياً لمدة 8 أسابيع',
             description: 'قصي مربعات صغيرة من شرائح BUPY السيليكونية لتغطي كل فتحة بزيادة 1 سم عن الحواف. توفر الشريحة ضغطاً يمنع تضخم الندبة وتوحد لون الجلد.',
             proTip: 'اغسلي الشريحة يومياً وجففيها لإعادة استخدامها لأكثر من 20 يوماً بكفاءة كاملة.',
-            imageUrl: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_3.png`,
             badges: ['سيليكون BUPY الأصلي', 'تسطيح ومنع التصبغ']
           }
         ];
@@ -113,7 +113,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'اليوم 10 إلى 14 بعد فك الغرز',
             description: 'نظفي ثنية الرقبة بلطف بماء معقم وجففي المحيط تماماً. نظراً لأن جلد الرقبة رقيق جداً، يجب تجنب الشد العنيف أو العطور نهائياً.',
             proTip: 'احرصي على عدم تعريض الجرح لحرارة المجفف أو البخار الكثيف في هذه المرحلة المبكرة.',
-            imageUrl: 'https://images.unsplash.com/photo-1512290900672-1f5539d91fbd?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_1.png`,
             badges: ['أمان تام للرقبة', 'خالي من العطور']
           },
           {
@@ -123,7 +123,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'ارتداء مستمر ليل نهار',
             description: 'ثبتي شريحة السيليكون بطول خط الجرح. تمتاز شريحة BUPY بسماكة 0.5 مم فائقة النعومة وتتحرك بانسيابية مع حركات البلع والالتفات دون انفصال.',
             proTip: 'الترطيب الدائم للسيليكون يمنع إحساس الخنق أو الشد المزعج المصاحب لندبات الغدة.',
-            imageUrl: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_2.png`,
             badges: ['سماكة 0.5 مم مرنة', 'تثبيت مع حركة البلع']
           },
           {
@@ -133,7 +133,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'عند الخروج والتعرض للضوء النهاري',
             description: 'ثبتي شريط 3M Micropore بلون البشرة فوق شريحة السيليكون أو بعد نزعها لحجب أشعة الشمس المباشرة وحماية الندبة من فرط التصبغ (Hyperpigmentation).',
             proTip: 'أشعة الشمس هي العدو الأول لندبة الرقبة؛ حجب الضوء يضمن تلاشي الخط ليماثل لون الرقبة الطبيعي.',
-            imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_3.png`,
             badges: ['حماية UV', 'تطابق تام مع لون الجلد']
           }
         ];
@@ -147,7 +147,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'الخطوة الأولى قبل الاستحمام أو تثبيت السيليكون',
             description: 'اغسلي محيط أسفل البطن بماء فاتر ورغوة صابون طبي غير معطر. جففي حواف الجرح القيصري بالتربيت الخفيف جداً بواسطة شاش معقم قطني. تجنبي تماماً فرك الجرح بالليفة أو استخدام الكحول المركز.',
             proTip: 'تأكدي أن الجلد جاف تماماً وخالٍ من أي زيوت أو كريمات لضمان أقصى التصاق للضمادات.',
-            imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_1.png`,
             badges: ['تعقيم معتمد', 'تربيت بدون فرك']
           },
           {
@@ -157,7 +157,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'أول 10 إلى 14 يوماً مع كل استحمام',
             description: 'انزعي الغلاف الواقي لضمادة 3M Tegaderm وضعي الغشاء الشفاف مباشرة فوق جرح القيصرية مع الضغط على الأطراف بلطف لإحكام الغلق. استمتعي بحمامك المنعش دون أي خوف من تسرب المياه أو الشامبو.',
             proTip: 'بعد الانتهاء من الاستحمام، انزعي الضمادة برفق من زاوية مائلة ببطء لمنع شد الجلد.',
-            imageUrl: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_2.png`,
             badges: ['عزل مائي 100%', 'منفذ للبخار والغازات']
           },
           {
@@ -167,7 +167,7 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
             timing: 'من اليوم 10 حتى 12 أسبوعاً',
             description: 'قصي شريحة BUPY السيليكونية لتتجاوز طرفي الجرح القيصري بمقدار 1 إلى 2 سم. ضعي الجانب اللاصق مباشرة على أثر الجرح مع ضغط ناعم. ابدئي بـ 4 ساعات يومياً ثم زيديها تدريجياً حتى 12 إلى 24 ساعة.',
             proTip: 'اغسلي الشريحة يومياً بماء دافئ وصابون طبي ودعيها تجف ذاتياً؛ يمكن إعادة استخدام نفس الشريحة لـ 20-30 يوماً.',
-            imageUrl: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80',
+            imageUrl: `/healing-touch-egypt/assets/guide/${campaignId}_step_3.png`,
             badges: ['سيليكون BUPY المعتمد', 'قابلة للغسيل وإعادة الاستخدام']
           }
         ];
@@ -218,8 +218,16 @@ export const VisualStepGuide: React.FC<VisualStepGuideProps> = ({
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   onError={(e) => {
-                    // Fallback to placeholder if external image fails
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80';
+                    const target = e.currentTarget;
+                    const heroSrc = `/healing-touch-egypt/assets/campaign_${campaignId}_hero.png`;
+                    const ogSrc = '/healing-touch-egypt/assets/og-image.jpg';
+                    if (!target.dataset.triedHero) {
+                      target.dataset.triedHero = 'true';
+                      target.src = heroSrc;
+                    } else if (!target.dataset.triedOg) {
+                      target.dataset.triedOg = 'true';
+                      target.src = ogSrc;
+                    }
                   }}
                 />
                 {/* Step Number Badge */}

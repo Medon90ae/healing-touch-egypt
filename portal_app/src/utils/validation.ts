@@ -1,6 +1,8 @@
 import { LeadSubmissionData } from '../types/campaign';
 import { PROMO_CODE_CONFIG, WEBHOOK_URL, WHATSAPP_RECOVERY_NUMBER } from '../data/campaignConfig';
 
+export const OFFICIAL_PHONE = '201155803307';
+
 /**
  * Normalizes and validates Egyptian mobile numbers.
  * Valid Egyptian formats:
