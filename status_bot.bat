@@ -22,7 +22,7 @@ if not defined BOT_PID (
 
 set IS_RUNNING=0
 if defined BOT_PID (
-    for /f "tokens=1" %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul') do (
+    for /f "tokens=1 delims=," %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul ^| findstr /i "python"') do (
         set IS_RUNNING=1
     )
 )

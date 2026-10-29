@@ -34,14 +34,6 @@ if hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(asctime)s] [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger("TelegramControlBot")
-
 # Core Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 VENV_PYTHON = BASE_DIR / ".venv" / "Scripts" / "python.exe"
@@ -50,10 +42,23 @@ MANUAL_INBOX = MEDIA_DIR / "manual_inbox"
 READY_PUBLISH = MEDIA_DIR / "ready_to_publish"
 AUDIO_INPUTS = MEDIA_DIR / "notebooklm_hub" / "audio_inputs"
 PID_FILE = MEDIA_DIR / "telegram_bot.pid"
+LOG_FILE = MEDIA_DIR / "telegram_bot.log"
 
 # Ensure directories exist
 for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS):
     p.mkdir(parents=True, exist_ok=True)
+
+# Setup logging (console + persistent file log)
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(str(LOG_FILE), encoding="utf-8"),
+    ],
+)
+logger = logging.getLogger("TelegramControlBot")
 
 # Bot Configuration & Security Credentials
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "9068379040:AAGDIoqnXxOFnJcmXEBGL-xnj-0FXCUKHVA")
@@ -811,16 +816,33 @@ def handle_incoming_media(message: Dict[str, Any]):
 
 def process_callback_query(cq: Dict[str, Any]):
     cq_id = cq.get("id")
-    chat_id = str(cq.get("message", {}).get("chat", {}).get("id"))
+    user_id = str(cq.get("from", {}).get("id"))
+    chat_id = str(cq.get("message", {}).get("chat", {}).get("id")) or user_id
     msg_id = cq.get("message", {}).get("message_id")
     data = cq.get("data", "")
 
+    logger.info("Button clicked: data='%s', from_user=%s, chat_id=%s", data, user_id, chat_id)
+
     # Security Gate
-    if chat_id != AUTHORIZED_CHAT_ID:
+    if user_id != AUTHORIZED_CHAT_ID and chat_id != AUTHORIZED_CHAT_ID:
+        logger.warning("Unauthorized button click attempt from user %s", user_id)
         bot.answer_callback_query(cq_id, "⚠️ غير مصرح لك باستخدام هذا البوت.", show_alert=True)
         return
 
-    bot.answer_callback_query(cq_id)
+    # Instant UI feedback toast for user on click
+    toast_msg = "⏳ جاري التنفيذ..."
+    if data == "menu_main":
+        toast_msg = "🏠 القائمة الرئيسية"
+    elif data == "menu_products":
+        toast_msg = "🩺 قائمة المنتجات السريرية"
+    elif data.startswith("prod_"):
+        toast_msg = f"⏳ جاري سحب أبحاث المنتج [{data.split('_')[1]}]..."
+    elif data == "act_master":
+        toast_msg = "🚀 جاري إطلاق المسار الشامل..."
+    elif data == "act_dry_run":
+        toast_msg = "👁️ جاري تشغيل وضع المعاينة..."
+
+    bot.answer_callback_query(cq_id, text=toast_msg)
 
     # 1. Main Menu Navigation
     if data == "menu_main":
@@ -963,10 +985,13 @@ def run_bot_polling():
                     update_id = update["update_id"]
                     offset = update_id + 1
 
-                    if "callback_query" in update:
-                        process_callback_query(update["callback_query"])
-                    elif "message" in update:
-                        process_message(update["message"])
+                    try:
+                        if "callback_query" in update:
+                            process_callback_query(update["callback_query"])
+                        elif "message" in update:
+                            process_message(update["message"])
+                    except Exception as handler_ex:
+                        logger.error("Error processing update %s: %s", update_id, handler_ex, exc_info=True)
 
             except requests.exceptions.RequestException as re:
                 consecutive_errors += 1
