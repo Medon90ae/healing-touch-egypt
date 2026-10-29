@@ -43,12 +43,116 @@ MEDIA_DIR = BASE_DIR / "media_assets"
 MANUAL_INBOX = MEDIA_DIR / "manual_inbox"
 READY_PUBLISH = MEDIA_DIR / "ready_to_publish"
 AUDIO_INPUTS = MEDIA_DIR / "notebooklm_hub" / "audio_inputs"
+RESEARCH_REPORTS_DIR = MEDIA_DIR / "notebooklm_hub" / "research_reports"
 PID_FILE = MEDIA_DIR / "telegram_bot.pid"
 LOG_FILE = MEDIA_DIR / "telegram_bot.log"
+SESSIONS_FILE = MEDIA_DIR / "telegram_user_sessions.json"
+
+# Session State Constants (Guided Multi-Stage Clinical Pipeline)
+STATE_IDLE = "IDLE"
+STATE_STAGE_1_RESEARCH = "STAGE_1_RESEARCH"
+STATE_STAGE_2_PROMPTS = "STAGE_2_PROMPTS"
+STATE_STAGE_3_MEDIA = "STAGE_3_MEDIA"
+
+# Verified Platform Endpoints
+POMELLI_BRAND_BOOK_URL = "https://labs.google.com/pomelli/brand_book/am6H88zhmUadtfPiiAmOnW"
+NOTEBOOKLM_URL = "https://notebooklm.google.com/"
+GEMINI_URL = "https://gemini.google.com/"
 
 # Ensure directories exist
-for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS):
+for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS, RESEARCH_REPORTS_DIR):
     p.mkdir(parents=True, exist_ok=True)
+
+# -----------------------------------------------------------------------------
+# 💾 Persistent Session State Machine
+# -----------------------------------------------------------------------------
+def load_user_sessions() -> Dict[str, Dict[str, Any]]:
+    if SESSIONS_FILE.exists():
+        try:
+            return json.loads(SESSIONS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def save_user_sessions(sessions: Dict[str, Dict[str, Any]]):
+    try:
+        SESSIONS_FILE.write_text(json.dumps(sessions, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+USER_SESSIONS: Dict[str, Dict[str, Any]] = load_user_sessions()
+
+
+def get_session(chat_id: str | int) -> Dict[str, Any]:
+    cid = str(chat_id).strip()
+    if cid not in USER_SESSIONS:
+        USER_SESSIONS[cid] = {
+            "stage": STATE_IDLE,
+            "product_choice": "1",
+            "research_file": None,
+            "findings": [],
+            "anxieties": [],
+            "media_files": [],
+            "updated_at": datetime.now().isoformat(),
+        }
+    return USER_SESSIONS[cid]
+
+
+def update_session(chat_id: str | int, **kwargs) -> Dict[str, Any]:
+    cid = str(chat_id).strip()
+    sess = get_session(cid)
+    sess.update(kwargs)
+    sess["updated_at"] = datetime.now().isoformat()
+    USER_SESSIONS[cid] = sess
+    save_user_sessions(USER_SESSIONS)
+    return sess
+
+
+def reset_session(chat_id: str | int):
+    cid = str(chat_id).strip()
+    USER_SESSIONS[cid] = {
+        "stage": STATE_IDLE,
+        "product_choice": "1",
+        "research_file": None,
+        "findings": [],
+        "anxieties": [],
+        "media_files": [],
+        "updated_at": datetime.now().isoformat(),
+    }
+    save_user_sessions(USER_SESSIONS)
+
+
+def extract_text_from_file(file_path: Path) -> str:
+    """Extracts text from txt, md, json, csv, docx, or pdf files safely."""
+    suffix = file_path.suffix.lower()
+    if suffix in [".txt", ".md", ".json", ".csv"]:
+        for enc in ["utf-8", "utf-8-sig", "cp1256", "windows-1256", "latin-1"]:
+            try:
+                return file_path.read_text(encoding=enc).strip()
+            except Exception:
+                continue
+    elif suffix == ".pdf":
+        try:
+            import pypdf
+            reader = pypdf.PdfReader(str(file_path))
+            pages = [p.extract_text() or "" for p in reader.pages]
+            return "\n\n".join(pages).strip()
+        except Exception:
+            pass
+    elif suffix in [".docx", ".doc"]:
+        try:
+            import docx
+            doc = docx.Document(str(file_path))
+            return "\n".join([p.text for p in doc.paragraphs if p.text.strip()]).strip()
+        except Exception:
+            pass
+    try:
+        raw = file_path.read_bytes()
+        return raw.decode("utf-8", errors="ignore").strip()
+    except Exception:
+        return ""
 
 # Setup logging (persistent file log + console if available)
 log_handlers = [logging.FileHandler(str(LOG_FILE), encoding="utf-8")]
@@ -437,66 +541,367 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
 
 
 def handle_product_research_generation(chat_id: str, prod_choice: str):
-    """Generates research & prompt pack for selected product and sends file to Telegram."""
-    global ACTIVE_TASK_NAME
-
+    """Executes Stage 1: registers user session and delivers Deep Research Card instantly."""
     prod_info = PRODUCTS_CATALOG.get(prod_choice, PRODUCTS_CATALOG["1"])
+    update_session(chat_id, stage=STATE_STAGE_1_RESEARCH, product_choice=prod_choice)
 
-    if not PIPELINE_LOCK.acquire(blocking=False):
+    # Background silent generator for PROMPTS_PACK_TODAY.txt so files are pre-built
+    def _bg_pack_gen():
+        try:
+            cmd = [
+                str(VENV_PYTHON),
+                "antigravity_social_automation.py",
+                "--mode",
+                "notebooklm",
+                "--product",
+                prod_choice,
+            ]
+            subprocess.run(cmd, cwd=str(BASE_DIR), capture_output=True, timeout=120)
+        except Exception:
+            pass
+
+    threading.Thread(target=_bg_pack_gen, daemon=True).start()
+
+    # Deliver Stage 1 Deep Research Prompt card instantly
+    card_text, card_keyboard = build_stage1_deep_research_card(prod_choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def analyze_clinical_research(raw_text: str, product_choice: str) -> Dict[str, Any]:
+    """Analyzes raw clinical research text, extracting findings, patient anxieties, and guidelines."""
+    lines = [ln.strip() for ln in raw_text.splitlines() if ln.strip()]
+    findings = []
+    anxieties = []
+    guidelines = []
+
+    clinical_keywords = [
+        "ندبة", "ندبات", "جرح", "جروح", "شاور", "ماء", "استحمام", "سيليكون", "تيغاديرم",
+        "غضروف", "كولاجين", "التئام", "التهاب", "بكتيريا", "تعافي", "قيصرية", "تجميل",
+        "تكميم", "أنف", "فتحات", "أوبسايت", "ميكروبور", "كيلويد", "hypertrophic",
+        "infection", "healing", "scar", "wound", "sterile", "دعامة", "دعامات",
+    ]
+    anxiety_keywords = [
+        "خوف", "قلق", "حكة", "ألم", "احمرار", "صديد", "بلل", "انكماش", "أثر",
+        "تشوه", "عرق", "حساسية", "تورم", "سخونة", "نزف", "عدوى", "أمان",
+    ]
+
+    for line in lines:
+        cleaned = line.lstrip("•-*#0123456789. \t").strip()
+        if len(cleaned) < 15 or len(cleaned) > 250:
+            continue
+        if any(w in cleaned for w in anxiety_keywords) or "?" in cleaned or "؟" in cleaned:
+            if len(anxieties) < 4 and cleaned not in anxieties:
+                anxieties.append(cleaned)
+        elif any(w in cleaned for w in clinical_keywords):
+            if len(findings) < 5 and cleaned not in findings:
+                findings.append(cleaned)
+        elif len(guidelines) < 3 and any(w in cleaned for w in ["يجب", "ينصح", "طريقة", "تغيير", "غيار", "تطبيق", "خطوات", "بروتوكول"]):
+            if cleaned not in guidelines:
+                guidelines.append(cleaned)
+
+    # Fallback to configured defaults if research had few explicit matches
+    cfg = PRODUCT_PROMPT_CONFIGS.get(str(product_choice), PRODUCT_PROMPT_CONFIGS.get("1", {}))
+    prod_name = cfg.get("name_ar", PRODUCTS_CATALOG.get(str(product_choice), {}).get("name", "المنتج الطبي"))
+    if not findings:
+        findings = [
+            f"دراسات التئام الأنسجة السريرية لـ {prod_name} تؤكد قدرته على عزل الجرح ومنع الندبات التضخمية.",
+            "التوصيات السريرية تؤكد أهمية الحفاظ على بيئة رطبة معقمة لتسريع تكوين ألياف الكولاجين المنتظمة.",
+        ]
+    if not anxieties:
+        anxieties = cfg.get(
+            "patient_anxieties",
+            ["الخوف من وصول الماء أو البكتيريا أثناء الاستحمام وتأثير ذلك على العملية", "القلق من بقاء أثر بارز أو حكة مستمرة في مكان الجرح"],
+        )[:3]
+
+    return {
+        "findings": findings,
+        "anxieties": anxieties,
+        "guidelines": guidelines,
+        "total_chars": len(raw_text),
+        "total_lines": len(lines),
+    }
+
+
+def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    focus = html.escape(d["focus"])
+    brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
+
+    kws_html = "\n".join([f"• <code>{html.escape(k)}</code>" for k in d["keywords"][:6]])
+    lts_html = "\n".join([f"• {html.escape(q)}" for q in (d["long_tails"][:3] + d["trends"][:3])])
+
+    studies_html_list = []
+    for s in d["studies"]:
+        y = s.get("pub_year", "2025")
+        t = html.escape(s.get("title", "")[:75])
+        u = s.get("url", "https://pubmed.ncbi.nlm.nih.gov/")
+        studies_html_list.append(f"• <a href='{u}'>[{y}] {t}...</a>")
+    studies_html = "\n".join(studies_html_list) if studies_html_list else "• دراسات PubMed المعتمدة في أرشيف التعافي"
+
+    prompt_lines = [
+        f"بصفتك باحثاً إكلينيكياً واستشارياً في جراحة التعافي وعلاج الجروح في مصر:",
+        f"أريد بحثاً سريرياً دقيقاً وموثقاً حول: {d['focus']}.",
+        "",
+        "الأسئلة السريرية والبحثية المحددة المطلوب الإجابة عليها تفصيلياً:",
+    ]
+    prompt_lines.extend([f"• {q}" for q in d["queries"]])
+    prompt_lines.append("")
+    prompt_lines.append("مخاوف وتساؤلات المرضى المقلقة في مصر المطلوب طمأنتهم علمياً بشأنها:")
+    prompt_lines.extend([f"• {a}" for a in d["anxieties"]])
+    prompt_lines.append("")
+    prompt_lines.append("تساؤلات وترندات بحث جوجل مصر الصاعدة هذا الأسبوع للإجابة عليها:")
+    prompt_lines.extend([f"• {t}" for t in d["trends"][:4]])
+    prompt_lines.append("")
+    prompt_lines.append("الشروط الصارمة للمحتوى الناتج:")
+    prompt_lines.append("1. نبرة طبية توجيهية هادئة تشرح فسيولوجيا التئام الأنسجة وتبدد المخاوف دون تهويل.")
+    prompt_lines.append("2. استهداف الجمهور المصري وإجابات تناسب الصيف والعرق وطريقة الغيار المنزلي.")
+    prompt_lines.append("3. منع تام لأي عروض تسويقية أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.")
+    prompt_lines.append("4. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 بكود HT10 وحق المعاينة قبل الاستلام.")
+    prompt_lines.append("")
+    prompt_lines.append("أحدث أبحاث PubMed السريرية المعتمدة للاستشهاد بها ودعم المحتوى:")
+    for s in d["studies"]:
+        prompt_lines.append(f"• [{s.get('pub_year')}] {s.get('title')} -> {s.get('url')}")
+
+    raw_prompt = "\n".join(prompt_lines)
+    escaped_code = html.escape(raw_prompt)
+
+    msg = (
+        f"🔬 <b>[المرحلة 1 من 4] البحث السريري المعمق (Gemini Deep Research)</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"🏷️ <b>العلامة:</b> {brand}\n"
+        f"📌 <b>المحور السريري:</b> {focus}\n\n"
+        f"🔑 <b>أهم الكلمات البحثية في مصر:</b>\n"
+        f"{kws_html}\n\n"
+        f"❓ <b>الأسئلة وترندات جوجل مصر الصاعدة:</b>\n"
+        f"{lts_html}\n\n"
+        f"📚 <b>أحدث دراسات PubMed السريرية:</b>\n"
+        f"{studies_html}\n\n"
+        f"📋 <b>خطوات التشغيل الآن:</b>\n"
+        f"1️⃣ اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇\n"
+        f"2️⃣ اضغط زر <b>🌐 فتح Gemini Deep Research</b> والصق البرومبت.\n"
+        f"3️⃣ بعد انتهاء البحث، انسخ التقرير الناتج أو احفظه، و<b>أرسله هنا في الشات مباشرة</b> (كنص أو كملف txt / docx / pdf / md) لنقوم بتحليله وتوليد برومبتات الهوية والصوتيات فوراً!\n\n"
+        f"👇 <b>برومبت البحث السريري المعمق:</b>\n"
+        f"<pre><code>{escaped_code}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🌐 فتح Gemini Deep Research مباشرة", "url": GEMINI_URL},
+            ],
+            [
+                {"text": "📋 خيارات وبرومبتات إضافية للمنتج", "callback_data": f"hub_prod_{choice}"},
+                {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
+            ],
+            [
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
+
+    findings_sample = analysis.get("findings", [])
+    findings_context = " - ".join(findings_sample[:2]) if findings_sample else d["focus"]
+
+    pomelli_1_1 = (
+        f"Photorealistic 8K macro medical photography following the Healing Touch Egypt Brand Book aesthetic: "
+        f"Brand Colors: `#064E3B` (Clinical Forest Green), `#10B981` (Medical Mint), `#0F172A` (Slate Navy Charcoal), `#FFFFFF` (Sterile White). "
+        f"Scene: Immaculate sterile stainless steel medical preparation tray, soft natural directional clinical lighting. "
+        f"Centerpiece: Authentic medical packaging of {brand} ({name_ar}), placed cleanly with visible authentic specifications. "
+        f"Clinical context from research: {findings_context}. "
+        f"Surrounding props: sterile surgical gauze, sterile cotton drape, medical scissors. "
+        f"Camera: Macro 85mm f/2.8 lens, shallow depth of field focusing on authentic medical texture, professional healthcare documentary photography, "
+        f"zero text overlays, zero cartoonish elements, sterile, reassuring, compassionate."
+    )
+
+    pomelli_9_16 = (
+        f"Vertical 9:16 aspect ratio clinical photography following the Healing Touch Egypt Brand Book guidelines: "
+        f"Clean, compassionate Egyptian clinical recovery suite setting. "
+        f"Showing authentic healthcare specialist handling {brand} ({name_ar}) with sterile surgical gloves. "
+        f"Palette accents: `#064E3B` Forest Green and `#10B981` Mint. "
+        f"Soft natural ambient light, calm reassuring atmosphere for post-operative recovery, 8K ultra-clean documentary realism, no text, no artifacts."
+    )
+
+    msg = (
+        f"🎨 <b>[المرحلة 2 من 4] برومبتات Google Pomelli Brand Book (واقعية 8K)</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"🏷️ <b>العلامة:</b> {brand}\n"
+        f"🌿 <b>كتاب الهوية المعتمد:</b> متطابق مع هوية وألوان هيلينج تاتش السريرية\n\n"
+        f"📐 <b>1️⃣ برومبت الصورة المربعة 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(pomelli_1_1)}</code></pre>\n\n"
+        f"📱 <b>2️⃣ برومبت الستوري والريلز العمودي 9:16 (إنستجرام وتيك توك):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(pomelli_9_16)}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🎨 فتح Google Pomelli Brand Book مباشرة", "url": POMELLI_BRAND_BOOK_URL},
+            ],
+            [
+                {"text": "🎙️ برومبت Google NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+                {"text": "🚀 تشغيل المسار الشامل", "callback_data": "act_master"},
+            ],
+            [
+                {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_synthesized_notebooklm_card(choice: str, analysis: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+
+    findings_bullets = "\n".join([f"• {f}" for f in analysis.get("findings", [])[:3]])
+    anxieties_bullets = "\n".join([f"• {a}" for a in analysis.get("anxieties", [])[:2]])
+
+    audio_prompt = (
+        f"قم بتوليد حوار بودكاست طبي بين اثنين من استشاريي التعافي الطبي في مصر باللهجة المصرية البيضاء الراقية، "
+        f"يتناولان فيه بالنقاش العلمي الهادئ والمريح نتائج تقرير البحث السريري حول {d['name_ar']}:\n"
+        f"أهم الحقائق المستخلصة من البحث:\n{findings_bullets}\n\n"
+        f"المخاوف المطلوب طمأنة المريض بشأنها علمياً:\n{anxieties_bullets}\n\n"
+        f"بروتوكول العناية المنزلي الصحيح وتصحيح المفاهيم الخاطئة في مصر.\n"
+        f"الخاتمة: التأكيد على كود الخصم والمعاينة HT10 والتواصل مع أخصائية التعافي عبر واتساب 01155803307 وحق معاينة المنتج قبل الاستلام والشحن المجاني."
+    )
+
+    video_prompt = (
+        f"أنشئ بريف وإنتاج فيديو شارح تفاعلي (Explainer Video) يستند لتقرير البحث السريري حول {d['name_ar']}:\n"
+        f"المحاور: فسيولوجيا تعافي الأنسجة، تجنب الماء أو الحكة، خطوات الغيار العملي الآمن، ودحض المخاوف الشائعة.\n"
+        f"النبرة: وقورة، طبية، مطمئنة، وتوجيه هادئ للاستشارة عبر واتساب 01155803307 بكود HT10."
+    )
+
+    msg = (
+        f"🎙️ <b>[المرحلة 2 من 4] برومبتات استوديو Google NotebookLM</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"🧠 <b>المعرفة المدخلة:</b> تم دمج وتطويع نتائج تقرير البحث السريري المرفوع\n\n"
+        f"🎧 <b>1️⃣ برومبت البودكاست والنقاش الصوتي (Audio Overview):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(audio_prompt)}</code></pre>\n\n"
+        f"🎬 <b>2️⃣ برومبت الفيديو التوضيحي السريري (Video Overview):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(video_prompt)}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🌐 فتح Google NotebookLM مباشرة", "url": NOTEBOOKLM_URL},
+            ],
+            [
+                {"text": "🎨 برومبت Pomelli Brand Book", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🚀 تشغيل المسار الشامل", "callback_data": "act_master"},
+            ],
+            [
+                {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def handle_research_report_received(
+    chat_id: str,
+    raw_text: str,
+    source_label: str = "نص رسالة",
+    file_path: Optional[Path] = None,
+):
+    """Processes uploaded research report, analyzes clinical points, and synthesizes Stage 2 prompts."""
+    session = get_session(chat_id)
+    choice = session.get("product_choice", "1")
+    prod_info = PRODUCTS_CATALOG.get(choice, PRODUCTS_CATALOG["1"])
+
+    clean_text = raw_text.strip()
+    if len(clean_text) < 40:
         bot.send_message(
             chat_id,
-            f"⚠️ <b>هناك عملية تشغيل جارية بالفعل حالياً</b> (المهمة: <code>{ACTIVE_TASK_NAME}</code>). يرجى الانتظار.",
+            "⚠️ <b>النص المستلم قصير جداً (أقل من 40 حرف).</b>\n"
+            "يرجى نسخ التقرير الطبي الكامل من Gemini Deep Research أو رفع ملف التقرير للبدء بالتحليل.",
+            reply_markup=build_stage1_deep_research_card(choice)[1],
         )
         return
 
-    ACTIVE_TASK_NAME = f"Product Research: {prod_info['name']}"
+    # Save to dedicated clinical archive
+    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+    saved_report_file = RESEARCH_REPORTS_DIR / f"research_report_prod_{choice}_{timestamp_str}.txt"
     try:
-        bot.send_message(
-            chat_id,
-            f"⏳ <b>جاري إعداد أبحاث وترندات اليوم لمنتج:</b>\n"
-            f"<b>{prod_info['icon']} {prod_info['name']}</b> ({prod_info['brand']})\n\n"
-            f"• استخراج أحدث توصيات <b>PubMed</b> السريرية المنشورة...\n"
-            f"• سحب أسئلة وترندات جوجل مصر الصاعدة...\n"
-            f"• تجهيز برومبتات المنصات (Facebook, Reels, TikTok, Shorts, Reddit, Blogger)...",
-        )
+        saved_report_file.write_text(clean_text, encoding="utf-8")
+    except Exception as e:
+        logger.warning("Could not write research report file: %s", e)
 
-        cmd = [
-            str(VENV_PYTHON),
-            "antigravity_social_automation.py",
-            "--mode",
-            "notebooklm",
-            "--product",
-            prod_choice,
+    # Analyze clinical findings
+    analysis = analyze_clinical_research(clean_text, choice)
+
+    # Update session
+    update_session(
+        chat_id,
+        stage=STATE_STAGE_3_MEDIA,
+        product_choice=choice,
+        research_file=str(saved_report_file),
+        findings=analysis["findings"],
+        anxieties=analysis["anxieties"],
+    )
+
+    findings_bullets = "\n".join([f"• {f}" for f in analysis["findings"][:4]])
+    anxieties_bullets = "\n".join([f"• {a}" for a in analysis["anxieties"][:3]])
+
+    ack_text = (
+        f"✅ <b>تم استلام تقرير البحث السريري وتحليله بنجاح!</b>\n\n"
+        f"🎯 <b>المنتج:</b> {prod_info['name']}\n"
+        f"📊 <b>المصدر:</b> {source_label} | <b>الحجم:</b> {len(clean_text)} حرف\n"
+        f"📁 <b>الأرشيف السريري:</b> <code>{saved_report_file.name}</code>\n\n"
+        f"🧠 <b>أبرز المخرجات السريرية المستخلصة من التقرير:</b>\n"
+        f"{findings_bullets}\n\n"
+        f"❓ <b>مخاوف المرضى المعالجة علمياً في التقرير:</b>\n"
+        f"{anxieties_bullets}\n\n"
+        f"👇 <b>تم توليد برومبتات الهوية والصوتيات الذكية استناداً لنتائج هذا البحث:</b>"
+    )
+    bot.send_message(chat_id, ack_text)
+
+    # Send Pomelli Brand Book Card
+    pomelli_text, pomelli_kb = build_synthesized_pomelli_card(choice, analysis)
+    bot.send_message(chat_id, pomelli_text, reply_markup=pomelli_kb)
+
+    # Send NotebookLM Studio Card
+    nlm_text, nlm_kb = build_synthesized_notebooklm_card(choice, analysis)
+    bot.send_message(chat_id, nlm_text, reply_markup=nlm_kb)
+
+    # Final guidance message for Stage 3 Media Ingestion
+    guidance_text = (
+        "💡 <b>الخطوة التالية (المرحلة 3 من 4 - توليد ورفع الوسائط):</b>\n\n"
+        "1️⃣ افتح <b>Google Pomelli Brand Book</b> وأنتج الصور الطبية 8K.\n"
+        "2️⃣ افتح <b>Google NotebookLM</b> وأنتج البودكاست الصوتي والفيديو.\n"
+        "3️⃣ <b>احفظ المخرجات وأرسلها هنا في شات تيليجرام مباشرة</b> (صور / فيديوهات / صوتيات).\n\n"
+        "📥 سنقوم بإيداعها فوراً في <code>manual_inbox</code> وتفعيل زر الإطلاق الشامل الموحد!"
+    )
+    guidance_kb = {
+        "inline_keyboard": [
+            [
+                {"text": "🎨 فتح Pomelli Brand Book", "url": POMELLI_BRAND_BOOK_URL},
+                {"text": "🎙️ فتح NotebookLM", "url": NOTEBOOKLM_URL},
+            ],
+            [
+                {"text": "🚀 تشغيل المسار الشامل (إذا رفعت الميديا)", "callback_data": "act_master"},
+                {"text": "📥 فحص manual_inbox", "callback_data": "act_inbox_status"},
+            ],
+            [
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
         ]
-        res = subprocess.run(
-            cmd,
-            cwd=str(BASE_DIR),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-
-        prompts_txt = MANUAL_INBOX / "PROMPTS_PACK_TODAY.txt"
-        if prompts_txt.exists():
-            caption = (
-                f"📄 <b>حزمة برومبتات ومصادر أبحاث اليوم المعتمدة:</b>\n"
-                f"🎯 <b>المنتج:</b> {prod_info['name']}\n"
-                f"🎟️ <b>كود الخصم المعتمد:</b> HT10\n"
-                f"🩺 <b>الاستشارة:</b> أخصائية العناية بالتعافي (واتساب 01155803307)"
-            )
-            bot.send_document(chat_id, prompts_txt, caption=caption)
-
-        # Send interactive Hub Card with dedicated prompt buttons
-        card_text, card_keyboard = build_product_hub_card(prod_choice)
-        bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
-
-    except Exception as ex:
-        logger.error("Error generating product research: %s", ex, exc_info=True)
-        bot.send_message(chat_id, f"❌ خطأ أثناء إعداد أبحاث المنتج: <code>{ex}</code>")
-    finally:
-        ACTIVE_TASK_NAME = None
-        PIPELINE_LOCK.release()
+    }
+    bot.send_message(chat_id, guidance_text, reply_markup=guidance_kb)
 
 
 def get_category_trends(category: str) -> List[str]:
@@ -718,7 +1123,7 @@ def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🌐 فتح Google Pomelli مباشرة", "url": "https://labs.google.com/pomelli/campaigns"},
+                {"text": "🎨 فتح Google Pomelli Brand Book مباشرة", "url": POMELLI_BRAND_BOOK_URL},
             ],
             [
                 {"text": "🔬 برومبت Gemini", "callback_data": f"prompt_gemini_{choice}"},
@@ -1166,11 +1571,49 @@ def handle_inbox_status(chat_id: str):
 
 
 # =============================================================================
-# 📥 Direct Media Ingestion from Telegram
+# 📥 Direct Media & Research Document Ingestion from Telegram
 # =============================================================================
 
+def handle_incoming_research_document(message: Dict[str, Any]):
+    """Downloads clinical research document (.txt, .md, .pdf, .docx, .json) and extracts text."""
+    chat_id = str(message.get("chat", {}).get("id"))
+    if chat_id != AUTHORIZED_CHAT_ID:
+        return
+
+    doc = message["document"]
+    file_id = doc["file_id"]
+    original_name = doc.get("file_name") or "research_document.txt"
+    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+    dest_path = RESEARCH_REPORTS_DIR / f"upload_{timestamp_str}_{original_name}"
+
+    file_info = bot.get_file(file_id)
+    if not file_info or "file_path" not in file_info:
+        bot.send_message(chat_id, "❌ تعذر استرجاع مسار الملف من سيرفر تيليجرام.")
+        return
+
+    bot.send_message(chat_id, f"⏳ جاري استقبال المستند السريري <code>{original_name}</code> واستخراج محتواه...")
+    if bot.download_file(file_info["file_path"], dest_path):
+        extracted_text = extract_text_from_file(dest_path)
+        if len(extracted_text) >= 40:
+            handle_research_report_received(
+                chat_id=chat_id,
+                raw_text=extracted_text,
+                source_label=f"مستند مرفوع ({original_name})",
+                file_path=dest_path,
+            )
+        else:
+            bot.send_message(
+                chat_id,
+                f"⚠️ تم تحميل المستند <code>{original_name}</code> لكن لم يتم العثور على محتوى نصي كافٍ (أقل من 40 حرف).\n"
+                f"يرجى التأكد من أن الملف يحتوي على تقرير البحث السريري أو نسخ التقرير ولصقه مباشرة في الشات.",
+                reply_markup=build_main_menu_keyboard(),
+            )
+    else:
+        bot.send_message(chat_id, "❌ فشل تحميل الملف من سيرفر تيليجرام.")
+
+
 def handle_incoming_media(message: Dict[str, Any]):
-    """Saves user-sent photos, videos, audio, or documents into manual_inbox."""
+    """Saves user-sent photos, videos, or audio into manual_inbox."""
     chat_id = str(message.get("chat", {}).get("id"))
     if chat_id != AUTHORIZED_CHAT_ID:
         return
@@ -1192,16 +1635,16 @@ def handle_incoming_media(message: Dict[str, Any]):
         ext = ".mp4"
         original_name = video.get("file_name") or f"telegram_video_{timestamp_str}{ext}"
         media_type = "فيديو 🎥"
-    elif "document" in message:
-        doc = message["document"]
-        file_id = doc["file_id"]
-        original_name = doc.get("file_name") or f"telegram_doc_{timestamp_str}.dat"
-        media_type = "مستند/ملف 📄"
     elif "voice" in message or "audio" in message:
         aud = message.get("voice") or message.get("audio")
         file_id = aud["file_id"]
         original_name = f"telegram_audio_{timestamp_str}.mp3"
         media_type = "تسجيل صوتي 🎙️"
+    elif "document" in message:
+        doc = message["document"]
+        file_id = doc["file_id"]
+        original_name = doc.get("file_name") or f"telegram_doc_{timestamp_str}.dat"
+        media_type = "مستند/ملف 📄"
 
     if not file_id:
         return
@@ -1223,23 +1666,30 @@ def handle_incoming_media(message: Dict[str, Any]):
 
     if success:
         size_kb = round(save_path.stat().st_size / 1024, 1)
+        sess = get_session(chat_id)
+        m_files = sess.get("media_files", [])
+        m_files.append(save_path.name)
+        update_session(chat_id, media_files=m_files, stage=STATE_STAGE_3_MEDIA)
+
         confirm_text = (
-            f"✅ <b>تم استلام {media_type} بنجاح!</b>\n\n"
+            f"✅ <b>تم استلام {media_type} وإيداعه في manual_inbox بنجاح!</b>\n\n"
             f"📁 <b>اسم الملف:</b> <code>{save_path.name}</code>\n"
             f"⚖️ <b>الحجم:</b> {size_kb} KB\n"
+            f"📊 <b>إجمالي وسائط الجلسة:</b> {len(m_files)} أصل مهيأ\n"
             f"📍 <b>الموقع:</b> <code>manual_inbox</code>\n\n"
-            f"هل تريد تشغيل المسار الشامل الآن واستيعابه في صفحات الهبوط والمنصات؟"
+            f"👇 <b>الخطوة التالية (المرحلة 4 من 4):</b>\n"
+            f"يمكنك إرسال المزيد من الصور والفيديوهات، أو إطلاق المسار الشامل الموحد الآن لاستيعاب كافة الوسائط وبناء صفحات الهبوط وتحديث البوابة والنشر الفوري:"
         )
         keyboard = {
             "inline_keyboard": [
-                [{"text": "🚀 تشغيل المسار الشامل الآن", "callback_data": "act_master"}],
+                [{"text": "🚀 تشغيل المسار الشامل الموحد الآن (1-Click Pipeline)", "callback_data": "act_master"}],
                 [{"text": "📥 استعراض محتويات manual_inbox", "callback_data": "act_inbox_status"}],
                 [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
             ]
         }
         bot.send_message(chat_id, confirm_text, reply_markup=keyboard)
     else:
-        bot.send_message(chat_id, f"❌ فشل تحميل الملف من سيرفر تيليجرام.")
+        bot.send_message(chat_id, "❌ فشل تحميل الملف من سيرفر تيليجرام.")
 
 
 # =============================================================================
@@ -1298,13 +1748,14 @@ def process_callback_query(cq: Dict[str, Any]):
 
     # 1. Main Menu Navigation
     if data == "menu_main":
+        reset_session(chat_id)
         bot.edit_message_text(chat_id, msg_id, get_main_menu_text(), reply_markup=build_main_menu_keyboard())
 
     # 2. Products Submenu
     elif data == "menu_products":
         bot.edit_message_text(chat_id, msg_id, get_products_menu_text(), reply_markup=build_products_submenu_keyboard())
 
-    # 3. Product Selection & Generation
+    # 3. Product Selection & Generation (Stage 1 Launcher)
     elif data.startswith("prod_"):
         choice = data.split("_")[1]
         threading.Thread(
@@ -1411,29 +1862,55 @@ def process_message(msg: Dict[str, Any]):
         )
         return
 
-    # Check for direct media upload
-    if any(k in msg for k in ("photo", "video", "document", "voice", "audio")):
+    # Check for document upload: if research text document -> Stage 2 Ingestion, else media
+    if "document" in msg:
+        doc = msg["document"]
+        fname = (doc.get("file_name") or "").lower()
+        if any(fname.endswith(ext) for ext in [".txt", ".md", ".pdf", ".docx", ".doc", ".json"]):
+            handle_incoming_research_document(msg)
+            return
+        else:
+            handle_incoming_media(msg)
+            return
+
+    # Direct media uploads (photos, videos, audio)
+    if any(k in msg for k in ("photo", "video", "voice", "audio")):
         handle_incoming_media(msg)
         return
 
     text = msg.get("text", "").strip()
 
-    # Commands
+    # Commands & Shortcuts
     if text.startswith("/start") or text == "قائمة" or text.startswith("/menu"):
+        reset_session(chat_id)
         bot.send_message(chat_id, get_main_menu_text(), reply_markup=build_main_menu_keyboard())
+        return
+    elif text.startswith("/cancel") or text == "إلغاء":
+        reset_session(chat_id)
+        bot.send_message(chat_id, "🔙 تم إلغاء العملية والعودة للقائمة الرئيسية.", reply_markup=build_main_menu_keyboard())
+        return
     elif text.startswith("/run") or text == "1":
         threading.Thread(
             target=handle_master_pipeline_execution,
             args=(chat_id,),
             daemon=True,
         ).start()
+        return
     elif text.startswith("/products") or text == "2":
         bot.send_message(chat_id, get_products_menu_text(), reply_markup=build_products_submenu_keyboard())
+        return
     elif text.startswith("/status"):
         handle_n8n_status(chat_id)
-    else:
-        # Default fallback: show main interactive menu
-        bot.send_message(chat_id, get_main_menu_text(), reply_markup=build_main_menu_keyboard())
+        return
+
+    # Check session state for clinical research text upload
+    session = get_session(chat_id)
+    if session.get("stage") == STATE_STAGE_1_RESEARCH or len(text) >= 70:
+        handle_research_report_received(chat_id, text, source_label="رسالة نصية مباشرة")
+        return
+
+    # Default fallback: show main interactive menu
+    bot.send_message(chat_id, get_main_menu_text(), reply_markup=build_main_menu_keyboard())
 
 
 def write_pid_file():
