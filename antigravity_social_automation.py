@@ -648,6 +648,10 @@ def generate_tiktok_reel_video(story_card_path: str, duration_sec: int = 8) -> s
     cat_tag = in_path.stem.split("]_")[-1] if "]_" in in_path.stem else "case"
     out_mp4 = BRANDED_DIR / f"{date_str}_[فيديو_تيكتوك_وريلز]_{cat_tag}.mp4"
 
+    if out_mp4.exists() and out_mp4.stat().st_size > 50000:
+        print(f"[*] 🎬 تم العثور على فيديو الريلز المولد اليوم ({out_mp4.name}) — استخدام الفيديو الجاهز فوراً.")
+        return str(out_mp4)
+
     # البحث عن أحدث ملف صوتي من NotebookLM في مجلد audio_inputs
     audio_files = sorted(
         list(NOTEBOOK_AUDIO_DIR.glob("*.mp3")) + list(NOTEBOOK_AUDIO_DIR.glob("*.wav")) + list(NOTEBOOK_AUDIO_DIR.glob("*.m4a")),

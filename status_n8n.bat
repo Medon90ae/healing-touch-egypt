@@ -53,6 +53,9 @@ if "%HTTP_CODE%"=="200" (
     echo   Memory Usage:     !N8N_MEM!
     echo   Web Editor UI:    http://localhost:%N8N_PORT%
     echo ======================================================================
+    echo Press Enter or any key to close this window...
+    echo ======================================================================
+    echo %cmdcmdline% | find """" >nul && pause >nul
     exit /b 0
 )
 
@@ -67,6 +70,9 @@ if defined N8N_PID (
     echo   The port is listening but /healthz is not returning HTTP 200.
     echo   Run 'stop_n8n.bat' followed by 'start_n8n.bat' to restart.
     echo ======================================================================
+    echo Press Enter or any key to close this window...
+    echo ======================================================================
+    echo %cmdcmdline% | find """" >nul && pause >nul
     exit /b 2
 )
 
@@ -80,4 +86,7 @@ echo ======================================================================
 echo   To start the n8n background service, run:
 echo     start_n8n.bat
 echo ======================================================================
+echo Press Enter or any key to close this window...
+echo ======================================================================
+echo %cmdcmdline% | find """" >nul && pause >nul
 exit /b 1

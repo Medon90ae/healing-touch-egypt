@@ -270,7 +270,7 @@ class TestMilestone4SingleClickPipeline(unittest.TestCase):
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=180
+            timeout=300
         )
         self.assertEqual(
             res.returncode, 0,

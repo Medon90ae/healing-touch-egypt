@@ -26,6 +26,9 @@ if "%HTTP_CODE%"=="200" (
     echo [+] Health check: %HEALTH_URL% -^> HTTP 200 OK
     echo [+] Web Editor UI: http://localhost:%N8N_PORT%
     echo ======================================================================
+    echo Press Enter or any key to close this window...
+    echo ======================================================================
+    echo %cmdcmdline% | find """" >nul && pause >nul
     exit /b 0
 )
 
@@ -47,31 +50,34 @@ echo [*] Launching n8n background service silently via scripts\run_n8n_silent.vb
 if not exist "%VBS_SCRIPT%" (
     echo [-] ERROR: Silent runner script not found: "%VBS_SCRIPT%"
     echo ======================================================================
+    echo Press Enter or any key to close this window...
+    echo ======================================================================
+    echo %cmdcmdline% | find """" >nul && pause >nul
     exit /b 1
 )
 
 wscript.exe "%VBS_SCRIPT%"
 
-:: Step 4: Wait for http://localhost:5678/healthz to respond with HTTP 200 (timeout: 60s)
+:: Step 4: Verification loop - wait up to 25 seconds for /healthz to report HTTP 200
 echo [*] Waiting for n8n service to initialize on port %N8N_PORT%...
 set /a ATTEMPTS=0
-set MAX_ATTEMPTS=60
+set /a MAX_ATTEMPTS=25
 
-:WAIT_HEALTH_LOOP
+:POLL_HEALTH_LOOP
 ping -n 2 127.0.0.1 >nul
 set /a ATTEMPTS+=1
 
-set CHECK_CODE=000
+set HTTP_CODE=000
 for /f "tokens=*" %%c in ('curl.exe -s -m 2 -w "%%{http_code}" -o nul "%HEALTH_URL%" 2^>nul') do (
-    set CHECK_CODE=%%c
+    set HTTP_CODE=%%c
 )
 
-if "%CHECK_CODE%"=="200" goto N8N_STARTED_SUCCESS
+if "%HTTP_CODE%"=="200" goto N8N_STARTED_SUCCESS
 
 if %ATTEMPTS% geq %MAX_ATTEMPTS% goto N8N_START_TIMEOUT
 
-echo [*] Initializing n8n service... [!ATTEMPTS!/%MAX_ATTEMPTS%s]
-goto WAIT_HEALTH_LOOP
+echo [*] Initializing... (!ATTEMPTS!/%MAX_ATTEMPTS%s)
+goto POLL_HEALTH_LOOP
 
 :N8N_STARTED_SUCCESS
 set NEW_PID=
@@ -86,6 +92,9 @@ echo   Process PID:     !NEW_PID!
 echo   Health Endpoint: %HEALTH_URL% [HTTP 200 OK]
 echo   Web Editor UI:   http://localhost:%N8N_PORT%
 echo ======================================================================
+echo Press Enter or any key to close this window...
+echo ======================================================================
+echo %cmdcmdline% | find """" >nul && pause >nul
 exit /b 0
 
 :N8N_START_TIMEOUT
@@ -93,4 +102,7 @@ echo ======================================================================
 echo [-] ERROR: Timed out waiting for n8n service to respond on %HEALTH_URL% after %MAX_ATTEMPTS% seconds.
 echo [-] Please inspect logs or run 'status_n8n.bat' to verify status.
 echo ======================================================================
+echo Press Enter or any key to close this window...
+echo ======================================================================
+echo %cmdcmdline% | find """" >nul && pause >nul
 exit /b 1
