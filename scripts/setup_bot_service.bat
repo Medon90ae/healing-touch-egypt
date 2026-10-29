@@ -4,6 +4,7 @@ chcp 65001 >nul
 
 cd /d "%~dp0"
 set TASK_NAME=HealingTouch_TelegramBot_Service
+set PS_SCRIPT=%~dp0configure_bot_task.ps1
 set VBS_SCRIPT=%~dp0run_bot_silent.vbs
 
 echo ======================================================================
@@ -21,21 +22,20 @@ if /i "%1"=="/query" goto QUERY_TASK
 if /i "%1"=="/status" goto QUERY_TASK
 if /i "%1"=="--status" goto QUERY_TASK
 
-if not exist "%VBS_SCRIPT%" (
-    echo [-] ERROR: Runner script not found: "%VBS_SCRIPT%"
-    echo ======================================================================
-    exit /b 1
-)
-
-echo [*] Target VBScript Launcher: "%VBS_SCRIPT%"
 echo [*] Task Name: "%TASK_NAME%"
 echo [*] Configuring Windows Scheduled Task for ONLOGON auto-start...
 
-:: Attempt registration with /rl HIGHEST
+:: Primary method: PowerShell advanced configuration (battery-safe, zero timeout, working dir)
+if exist "%PS_SCRIPT%" (
+    powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%" >nul 2>&1
+    if !errorlevel! equ 0 goto TASK_SUCCESS
+)
+
+:: Fallback method 1: schtasks with /rl HIGHEST
 schtasks /create /tn "%TASK_NAME%" /tr "wscript.exe \"%VBS_SCRIPT%\"" /sc ONLOGON /rl HIGHEST /f >nul 2>&1
 if !errorlevel! equ 0 goto TASK_SUCCESS
 
-:: If /rl HIGHEST failed (due to non-elevated prompt), retry standard registration
+:: Fallback method 2: schtasks standard
 schtasks /create /tn "%TASK_NAME%" /tr "wscript.exe \"%VBS_SCRIPT%\"" /sc ONLOGON /f >nul 2>&1
 if !errorlevel! equ 0 goto TASK_SUCCESS
 

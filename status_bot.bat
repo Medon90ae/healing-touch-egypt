@@ -3,28 +3,12 @@ setlocal enabledelayedexpansion
 chcp 65001 >nul
 
 cd /d "%~dp0"
-set PID_FILE=%~dp0media_assets\telegram_bot.pid
-set BOT_PID=
+set "PID_FILE=%~dp0media_assets\telegram_bot.pid"
 
-if exist "%PID_FILE%" (
-    set /p BOT_PID=<"%PID_FILE%"
-)
-
-:: Self-healing: if PID_FILE was missing, search for running process
-if not defined BOT_PID (
-    for /f "tokens=2 delims=," %%i in ('wmic process where "CommandLine like '%%telegram_control_bot.py%%' and Name='python.exe'" get ProcessId /format:csv 2^>nul ^| findstr /r "[0-9]"') do (
-        set BOT_PID=%%i
-        if defined BOT_PID (
-            echo !BOT_PID!>"%PID_FILE%"
-        )
-    )
-)
-
-set IS_RUNNING=0
-if defined BOT_PID (
-    for /f "tokens=1 delims=," %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul ^| findstr /i "python"') do (
-        set IS_RUNNING=1
-    )
+:: Step 1: Detect running instance via dedicated localhost port 48199
+set "BOT_PID="
+for /f "tokens=5" %%a in ('netstat -ano -p tcp 2^>nul ^| findstr "127.0.0.1:48199" ^| findstr /i "LISTENING"') do (
+    set "BOT_PID=%%a"
 )
 
 echo ======================================================================
@@ -32,28 +16,34 @@ echo       🌿 هيلينج تاتش مصر - حالة مركز القيادة 
 echo           Healing Touch Egypt - Telegram Bot Status Check
 echo ======================================================================
 
-if "%IS_RUNNING%"=="1" (
-    echo   الحالة:             🟢 قيد التشغيل ونشط (ONLINE)
-    echo   معرف العملية (PID): !BOT_PID!
-    echo   المعرف:             @ArgentoSpeedaf_bot
-    echo   المشرف المعتمد:     7692685242
-    echo   الأوامر التفاعلية:  /start , /menu , /run , /products
-    echo ======================================================================
-    echo [+] البوت يستقبل الأوامر والقوائم التفاعلية والوسائط على مدار الساعة.
-    echo.
-    echo ======================================================================
-    echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-    echo ======================================================================
-    echo %cmdcmdline% | find """" >nul && pause >nul
-    exit /b 0
-) else (
-    echo   الحالة:             🔴 متوقف حالياً (OFFLINE)
-    echo ======================================================================
-    echo [*] لتشغيل الخدمة: شغل ملف start_bot.bat
-    echo.
-    echo ======================================================================
-    echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-    echo ======================================================================
-    echo %cmdcmdline% | find """" >nul && pause >nul
-    exit /b 1
-)
+if defined BOT_PID goto STATE_ONLINE
+goto STATE_OFFLINE
+
+:STATE_ONLINE
+echo !BOT_PID!>"%PID_FILE%"
+echo   الحالة:             ONLINE [قيد التشغيل ونشط]
+echo   معرف العملية (PID): !BOT_PID!
+echo   المنفذ الداخلي:     127.0.0.1:48199 (حماية ضد التكرار نشطة)
+echo   المعرف:             @ArgentoSpeedaf_bot
+echo   المشرف المعتمد:     7692685242
+echo   الأوامر التفاعلية:  /start , /menu , /run , /products
+echo ======================================================================
+echo [+] البوت يستقبل الأوامر والقوائم التفاعلية والوسائط على مدار الساعة.
+echo.
+echo ======================================================================
+if /i "%1"=="nopause" exit /b 0
+if /i "%1"=="--nopause" exit /b 0
+echo %cmdcmdline% | findstr /i /c:"/c """ >nul && pause >nul
+exit /b 0
+
+:STATE_OFFLINE
+if exist "%PID_FILE%" del "%PID_FILE%" >nul 2>&1
+echo   الحالة:             OFFLINE [متوقف حالياً]
+echo ======================================================================
+echo [*] لتشغيل الخدمة: شغل ملف start_bot.bat
+echo.
+echo ======================================================================
+if /i "%1"=="nopause" exit /b 1
+if /i "%1"=="--nopause" exit /b 1
+echo %cmdcmdline% | findstr /i /c:"/c """ >nul && pause >nul
+exit /b 1

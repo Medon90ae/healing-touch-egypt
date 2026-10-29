@@ -18,6 +18,7 @@ import os
 import sys
 import time
 import json
+import socket
 import logging
 import threading
 import subprocess
@@ -48,17 +49,38 @@ LOG_FILE = MEDIA_DIR / "telegram_bot.log"
 for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS):
     p.mkdir(parents=True, exist_ok=True)
 
-# Setup logging (console + persistent file log)
+# Setup logging (persistent file log + console if available)
+log_handlers = [logging.FileHandler(str(LOG_FILE), encoding="utf-8")]
+if sys.stdout is not None:
+    log_handlers.append(logging.StreamHandler(sys.stdout))
+
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(str(LOG_FILE), encoding="utf-8"),
-    ],
+    handlers=log_handlers,
 )
 logger = logging.getLogger("TelegramControlBot")
+
+# Single-instance Socket Lock (Prevents duplicate instances and Telegram 409 Conflicts)
+SINGLE_INSTANCE_PORT = 48199
+_SINGLE_INSTANCE_SOCKET: Optional[socket.socket] = None
+
+
+def acquire_single_instance_lock(port: int = SINGLE_INSTANCE_PORT) -> bool:
+    """Binds to a dedicated localhost port to ensure strictly 1 running bot instance.
+    The OS automatically releases the socket when the process exits or terminates.
+    """
+    global _SINGLE_INSTANCE_SOCKET
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 0)
+        s.bind(("127.0.0.1", port))
+        s.listen(1)
+        _SINGLE_INSTANCE_SOCKET = s
+        return True
+    except OSError:
+        return False
 
 # Bot Configuration & Security Credentials
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "9068379040:AAGDIoqnXxOFnJcmXEBGL-xnj-0FXCUKHVA")
@@ -245,6 +267,12 @@ class TelegramBotClient:
             r = self.session.get(f"{self.api_url}/getUpdates", params=params, timeout=timeout + 10)
             if r.status_code == 200 and r.json().get("ok"):
                 return r.json().get("result", [])
+            elif r.status_code == 409:
+                logger.error("409 Conflict: Another bot instance is polling Telegram! Retrying in 5s... %s", r.text)
+                time.sleep(5)
+                return []
+            else:
+                logger.warning("getUpdates returned HTTP %d: %s", r.status_code, r.text)
         except requests.exceptions.Timeout:
             return []
         except Exception as e:
@@ -1008,4 +1036,13 @@ def run_bot_polling():
 
 
 if __name__ == "__main__":
-    run_bot_polling()
+    if not acquire_single_instance_lock():
+        logger.warning(
+            "Another instance of TelegramControlBot is already active on 127.0.0.1:%d. Exiting cleanly.",
+            SINGLE_INSTANCE_PORT,
+        )
+        sys.exit(0)
+    try:
+        run_bot_polling()
+    except Exception as fatal_e:
+        logger.critical("Fatal unhandled exception in bot main: %s", fatal_e, exc_info=True)

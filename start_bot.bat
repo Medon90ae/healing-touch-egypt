@@ -3,79 +3,89 @@ setlocal enabledelayedexpansion
 chcp 65001 >nul
 
 cd /d "%~dp0"
-set PID_FILE=%~dp0media_assets\telegram_bot.pid
-set VBS_SCRIPT=%~dp0scripts\run_bot_silent.vbs
+set "PID_FILE=%~dp0media_assets\telegram_bot.pid"
+set "VBS_SCRIPT=%~dp0scripts\run_bot_silent.vbs"
 
 echo ======================================================================
 echo       🌿 هيلينج تاتش مصر - تشغيل مركز القيادة التفاعلي على تيليجرام
 echo           Healing Touch Egypt - Telegram Bot Background Service
 echo ======================================================================
 
-:: Step 1: Check if already running via PID file
-if exist "%PID_FILE%" (
-    set /p BOT_PID=<"%PID_FILE%"
-    if defined BOT_PID (
-        set IS_ALIVE=
-        for /f "tokens=1 delims=," %%p in ('tasklist /fi "PID eq !BOT_PID!" /fo csv /nh 2^>nul ^| findstr /i "python"') do (
-            set IS_ALIVE=%%p
-        )
-        if defined IS_ALIVE (
-            echo [+] بوت تيليجرام التفاعلي يعمل بالفعل في الخلفية بنشاط! [PID: !BOT_PID!]
-            echo [+] اسم البوت: @ArgentoSpeedaf_bot
-            echo [+] يمكنك إرسال /start في الشات للتحكم الفوري.
-            echo ======================================================================
-            echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-            echo ======================================================================
-            echo %cmdcmdline% | find """" >nul && pause >nul
-            exit /b 0
-        ) else (
-            echo [*] تم رصد سجل عملية قديم غير نشط [PID: !BOT_PID!] — جاري التنظيف وإعادة الإطلاق...
-            del "%PID_FILE%" >nul 2>&1
-        )
-    )
+:: Step 1: Check if already running via exclusive localhost port 48199
+set "PORT_PID="
+for /f "tokens=5" %%a in ('netstat -ano -p tcp 2^>nul ^| findstr "127.0.0.1:48199" ^| findstr /i "LISTENING"') do (
+    set "PORT_PID=%%a"
 )
 
-:: Step 2: Also kill any lingering orphaned telegram_control_bot.py processes
-for /f "tokens=2 delims=," %%i in ('wmic process where "CommandLine like '%%telegram_control_bot.py%%' and Name='python.exe'" get ProcessId /format:csv 2^>nul ^| findstr /r "[0-9]"') do (
+if defined PORT_PID goto ALREADY_RUNNING
+
+:: Step 2: Clean up any lingering orphaned telegram_control_bot.py processes
+for /f "tokens=2 delims=," %%i in ('wmic process where "CommandLine like '%%telegram_control_bot.py%%' and (Name='python.exe' or Name='pythonw.exe')" get ProcessId /format:csv 2^>nul ^| findstr /r "[0-9]"') do (
     taskkill /F /PID %%i /T >nul 2>&1
 )
+if exist "%PID_FILE%" del "%PID_FILE%" >nul 2>&1
 
-:: Step 3: Launch silently via VBScript runner
+:: Step 3: Launch via Scheduled Task or Silent VBScript
 echo [*] جاري تشغيل بوت تيليجرام كخدمة صامتة في الخلفية...
-if not exist "%VBS_SCRIPT%" (
-    echo [-] خطأ: ملف التشغيل الصامت غير موجود: "%VBS_SCRIPT%"
-    echo ======================================================================
-    echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-    echo ======================================================================
-    echo %cmdcmdline% | find """" >nul && pause >nul
-    exit /b 1
+
+set "LAUNCHED_VIA_TASK=0"
+schtasks /query /tn "HealingTouch_TelegramBot_Service" >nul 2>&1
+if !errorlevel! equ 0 (
+    schtasks /run /tn "HealingTouch_TelegramBot_Service" >nul 2>&1
+    if !errorlevel! equ 0 set "LAUNCHED_VIA_TASK=1"
 )
 
-start "" wscript.exe "%VBS_SCRIPT%"
+if "!LAUNCHED_VIA_TASK!"=="0" (
+    if not exist "%VBS_SCRIPT%" goto RUNNER_NOT_FOUND
+    start "" wscript.exe "%VBS_SCRIPT%"
+)
+
+:: Wait for socket binding
 ping -n 3 127.0.0.1 >nul
 
-:: Step 4: Verify startup
-if exist "%PID_FILE%" (
-    set /p NEW_PID=<"%PID_FILE%"
-    set IS_NEW_ALIVE=
-    for /f "tokens=1 delims=," %%p in ('tasklist /fi "PID eq !NEW_PID!" /fo csv /nh 2^>nul ^| findstr /i "python"') do (
-        set IS_NEW_ALIVE=%%p
-    )
-    if defined IS_NEW_ALIVE (
-        echo [+] ✅ تم تشغيل بوت تيليجرام بنجاح كخدمة دائمة في الخلفية! [PID: !NEW_PID!]
-        echo [+] تم إرسال رسالة الترحيب وقائمة التحكم إلى حسابك على تيليجرام فوراً.
-        echo [+] المعرف: @ArgentoSpeedaf_bot
-        echo ======================================================================
-        echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-        echo ======================================================================
-        echo %cmdcmdline% | find """" >nul && pause >nul
-        exit /b 0
-    )
+:: Step 4: Verify startup via port 48199
+set "VERIFIED_PID="
+for /f "tokens=5" %%a in ('netstat -ano -p tcp 2^>nul ^| findstr "127.0.0.1:48199" ^| findstr /i "LISTENING"') do (
+    set "VERIFIED_PID=%%a"
 )
 
-echo [!] تنبيه: جاري اكتمال إطلاق الخدمة. يرجى مراجعة حالة البوت عبر status_bot.bat
+if defined VERIFIED_PID goto LAUNCH_SUCCESS
+goto LAUNCH_PENDING
+
+:ALREADY_RUNNING
+echo [+] بوت تيليجرام التفاعلي يعمل بالفعل في الخلفية بنشاط - PID: !PORT_PID!
+echo [+] المنفذ الداخلي المؤمن: 127.0.0.1:48199
+echo [+] اسم البوت: @ArgentoSpeedaf_bot
+echo [+] يمكنك إرسال /start في الشات للتحكم الفوري.
+goto END_SUCCESS
+
+:LAUNCH_SUCCESS
+echo !VERIFIED_PID!>"%PID_FILE%"
+echo [+] تم تشغيل بوت تيليجرام التفاعلي بنجاح - PID: !VERIFIED_PID!
+echo [+] اسم البوت: @ArgentoSpeedaf_bot
+echo [+] المشرف المعتمد: 7692685242
+echo [+] المنفذ المؤمن: 127.0.0.1:48199
+echo [+] يمكنك الآن فتح تيليجرام وإرسال /start أو النقر على الأزرار التفاعلية.
+goto END_SUCCESS
+
+:LAUNCH_PENDING
+echo [-] تنبيه: جاري بدء الخدمة في الخلفية... يمكنك فحص الحالة عبر status_bot.bat
+goto END_SUCCESS
+
+:RUNNER_NOT_FOUND
+echo [-] خطأ: ملف التشغيل الصامت غير موجود: "%VBS_SCRIPT%"
+goto END_ERROR
+
+:END_SUCCESS
 echo ======================================================================
-echo اضغط Enter أو أي زر لإغلاق هذه النافذة...
-echo ======================================================================
-echo %cmdcmdline% | find """" >nul && pause >nul
+if /i "%1"=="nopause" exit /b 0
+if /i "%1"=="--nopause" exit /b 0
+echo %cmdcmdline% | findstr /i /c:"/c """ >nul && pause >nul
 exit /b 0
+
+:END_ERROR
+echo ======================================================================
+if /i "%1"=="nopause" exit /b 1
+if /i "%1"=="--nopause" exit /b 1
+echo %cmdcmdline% | findstr /i /c:"/c """ >nul && pause >nul
+exit /b 1

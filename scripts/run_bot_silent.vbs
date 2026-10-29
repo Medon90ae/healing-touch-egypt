@@ -14,7 +14,10 @@ projectDir = fso.GetParentFolderName(scriptDir)
 Set WshShell = CreateObject("WScript.Shell")
 WshShell.CurrentDirectory = projectDir
 
-pythonExe = projectDir & "\.venv\Scripts\python.exe"
+pythonExe = projectDir & "\.venv\Scripts\pythonw.exe"
+If Not fso.FileExists(pythonExe) Then
+    pythonExe = projectDir & "\.venv\Scripts\python.exe"
+End If
 botScript = projectDir & "\scripts\telegram_control_bot.py"
 
 If Not fso.FileExists(pythonExe) Then
