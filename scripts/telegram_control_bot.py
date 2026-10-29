@@ -18,13 +18,14 @@ import os
 import sys
 import time
 import json
+import html
 import socket
 import logging
 import threading
 import subprocess
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 
 import requests
 
@@ -128,6 +129,21 @@ PRODUCTS_CATALOG = {
         "icon": "📚",
     },
 }
+
+# Import clinical research and SEO configs
+sys.path.insert(0, str(BASE_DIR))
+try:
+    from antigravity_social_automation import PRODUCT_PROMPT_CONFIGS
+except Exception:
+    PRODUCT_PROMPT_CONFIGS = {}
+
+try:
+    from clinical_research_harvester import harvest_pubmed_studies
+except Exception:
+    def harvest_pubmed_studies(p_id, max_results=3):
+        return []
+
+TRENDS_FILE = BASE_DIR / "media_assets" / "live_trends_registry.json"
 
 # Concurrency lock for long-running pipelines
 PIPELINE_LOCK = threading.Lock()
@@ -471,36 +487,9 @@ def handle_product_research_generation(chat_id: str, prod_choice: str):
             )
             bot.send_document(chat_id, prompts_txt, caption=caption)
 
-        action_card_text = (
-            f"✨ <b>تم تجهيز حزمة الأبحاث والبرومبتات بنجاح!</b>\n\n"
-            f"🎯 <b>المنتج:</b> {prod_info['name']}\n"
-            f"📌 <b>المحور:</b> {prod_info['tag']}\n\n"
-            f"🌐 يمكنك الآن فتح أدوات الذكاء الاصطناعي الأربعة مباشرة من الروابط أدناه:\n"
-            f"• <b>Pomelli:</b> لحملات التصاميم والمنشورات المعتمدة\n"
-            f"• <b>NotebookLM:</b> لتوليد الفيديو التوضيحي والبودكاست السريري\n"
-            f"• <b>Gemini Deep Research:</b> للأبحاث الطبية الموثقة\n\n"
-            f"💡 <i>أي صور أو فيديوهات تقوم بحفظها، أرسلها هنا مباشرة في الشات لتصل إلى manual_inbox تلقائياً!</i>"
-        )
-        action_keyboard = {
-            "inline_keyboard": [
-                [
-                    {"text": "🔗 فتح Google Pomelli", "url": "https://labs.google.com/pomelli/campaigns"},
-                    {"text": "🔗 فتح Google NotebookLM", "url": "https://notebooklm.google.com/"},
-                ],
-                [
-                    {"text": "🔗 فتح Gemini Research", "url": "https://gemini.google.com/"},
-                    {"text": "🔗 فتح Google Stitch", "url": "https://stitch.withgoogle.com/"},
-                ],
-                [
-                    {"text": "🚀 تشغيل المسار الشامل الآن", "callback_data": "act_master"}
-                ],
-                [
-                    {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
-                    {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
-                ],
-            ]
-        }
-        bot.send_message(chat_id, action_card_text, reply_markup=action_keyboard)
+        # Send interactive Hub Card with dedicated prompt buttons
+        card_text, card_keyboard = build_product_hub_card(prod_choice)
+        bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
 
     except Exception as ex:
         logger.error("Error generating product research: %s", ex, exc_info=True)
@@ -508,6 +497,421 @@ def handle_product_research_generation(chat_id: str, prod_choice: str):
     finally:
         ACTIVE_TASK_NAME = None
         PIPELINE_LOCK.release()
+
+
+def get_category_trends(category: str) -> List[str]:
+    """Loads live Google Suggest queries for Egyptian market by clinical category."""
+    if TRENDS_FILE.exists():
+        try:
+            data = json.loads(TRENDS_FILE.read_text(encoding="utf-8"))
+            return data.get("categories", {}).get(category, [])
+        except Exception:
+            pass
+    return []
+
+
+def get_product_data(choice: str) -> Dict[str, Any]:
+    """Retrieves full clinical configuration, PubMed papers, and Egypt trends."""
+    choice_str = str(choice).strip()
+    cfg = PRODUCT_PROMPT_CONFIGS.get(choice_str, PRODUCT_PROMPT_CONFIGS.get("1", {}))
+    cat = cfg.get("category", "c-section")
+    trends = get_category_trends(cat)
+    studies = harvest_pubmed_studies(choice_str, max_results=3)
+    return {
+        "choice": choice_str,
+        "cfg": cfg,
+        "name_ar": cfg.get("name_ar", PRODUCTS_CATALOG.get(choice_str, {}).get("name", "منتج سريري")),
+        "focus": cfg.get("clinical_focus", PRODUCTS_CATALOG.get(choice_str, {}).get("tag", "العناية والتعافي السريري")),
+        "keywords": cfg.get("target_keywords_egypt", []),
+        "long_tails": cfg.get("long_tail_queries_egypt", []),
+        "hashtags": cfg.get("egypt_hashtags", []),
+        "queries": cfg.get("gemini_research_queries", []),
+        "anxieties": cfg.get("patient_anxieties", []),
+        "pomelli_1_1": cfg.get("pomelli_prompt_1_1", ""),
+        "pomelli_9_16": cfg.get("pomelli_prompt_9_16", ""),
+        "trends": trends,
+        "studies": studies,
+    }
+
+
+def build_product_hub_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    focus = html.escape(d["focus"])
+
+    text = (
+        f"🌿 <b>مركز أبحاث وبرومبتات المنتج السريرية المعتمدة</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"📌 <b>المحور السريري:</b> {focus}\n"
+        f"📈 <b>سيو وترندات مصر:</b> تم رصد وتحليل استفسارات جوجل مصر الصاعدة\n"
+        f"📚 <b>الأبحاث الموثقة:</b> تم استخراج أحدث دراسات PubMed السريرية\n\n"
+        f"👇 <b>اختر المنصة لعرض الكلمات البحثية والأسئلة والبرومبت المخصص للنسخ المباشر:</b>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🔬 برومبت Gemini Deep Research", "callback_data": f"prompt_gemini_{choice}"},
+            ],
+            [
+                {"text": "🎙️ برومبت Google NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+                {"text": "🎨 برومبت Google Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+            ],
+            [
+                {"text": "📱 برومبتات السوشيال (ريلز / تيك توك / مقالات)", "callback_data": f"prompt_social_menu_{choice}"},
+            ],
+            [
+                {"text": "📄 تحميل الحزمة كاملة (ملف TXT)", "callback_data": f"prompt_file_{choice}"},
+                {"text": "🚀 تشغيل المسار الشامل الآن", "callback_data": "act_master"},
+            ],
+            [
+                {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return text, keyboard
+
+
+def build_gemini_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    focus = html.escape(d["focus"])
+
+    kws_html = "\n".join([f"• <code>{html.escape(k)}</code>" for k in d["keywords"][:6]])
+    lts_html = "\n".join([f"• {html.escape(q)}" for q in (d["long_tails"][:3] + d["trends"][:3])])
+
+    studies_html_list = []
+    for s in d["studies"]:
+        y = s.get("pub_year", "2025")
+        t = html.escape(s.get("title", "")[:75])
+        u = s.get("url", "https://pubmed.ncbi.nlm.nih.gov/")
+        studies_html_list.append(f"• <a href='{u}'>[{y}] {t}...</a>")
+    studies_html = "\n".join(studies_html_list) if studies_html_list else "• دراسات PubMed المعتمدة في أرشيف التعافي"
+
+    prompt_lines = [
+        f"بصفتك باحثاً إكلينيكياً واستشارياً في جراحة التعافي وعلاج الجروح في مصر:",
+        f"أريد بحثاً سريرياً دقيقاً وموثقاً حول: {d['focus']}.",
+        "",
+        "الأسئلة السريرية والبحثية المحددة المطلوب الإجابة عليها تفصيلياً:",
+    ]
+    prompt_lines.extend([f"• {q}" for q in d["queries"]])
+    prompt_lines.append("")
+    prompt_lines.append("مخاوف وتساؤلات المرضى المقلقة في مصر المطلوب طمأنتهم علمياً بشأنها:")
+    prompt_lines.extend([f"• {a}" for a in d["anxieties"]])
+    prompt_lines.append("")
+    prompt_lines.append("تساؤلات وترندات بحث جوجل مصر الصاعدة هذا الأسبوع للإجابة عليها:")
+    prompt_lines.extend([f"• {t}" for t in d["trends"][:4]])
+    prompt_lines.append("")
+    prompt_lines.append("الشروط الصارمة للمحتوى الناتج:")
+    prompt_lines.append("1. نبرة طبية توجيهية هادئة تشرح فسيولوجيا التئام الأنسجة وتبدد المخاوف دون تهويل.")
+    prompt_lines.append("2. استهداف الجمهور المصري وإجابات تناسب الصيف والعرق وطريقة الغيار المنزلي.")
+    prompt_lines.append("3. منع تام لأي عروض تسويقية أو أسعار؛ التركيز 100% على الإرشاد والدعم والتثقيف الصحي.")
+    prompt_lines.append("4. إدراج توجيه واضح للتواصل مع أخصائي التعافي عبر واتساب 01155803307 بكود HT10 وحق المعاينة قبل الاستلام.")
+    prompt_lines.append("")
+    prompt_lines.append("أحدث أبحاث PubMed السريرية المعتمدة للاستشهاد بها ودعم المحتوى:")
+    for s in d["studies"]:
+        prompt_lines.append(f"• [{s.get('pub_year')}] {s.get('title')} -> {s.get('url')}")
+
+    raw_prompt = "\n".join(prompt_lines)
+    escaped_code = html.escape(raw_prompt)
+
+    msg = (
+        f"🔬 <b>برومبت البحث المعمق في Gemini Deep Research</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"📌 <b>المحور:</b> {focus}\n\n"
+        f"🔑 <b>أهم الكلمات البحثية في مصر (Focus Keywords):</b>\n"
+        f"{kws_html}\n\n"
+        f"❓ <b>الأسئلة وترندات جوجل مصر الصاعدة:</b>\n"
+        f"{lts_html}\n\n"
+        f"📚 <b>أحدث أبحاث PubMed السريرية المعتمدة:</b>\n"
+        f"{studies_html}\n\n"
+        f"📋 <b>نص البرومبت الإكلينيكي (اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇):</b>\n"
+        f"<pre><code>{escaped_code}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🌐 فتح موقع Gemini مباشرة", "url": "https://gemini.google.com/"},
+            ],
+            [
+                {"text": "🎙️ برومبت NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+            ],
+            [
+                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_notebooklm_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+
+    audio_prompt = (
+        f"قم بتوليد حوار صوتي بين اثنين من استشاريي التعافي الطبي باللهجة المصرية الراقية يشرحان فيه بأسلوب ودي مريح "
+        f"للمريض أهمية {d['name_ar']} في مرحلة التعافي، وكيفية التغلب على الحكة أو القلق بعد العملية وتصحيح المفاهيم الخاطئة "
+        f"الشائعة في مصر، مع التأكيد على حق معاينة المنتج قبل الاستلام وتطبيق كود HT10 والاستشارة عبر واتساب 01155803307."
+    )
+
+    video_prompt = (
+        f"أنشئ فيديو شارحاً تفاعلياً (Explainer Video) لحالة التعافي باستخدام {d['name_ar']} يركز على بيولوجيا التئام "
+        f"الأنسجة وطريقة العناية السليمة بالخطوات، بنبرة طمأنينة علمية راقية تجيب على قلق المريض المصري من الندبات "
+        f"والالتهاب ومخاوف الاستحمام، مع التنويه لحق معاينة الشحنة قبل الاستلام والتواصل واتساب 01155803307 بكود HT10."
+    )
+
+    msg = (
+        f"🎙️ <b>برومبتات استوديو Google NotebookLM</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n\n"
+        f"💡 <i>طريقة الاستخدام:</i>\n"
+        f"1. افتح رابط NotebookLM أدناه وأنشئ نوت بوك جديد.\n"
+        f"2. ارفع ملف المعرفة السريرية المرفق، أو أبحاث PubMed.\n"
+        f"3. انسخ الأوامر التالية واستخدمها في استوديو الصوت والفيديو:\n\n"
+        f"🎧 <b>1️⃣ برومبت البودكاست والنقاش الصوتي (Audio Overview):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(audio_prompt)}</code></pre>\n\n"
+        f"🎬 <b>2️⃣ برومبت الفيديو التوضيحي السريري (Video Overview):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(video_prompt)}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🌐 فتح Google NotebookLM مباشرة", "url": "https://notebooklm.google.com/"},
+            ],
+            [
+                {"text": "🔬 برومبت Gemini", "callback_data": f"prompt_gemini_{choice}"},
+                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+            ],
+            [
+                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    p1 = d.get("pomelli_1_1", "")
+    p9 = d.get("pomelli_9_16", "")
+
+    msg = (
+        f"🎨 <b>برومبتات توليد الصور الطبية في Google Pomelli (واقعية سريرية 8K)</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n\n"
+        f"📐 <b>1️⃣ برومبت البوست المربع 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(p1)}</code></pre>\n\n"
+        f"📱 <b>2️⃣ برومبت الستوري والريلز العمودي 9:16 (إنستجرام وتيك توك):</b>\n"
+        f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
+        f"<pre><code>{html.escape(p9)}</code></pre>\n\n"
+        f"💡 <i>تذكير: أي صورة تقوم بحفظها من Pomelli، أرسلها هنا مباشرة في الشات لتصل إلى manual_inbox تلقائياً!</i>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🌐 فتح Google Pomelli مباشرة", "url": "https://labs.google.com/pomelli/campaigns"},
+            ],
+            [
+                {"text": "🔬 برومبت Gemini", "callback_data": f"prompt_gemini_{choice}"},
+                {"text": "🎙️ برومبت NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+            ],
+            [
+                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_social_prompts_menu(choice: str) -> Tuple[str, Dict[str, Any]]:
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+
+    text = (
+        f"📱 <b>برومبتات صناعة المحتوى السريري والسيو لمنصات التواصل</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n\n"
+        f"👇 <b>اختر نوع المحتوى المطلوب لعرض البرومبت والسكريبت المهيأ للنسخ:</b>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🎬 سكريبت وسيو يوتيوب مصر (16:9 + Shorts)", "callback_data": f"prompt_yt_{choice}"},
+            ],
+            [
+                {"text": "⚡ سكريبت تيك توك مصر (Viral Hook)", "callback_data": f"prompt_tt_{choice}"},
+            ],
+            [
+                {"text": "📸 كاروسيل وريلز إنستجرام مصر", "callback_data": f"prompt_ig_{choice}"},
+            ],
+            [
+                {"text": "✍️ مقال مدونة بلوجر (SEO 1500 كلمة)", "callback_data": f"prompt_blog_{choice}"},
+            ],
+            [
+                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return text, keyboard
+
+
+def build_social_prompt_card(choice: str, sub: str) -> Tuple[str, Dict[str, Any]]:
+    cfg = PRODUCT_PROMPT_CONFIGS.get(choice, PRODUCT_PROMPT_CONFIGS.get("1", {}))
+    name_ar = cfg.get("name_ar", "")
+    focus = cfg.get("clinical_focus", "")
+    kws = "، ".join(cfg.get("target_keywords_egypt", [])[:5])
+    lts = "\n".join([f"• {q}" for q in cfg.get("long_tail_queries_egypt", [])[:4]])
+    hashtags = " ".join(cfg.get("egypt_hashtags", []))
+
+    if sub == "yt":
+        title = "🎬 <b>برومبت سكريبت وسيو يوتيوب مصر (Long-form + Shorts)</b>"
+        prompt = (
+            f"بصفتك كبير استشاريي إنتاج الفيديو الطبي والسيو السريري في مصر (Clinical Video SEO Specialist - Egypt):\n"
+            f"الموضوع السريري: {name_ar} - {focus}.\n\n"
+            f"الكلمات المفتاحية الإلزامية بمصر: {kws}\n\n"
+            f"الأسئلة الأكثر بحثاً في مصر المطلوب الإجابة عليها بالفيديو:\n{lts}\n\n"
+            f"المطلوب إنتاجه تفصيلياً:\n"
+            f"1. [العنوان السريري الجذاب]: عنوان أقل من 60 حرفاً يثير الطمأنينة بدون تهويل تجاري.\n"
+            f"2. [سكريبت الفيديو الكامل 16:9 (3 إلى 5 دقائق)]:\n"
+            f"   • أول 15 ثانية (Hook): مخاطبة مباشرة لأكبر خوف يقلق المريض المصري.\n"
+            f"   • الدقيقة 1-2 (فسيولوجيا الأنسجة): شرح مبسط لكيفية تعافي الجرح.\n"
+            f"   • الدقيقة 2-4 (البروتوكول السريري العملي): خطوات العناية العملية بالترتيب بأمان.\n"
+            f"   • الخاتمة (CTA): طمأنة المريض والتوجيه الهادئ لطلب استشارة مجانية عبر واتساب 01155803307 بكود HT10 وحق المعاينة قبل الاستلام والشحن المجاني.\n"
+            f"3. [سكريبت شورتس عمودي 9:16 (أقل من 59 ثانية)].\n"
+            f"4. [وصف الفيديو المهيأ لسيو يوتيوب مصر SEO Description].\n"
+            f"5. [قائمة التاغات الدلالية Tags]: 15 تاغ بحثي نشط في يوتيوب مصر.\n\n"
+            f"القواعد الإلزامية: منع تام لذكر أي أسعار أو خصومات بيعية؛ النبرة طبية توجيهية وقورة."
+        )
+    elif sub == "tt":
+        title = "⚡ <b>برومبت سكريبت تيك توك مصر (Viral Hook & Script)</b>"
+        prompt = (
+            f"بصفتك صانع محتوى طبي رقمي متخصص في خوارزميات تيك توك في مصر (TikTok Medical SEO - Egypt):\n"
+            f"الموضوع السريري: {name_ar} - {focus}.\n"
+            f"الكلمات المستهدفة بمصر: {kws}\n\n"
+            f"المطلوب إنتاجه بدقة تامة:\n"
+            f"1. [الهوك البصري والنفسي في أول ثانيتين]: جملة افتتاحية قوية توقف التمرير فوراً.\n"
+            f"2. [سكريبت الفيديو (مدة 45 إلى 55 ثانية)]:\n"
+            f"   • اللهجة: لهجة مصرية بيضاء راقية ومحترمة.\n"
+            f"   • توجيهات الكاميرا والمشاهد (Visual & B-roll Cues) بين أقواس.\n"
+            f"   • النص المكتوب على الشاشة (On-Screen Text) أثناء الحديث.\n"
+            f"   • خاتمة هادئة للتواصل مع أخصائي التعافي واتساب 01155803307 بكود HT10.\n"
+            f"3. [كابشن تيك توك والهاشتاجات]: {hashtags}"
+        )
+    elif sub == "ig":
+        title = "📸 <b>برومبت كاروسيل وريلز إنستجرام مصر</b>"
+        prompt = (
+            f"بصفتك مصمم محتوى سريري واستراتيجي إنستجرام في مصر:\n"
+            f"الموضوع السريري: {name_ar} - {focus}.\n\n"
+            f"المطلوب إنتاجه:\n"
+            f"1. [دليل الكاروسيل السريري (Clinical Carousel - 7 شرائح توعوية)]:\n"
+            f"   • الشريحة 1 (الغلاف): عنوان عريض يبرز الخطأ الشائع في رعاية الجروح.\n"
+            f"   • الشريحة 2 (المشكلة الحقيقية): مخاوف المرضى الواقعية (التهاب، عرق، ألم).\n"
+            f"   • الشريحة 3 (الفسيولوجيا): ماذا يحدث لطبقات الجلد وألياف الكولاجين؟\n"
+            f"   • الشريحة 4 و 5 (الحل العملي خطوة بخطوة): طريقة الاستخدام الآمنة.\n"
+            f"   • الشريحة 6 (الدليل العلمي): استشهاد سريع بأبحاث PubMed.\n"
+            f"   • الشريحة 7 (الخاتمة): بطاقة التوجيه السريري واتساب 01155803307 بكود HT10.\n"
+            f"2. [سكريبت ريلز عمودي 9:16 (50 ثانية)].\n"
+            f"3. [كابشن إنستجرام مع الهاشتاجات]: {hashtags}"
+        )
+    else:  # blog
+        title = "✍️ <b>برومبت مقال مدونة بلوجر (SEO 1500 كلمة)</b>"
+        prompt = (
+            f"بصفتك كبير كتاب المحتوى الطبي واستشاري السيو المتخصص في محرك بحث جوجل مصر:\n"
+            f"نريد كتابة مقال طبي استشاري شامل ومطول (1200 إلى 1500 كلمة) مهيأ للتصدر في المرتبة الأولى بنتائج بحث جوجل في جمهورية مصر العربية.\n"
+            f"الموضوع السريري: {name_ar} - {focus}.\n"
+            f"الكلمات المفتاحية: {kws}\n"
+            f"الأسئلة الأكثر بحثاً في مصر:\n{lts}\n\n"
+            f"المطلوب:\n"
+            f"1. مقدمة طمأنينة تشرح مخاوف المريض بأسلوب علمي راقٍ.\n"
+            f"2. الفسيولوجيا الطبية لتعافي الأنسجة.\n"
+            f"3. بروتوكول العناية خطوة بخطوة وطريقة التغيير الآمنة.\n"
+            f"4. جدول مقارنة سريري بين المستلزم الأصلي والممارسات الخاطئة الشائعة.\n"
+            f"5. فقرة الأسئلة الشائعة (FAQ Schema).\n"
+            f"6. توجيه واضح لطلب استشارة سريرية مجانية عبر واتساب 01155803307 بكود HT10 وحق المعاينة قبل الاستلام."
+        )
+
+    msg = (
+        f"{title}\n\n"
+        f"🎯 <b>المنتج:</b> {html.escape(name_ar)}\n\n"
+        f"📋 <b>نص البرومبت الإكلينيكي (اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇):</b>\n"
+        f"<pre><code>{html.escape(prompt)}</code></pre>"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🔙 رجوع لقائمة السوشيال", "callback_data": f"prompt_social_menu_{choice}"},
+                {"text": "🎯 خيارات المنتج", "callback_data": f"hub_prod_{choice}"},
+            ],
+            [
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def handle_show_product_hub(chat_id: str, choice: str):
+    card_text, card_keyboard = build_product_hub_card(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_gemini_prompt(chat_id: str, choice: str):
+    card_text, card_keyboard = build_gemini_prompt_card(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_notebooklm_prompt(chat_id: str, choice: str):
+    card_text, card_keyboard = build_notebooklm_prompt_card(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_pomelli_prompt(chat_id: str, choice: str):
+    card_text, card_keyboard = build_pomelli_prompt_card(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_social_menu(chat_id: str, choice: str):
+    card_text, card_keyboard = build_social_prompts_menu(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_social_single(chat_id: str, choice: str, sub: str):
+    card_text, card_keyboard = build_social_prompt_card(choice, sub)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_send_prompts_file(chat_id: str, choice: str):
+    prompts_txt = MANUAL_INBOX / "PROMPTS_PACK_TODAY.txt"
+    if not prompts_txt.exists():
+        hub_archive = BASE_DIR / "media_assets" / "notebooklm_hub" / "archive"
+        if hub_archive.exists():
+            files = sorted(hub_archive.glob("Prompts_Pack_*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if files:
+                prompts_txt = files[0]
+
+    prod_info = PRODUCTS_CATALOG.get(choice, PRODUCTS_CATALOG["1"])
+    if prompts_txt.exists():
+        caption = (
+            f"📄 <b>ملف حزمة البرومبتات والمصادر الطبية الكاملة:</b>\n"
+            f"🎯 <b>المنتج:</b> {prod_info['name']}\n"
+            f"🎟️ <b>كود الخصم المعتمد:</b> HT10\n"
+            f"🩺 <b>الاستشارة:</b> أخصائية العناية بالتعافي (واتساب 01155803307)"
+        )
+        bot.send_document(chat_id, prompts_txt, caption=caption)
+    else:
+        bot.send_message(chat_id, "⚠️ لم يتم العثور على ملف البرومبتات. يرجى اختيار المنتج لإعادة توليده.")
 
 
 def handle_dry_run_execution(chat_id: str):
@@ -864,7 +1268,27 @@ def process_callback_query(cq: Dict[str, Any]):
     elif data == "menu_products":
         toast_msg = "🩺 قائمة المنتجات السريرية"
     elif data.startswith("prod_"):
-        toast_msg = f"⏳ جاري سحب أبحاث المنتج [{data.split('_')[1]}]..."
+        toast_msg = f"⏳ جاري تجهيز أبحاث وترندات المنتج [{data.split('_')[1]}]..."
+    elif data.startswith("hub_prod_"):
+        toast_msg = "🎯 خيارات وبرومبتات المنتج"
+    elif data.startswith("prompt_gemini_"):
+        toast_msg = "🔬 جاري عرض برومبت Gemini ومصادر PubMed..."
+    elif data.startswith("prompt_nlm_"):
+        toast_msg = "🎙️ جاري عرض برومبتات استوديو NotebookLM..."
+    elif data.startswith("prompt_pomelli_"):
+        toast_msg = "🎨 جاري عرض برومبتات Google Pomelli..."
+    elif data.startswith("prompt_social_menu_"):
+        toast_msg = "📱 قائمة برومبتات السوشيال ميديا"
+    elif data.startswith("prompt_yt_"):
+        toast_msg = "🎬 برومبت وسكريبت يوتيوب مصر"
+    elif data.startswith("prompt_tt_"):
+        toast_msg = "⚡ برومبت وسكريبت تيك توك مصر"
+    elif data.startswith("prompt_ig_"):
+        toast_msg = "📸 برومبت كاروسيل وريلز إنستجرام"
+    elif data.startswith("prompt_blog_"):
+        toast_msg = "✍️ برومبت مقال مدونة بلوجر"
+    elif data.startswith("prompt_file_"):
+        toast_msg = "📄 جاري إرسال حزمة البرومبتات كاملة..."
     elif data == "act_master":
         toast_msg = "🚀 جاري إطلاق المسار الشامل..."
     elif data == "act_dry_run":
@@ -880,7 +1304,7 @@ def process_callback_query(cq: Dict[str, Any]):
     elif data == "menu_products":
         bot.edit_message_text(chat_id, msg_id, get_products_menu_text(), reply_markup=build_products_submenu_keyboard())
 
-    # 3. Product Selection
+    # 3. Product Selection & Generation
     elif data.startswith("prod_"):
         choice = data.split("_")[1]
         threading.Thread(
@@ -888,6 +1312,47 @@ def process_callback_query(cq: Dict[str, Any]):
             args=(chat_id, choice),
             daemon=True,
         ).start()
+
+    # 4. Product Prompt Hub & Platform Prompts
+    elif data.startswith("hub_prod_"):
+        choice = data.split("_")[2]
+        handle_show_product_hub(chat_id, choice)
+
+    elif data.startswith("prompt_gemini_"):
+        choice = data.split("_")[2]
+        handle_show_gemini_prompt(chat_id, choice)
+
+    elif data.startswith("prompt_nlm_"):
+        choice = data.split("_")[2]
+        handle_show_notebooklm_prompt(chat_id, choice)
+
+    elif data.startswith("prompt_pomelli_"):
+        choice = data.split("_")[2]
+        handle_show_pomelli_prompt(chat_id, choice)
+
+    elif data.startswith("prompt_social_menu_"):
+        choice = data.split("_")[3]
+        handle_show_social_menu(chat_id, choice)
+
+    elif data.startswith("prompt_yt_"):
+        choice = data.split("_")[2]
+        handle_show_social_single(chat_id, choice, "yt")
+
+    elif data.startswith("prompt_tt_"):
+        choice = data.split("_")[2]
+        handle_show_social_single(chat_id, choice, "tt")
+
+    elif data.startswith("prompt_ig_"):
+        choice = data.split("_")[2]
+        handle_show_social_single(chat_id, choice, "ig")
+
+    elif data.startswith("prompt_blog_"):
+        choice = data.split("_")[2]
+        handle_show_social_single(chat_id, choice, "blog")
+
+    elif data.startswith("prompt_file_"):
+        choice = data.split("_")[2]
+        handle_send_prompts_file(chat_id, choice)
 
     # 4. Action Handlers
     elif data == "act_master":

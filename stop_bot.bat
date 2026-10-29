@@ -38,14 +38,20 @@ for /f "tokens=2 delims=," %%i in ('wmic process where "CommandLine like '%%tele
     set "KILLED=1"
 )
 
-if "!KILLED!"=="1" (
-    echo [+] تم إيقاف خدمة بوت تيليجرام بنجاح.
-) else (
-    echo [*] خدمة بوت تيليجرام متوقفة بالفعل (لا توجد عمليات جارية).
-)
+if "!KILLED!"=="1" goto SUCCESS_KILLED
+goto ALREADY_STOPPED
 
+:SUCCESS_KILLED
+echo [+] تم إيقاف خدمة بوت تيليجرام بنجاح
+goto END_STOP
+
+:ALREADY_STOPPED
+echo [*] خدمة بوت تيليجرام متوقفة بالفعل - لا توجد عمليات جارية
+goto END_STOP
+
+:END_STOP
 echo ======================================================================
 if /i "%1"=="nopause" exit /b 0
 if /i "%1"=="--nopause" exit /b 0
-echo %cmdcmdline% | findstr /i /c:"/c """ >nul && pause >nul
+echo %cmdcmdline% | findstr /i /c:"/c \"\"" >nul && pause >nul
 exit /b 0
