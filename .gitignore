@@ -33,3 +33,7 @@ media_assets/notebooklm_hub/archive/**
 cloudflared.exe
 *.exe
 media_assets/crm_leads/*.db
+
+config/cloud_archive_manifest.json
+config/*.tmp
+media_assets/archive/**

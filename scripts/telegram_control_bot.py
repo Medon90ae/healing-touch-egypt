@@ -454,6 +454,9 @@ def build_main_menu_keyboard() -> Dict[str, Any]:
                 {"text": "📦 أحدث حزمة نشر جاهزة", "callback_data": "act_latest_pack"},
                 {"text": "📥 فحص صندوق manual_inbox", "callback_data": "act_inbox_status"},
             ],
+            [
+                {"text": "☁️ أرشفة Google Drive وتفريغ مساحة الجهاز", "callback_data": "act_cloud_archive"}
+            ],
         ]
     }
 
@@ -2136,6 +2139,33 @@ def process_callback_query(cq: Dict[str, Any]):
     elif data == "act_inbox_status":
         handle_inbox_status(chat_id)
 
+    elif data == "act_cloud_archive":
+        threading.Thread(
+            target=handle_cloud_archive,
+            args=(chat_id,),
+            daemon=True,
+        ).start()
+
+
+def handle_cloud_archive(chat_id: str):
+    """Uploads archives/packs to Google Drive, purges verified local copies, reports freed space."""
+    try:
+        from scripts.cloud_archiver import sync_and_purge, local_status, format_report_ar
+    except ImportError:
+        from cloud_archiver import sync_and_purge, local_status, format_report_ar  # type: ignore
+    try:
+        st = local_status()
+        bot.send_message(
+            chat_id,
+            "⏳ <b>جاري الأرشفة السحابية إلى Google Drive...</b>\n"
+            f"📦 حجم الأرشيف المحلي الحالي: {st.get('total_mb')} MB\n"
+            f"💾 المساحة الحرة قبل التفريغ: {st.get('disk_free_gb')} GB\n"
+            "🔒 لن يُحذف أي ملف من الجهاز قبل التحقق من رفعه بنجاح.",
+        )
+        res = sync_and_purge(purge=True, clean_portal_dist=True)
+        bot.send_message(chat_id, format_report_ar(res), reply_markup=build_main_menu_keyboard())
+    except Exception as e:  # noqa: BLE001
+        bot.send_message(chat_id, f"❌ تعذرت الأرشفة السحابية: <code>{e}</code>", reply_markup=build_main_menu_keyboard())
 
 def handle_incoming_review_media(msg: Dict[str, Any], session: Dict[str, Any]):
     """R5: Ingests patient review media (photo or audio) into client_reviews/{product_id}/."""

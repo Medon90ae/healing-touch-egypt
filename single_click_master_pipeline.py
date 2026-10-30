@@ -732,7 +732,8 @@ def step_6_archive_and_clean_inbox(
         return {
             "status": "success",
             "archived_count": 0,
-            "inbox_clean": True
+            "inbox_clean": True,
+            "cloud_archive": step_6b_cloud_archive_to_gdrive(dry_run=dry_run)
         }
 
     # إذا كان Dry Run وبدون --force نحتفظ بالملفات مع إظهار تقرير المحاكاة
@@ -761,8 +762,27 @@ def step_6_archive_and_clean_inbox(
     return {
         "status": "success",
         "archived_count": archived_count,
-        "inbox_clean": len(remaining) == 0
+        "inbox_clean": len(remaining) == 0,
+        "cloud_archive": step_6b_cloud_archive_to_gdrive(dry_run=dry_run)
     }
+
+
+def step_6b_cloud_archive_to_gdrive(dry_run: bool = False) -> Dict[str, Any]:
+    """
+    Step 6b: Offload archives/packs to Google Drive and purge verified local copies
+    (keeps the newest archive + latest pack locally). Never fatal for the pipeline.
+    """
+    if dry_run or os.environ.get("HT_DISABLE_CLOUD_ARCHIVE") == "1" or "PYTEST_CURRENT_TEST" in os.environ:
+        return {"status": "skipped"}
+    try:
+        from scripts.cloud_archiver import sync_and_purge
+        logger.info("☁️ [الخطوة 6ب]: رفع الأرشيف وحزم النشر إلى Google Drive وتفريغ مساحة الجهاز...")
+        res = sync_and_purge(purge=True, clean_portal_dist=True)
+        return {k: res.get(k) for k in ("status", "backend", "uploaded", "purged_files", "purged_mb",
+                                         "failed", "disk_free_gb", "drive_url")}
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"تنبيه الأرشفة السحابية (غير مؤثر على النشر): {e}")
+        return {"status": "error", "error": str(e)}
 
 
 # =============================================================================
