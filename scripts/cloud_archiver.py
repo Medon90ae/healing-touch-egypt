@@ -80,17 +80,17 @@ class ArchiveSpec:
 
 
 ARCHIVE_SPECS: List[ArchiveSpec] = [
-    ArchiveSpec("media_assets/manual_inbox/archive", "01_Processed_Inbox_Archive", purge=True, keep_latest=1),
+    ArchiveSpec("media_assets/manual_inbox/archive", "01_Processed_Inbox_Archive", purge=True, keep_latest=0),
     ArchiveSpec("media_assets/ready_to_publish", "02_Ready_To_Publish_Packs", purge=True, keep_latest=1,
                 include=["20*"]),
     ArchiveSpec("media_assets/notebooklm_hub/audio_inputs", "03_Clinical_Research_NotebookLM/audio_inputs",
-                purge=True, keep_latest=2),
+                purge=True, keep_latest=1),
     ArchiveSpec("media_assets/notebooklm_hub/archive", "03_Clinical_Research_NotebookLM/archive",
                 purge=True, keep_latest=0),
     ArchiveSpec("media_assets/notebooklm_hub/daily_sources_archive",
-                "03_Clinical_Research_NotebookLM/daily_sources_archive", purge=True, keep_latest=5),
+                "03_Clinical_Research_NotebookLM/daily_sources_archive", purge=True, keep_latest=2),
     ArchiveSpec("media_assets/notebooklm_hub", "03_Clinical_Research_NotebookLM/briefs", purge=True,
-                keep_latest=3, include=["Healing_Touch_Brief_*.md"], recursive=False),
+                keep_latest=1, include=["Healing_Touch_Brief_*.md"], recursive=False),
     ArchiveSpec("media_assets/notebooklm_hub/research_reports",
                 "03_Clinical_Research_NotebookLM/research_reports", purge=False),
     ArchiveSpec("media_assets/notebooklm_hub/pic", "03_Clinical_Research_NotebookLM/pic", purge=False),
@@ -99,8 +99,10 @@ ARCHIVE_SPECS: List[ArchiveSpec] = [
     ArchiveSpec("media_assets/client_reviews", "05_Client_Reviews_Proof", purge=False),
     ArchiveSpec("media_assets/crm_leads", "06_CRM_Leads_Backups", purge=False, include=["*.db", "*.csv", "*.json"],
                 recursive=False),
-    ArchiveSpec("media_assets/archive", "07_Media_Archive_Legacy", purge=True, keep_latest=1),
+    ArchiveSpec("media_assets/archive", "07_Media_Archive_Legacy", purge=True, keep_latest=0),
 ]
+
+FLOW_INBOX_DRIVE_SUBFOLDER = "00_Flow_Inbox"
 
 TOP_FOLDERS = sorted({s.drive_path.split("/")[0] for s in ARCHIVE_SPECS})
 
@@ -138,6 +140,7 @@ class DesktopBackend:
     def __init__(self, my_drive: Path):
         self.root = my_drive / CLOUD_ROOT_NAME
         self.root.mkdir(parents=True, exist_ok=True)
+        (self.root / FLOW_INBOX_DRIVE_SUBFOLDER).mkdir(parents=True, exist_ok=True)
 
     @staticmethod
     def detect() -> Optional["DesktopBackend"]:

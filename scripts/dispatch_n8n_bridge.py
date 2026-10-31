@@ -146,11 +146,15 @@ def build_omnichannel_payload(
     gallery = gallery_images or [hero]
     v_vert = video_vertical or "https://medon90ae.github.io/healing-touch-egypt/assets/video_vertical.mp4"
     v_horiz = video_horizontal or "https://medon90ae.github.io/healing-touch-egypt/assets/video_horizontal.mp4"
-    platforms = target_platforms or ["facebook", "instagram", "youtube", "tiktok", "reddit", "blogger"]
+    platforms = target_platforms or ["facebook", "instagram", "youtube", "tiktok"]
+    today_str = dt.datetime.now().strftime("%Y-%m-%d")
+    idempotency_key = f"ht_{campaign_id}_{today_str}"
 
     payload = {
         "event": "media_pack_ready",
         "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "idempotency_key": idempotency_key,
+        "google_flow_project_url": "https://flow.google.com/project/942f62cb-f0e4-4860-bfce-2ba75998cfc7",
         "campaign_id": campaign_id,
         "theme": theme,
         "product_name": product_name,
@@ -159,6 +163,12 @@ def build_omnichannel_payload(
         "wa_link": wa_link,
         "landing_url": landing_url,
         "target_platforms": platforms,
+        "system_user_tokens": {
+            "fb_page_id": os.getenv("FB_PAGE_ID", "1371809382684781").strip("'\" "),
+            "ig_user_id": os.getenv("IG_USER_ID", "27911522148524499").strip("'\" "),
+            "meta_permanent_token_configured": bool(os.getenv("META_PERMANENT_PAGE_TOKEN")),
+            "ig_permanent_token_configured": bool(os.getenv("INSTAGRAM_ACCESS_TOKEN")),
+        },
         "meta_platforms": {
             "facebook_photo": {
                 "image_url_or_path": hero,

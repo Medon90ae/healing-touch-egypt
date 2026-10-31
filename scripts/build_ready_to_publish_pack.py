@@ -691,8 +691,16 @@ def generate_pack(category: str = None) -> Path:
     if assets["square_img"]:
         shutil.copy2(str(assets["square_img"]), str(ig_dir / "صورة_بوست_رئيسية_1x1.png"))
         shutil.copy2(str(assets["square_img"]), str(fb_dir / "صورة_منشور_فيسبوك_1x1.png"))
+        try:
+            Image.open(str(assets["square_img"])).convert("RGB").save(str(tiktok_dir / "صورة_تيكتوك_1x1.jpg"), "JPEG", quality=95)
+        except Exception:
+            pass
     if assets["vertical_img"]:
         shutil.copy2(str(assets["vertical_img"]), str(ig_dir / "صورة_ستوري_Story_9x16.png"))
+        try:
+            Image.open(str(assets["vertical_img"])).convert("RGB").save(str(tiktok_dir / "صورة_غلاف_تيكتوك_9x16.jpg"), "JPEG", quality=95)
+        except Exception:
+            pass
 
     # حفظ باقي صور المعرض السريري والكاروسيل
     active_files_list = assets.get("active_files", [])

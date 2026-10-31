@@ -1608,16 +1608,25 @@ IG_USER_ID = os.getenv("IG_USER_ID", "27911522148524499")
 INSTAGRAM_ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN", "IGAAT1F8BF5HBBZAGE1RXlsX3JiNENqUFNfMVVRVGpkSXBQalNLell2UXFjZAGhucUJyb3dxeHhHbF9DNXJQekdNVUlUUGVLQmdreW95OGZAwYW8zaVhSNVB1OFhycjJqdkl4UTdneExPZA2FGTUtpaHZAKSUQ1TVF3Tk5tMnRjVGgzUQZDZD")
 
 
-def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
-    """نشر تلقائي للبوست على حساب Instagram Business المرتبط عبر Meta Graph API."""
-    user_id = os.getenv("IG_USER_ID", IG_USER_ID)
-    token = os.getenv("INSTAGRAM_ACCESS_TOKEN", INSTAGRAM_ACCESS_TOKEN)
+def publish_instagram_graph_api_with_url(caption: str, image_url: str = "") -> tuple[bool, str]:
+    """??? ?????? ?????? ??? ???? Instagram Business ??????? ??? Meta Graph API ?????? ?????? ???????."""
+    user_id = os.getenv("IG_USER_ID", IG_USER_ID).strip("'\" ")
+    token = os.getenv("INSTAGRAM_ACCESS_TOKEN", INSTAGRAM_ACCESS_TOKEN).strip("'\" ")
     if not token or not user_id:
-        return False
+        return False, ""
     try:
-        # استخدام رابط صورة عام وموثوق معتمد لدى خوادم إنستجرام
-        media_url = image_url if image_url.startswith("http") else "https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg"
-        print(f"[Instagram API] جاري النشر التلقائي المباشر على إنستجرام (@mohamedahmedalahmady)...")
+        fallback_url = "https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/og-image.jpg"
+        media_url = image_url if image_url.startswith("http") else fallback_url
+        if media_url != fallback_url:
+            try:
+                head_r = requests.head(media_url, timeout=8)
+                if head_r.status_code != 200:
+                    print(f"[Instagram API] ?????: ?????? ({media_url}) ??? ??????? ({head_r.status_code})? ??????? ?????? ????????.")
+                    media_url = fallback_url
+            except Exception:
+                media_url = fallback_url
+
+        print(f"[Instagram API] ???? ????? ???????? ??????? ??? ???????? (@mohamedahmedalahmady)...")
         create_res = requests.post(
             f"https://graph.instagram.com/v21.0/{user_id}/media",
             data={"image_url": media_url, "caption": caption[:2100], "access_token": token},
@@ -1625,32 +1634,115 @@ def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
         ).json()
         if "id" in create_res:
             creation_id = create_res["id"]
+            import time as _time
+            for _attempt in range(6):
+                try:
+                    st_res = requests.get(
+                        f"https://graph.instagram.com/v21.0/{creation_id}",
+                        params={"fields": "status_code", "access_token": token},
+                        timeout=10,
+                    ).json()
+                    st_code = st_res.get("status_code", "")
+                    if st_code == "FINISHED":
+                        break
+                    if st_code == "ERROR":
+                        print(f"[!] ??? ?????? ????? ????????: {st_res}")
+                        break
+                except Exception:
+                    pass
+                _time.sleep(2)
+
             publish_res = requests.post(
                 f"https://graph.instagram.com/v21.0/{user_id}/media_publish",
                 data={"creation_id": creation_id, "access_token": token},
                 timeout=35,
             ).json()
             if "id" in publish_res:
-                post_id = publish_res['id']
+                post_id = publish_res["id"]
                 try:
                     p_info = requests.get(f"https://graph.instagram.com/v21.0/{post_id}?fields=permalink&access_token={token}", timeout=10).json()
-                    ig_permalink = p_info.get("permalink", f"https://www.instagram.com/")
+                    ig_permalink = p_info.get("permalink", "https://www.instagram.com/mohamedahmedalahmady/")
                 except Exception:
-                    ig_permalink = "https://www.instagram.com/"
-                print(f"[+] 📸 تم النشر تلقائياً وحياً على إنستجرام بنجاح!\n   • الرابط المباشر للمنشور: {ig_permalink}")
-                return True
+                    ig_permalink = "https://www.instagram.com/mohamedahmedalahmady/"
+                print(f"[+] ?? ?? ????? ???????? ????? ??? ???????? ?????!\n   ? ?????? ??????? ???????: {ig_permalink}")
+                return True, ig_permalink
             else:
-                print(f"[!] خطأ نشر إنستجرام في مرحلة النشر: {publish_res}")
+                print(f"[!] ??? ??? ???????? ?? ????? ?????: {publish_res}")
         else:
-            print(f"[!] خطأ نشر إنستجرام في مرحلة إنشاء الحاوية: {create_res}")
+            print(f"[!] ??? ??? ???????? ?? ????? ????? ???????: {create_res}")
     except Exception as e:
-        print(f"[!] استثناء نشر إنستجرام: {e}")
-    return False
+        print(f"[!] ??????? ??? ????????: {e}")
+    return False, ""
 
 
-# =============================================================================
-# 🤖 القسم السادس: النشر التلقائي على Reddit API + مدونة جوجل Blogger
-# =============================================================================
+def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
+    """??? ?????? ?????? ??? ???? Instagram Business ??????? ??? Meta Graph API."""
+    ok, _ = publish_instagram_graph_api_with_url(caption, image_url=image_url)
+    return ok
+
+
+def publish_facebook_reel_graph_api(video_path: str, description: str) -> tuple[bool, str]:
+    """??? ???? ????? Reels ????? (9:16) ???????? ??? ???? ?????? ??? Graph API."""
+    token = META_PERMANENT_PAGE_TOKEN.strip("'\" ") if META_PERMANENT_PAGE_TOKEN else ""
+    page_id = FB_PAGE_ID.strip("'\" ") if FB_PAGE_ID else ""
+    if not token or not video_path or not os.path.isfile(video_path):
+        return False, ""
+    try:
+        print(f"[Meta Reels API] ???? ??? ???? ???? ?????? ???????? ({os.path.basename(video_path)})...")
+        init_url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{page_id}/video_reels"
+        init_res = requests.post(
+            init_url,
+            data={"upload_phase": "start", "access_token": token},
+            timeout=30,
+        ).json()
+        video_id = init_res.get("video_id")
+        upload_url = init_res.get("upload_url")
+        if video_id and upload_url:
+            file_size = os.path.getsize(video_path)
+            with open(video_path, "rb") as vf:
+                requests.post(
+                    upload_url,
+                    headers={
+                        "Authorization": f"OAuth {token}",
+                        "offset": "0",
+                        "file_size": str(file_size),
+                    },
+                    data=vf,
+                    timeout=180,
+                )
+            fin_res = requests.post(
+                init_url,
+                data={
+                    "upload_phase": "finish",
+                    "video_id": video_id,
+                    "video_state": "PUBLISHED",
+                    "description": description,
+                    "access_token": token,
+                },
+                timeout=60,
+            ).json()
+            if fin_res.get("success") or "id" in fin_res:
+                reel_url = f"https://www.facebook.com/reel/{video_id}/"
+                print(f"[+] ?? ?? ??? ???? ?????? ?????: {reel_url}")
+                return True, reel_url
+
+        # ???? ???? ????? ??? /videos ??? ???? ???? video_reels
+        with open(video_path, "rb") as vf:
+            v_res = requests.post(
+                f"https://graph.facebook.com/{GRAPH_API_VERSION}/{page_id}/videos",
+                data={"description": description, "access_token": token},
+                files={"source": vf},
+                timeout=180,
+            ).json()
+        if "id" in v_res:
+            vid_url = f"https://www.facebook.com/reel/{v_res['id']}/"
+            print(f"[+] ?? ?? ??? ???????/?????? ??? ?????? ?????: {vid_url}")
+            return True, vid_url
+    except Exception as e:
+        print(f"[!] ????? ???? ??????: {e}")
+    return False, ""
+
+
 REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "uHHEj4680_jmB1rrt6yTXw")
 REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "_xfBnP9uNQMDhEUaOwC2ap_sJfIqHw")
 REDDIT_USERNAME = os.getenv("REDDIT_USERNAME", "Dull-Nectarine4963")
@@ -2235,8 +2327,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{tmpl['category']}_hero.png"
     publish_instagram_graph_api(instagram_caption, image_url=ig_image_url)
-    publish_to_blogger_webhook(blogger_post)
-    publish_to_reddit_api(blogger_post.get("title", tmpl["title"]), reddit_text)
+    # publish_to_blogger_webhook(blogger_post)  # ????
+    # publish_to_reddit_api(...)  # ????
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
 

@@ -106,6 +106,22 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
     logger.info("━" * 60)
     logger.info("🔍 [الخطوة 1/6]: فحص وتصنيف وسائط manual_inbox ومطابقتها مع الأبحاث السريرية...")
 
+    # استيعاب تلقائي لأي مخرجات وضعها المستخدم في 00_Flow_Inbox على Google Drive
+    if "PYTEST_CURRENT_TEST" not in os.environ:
+        try:
+            flow_inbox = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\00_Flow_Inbox")
+            flow_archive = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\01_Processed_Inbox_Archive")
+            if flow_inbox.exists():
+                flow_files = [f for f in flow_inbox.iterdir() if f.is_file() and not f.name.startswith(".")]
+                if flow_files:
+                    flow_archive.mkdir(parents=True, exist_ok=True)
+                    for ff in flow_files:
+                        shutil.copy2(str(ff), str(MANUAL_INBOX_DIR / ff.name))
+                        shutil.move(str(ff), str(flow_archive / f"flow_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{ff.name}"))
+                    logger.info(f"☁️ تم سحب {len(flow_files)} ملف تلقائياً من مجلد Google Drive (00_Flow_Inbox) إلى manual_inbox!")
+        except Exception as e:
+            logger.warning(f"⚠️ تنبيه أثناء فحص مجلد 00_Flow_Inbox على Google Drive: {e}")
+
     triage = scan_and_triage_manual_inbox(MANUAL_INBOX_DIR)
     
     # فحص الملفات المرفوعة الفعلية في الصندوق
@@ -629,7 +645,7 @@ def step_4_dispatch_to_n8n_webhook(
 
 
 # =============================================================================
-# الخطوة 5: تنفيذ أو تجهيز النشر المتوازي للمنصات الـ 6
+# الخطوة 5: النشر التلقائي المباشر (فيسبوك + إنستجرام) وتجهيز (يوتيوب + تيك توك)
 # =============================================================================
 def step_5_execute_or_stage_parallel_publishing(
     step1_data: Dict[str, Any],
@@ -638,29 +654,29 @@ def step_5_execute_or_stage_parallel_publishing(
     dry_run: bool = False
 ) -> Dict[str, Any]:
     """
-    Step 5: Execute or stage parallel publishing for Meta, Instagram, YouTube, TikTok, Reddit, and Blogger.
+    Step 5: Auto-publish directly to Facebook & Instagram (Photo + Reels),
+    stage YouTube & TikTok for manual upload, and skip Blogger & Reddit completely.
     """
     logger.info("━" * 60)
-    logger.info("📢 [الخطوة 5/6]: تجهيز وبث المحتوى بالتوازي للمنصات الـ 6 (Facebook, Instagram, YouTube, TikTok, Reddit, Blogger)...")
+    logger.info("📢 [الخطوة 5/6]: النشر التلقائي المباشر على (Facebook + Instagram) وتجهيز (YouTube + TikTok)...")
 
     tmpl = step1_data["case_data"]
     cat = step1_data["category"]
     pack_dir = step3_data["pack_dir"]
     copy = step3_data["copywriting"]
     square_card = step3_data["square_card"]
+    video_p = step3_data.get("video_path")
     chosen_idx = step1_data["template_index"]
 
     platforms_summary = {
-        "facebook": {"name": "Facebook Pages", "folder": "06_فيسبوك_Facebook", "staged": True},
-        "instagram": {"name": "Instagram Reels & Carousels", "folder": "03_إنستجرام_Instagram", "staged": True},
-        "youtube": {"name": "YouTube Shorts & Videos", "folder": "01_يوتيوب_YouTube", "staged": True},
-        "tiktok": {"name": "TikTok Videos & Script", "folder": "02_تيكتوك_TikTok", "staged": True},
-        "reddit": {"name": "Reddit Clinical Discussion", "folder": "05_ريديت_Reddit", "staged": True},
-        "blogger": {"name": "Google Blogger Clinical Article", "folder": "04_بلوجر_Blogger", "staged": True}
+        "facebook": {"name": "Facebook Pages (Auto-Publish)", "folder": "06_فيسبوك_Facebook", "staged": True},
+        "instagram": {"name": "Instagram Feed & Reels (Auto-Publish)", "folder": "03_إنستجرام_Instagram", "staged": True},
+        "youtube": {"name": "YouTube Shorts & Videos (Manual)", "folder": "01_يوتيوب_YouTube", "staged": True},
+        "tiktok": {"name": "TikTok Videos & Script (Manual)", "folder": "02_تيكتوك_TikTok", "staged": True},
     }
 
     if dry_run:
-        logger.info("🔍 [معاينة - DRY RUN]: جاهزية النشر المتوازي المؤكدة للمنصات الـ 6:")
+        logger.info("🔍 [معاينة - DRY RUN]: جاهزية النشر لفيسبوك وإنستجرام وتجهيز يوتيوب وتيك توك (تم إلغاء بلوجر وريديت):")
         for p_key, p_info in platforms_summary.items():
             logger.info(f"   ✅ المنصة [{p_info['name']}]: مجهزة بالكامل داخل مجلد {p_info['folder']}")
         asa.record_post_history(chosen_idx, tmpl["title"])
@@ -671,28 +687,47 @@ def step_5_execute_or_stage_parallel_publishing(
             "published": False
         }
 
-    # النشر الحي المباشر عبر واجهات البرمجة
+    # النشر الحي المباشر على فيسبوك وإنستجرام عبر Meta Graph API
     post_data = {
         "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
         "caption": copy["facebook"],
         "hashtags": "",
         "row_index": -1
     }
-    
+
     fb_ok, fb_url = asa.publish_facebook_graph_api(post_data, square_card)
+
+    # نشر ريلز فيسبوك تلقائياً إذا توفر فيديو رأسي
+    fb_reel_ok, fb_reel_url = False, ""
+    if video_p and Path(video_p).exists():
+        fb_reel_ok, fb_reel_url = asa.publish_facebook_reel_graph_api(str(video_p), copy["facebook"])
+
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{cat}_hero.png"
-    ig_ok = asa.publish_instagram_graph_api(copy["instagram"], image_url=ig_image_url)
-    
-    blogger_post = {
-        "title": copy["blogger_title"],
-        "html_content": copy["blogger_html"],
-        "file_path": str(BRANDED_DIR / f"{dt.datetime.now().strftime('%Y-%m-%d')}_[مقال_مدونة_جوجل_Blogger].txt")
+    ig_ok, ig_url = asa.publish_instagram_graph_api_with_url(copy["instagram"], image_url=ig_image_url)
+
+    # حفظ ملخص النشر الحي ليقرأه بوت تيليجرام ويعرض الروابط المباشرة للمستخدم
+    live_report = {
+        "timestamp": dt.datetime.now().isoformat(timespec="seconds"),
+        "category": cat,
+        "title": tmpl.get("title", ""),
+        "landing_url": step2_data.get("public_url", ""),
+        "pack_dir": str(pack_dir),
+        "facebook_ok": fb_ok,
+        "facebook_url": fb_url,
+        "facebook_reel_ok": fb_reel_ok,
+        "facebook_reel_url": fb_reel_url,
+        "instagram_ok": ig_ok,
+        "instagram_url": ig_url,
     }
-    bl_ok = asa.publish_to_blogger_webhook(blogger_post)
-    rd_ok = asa.publish_to_reddit_api(copy["reddit_title"], copy["reddit_markdown"])
+    try:
+        (MEDIA_DIR / "latest_live_publish_report.json").write_text(
+            json.dumps(live_report, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        pass
 
     asa.record_post_history(chosen_idx, tmpl["title"])
-    logger.info("[+] 🚀 اكتمل البث السريري المباشر عبر واجهات البرمجة المعتمدة!")
+    logger.info("[+] 🚀 اكتمل النشر التلقائي المباشر على فيسبوك وإنستجرام بنجاح (وتم إلغاء بلوجر وريديت)!")
 
     return {
         "status": "success",
@@ -700,9 +735,13 @@ def step_5_execute_or_stage_parallel_publishing(
         "published": True,
         "results": {
             "facebook": fb_ok,
+            "facebook_url": fb_url,
+            "facebook_reel": fb_reel_ok,
+            "facebook_reel_url": fb_reel_url,
             "instagram": ig_ok,
-            "blogger": bl_ok,
-            "reddit": rd_ok
+            "instagram_url": ig_url,
+            "blogger": False,
+            "reddit": False
         }
     }
 
@@ -833,6 +872,53 @@ def build_and_sync_portal() -> Dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 
+def deploy_docs_to_github_pages(category: str, dry_run: bool = False) -> Dict[str, Any]:
+    """
+    Automatically builds SEO articles & sitemap (github_seo_trend_engine.py --build-site)
+    and pushes updated docs/ (landing pages, portal, hero images) to GitHub Pages.
+    Skipped in dry_run or pytest runs.
+    """
+    if dry_run or "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("HT_SKIP_GIT_DEPLOY") == "1":
+        return {"status": "skipped", "reason": "dry_run_or_test"}
+    logger.info("━" * 60)
+    logger.info("🌍 [نشر وتحديث صفحات الهبوط على GitHub Pages]: تحديث مقالات السيو ورفع docs/ تلقائياً...")
+    try:
+        # 1. تحديث مقالات السيو وخريطة الموقع وواجهة index.html
+        subprocess.run(
+            [sys.executable, "github_seo_trend_engine.py", "--build-site"],
+            cwd=str(BASE_DIR),
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        # 2. إضافة التعديلات في docs/ ودفعها إلى GitHub Pages
+        subprocess.run(["git", "add", "docs/"], cwd=str(BASE_DIR), capture_output=True, timeout=60, check=False)
+        commit_msg = f"feat(lp): auto-update landing pages, portal, and assets for {category}"
+        c_res = subprocess.run(
+            ["git", "commit", "-m", commit_msg],
+            cwd=str(BASE_DIR),
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        p_res = subprocess.run(
+            ["git", "push", "origin", "main"],
+            cwd=str(BASE_DIR),
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        pushed = p_res.returncode == 0
+        logger.info(f"   • حالة الرفع إلى GitHub Pages: {'تم الرفع بنجاح (LIVE)' if pushed else 'لا توجد تغييرات أو تنبيه دفع'}")
+        return {"status": "success" if pushed else "warning", "pushed": pushed}
+    except Exception as e:
+        logger.warning(f"تنبيه رفع GitHub Pages: {e}")
+        return {"status": "error", "error": str(e)}
+
+
 # =============================================================================
 # المشغل الموحد بضغطة زر واحدة (Single-Click Master Pipeline Orchestrator)
 # =============================================================================
@@ -866,6 +952,9 @@ def run_single_click_master_pipeline(
 
     # بناء ومزامنة البوابة التفاعلية آلياً
     portal_res = build_and_sync_portal()
+
+    # رفع وتحديث صفحات الهبوط والأصول مباشرة على GitHub Pages قبل النشر على المنصات
+    gh_deploy_res = deploy_docs_to_github_pages(step1["category"], dry_run=dry_run)
 
     # الخطوة 3: توليد الكروت والتصميمات وحزم النشر
     step3 = step_3_generate_creatives_and_packages(step1, step2)

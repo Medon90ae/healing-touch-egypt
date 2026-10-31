@@ -50,3 +50,24 @@
 [2026-10-29 19:40:20] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
 [2026-10-29 22:06:36] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 11076]
 [2026-10-29 22:06:36] [INFO] Target Chat ID: 7692685242
+[2026-10-30 01:18:23] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 8956]
+[2026-10-30 01:18:23] [INFO] Target Chat ID: 7692685242
+[2026-10-30 01:55:44] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-30 01:55:56] [INFO] Button clicked: data='prod_6', from_user=7692685242, chat_id=7692685242
+[2026-10-30 02:32:15] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 13428]
+[2026-10-30 02:32:15] [INFO] Target Chat ID: 7692685242
+[2026-10-30 02:53:36] [INFO] ☁️ [google_drive_desktop] ملفات جديدة للرفع: 0 | مرفوعة سابقاً: 464
+[2026-10-30 02:53:36] [INFO] ☁️ اكتملت الأرشفة: رفع 0 | حذف محلي 0 (0.0 MB) | فشل 0 | المساحة الحرة الآن 10.05 GB
+[2026-10-30 18:37:12] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-30 18:37:15] [INFO] Button clicked: data='prod_5', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:23:11] [INFO] Button clicked: data='act_inbox_status', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:23:19] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:23:19] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-30 19:26:04] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:26:44] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:29:39] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:29:45] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:43:54] [INFO] Button clicked: data='act_n8n_status', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:44:02] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:44:17] [INFO] Button clicked: data='act_dry_run', from_user=7692685242, chat_id=7692685242
+[2026-10-30 19:44:17] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))

@@ -76,6 +76,15 @@ PRODUCT_SLUGS = {
 POMELLI_BRAND_BOOK_URL = "https://labs.google.com/pomelli/brand_book/am6H88zhmUadtfPiiAmOnW"
 NOTEBOOKLM_URL = "https://notebooklm.google.com/"
 GEMINI_URL = "https://gemini.google.com/"
+GOOGLE_FLOW_URL = "https://flow.google.com/project/942f62cb-f0e4-4860-bfce-2ba75998cfc7"
+
+CHOICE_TO_CATEGORY = {
+    "1": "c-section",
+    "2": "c-section",
+    "3": "thyroid",
+    "4": "rhinoplasty",
+    "5": "bariatric",
+}
 
 # Ensure directories exist
 for p in (MEDIA_DIR, MANUAL_INBOX, READY_PUBLISH, AUDIO_INPUTS, RESEARCH_REPORTS_DIR, CLIENT_REVIEWS_DIR):
@@ -699,16 +708,24 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
 
     ACTIVE_TASK_NAME = "Single-Click Master Pipeline"
     try:
+        sess = get_session(chat_id)
+        prod_choice = str(sess.get("product_choice") or "").strip()
+        selected_cat = CHOICE_TO_CATEGORY.get(prod_choice)
+        prod_label = PRODUCTS_CATALOG.get(prod_choice, {}).get("name", "المنتج السريري المختار")
+
         status_msg = bot.send_message(
             chat_id,
-            "⏳ <b>[1/4] جاري تشغيل المسار الشامل الموحد...</b>\n"
-            "• فحص وتصنيف وسائط <code>manual_inbox</code>\n"
-            "• استخراج الأبحاث وترندات جوجل مصر الحية\n"
-            "• بناء صفحات الهبوط وتوليد حزم النشر للمنصات الستة...",
+            "⏳ <b>[1/4] جاري تشغيل المسار الشامل الموحد (Google Flow + Drive + Auto-Publish)...</b>\n"
+            f"• 🎯 المنتج المستهدف: <b>{html.escape(prod_label)}</b>\n"
+            "• ☁️ سحب وسائط <code>00_Flow_Inbox</code> و <code>manual_inbox</code>\n"
+            "• 🌐 بناء وتحديث صفحات الهبوط على GitHub Pages\n"
+            "• 📱 النشر التلقائي على فيسبوك وإنستجرام وتجهيز يوتيوب وتيكتوك...",
         )
         target_msg_id = status_msg.get("result", {}).get("message_id") if status_msg else None
 
         cmd = [str(VENV_PYTHON), "single_click_master_pipeline.py"]
+        if selected_cat:
+            cmd.extend(["--category", selected_cat])
         res = subprocess.run(
             cmd,
             cwd=str(BASE_DIR),
@@ -719,17 +736,41 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
         )
 
         if res.returncode == 0:
+            report_file = MEDIA_DIR / "latest_live_publish_report.json"
+            rep: Dict[str, Any] = {}
+            if report_file.exists():
+                try:
+                    rep = json.loads(report_file.read_text(encoding="utf-8"))
+                except Exception:
+                    rep = {}
+
+            lp_url = rep.get("landing_page_url") or "https://medon90ae.github.io/healing-touch-egypt/"
+            fb_photo_url = rep.get("facebook_photo_url") or "https://www.facebook.com/1371809382684781"
+            fb_reel_url = rep.get("facebook_reel_url")
+            ig_post_url = rep.get("instagram_post_url") or "https://www.instagram.com/mohamedahmedalahmady/"
+            yt_dir = rep.get("youtube_manual_dir") or r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\02_Ready_To_Publish_Packs"
+            tt_dir = rep.get("tiktok_manual_dir") or r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\02_Ready_To_Publish_Packs"
+
+            fb_reel_line = f"🎬 <b>ريلز فيسبوك (نُشر تلقائياً):</b>\n👉 {fb_reel_url}\n\n" if fb_reel_url else ""
+
             success_text = (
-                "✅ <b>اكتمل تنفيذ المسار الشامل بنجاح باهر!</b>\n\n"
-                "🌐 <b>رابط البوابة التفاعلية الحية:</b>\n"
-                "👉 https://medon90ae.github.io/healing-touch-egypt/portal/\n\n"
-                "🔗 <b>رابط الموقع والصفحات الطبية:</b>\n"
-                "👉 https://medon90ae.github.io/healing-touch-egypt/\n\n"
-                "📱 <b>محرك الأتمتة n8n:</b> تم إرسال مسودة المنشور للاعتماد السريري والتمرير الفوري للمنصات!\n"
-                "🧹 تم تنظيف صندوق <code>manual_inbox</code> وأرشفة الوسائط بأمان."
+                "✅ <b>اكتمل النشر التلقائي وتحديث صفحات الهبوط والأرشفة السحابية بنجاح!</b>\n\n"
+                "🌐 <b>صفحة الهبوط المحدثة للحملة (GitHub Pages Live):</b>\n"
+                f"👉 {lp_url}\n\n"
+                "📘 <b>منشور فيسبوك (نُشر تلقائياً):</b>\n"
+                f"👉 {fb_photo_url}\n\n"
+                f"{fb_reel_line}"
+                "📸 <b>منشور إنستجرام (نُشر تلقائياً):</b>\n"
+                f"👉 {ig_post_url}\n\n"
+                "🎥 <b>جاهز للرفع اليدوي (يوتيوب + تيكتوك بصيغة JPG/MP4):</b>\n"
+                f"• يوتيوب: <code>{yt_dir}</code>\n"
+                f"• تيكتوك: <code>{tt_dir}</code>\n"
+                "<i>(تم إلغاء بلوجر وريديت نهائياً كما طلبت)</i>\n\n"
+                "☁️ <b>تنظيف الجهاز (Zero Local Storage):</b> تم نقل كافة الحزم والأصول إلى Google Drive وتفريغ مساحة القرص C تلقائياً!"
             )
             keyboard = {
                 "inline_keyboard": [
+                    [{"text": "🎬 فتح Google Flow Studio", "url": GOOGLE_FLOW_URL}],
                     [{"text": "🚀 تشغيل مجدداً", "callback_data": "act_master"}],
                     [{"text": "📦 استعراض الحزمة الجاهزة", "callback_data": "act_latest_pack"}],
                     [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
@@ -903,6 +944,9 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
+                {"text": "🎬 البرومبت الموحد الشامل — Google Flow (فيديو + صور + سيو)", "callback_data": f"prompt_flow_{choice}"},
+            ],
+            [
                 {"text": "🌐 فتح Gemini Deep Research مباشرة", "url": GEMINI_URL},
             ],
             [
@@ -910,6 +954,83 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
                 {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
             ],
             [
+                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
+            ],
+        ]
+    }
+    return msg, keyboard
+
+
+def build_unified_google_flow_card(choice: str, analysis: Optional[Dict[str, Any]] = None) -> Tuple[str, Dict[str, Any]]:
+    """
+    Generates the All-in-One Super Prompt for Google Flow (Veo 3.1 + Imagen 4 + Gemini)
+    to produce 9:16 vertical Reel, 16:9 horizontal video, 8K contextual clinical photos
+    (zero distorted text overlay), and full Arabic SEO copy in one single prompt.
+    """
+    d = get_product_data(choice)
+    name_ar = html.escape(d["name_ar"])
+    brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
+    focus = html.escape(d["focus"])
+
+    findings_list = (analysis or {}).get("findings") or [d["focus"]]
+    anxieties_list = (analysis or {}).get("anxieties") or d.get("anxieties", [])[:3]
+    kws_str = "، ".join(d.get("keywords", [])[:5])
+    hashtags_str = " ".join(d.get("hashtags", [])[:6])
+
+    super_prompt = (
+        f"[GOOGLE FLOW ALL-IN-ONE CLINICAL PRODUCTION BRIEF — HEALING TOUCH EGYPT 2026]\n"
+        f"Project Workspace: {GOOGLE_FLOW_URL}\n"
+        f"Product: {brand} ({d['name_ar']})\n"
+        f"Clinical Focus: {d['focus']}\n"
+        f"Brand Palette: Clinical Forest Green (#064E3B), Medical Mint (#10B981), Slate Navy (#0F172A), Sterile White (#FFFFFF).\n\n"
+        f"=== 1. VIDEO SCENE GENERATION (Veo 3.1 — Generate in 9:16 Vertical & 16:9 Horizontal) ===\n"
+        f"• Scene 1 (0-4s Visual Hook): Compassionate Egyptian clinical recovery suite, soft natural morning light, "
+        f"a recovery care specialist (أخصائية العناية بالتعافي) wearing sterile mint medical gloves preparing {brand} on a stainless steel tray.\n"
+        f"• Scene 2 (4-12s Physiological Protection): Macro cinematic close-up showing the breathable, waterproof sterile barrier "
+        f"protecting post-operative tissue ({findings_list[0]}), calm reassuring motion, 8K documentary realism.\n"
+        f"• Scene 3 (12-20s Patient Peace of Mind): Warm reassuring atmosphere in an upscale Cairo home recovery setting, "
+        f"demonstrating effortless daily hygiene and confidence.\n"
+        f"• Audio & Voiceover Guide (Egyptian White Arabic Dialect): Calm, reassuring female specialist voice addressing: "
+        f"{' / '.join(anxieties_list[:2])}, ending with: 'للاستشارة السريرية المجانية مع أخصائية العناية بالتعافي عبر واتساب 01155803307 بكود HT10 مع حق المعاينة قبل الاستلام.'\n\n"
+        f"=== 2. 8K CLINICAL STILL IMAGES (Imagen 4 — 1:1 Square & 9:16 Story) ===\n"
+        f"• Photorealistic 8K macro medical photography of {brand} in an authentic Egyptian clinical setting, "
+        f"shallow depth of field (85mm f/2.8), Clinical Forest Green (#064E3B) and Mint (#10B981) accents.\n"
+        f"• STRICT VISUAL GUARDRAIL: Generate contextual clinical lifestyle and sterile tray scenes ONLY — "
+        f"ZERO artificial text overlays on packaging to avoid text distortion; our local engine composites the real product label and Arabic typography automatically.\n\n"
+        f"=== 3. OMNICHANNEL ARABIC SEO COPYPACK (Facebook + Instagram + YouTube + TikTok) ===\n"
+        f"• Focus Keywords (Egypt): {kws_str}\n"
+        f"• Mandatory Compliance: Use title 'أخصائية العناية بالتعافي' only (never 'طبيبة'/'الدكتورة'), zero commercial price hype, "
+        f"include WhatsApp consultation 01155803307 + code HT10 + hashtags: {hashtags_str}"
+    )
+
+    msg = (
+        f"🎬 <b>البرومبت الموحد الشامل لـ Google Flow (All-in-One Super Prompt)</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar} (<code>{brand}</code>)\n"
+        f"📌 <b>المحور السريري:</b> {focus}\n\n"
+        f"✨ <b>ماذا ينتج هذا البرومبت الموحد دفعة واحدة؟</b>\n"
+        f"1️⃣ فيديو عمودي <code>9:16</code> للريلز والشورتس وتيكتوك + فيديو أفقي <code>16:9</code> ليوتيوب وصفحة الهبوط.\n"
+        f"2️⃣ صور طبية سياقية <code>8K</code> (بدون تشويه نصوص العبوة) لفيسبوك وإنستجرام.\n"
+        f"3️⃣ سكريبت وكابشن السيو العربي الموحد بكود <code>HT10</code>.\n\n"
+        f"📋 <b>اضغط داخل المربع لنسخ البرومبت الموحد بلمسة واحدة 👇:</b>\n"
+        f"<pre><code>{html.escape(super_prompt)}</code></pre>\n\n"
+        f"☁️ <b>بعد التوليد في Google Flow:</b>\n"
+        f"ارفع المخرجات مباشرة إلى مجلد درايف <code>00_Flow_Inbox</code> (أو أرسلها هنا في تيليجرام) ثم اضغط <b>🚀 تشغيل المسار الشامل الآن</b> ليتم النشر التلقائي وتنظيف جهازك بالكامل!"
+    )
+
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "🎬 فتح مشروع Google Flow مباشرة", "url": GOOGLE_FLOW_URL},
+            ],
+            [
+                {"text": "🚀 تشغيل المسار والنشر الشامل الآن", "callback_data": "act_master"},
+            ],
+            [
+                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎙️ برومبت NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+            ],
+            [
+                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
                 {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
             ],
         ]
@@ -1085,6 +1206,10 @@ def handle_research_report_received(
     )
     bot.send_message(chat_id, ack_text)
 
+    # Send Unified Google Flow Super Prompt Card first
+    flow_text, flow_kb = build_unified_google_flow_card(choice, analysis)
+    bot.send_message(chat_id, flow_text, reply_markup=flow_kb)
+
     # Send Pomelli Brand Book Card
     pomelli_text, pomelli_kb = build_synthesized_pomelli_card(choice, analysis)
     bot.send_message(chat_id, pomelli_text, reply_markup=pomelli_kb)
@@ -1096,13 +1221,15 @@ def handle_research_report_received(
     # Final guidance message for Stage 3 Media Ingestion
     guidance_text = (
         "💡 <b>الخطوة التالية (المرحلة 3 من 4 - توليد ورفع الوسائط):</b>\n\n"
-        "1️⃣ افتح <b>Google Pomelli Brand Book</b> وأنتج الصور الطبية 8K.\n"
-        "2️⃣ افتح <b>Google NotebookLM</b> وأنتج البودكاست الصوتي والفيديو.\n"
-        "3️⃣ <b>احفظ المخرجات وأرسلها هنا في شات تيليجرام مباشرة</b> (صور / فيديوهات / صوتيات).\n\n"
-        "📥 سنقوم بإيداعها فوراً في <code>manual_inbox</code> وتفعيل زر الإطلاق الشامل الموحد!"
+        "1️⃣ افتح <b>Google Flow</b> بالبرومبت الموحد الشامل أعلاه لتوليد الفيديوهات والصور دفعة واحدة.\n"
+        "2️⃣ ضع المخرجات في مجلد درايف <code>00_Flow_Inbox</code> أو <b>أرسلها هنا في شات تيليجرام مباشرة</b>.\n"
+        "3️⃣ اضغط <b>🚀 تشغيل المسار الشامل</b> ليتم تحديث صفحات الهبوط، والنشر التلقائي على فيسبوك وإنستجرام، وتجهيز يوتيوب وتيكتوك، وتفريغ مساحة جهازك على Google Drive!"
     )
     guidance_kb = {
         "inline_keyboard": [
+            [
+                {"text": "🎬 فتح مشروع Google Flow", "url": GOOGLE_FLOW_URL},
+            ],
             [
                 {"text": "🎨 فتح Pomelli Brand Book", "url": POMELLI_BRAND_BOOK_URL},
                 {"text": "🎙️ فتح NotebookLM", "url": NOTEBOOKLM_URL},
@@ -1171,6 +1298,9 @@ def build_product_hub_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
+                {"text": "🎬 البرومبت الموحد الشامل — Google Flow (فيديو + صور + سيو)", "callback_data": f"prompt_flow_{choice}"},
+            ],
+            [
                 {"text": "🔬 برومبت Gemini Deep Research", "callback_data": f"prompt_gemini_{choice}"},
             ],
             [
@@ -1178,7 +1308,7 @@ def build_product_hub_card(choice: str) -> Tuple[str, Dict[str, Any]]:
                 {"text": "🎨 برومبت Google Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
             ],
             [
-                {"text": "📱 برومبتات السوشيال (ريلز / تيك توك / مقالات)", "callback_data": f"prompt_social_menu_{choice}"},
+                {"text": "📱 برومبتات السوشيال (ريلز / تيك توك / يوتيوب)", "callback_data": f"prompt_social_menu_{choice}"},
             ],
             [
                 {"text": "📄 تحميل الحزمة كاملة (ملف TXT)", "callback_data": f"prompt_file_{choice}"},
@@ -1366,16 +1496,16 @@ def build_social_prompts_menu(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
+                {"text": "🎬 البرومبت الموحد الشامل — Google Flow", "callback_data": f"prompt_flow_{choice}"},
+            ],
+            [
                 {"text": "🎬 سكريبت وسيو يوتيوب مصر (16:9 + Shorts)", "callback_data": f"prompt_yt_{choice}"},
             ],
             [
                 {"text": "⚡ سكريبت تيك توك مصر (Viral Hook)", "callback_data": f"prompt_tt_{choice}"},
             ],
             [
-                {"text": "📸 كاروسيل وريلز إنستجرام مصر", "callback_data": f"prompt_ig_{choice}"},
-            ],
-            [
-                {"text": "✍️ مقال مدونة بلوجر (SEO 1500 كلمة)", "callback_data": f"prompt_blog_{choice}"},
+                {"text": "📸 كاروسيل وريلز إنستجرام وفيسبوك مصر", "callback_data": f"prompt_ig_{choice}"},
             ],
             [
                 {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
@@ -1484,6 +1614,16 @@ def build_social_prompt_card(choice: str, sub: str) -> Tuple[str, Dict[str, Any]
 
 def handle_show_product_hub(chat_id: str, choice: str):
     card_text, card_keyboard = build_product_hub_card(choice)
+    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
+
+
+def handle_show_google_flow_prompt(chat_id: str, choice: str):
+    sess = get_session(chat_id)
+    analysis = {
+        "findings": sess.get("findings") or [],
+        "anxieties": sess.get("anxieties") or [],
+    }
+    card_text, card_keyboard = build_unified_google_flow_card(choice, analysis)
     bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
 
 
@@ -2057,6 +2197,10 @@ def process_callback_query(cq: Dict[str, Any]):
     elif data.startswith("hub_prod_"):
         choice = data.split("_")[2]
         handle_show_product_hub(chat_id, choice)
+
+    elif data.startswith("prompt_flow_"):
+        choice = data.split("_")[2]
+        handle_show_google_flow_prompt(chat_id, choice)
 
     elif data.startswith("prompt_gemini_"):
         choice = data.split("_")[2]

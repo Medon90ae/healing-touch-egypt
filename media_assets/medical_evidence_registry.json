@@ -1,6 +1,6 @@
 {
-  "total_studies": 15,
-  "last_updated": "2026-10-29 15:42:15",
+  "total_studies": 17,
+  "last_updated": "2026-10-30 01:55:59",
   "studies": [
     {
       "pmid": "40459590",
@@ -181,6 +181,30 @@
       "product_name": "سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)",
       "summary_ar": "دراسة سريرية محكمة منشورة في (J Surg Res) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (سبراي أوبسايت العازل للجروح (Opsite Post-Op Spray)).",
       "discovered_at": "2026-10-29T15:42:15.005178"
+    },
+    {
+      "pmid": "41545980",
+      "title": "Keloids as a rare complication of voluntary medical male circumcision: findings from PEPFAR's notifiable adverse events reporting system",
+      "journal": "BMC Urol",
+      "pub_year": "2026",
+      "doi": "10.1186/s12894-025-01949-7",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41545980/",
+      "product_choice": "6",
+      "product_name": "حزمة شاملة لكافة المستلزمات الطبية",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (BMC Urol) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (حزمة شاملة لكافة المستلزمات الطبية).",
+      "discovered_at": "2026-10-30T01:55:59.882429"
+    },
+    {
+      "pmid": "40861775",
+      "title": "Hypertrophic and Keloid Scar Management: Advances in Diagnosis, Perioperative Care, and Anesthetic Modulation",
+      "journal": "Cureus",
+      "pub_year": "2025",
+      "doi": "10.7759/cureus.88810",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40861775/",
+      "product_choice": "6",
+      "product_name": "حزمة شاملة لكافة المستلزمات الطبية",
+      "summary_ar": "دراسة سريرية محكمة منشورة في (Cureus) تبحث آليات التعافي السريري والوقاية من مضاعفات التئام الأنسجة ذات الصلة بـ (حزمة شاملة لكافة المستلزمات الطبية).",
+      "discovered_at": "2026-10-30T01:55:59.882761"
     }
   ]
 }
