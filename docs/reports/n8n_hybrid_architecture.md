@@ -348,7 +348,7 @@ This contract defines the payload emitted from the client-side website modal (`d
     "status": "success",
     "lead_id": "HT-20261028-0042",
     "message": "Lead registered and routed to staff successfully",
-    "whatsapp_redirect": "https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%D8%8C%20%D9%85%D8%B9%D8%A7%D9%83%D9%85%20%D8%B3%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AD%D9%85%D9%88%D8%AF..."
+    "whatsapp_redirect": "https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%D8%8C%20%D9%85%D8%B9%D8%A7%D9%83%D9%85%20%D8%B3%D8%A7%D8%B1%D8%A9%20%D9%85%D8%AD%D9%85%D9%88%D8%AF..._HT10"
   }
   ```
 - **Validation Failure (HTTP 400 Bad Request)**:

@@ -270,7 +270,7 @@ To enable n8n to read and append rows to Google Sheet Tab `gid=513215731`:
 3. **Configure in n8n**:
    - In n8n, click **"Credentials"** ➔ **"WhatsApp Cloud API"**.
    - Paste the Access Token, Phone Number ID, and Business Account ID.
-   - Test by sending a templated alert message to the clinic manager's number `201155803307`.
+   - Test by sending a templated alert message to the clinic manager's number `https://wa.me/201155803307?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B_%D9%87%D9%8A%D9%84%D9%8A%D9%86%D8%AC_%D8%AA%D8%A7%D8%AA%D8%B4_%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9_%D8%A8%D9%83%D9%88%D8%AF_HT10`.
 
 ---
 
