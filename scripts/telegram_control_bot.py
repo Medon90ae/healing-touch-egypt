@@ -963,9 +963,12 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
 
 def build_unified_google_flow_card(choice: str, analysis: Optional[Dict[str, Any]] = None) -> Tuple[str, Dict[str, Any]]:
     """
-    Generates the All-in-One Super Prompt for Google Flow (Veo 3.1 + Imagen 4 + Gemini)
-    to produce 9:16 vertical Reel, 16:9 horizontal video, 8K contextual clinical photos
-    (zero distorted text overlay), and full Arabic SEO copy in one single prompt.
+    Generates a mode-specific, production-tested Google Flow Studio guide (Imagen 4 + Veo 3.1 + Scenebuilder)
+    with separate 1-click copyable prompts for each Google Flow mode:
+    1) Mode: Create Images (Ingredients / Start Frames)
+    2) Mode: Text to Video / Ingredients to Video (9:16 Vertical Reel with Veo 3.1 Native Arabic Audio)
+    3) Mode: Scenebuilder -> Extend (+8s continuation with voice handoff)
+    4) Mode: Text to Video (16:9 Landscape for YouTube & Landing Page)
     """
     d = get_product_data(choice)
     name_ar = html.escape(d["name_ar"])
@@ -973,48 +976,64 @@ def build_unified_google_flow_card(choice: str, analysis: Optional[Dict[str, Any
     focus = html.escape(d["focus"])
 
     findings_list = (analysis or {}).get("findings") or [d["focus"]]
-    anxieties_list = (analysis or {}).get("anxieties") or d.get("anxieties", [])[:3]
-    kws_str = "، ".join(d.get("keywords", [])[:5])
-    hashtags_str = " ".join(d.get("hashtags", [])[:6])
+    anxieties_list = (analysis or {}).get("anxieties") or d.get("anxieties", [])[:2]
+    primary_finding = findings_list[0]
+    primary_anxiety = anxieties_list[0] if anxieties_list else "القلق من التهاب الجرح أو وصول الماء أثناء الاستحمام"
 
-    super_prompt = (
-        f"[GOOGLE FLOW ALL-IN-ONE CLINICAL PRODUCTION BRIEF — HEALING TOUCH EGYPT 2026]\n"
-        f"Project Workspace: {GOOGLE_FLOW_URL}\n"
-        f"Product: {brand} ({d['name_ar']})\n"
-        f"Clinical Focus: {d['focus']}\n"
-        f"Brand Palette: Clinical Forest Green (#064E3B), Medical Mint (#10B981), Slate Navy (#0F172A), Sterile White (#FFFFFF).\n\n"
-        f"=== 1. VIDEO SCENE GENERATION (Veo 3.1 — Generate in 9:16 Vertical & 16:9 Horizontal) ===\n"
-        f"• Scene 1 (0-4s Visual Hook): Compassionate Egyptian clinical recovery suite, soft natural morning light, "
-        f"a recovery care specialist (أخصائية العناية بالتعافي) wearing sterile mint medical gloves preparing {brand} on a stainless steel tray.\n"
-        f"• Scene 2 (4-12s Physiological Protection): Macro cinematic close-up showing the breathable, waterproof sterile barrier "
-        f"protecting post-operative tissue ({findings_list[0]}), calm reassuring motion, 8K documentary realism.\n"
-        f"• Scene 3 (12-20s Patient Peace of Mind): Warm reassuring atmosphere in an upscale Cairo home recovery setting, "
-        f"demonstrating effortless daily hygiene and confidence.\n"
-        f"• Audio & Voiceover Guide (Egyptian White Arabic Dialect): Calm, reassuring female specialist voice addressing: "
-        f"{' / '.join(anxieties_list[:2])}, ending with: 'للاستشارة السريرية المجانية مع أخصائية العناية بالتعافي عبر واتساب 01155803307 بكود HT10 مع حق المعاينة قبل الاستلام.'\n\n"
-        f"=== 2. 8K CLINICAL STILL IMAGES (Imagen 4 — 1:1 Square & 9:16 Story) ===\n"
-        f"• Photorealistic 8K macro medical photography of {brand} in an authentic Egyptian clinical setting, "
-        f"shallow depth of field (85mm f/2.8), Clinical Forest Green (#064E3B) and Mint (#10B981) accents.\n"
-        f"• STRICT VISUAL GUARDRAIL: Generate contextual clinical lifestyle and sterile tray scenes ONLY — "
-        f"ZERO artificial text overlays on packaging to avoid text distortion; our local engine composites the real product label and Arabic typography automatically.\n\n"
-        f"=== 3. OMNICHANNEL ARABIC SEO COPYPACK (Facebook + Instagram + YouTube + TikTok) ===\n"
-        f"• Focus Keywords (Egypt): {kws_str}\n"
-        f"• Mandatory Compliance: Use title 'أخصائية العناية بالتعافي' only (never 'طبيبة'/'الدكتورة'), zero commercial price hype, "
-        f"include WhatsApp consultation 01155803307 + code HT10 + hashtags: {hashtags_str}"
+    # Prompt 1: Pure Imagen 4 prompt for "Create Images" mode in Google Flow (produces 2-4 Ingredient/Start frames)
+    flow_image_prompt = (
+        f"Medium close-up photorealistic 8K medical photography inside an upscale, sunlit Cairo clinical recovery room. "
+        f"A compassionate Egyptian female recovery care specialist in her early 30s wearing modest mint-green clinical scrubs (#10B981) "
+        f"and a neat beige hijab, holding a sterile stainless-steel medical tray with surgical gauze and authentic medical dressing supplies "
+        f"for {primary_finding}. Warm natural morning window light, shallow depth of field shot on 85mm f/2.8 lens, "
+        f"Clinical Forest Green (#064E3B) wall accents, documentary healthcare realism, zero text overlays, no watermarks."
+    )
+
+    # Prompt 2: Pure Veo 3.1 prompt for "Text to Video" or "Ingredients to Video" (9:16 Portrait, 8s Hook + Native Arabic Audio)
+    flow_video_9_16_hook = (
+        f"Vertical 9:16 medium close-up tracking shot in a calm, sunlit Egyptian clinical recovery suite with forest green (#064E3B) "
+        f"and mint (#10B981) accents. A warm Egyptian female recovery specialist in mint clinical scrubs looks directly into the camera "
+        f"with a reassuring smile while gently demonstrating sterile post-operative wound protection on a clean medical tray. "
+        f"Soft volumetric morning light, 24fps cinematic shallow depth of field. "
+        f"Audio: Subtle quiet clinical room ambiance; the specialist speaks clearly in a warm, reassuring Egyptian Arabic voice: "
+        f"'لو لسه خارجة من العملية وقلقانة من الشاور أو التهاب الجرح، خطوة طبية بسيطة بتحمي الجرح تماماً وتطمنك في البيت... كملي معايا عشان تعرفي الطريقة الصح'"
+    )
+
+    # Prompt 3: Pure Veo 3.1 prompt for Scenebuilder "+ Extend" (+8s Clinical Action + CTA)
+    flow_video_extend = (
+        f"The camera slowly pushes in to a macro shot of the specialist's sterile gloved hands demonstrating gentle, waterproof barrier "
+        f"protection over a clean medical model, then tilts back up to her reassuring face nodding warmly. "
+        f"Audio: She continues speaking seamlessly in the same calm Egyptian Arabic voice: "
+        f"'الحاجز الطبي المعقم بيعزل المية والبكتيريا ويحافظ على التئام الأنسجة بأمان. تقدروا تتواصلوا مع أخصائية العناية بالتعافي على واتساب بكود HT10 للمعاينة قبل الاستلام.'"
+    )
+
+    # Prompt 4: Pure Veo 3.1 prompt for "Text to Video" (16:9 Landscape for YouTube & Landing Page)
+    flow_video_16_9 = (
+        f"Cinematic 16:9 widescreen dolly-in shot across an immaculate modern Egyptian surgical recovery clinic. "
+        f"An Egyptian female recovery care specialist in mint scrubs (#10B981) sits at a consultation desk with a sterile preparation tray, "
+        f"explaining post-operative tissue healing and scar prevention with calm hand gestures. Soft golden morning light through sheer curtains, "
+        f"shot on 35mm Arri Alexa, shallow depth of field, zero text overlays. "
+        f"Audio: Soft reassuring ambient tone; she speaks in clear, articulate Egyptian Arabic: "
+        f"'أهم مرحلة بعد أي إجراء جراحي هي حماية الأنسجة في أول أسابيع التعافي لمنع التلوث والندبات البارزة بطريقة طبية آمنة وموثقة.'"
     )
 
     msg = (
-        f"🎬 <b>البرومبت الموحد الشامل لـ Google Flow (All-in-One Super Prompt)</b>\n\n"
-        f"🎯 <b>المنتج:</b> {name_ar} (<code>{brand}</code>)\n"
-        f"📌 <b>المحور السريري:</b> {focus}\n\n"
-        f"✨ <b>ماذا ينتج هذا البرومبت الموحد دفعة واحدة؟</b>\n"
-        f"1️⃣ فيديو عمودي <code>9:16</code> للريلز والشورتس وتيكتوك + فيديو أفقي <code>16:9</code> ليوتيوب وصفحة الهبوط.\n"
-        f"2️⃣ صور طبية سياقية <code>8K</code> (بدون تشويه نصوص العبوة) لفيسبوك وإنستجرام.\n"
-        f"3️⃣ سكريبت وكابشن السيو العربي الموحد بكود <code>HT10</code>.\n\n"
-        f"📋 <b>اضغط داخل المربع لنسخ البرومبت الموحد بلمسة واحدة 👇:</b>\n"
-        f"<pre><code>{html.escape(super_prompt)}</code></pre>\n\n"
-        f"☁️ <b>بعد التوليد في Google Flow:</b>\n"
-        f"ارفع المخرجات مباشرة إلى مجلد درايف <code>00_Flow_Inbox</code> (أو أرسلها هنا في تيليجرام) ثم اضغط <b>🚀 تشغيل المسار الشامل الآن</b> ليتم النشر التلقائي وتنظيف جهازك بالكامل!"
+        f"🎬 <b>استوديو Google Flow الاحترافي (Veo 3.1 + Imagen 4)</b>\n"
+        f"🎯 <b>المنتج:</b> {name_ar} (<code>{brand}</code>)\n\n"
+        f"💡 <b>مهم:</b> Google Flow يعتمد على <b>قائمة الوضع (Mode)</b> بجوار صندوق البرومبت (وضع الصور الافتراضي ينتج صورتين فقط). لإنتاج الصور والفيديوهات معاً اتبع الأوضاع الـ 4 بالترتيب:\n\n"
+        f"🖼 <b>1️⃣ وضع <code>Create Images</code> (توليد الصور والـ Ingredients):</b>\n"
+        f"<i>اختر Create Images ومقاس 9:16 أو 16:9 ثم انسخ 👇</i>\n"
+        f"<pre><code>{html.escape(flow_image_prompt)}</code></pre>\n\n"
+        f"📱 <b>2️⃣ وضع <code>Text to Video</code> أو <code>Ingredients to Video</code> (فيديو ريلز وتيكتوك 9:16 ناطق بالعربية):</b>\n"
+        f"<i>غيّر الوضع إلى Text to Video (أو Ingredients لتثبيت الأخصائية والعبوة) + نموذج Veo 3.1 Quality + مقاس Portrait 9:16 👇</i>\n"
+        f"<pre><code>{html.escape(flow_video_9_16_hook)}</code></pre>\n\n"
+        f"➕ <b>3️⃣ وضع <code>Scenebuilder -> + Extend</code> (تمديد الفيديو 8 ثوانٍ إضافية بالـ CTA):</b>\n"
+        f"<i>اضغط Add to Scene على الفيديو ثم + Extend والصق 👇</i>\n"
+        f"<pre><code>{html.escape(flow_video_extend)}</code></pre>\n\n"
+        f"🖥 <b>4️⃣ وضع <code>Text to Video</code> (فيديو يوتيوب وصفحة الهبوط 16:9):</b>\n"
+        f"<i>اختر مقاس Landscape 16:9 والصق 👇</i>\n"
+        f"<pre><code>{html.escape(flow_video_16_9)}</code></pre>\n\n"
+        f"☁️ بعد التحميل ضع المخرجات في درايف <code>00_Flow_Inbox</code> واضغط <b>🚀 تشغيل المسار والنشر الشامل الآن</b>!"
     )
 
     keyboard = {
