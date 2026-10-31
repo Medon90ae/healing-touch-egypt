@@ -770,7 +770,6 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
             )
             keyboard = {
                 "inline_keyboard": [
-                    [{"text": "🎬 فتح Google Flow Studio", "url": GOOGLE_FLOW_URL}],
                     [{"text": "🚀 تشغيل مجدداً", "callback_data": "act_master"}],
                     [{"text": "📦 استعراض الحزمة الجاهزة", "callback_data": "act_latest_pack"}],
                     [{"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"}],
@@ -944,10 +943,11 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🎬 البرومبت الموحد الشامل — Google Flow (فيديو + صور + سيو)", "callback_data": f"prompt_flow_{choice}"},
+                {"text": "🌐 فتح Gemini Deep Research مباشرة", "url": GEMINI_URL},
             ],
             [
-                {"text": "🌐 فتح Gemini Deep Research مباشرة", "url": GEMINI_URL},
+                {"text": "🎨 برومبت الصور الخاطفة للعين (Pomelli 8K)", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎙️ برومبت استوديو NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
             ],
             [
                 {"text": "📋 خيارات وبرومبتات إضافية للمنتج", "callback_data": f"hub_prod_{choice}"},
@@ -961,124 +961,14 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     return msg, keyboard
 
 
-def build_unified_google_flow_card(choice: str, analysis: Optional[Dict[str, Any]] = None) -> Tuple[str, Dict[str, Any]]:
-    """
-    Generates high-conversion, scroll-stopping Google Flow Studio prompts (Imagen 4 + Veo 3.1 + Scenebuilder)
-    engineered with Performance Marketing psychology:
-    - Direct Eye-Contact POV (stops scrolling in 0.8s)
-    - Hero Product Hold in Foreground (using uploaded Ingredient reference, f/2.0 bokeh)
-    - Zero hospital anxiety (no ICU monitors, no metal trays, no random brown medicine bottles)
-    - Sensory Visual Proof Hook per product (water droplets beading, soft silicone flex, micro-mist spray)
-    """
-    d = get_product_data(choice)
-    name_ar = html.escape(d["name_ar"])
-    brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
-
-    flow_visual_hooks = {
-        "1": {
-            "hero_hold": "holding a single authentic 3M Tegaderm +Pad waterproof transparent dressing packet prominently toward the camera lens at chest-to-eye level (Hero Product Shot), with crystal-clear water droplets beading on a sample transparent film in the foreground",
-            "video_hook": "Macro 2-second visual hook of crystal-clear water droplets rolling harmlessly off a transparent waterproof medical film barrier, then smooth rack-focus to the warm Egyptian female specialist looking directly into the camera lens holding the dressing",
-            "spoken_ar": "خايفة تاخدي شاور بعد القيصرية لييجي مية على الجرح؟ الغيار الطبي الشفاف بيعزل المية والبكتيريا تماماً عشان تاخدي شاور بأمان وراحة في بيتك.",
-        },
-        "2": {
-            "hero_hold": "holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently stretching a soft, translucent skin-toned medical silicone strip in the foreground toward the lens (Hero Product Shot)",
-            "video_hook": "Macro close-up of a soft, ultra-thin medical silicone scar sheet flexing and adhering smoothly like a second skin, then smooth rack-focus to the smiling Egyptian female specialist looking directly into the camera",
-            "spoken_ar": "بدل ما تقلقي من بروز خط العملية أو الحكة بعد التئام الجرح، شيت السيليكون الطبي بيحافظ على ترطيب الأنسجة وينعم الندبة يوم بعد يوم.",
-        },
-        "3": {
-            "hero_hold": "holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in the foreground toward the camera lens (Hero Product Shot) in a bright aesthetic facial care studio",
-            "video_hook": "Close-up foreground focus on the authentic skin-tone tan surgical tape spool held near the lens, then smooth rack-focus to the reassuring Egyptian female specialist looking directly into the camera",
-            "spoken_ar": "بعد تجميل الأنف أو جراحات الرقبة، تثبيت الأنسجة وحمايتها من الشمس بشريط ميكروبور البيج الأصلي بيفرق جداً في هدوء التورم وجمال النتيجة.",
-        },
-        "4": {
-            "hero_hold": "holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Shot) in a warm aesthetic clinic lounge",
-            "video_hook": "Macro close-up of a soft, crystal-clear medical silicone nostril retainer flexing gently to show its ultra-comfortable ergonomic curve, then rack-focus to the smiling Egyptian specialist looking straight into the lens",
-            "spoken_ar": "الحفاظ على تماثل فتحات الأنف والتنفس المريح بعد التجميل بيبدأ بدعامة السيليكون الطبية الناعمة المصممة لحماية الغضاريف بدون أي ضغط.",
-        },
-        "5": {
-            "hero_hold": "holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Shot), catching a subtle backlit mist glow in warm morning sunlight",
-            "video_hook": "Dynamic close-up of a fine, crystal-clear protective medical spray mist forming an instant breathable waterproof barrier, then smooth rack-focus to the warm Egyptian specialist holding the OPSITE bottle and looking straight into the lens",
-            "spoken_ar": "فتحات مناظير التكميم محتاجة عزل فوري يحميها من المية والاحتكاك.. رشة واحدة من سبراي أوبسايت بتعمل طبقة شفافة معقمة تتنفس وتحميكي.",
-        },
-        "6": {
-            "hero_hold": "presenting the authentic Healing Touch post-operative care collection neatly arranged on a warm marble consultation desk in the foreground (Hero Product Shot)",
-            "video_hook": "Smooth cinematic glide across the authentic post-operative care products in warm sunlight, rising to the smiling Egyptian female specialist making direct eye contact with the camera",
-            "spoken_ar": "رحلة التعافي في البيت بعد أي عملية محتاجة رعاية طبية صح تطمنك في كل خطوة من أول الشاور الآمن لحد تجميل وتسطيح الندبات.",
-        },
-    }
-    vh = flow_visual_hooks.get(str(choice).strip(), flow_visual_hooks["1"])
-
-    # Prompt 1: Scroll-Stopping Imagen 4 Prompt (Create Images mode + Ingredient reference)
-    flow_image_prompt = (
-        f"Scroll-stopping vertical 9:16 commercial portrait shot on 85mm f/2.0 lens with creamy shallow depth of field. "
-        f"A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) "
-        f"and a neat beige hijab, making direct reassuring eye contact with the camera lens, {vh['hero_hold']}. "
-        f"Setting: An upscale, sunlit Cairo aesthetic consultation lounge with warm wood and deep forest-green (#064E3B) wall panels. "
-        f"STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text overlays."
-    )
-
-    # Prompt 2: Scroll-Stopping Veo 3.1 9:16 Video Hook + Native Egyptian Arabic Voice
-    flow_video_9_16_hook = (
-        f"Vertical 9:16 high-retention commercial video in a warm, sunlit Cairo consultation lounge (#064E3B and #10B981 palette, "
-        f"no hospital beds or metal trays). {vh['video_hook']}. "
-        f"Audio: Soft upscale room ambiance; she speaks directly to the viewer in a warm, reassuring Egyptian Arabic voice: "
-        f"'{vh['spoken_ar']}'"
-    )
-
-    # Prompt 3: Scenebuilder "+ Extend" (+8s Clinical Reassurance & CTA)
-    flow_video_extend = (
-        f"The specialist holds the authentic product closer to the camera lens with a gentle, confident nod and warm smile, "
-        f"soft golden window light illuminating the clean product packaging in sharp focus. "
-        f"Audio: She continues speaking seamlessly in the same calm Egyptian Arabic voice: "
-        f"'تقدروا تتواصلوا دلوقتي مع أخصائية العناية بالتعافي على واتساب بكود HT10 لاستشارة مجانية ومعاينة المنتج الأصلي قبل الاستلام.'"
-    )
-
-    # Prompt 4: Veo 3.1 16:9 Widescreen for YouTube & Landing Page Hero
-    flow_video_16_9 = (
-        f"Cinematic 16:9 widescreen commercial shot on 50mm f/1.8 lens in an upscale modern Cairo recovery lounge (warm wood, plants, "
-        f"#064E3B forest green accent wall, zero hospital beds or metal trays). The Egyptian female specialist in mint-green (#10B981) "
-        f"looks directly at the camera while {vh['hero_hold']}. "
-        f"Audio: Warm acoustic ambiance; she speaks clearly in articulate Egyptian Arabic: "
-        f"'{vh['spoken_ar']}'"
-    )
-
-    msg = (
-        f"🎬 <b>استوديو Google Flow الإعلاني الخاطف للعين (Scroll-Stopping 2026)</b>\n"
-        f"🎯 <b>المنتج:</b> {name_ar} (<code>{brand}</code>)\n\n"
-        f"✨ <b>تحديثات الجذب النفسي المطبقة في هذه البرومبتات:</b>\n"
-        f"• <b>نظر مباشر للكاميرا (Direct Eye-Contact)</b> + <b>رفع المنتج في مقدمة الكادر (Hero Hold)</b>.\n"
-        f"• <b>إلغاء رهبة المستشفيات تماماً:</b> منع صينية الستانلس، منع أسرّة وأجهزة المستشفى، ومنع زجاجات الدواء العشوائية.\n\n"
-        f"🖼 <b>1️⃣ وضع <code>Create Images</code> (أضف صورة المنتج من <code>+</code> ثم الصق 👇):</b>\n"
-        f"<pre><code>{html.escape(flow_image_prompt)}</code></pre>\n\n"
-        f"📱 <b>2️⃣ وضع <code>Text/Ingredients to Video</code> (فيديو ريلز وتيكتوك 9:16 بهوك بصري وصوتي 👇):</b>\n"
-        f"<i>اختر تبويب الفيديوهات + مقاس 9:16 + أضف الصورة من <code>+</code> والصق:</i>\n"
-        f"<pre><code>{html.escape(flow_video_9_16_hook)}</code></pre>\n\n"
-        f"➕ <b>3️⃣ وضع <code>Add to Scene -> + Extend</code> (لتكملة الفيديو +8 ثوانٍ بالـ CTA 👇):</b>\n"
-        f"<pre><code>{html.escape(flow_video_extend)}</code></pre>\n\n"
-        f"🖥 <b>4️⃣ وضع <code>Text to Video</code> بمقاس <code>16:9</code> (ليوتيوب وصفحة الهبوط 👇):</b>\n"
-        f"<pre><code>{html.escape(flow_video_16_9)}</code></pre>\n\n"
-        f"☁️ بعد التحميل ضع المخرجات في درايف <code>00_Flow_Inbox</code> واضغط <b>🚀 تشغيل المسار والنشر الشامل الآن</b>!"
-    )
-
-    keyboard = {
-        "inline_keyboard": [
-            [
-                {"text": "🎬 فتح مشروع Google Flow مباشرة", "url": GOOGLE_FLOW_URL},
-            ],
-            [
-                {"text": "🚀 تشغيل المسار والنشر الشامل الآن", "callback_data": "act_master"},
-            ],
-            [
-                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
-                {"text": "🎙️ برومبت NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
-            ],
-            [
-                {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
-                {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
-            ],
-        ]
-    }
-    return msg, keyboard
+SCROLL_STOPPING_HERO_HOOKS = {
+    "1": "holding the authentic 3M Tegaderm +Pad waterproof transparent dressing prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground",
+    "2": "holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently presenting a soft, translucent skin-toned medical silicone strip in sharp foreground focus toward the lens (Hero Product Hold)",
+    "3": "holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in sharp foreground focus toward the camera lens (Hero Product Hold) in a bright aesthetic facial studio",
+    "4": "holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold)",
+    "5": "holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight",
+    "6": "presenting the authentic Healing Touch Egypt post-operative care collection neatly arranged on a warm marble consultation desk in sharp foreground focus (Hero Product Hold)",
+}
 
 
 def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
@@ -1088,31 +978,33 @@ def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tup
 
     findings_sample = analysis.get("findings", [])
     findings_context = " - ".join(findings_sample[:2]) if findings_sample else d["focus"]
+    hero_action = SCROLL_STOPPING_HERO_HOOKS.get(str(choice).strip(), SCROLL_STOPPING_HERO_HOOKS["1"])
 
     pomelli_1_1 = (
-        f"Photorealistic 8K macro medical photography following the Healing Touch Egypt Brand Book aesthetic: "
+        f"Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, "
+        f"following the Healing Touch Egypt Brand Book aesthetic: "
         f"Brand Colors: `#064E3B` (Clinical Forest Green), `#10B981` (Medical Mint), `#0F172A` (Slate Navy Charcoal), `#FFFFFF` (Sterile White). "
-        f"Scene: Immaculate sterile stainless steel medical preparation tray, soft natural directional clinical lighting. "
-        f"Centerpiece: Authentic medical packaging of {brand} ({name_ar}), placed cleanly with visible authentic specifications. "
+        f"Subject & Action: A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (`#10B981`) "
+        f"and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, {hero_action} ({brand} - {name_ar}). "
         f"Clinical context from research: {findings_context}. "
-        f"Surrounding props: sterile surgical gauze, sterile cotton drape, medical scissors. "
-        f"Camera: Macro 85mm f/2.8 lens, shallow depth of field focusing on authentic medical texture, professional healthcare documentary photography, "
-        f"zero text overlays, zero cartoonish elements, sterile, reassuring, compassionate."
+        f"Setting: Upscale, sunlit Cairo consultation lounge with warm wood, indoor plants, and deep forest-green (`#064E3B`) wall panels. "
+        f"STRICT VISUAL RULES (MANDATORY): NO metal hospital trays, NO hospital beds or ICU monitors, NO surgical scissors/tweezers, "
+        f"NO generic brown medicine bottles, NO text distortion overlays."
     )
 
     pomelli_9_16 = (
-        f"Vertical 9:16 aspect ratio clinical photography following the Healing Touch Egypt Brand Book guidelines: "
-        f"Clean, compassionate Egyptian clinical recovery suite setting. "
-        f"Showing authentic healthcare specialist handling {brand} ({name_ar}) with sterile surgical gloves. "
-        f"Palette accents: `#064E3B` Forest Green and `#10B981` Mint. "
-        f"Soft natural ambient light, calm reassuring atmosphere for post-operative recovery, 8K ultra-clean documentary realism, no text, no artifacts."
+        f"Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book guidelines: "
+        f"Palette accents: `#064E3B` Forest Green, `#10B981` Mint, `#0F172A` Slate Navy, `#FFFFFF` Sterile White. "
+        f"A warm Egyptian female recovery care specialist in a tailored `#10B981` mint tunic and neat beige hijab looks DIRECTLY into the camera lens "
+        f"with a calm reassuring smile, {hero_action} ({brand} - {name_ar}) illuminated by golden Cairo morning window light. "
+        f"Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts."
     )
 
     msg = (
-        f"🎨 <b>[المرحلة 2 من 4] برومبتات Google Pomelli Brand Book (واقعية 8K)</b>\n\n"
+        f"🎨 <b>[المرحلة 2 من 4] برومبتات Google Pomelli Brand Book (إعلانية خاطفة للعين 8K)</b>\n\n"
         f"🎯 <b>المنتج:</b> {name_ar}\n"
         f"🏷️ <b>العلامة:</b> {brand}\n"
-        f"🌿 <b>كتاب الهوية المعتمد:</b> متطابق مع هوية وألوان هيلينج تاتش السريرية\n\n"
+        f"✨ <b>تعليمات الجذب المدمجة تلقائياً:</b> نظر مباشر للكاميرا + رفع المنتج في مقدمة الكادر (Hero Hold) + منع صينية الستانلس وأجهزة المستشفى والزجاجات العشوائية.\n\n"
         f"📐 <b>1️⃣ برومبت الصورة المربعة 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
         f"<pre><code>{html.escape(pomelli_1_1)}</code></pre>\n\n"
@@ -1249,10 +1141,6 @@ def handle_research_report_received(
     )
     bot.send_message(chat_id, ack_text)
 
-    # Send Unified Google Flow Super Prompt Card first
-    flow_text, flow_kb = build_unified_google_flow_card(choice, analysis)
-    bot.send_message(chat_id, flow_text, reply_markup=flow_kb)
-
     # Send Pomelli Brand Book Card
     pomelli_text, pomelli_kb = build_synthesized_pomelli_card(choice, analysis)
     bot.send_message(chat_id, pomelli_text, reply_markup=pomelli_kb)
@@ -1264,15 +1152,12 @@ def handle_research_report_received(
     # Final guidance message for Stage 3 Media Ingestion
     guidance_text = (
         "💡 <b>الخطوة التالية (المرحلة 3 من 4 - توليد ورفع الوسائط):</b>\n\n"
-        "1️⃣ افتح <b>Google Flow</b> بالبرومبت الموحد الشامل أعلاه لتوليد الفيديوهات والصور دفعة واحدة.\n"
-        "2️⃣ ضع المخرجات في مجلد درايف <code>00_Flow_Inbox</code> أو <b>أرسلها هنا في شات تيليجرام مباشرة</b>.\n"
-        "3️⃣ اضغط <b>🚀 تشغيل المسار الشامل</b> ليتم تحديث صفحات الهبوط، والنشر التلقائي على فيسبوك وإنستجرام، وتجهيز يوتيوب وتيكتوك، وتفريغ مساحة جهازك على Google Drive!"
+        "1️⃣ افتح <b>Google Pomelli Brand Book</b> وأنتج الصور الإعلانية الخاطفة للعين (8K).\n"
+        "2️⃣ افتح <b>Google NotebookLM</b> وأنتج البودكاست الصوتي والفيديو التوضيحي.\n"
+        "3️⃣ <b>ضع المخرجات في مجلد درايف <code>00_Flow_Inbox</code> أو أرسلها هنا في شات تيليجرام مباشرة</b> ثم اضغط <b>🚀 تشغيل المسار الشامل</b>!"
     )
     guidance_kb = {
         "inline_keyboard": [
-            [
-                {"text": "🎬 فتح مشروع Google Flow", "url": GOOGLE_FLOW_URL},
-            ],
             [
                 {"text": "🎨 فتح Pomelli Brand Book", "url": POMELLI_BRAND_BOOK_URL},
                 {"text": "🎙️ فتح NotebookLM", "url": NOTEBOOKLM_URL},
@@ -1341,14 +1226,11 @@ def build_product_hub_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🎬 البرومبت الموحد الشامل — Google Flow (فيديو + صور + سيو)", "callback_data": f"prompt_flow_{choice}"},
-            ],
-            [
                 {"text": "🔬 برومبت Gemini Deep Research", "callback_data": f"prompt_gemini_{choice}"},
             ],
             [
+                {"text": "🎨 برومبت الصور الخاطفة للعين (Pomelli 8K)", "callback_data": f"prompt_pomelli_{choice}"},
                 {"text": "🎙️ برومبت Google NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
-                {"text": "🎨 برومبت Google Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
             ],
             [
                 {"text": "📱 برومبتات السوشيال (ريلز / تيك توك / يوتيوب)", "callback_data": f"prompt_social_menu_{choice}"},
@@ -1493,19 +1375,35 @@ def build_notebooklm_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
 def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     d = get_product_data(choice)
     name_ar = html.escape(d["name_ar"])
-    p1 = d.get("pomelli_1_1", "")
-    p9 = d.get("pomelli_9_16", "")
+    brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
+    hero_action = SCROLL_STOPPING_HERO_HOOKS.get(str(choice).strip(), SCROLL_STOPPING_HERO_HOOKS["1"])
+
+    p1 = (
+        f"Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, "
+        f"following the Healing Touch Egypt Brand Book (`#064E3B` Forest Green, `#10B981` Medical Mint, `#0F172A` Slate Navy, `#FFFFFF` Sterile White). "
+        f"A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (`#10B981`) "
+        f"and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, {hero_action} ({brand} - {name_ar}). "
+        f"Setting: Upscale, sunlit Cairo consultation lounge with warm wood, indoor plants, and deep forest-green (`#064E3B`) wall panels. "
+        f"STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays."
+    )
+    p9 = (
+        f"Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (`#064E3B` Forest Green, `#10B981` Medical Mint). "
+        f"A warm Egyptian female recovery care specialist in a tailored `#10B981` mint tunic and neat beige hijab looks DIRECTLY into the camera lens "
+        f"with a calm reassuring smile, {hero_action} ({brand} - {name_ar}) illuminated by golden Cairo morning window light. "
+        f"Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts."
+    )
 
     msg = (
-        f"🎨 <b>برومبتات توليد الصور الطبية في Google Pomelli (واقعية سريرية 8K)</b>\n\n"
-        f"🎯 <b>المنتج:</b> {name_ar}\n\n"
+        f"🎨 <b>برومبتات توليد الصور الإعلانية الخاطفة للعين في Google Pomelli (8K Scroll-Stopping)</b>\n\n"
+        f"🎯 <b>المنتج:</b> {name_ar}\n"
+        f"✨ <b>تعليمات الجذب المدمجة تلقائياً:</b> نظر مباشر للكاميرا + رفع المنتج في مقدمة الكادر (Hero Hold) + منع صينية الستانلس وأجهزة المستشفى والزجاجات العشوائية.\n\n"
         f"📐 <b>1️⃣ برومبت البوست المربع 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
         f"<pre><code>{html.escape(p1)}</code></pre>\n\n"
         f"📱 <b>2️⃣ برومبت الستوري والريلز العمودي 9:16 (إنستجرام وتيك توك):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
         f"<pre><code>{html.escape(p9)}</code></pre>\n\n"
-        f"💡 <i>تذكير: أي صورة تقوم بحفظها من Pomelli، أرسلها هنا مباشرة في الشات لتصل إلى manual_inbox تلقائياً!</i>"
+        f"💡 <i>تذكير: أي صورة تحفظها من Pomelli، أرسلها هنا في الشات (أو ضعها في درايف) لتدخل مسار النشر التلقائي فوراً!</i>"
     )
 
     keyboard = {
@@ -1538,9 +1436,6 @@ def build_social_prompts_menu(choice: str) -> Tuple[str, Dict[str, Any]]:
 
     keyboard = {
         "inline_keyboard": [
-            [
-                {"text": "🎬 البرومبت الموحد الشامل — Google Flow", "callback_data": f"prompt_flow_{choice}"},
-            ],
             [
                 {"text": "🎬 سكريبت وسيو يوتيوب مصر (16:9 + Shorts)", "callback_data": f"prompt_yt_{choice}"},
             ],
