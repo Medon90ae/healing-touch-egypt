@@ -74,7 +74,7 @@ def read_resilient_text(target: Path | str) -> str:
 
 def find_active_inbox_files(inbox_dir: Path) -> list[Path]:
     """
-    العثور على الملفات المرفوعة الحالية في manual_inbox.
+    العثور على الملفات المرفوعة الحالية في manual_inbox مرتبة تنازلياً حسب الأحدث (st_mtime).
     إذا كان الصندوق فارغاً، يتم فحص مجلدات archive واختيار ملفات أحدث حملة مؤرخة تلقائياً.
     """
     if not inbox_dir.exists():
@@ -85,7 +85,7 @@ def find_active_inbox_files(inbox_dir: Path) -> list[Path]:
         if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]
     ]
     if current_files:
-        return current_files
+        return sorted(current_files, key=lambda f: f.stat().st_mtime, reverse=True)
 
     # فحص الأرشيف في media_assets/archive أو manual_inbox/archive
     arch_dirs_to_check = []
@@ -101,7 +101,7 @@ def find_active_inbox_files(inbox_dir: Path) -> list[Path]:
             if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]
         ]
         if arch_files:
-            return arch_files
+            return sorted(arch_files, key=lambda f: f.stat().st_mtime, reverse=True)
     return []
 
 
@@ -265,6 +265,7 @@ def route_platform_text_files(files_or_dir) -> dict:
     - blogger: مقال بلوجر والدليل الطبي الشامل
     - reddit: منشور ومقال ريديت / التقرير السريري الشامل
     - general: باقي النصوص العامة
+    (يتم فرز الملفات تنازلياً حسب st_mtime لضمان اعتماد الأحدث وتجنب المحتوى القديم)
     """
     if isinstance(files_or_dir, (str, Path)):
         p = Path(files_or_dir)
@@ -292,6 +293,12 @@ def route_platform_text_files(files_or_dir) -> dict:
             candidates = [p] if p.suffix.lower() in [".txt", ".md"] else []
     else:
         candidates = [Path(f) for f in files_or_dir if Path(f).suffix.lower() in [".txt", ".md"] and not Path(f).name.startswith("PROMPTS")]
+
+    candidates = sorted(
+        candidates,
+        key=lambda f: f.stat().st_mtime if (f.exists() and f.is_file()) else 0,
+        reverse=True
+    )
 
     routed = {
         "facebook": None,
