@@ -249,18 +249,48 @@ def search_pixabay_photo(query: str, exclude_ids: set = None) -> dict:
 
 
 def get_clinical_case_photo(topic_text: str, custom_category: str = None) -> dict:
-    import random
     cat = custom_category or detect_category_from_text(topic_text)
-    
-    # 🌟 الاعتماد الحصري بنسبة 100% على جلسات تصوير منتجات هيلينج تاتش الطبية المعتمدة للمشروع (منع Pexels/Pixabay نهائياً)
+
+    # تجميع كافة المعرفات وأسماء الملفات المسجلة سابقاً في سجل الاستخدام أو سجل المنشورات
+    used_records = load_used_images()
+    pub_log = load_published_log()
+    for item in pub_log:
+        if isinstance(item, dict):
+            for k in ("post_id", "hero_image", "image_url", "image_id"):
+                val = item.get(k)
+                if val:
+                    used_records.add(str(val))
+
+    def is_recorded(path_obj: Path) -> bool:
+        stem_str = path_obj.stem
+        name_str = path_obj.name
+        full_str = str(path_obj)
+        return (
+            stem_str in used_records
+            or name_str in used_records
+            or full_str in used_records
+        )
+
+    # 🌟 الاعتماد الحصري بنسبة 100% على جلسات تصوير منتجات هيلينج تاتش الطبية المعتمدة للمشروع
     clinical_lib = MEDIA_DIR / "clinical_library"
     if clinical_lib.exists():
-        candidates = list(clinical_lib.glob("*.png")) + list(clinical_lib.glob("*.jpg"))
-        if candidates:
+        raw_candidates = [
+            f for f in clinical_lib.iterdir()
+            if f.is_file() and f.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"]
+        ]
+        if raw_candidates:
             # تصفية ذكية حسب التخصص إن أمكن
-            matched = [c for c in candidates if cat in c.name.lower()] or candidates
-            chosen = random.choice(matched)
-            print(f"[+] 🎨 تم اعتماد صورة منتج سريرية فائقة الدقة من المكتبة السريرية المعتمدة: {chosen.name}")
+            matched = [c for c in raw_candidates if cat in c.name.lower()] or raw_candidates
+            # ترتيب تنازلي حسب الأحدث زمنياً (st_mtime)
+            sorted_candidates = sorted(matched, key=lambda f: f.stat().st_mtime, reverse=True)
+
+            # تخطي الملفات المسجلة مسبقاً في سجل المنشورات
+            fresh_candidates = [c for c in sorted_candidates if not is_recorded(c)]
+            chosen = fresh_candidates[0] if fresh_candidates else sorted_candidates[0]
+
+            mark_image_as_used(chosen.stem)
+            mark_image_as_used(chosen.name)
+            print(f"[+] 🎨 تم اعتماد صورة منتج سريرية فائقة الدقة من المكتبة السريرية المعتمدة (الأحدث): {chosen.name}")
             return {
                 "id": chosen.stem,
                 "image_url": "",
@@ -270,19 +300,27 @@ def get_clinical_case_photo(topic_text: str, custom_category: str = None) -> dic
                 "local_path": str(chosen),
             }
 
-    # إذا لم تتوفر المكتبة السريرية، نستخدم الصور المعتمدة في docs/assets
+    # إذا لم تتوفر المكتبة السريرية، نستخدم الصور المعتمدة في docs/assets مرتبة زمنياً
     docs_assets = BASE_DIR / "docs" / "assets"
-    for ext in [".png", ".jpg"]:
+    doc_candidates = []
+    for ext in [".png", ".jpg", ".jpeg", ".webp"]:
         cand = docs_assets / f"campaign_{cat}_hero{ext}"
-        if cand.exists():
-            return {
-                "id": cand.stem,
-                "image_url": "",
-                "source": "Clinical Library",
-                "alt": f"منتجات هيلينج تاتش مصر - {cat}",
-                "photographer": "Healing Touch Egypt",
-                "local_path": str(cand),
-            }
+        if cand.exists() and cand.is_file():
+            doc_candidates.append(cand)
+
+    if doc_candidates:
+        sorted_doc = sorted(doc_candidates, key=lambda f: f.stat().st_mtime, reverse=True)
+        fresh_doc = [c for c in sorted_doc if not is_recorded(c)]
+        chosen = fresh_doc[0] if fresh_doc else sorted_doc[0]
+        mark_image_as_used(chosen.stem)
+        return {
+            "id": chosen.stem,
+            "image_url": "",
+            "source": "Clinical Library",
+            "alt": f"منتجات هيلينج تاتش مصر - {cat}",
+            "photographer": "Healing Touch Egypt",
+            "local_path": str(chosen),
+        }
 
     og_img = docs_assets / "og-image.jpg"
     if og_img.exists():
