@@ -154,7 +154,6 @@ def build_omnichannel_payload(
         "event": "media_pack_ready",
         "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
         "idempotency_key": idempotency_key,
-        "google_flow_project_url": "https://flow.google.com/project/942f62cb-f0e4-4860-bfce-2ba75998cfc7",
         "campaign_id": campaign_id,
         "theme": theme,
         "product_name": product_name,

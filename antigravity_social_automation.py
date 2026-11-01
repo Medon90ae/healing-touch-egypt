@@ -252,25 +252,25 @@ def get_clinical_case_photo(topic_text: str, custom_category: str = None) -> dic
     import random
     cat = custom_category or detect_category_from_text(topic_text)
     
-    # 🌟 الاعتماد الحصري بنسبة 100% على جلسات تصوير منتجات Pomelli الطبية المعتمدة للمشروع (منع Pexels/Pixabay نهائياً)
-    pomelli_lib = MEDIA_DIR / "pomelli_library"
-    if pomelli_lib.exists():
-        candidates = list(pomelli_lib.glob("*.png")) + list(pomelli_lib.glob("*.jpg"))
+    # 🌟 الاعتماد الحصري بنسبة 100% على جلسات تصوير منتجات هيلينج تاتش الطبية المعتمدة للمشروع (منع Pexels/Pixabay نهائياً)
+    clinical_lib = MEDIA_DIR / "clinical_library"
+    if clinical_lib.exists():
+        candidates = list(clinical_lib.glob("*.png")) + list(clinical_lib.glob("*.jpg"))
         if candidates:
             # تصفية ذكية حسب التخصص إن أمكن
             matched = [c for c in candidates if cat in c.name.lower()] or candidates
             chosen = random.choice(matched)
-            print(f"[+] 🎨 تم اعتماد صورة منتج سريرية فائقة الدقة من جلسات Pomelli المعتمدة: {chosen.name}")
+            print(f"[+] 🎨 تم اعتماد صورة منتج سريرية فائقة الدقة من المكتبة السريرية المعتمدة: {chosen.name}")
             return {
                 "id": chosen.stem,
                 "image_url": "",
-                "source": "Pomelli Studio",
+                "source": "Clinical Studio",
                 "alt": f"جلسة تصوير طبية لمنتجات هيلينج تاتش مصر - {cat}",
                 "photographer": "Healing Touch Egypt Clinical Studio",
                 "local_path": str(chosen),
             }
 
-    # إذا لم تتوفر مكتبة Pomelli، نستخدم الصور المعتمدة في docs/assets
+    # إذا لم تتوفر المكتبة السريرية، نستخدم الصور المعتمدة في docs/assets
     docs_assets = BASE_DIR / "docs" / "assets"
     for ext in [".png", ".jpg"]:
         cand = docs_assets / f"campaign_{cat}_hero{ext}"
@@ -818,8 +818,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "توقيت الاستحمام الآمن بعد الولادة القيصرية واستخدام الضمادات المقاومة للماء",
             "الفرق بين الشاش التقليدي وضمادات الفيلم الشفاف شبه المنفذة في منع التهاب الجروح"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic 3M Tegaderm +Pad waterproof transparent dressing prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic 3M Tegaderm +Pad waterproof transparent dressing prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic 3M Tegaderm +Pad waterproof transparent dressing prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic 3M Tegaderm +Pad waterproof transparent dressing prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "خوف المريضة من دخول الماء أو الصابون لخط الجرح أثناء الاستحمام وتسببه في التهاب أو صديد",
             "قلق المريضة من كتمة الجرح والتعرق تحت اللصقة إذا كانت غير مسامية",
@@ -866,8 +866,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "بروتوكول تسطيح ندبة القيصرية بشيت السيليكون الطبي ومدة الاستخدام اليومي",
             "علاج الكلويد والندبات المتضخمة بعد العمليات الجراحية بدون تدخل جراحي"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently presenting a soft, translucent skin-toned medical silicone strip in sharp foreground focus toward the lens (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently presenting a soft, translucent skin-toned medical silicone strip in sharp foreground focus toward the lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently presenting a soft, translucent skin-toned medical silicone strip in sharp foreground focus toward the lens (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic BUPY Medical Silicone Scar Sheet box in one hand and gently presenting a soft, translucent skin-toned medical silicone strip in sharp foreground focus toward the lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "خوف المريضة من تحول خط الجرح إلى حبل بارز أحمر أو كلويد دائم يشوه المظهر",
             "الحكة الشديدة والنغزات المزعجة في مكان الندبة التي تجعل لمس الملابس مؤلماً",
@@ -914,8 +914,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "طريقة لصق بلاستر 3M البيج لتصريف تورم أرنبة الأنف بعد إزالة الجبيرة",
             "حماية جرح استئصال الغدة الدرقية في الرقبة من أشعة الشمس والتصبغ"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in sharp foreground focus toward the camera lens (Hero Product Hold) in a bright aesthetic facial studio. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in sharp foreground focus toward the camera lens (Hero Product Hold) in a bright aesthetic facial studio illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in sharp foreground focus toward the camera lens (Hero Product Hold) in a bright aesthetic facial studio. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool prominently in sharp foreground focus toward the camera lens (Hero Product Hold) in a bright aesthetic facial studio illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "الذعر من تورم أرنبة الأنف أو عدم تناسق النزول بعد فك الجبيرة",
             "ظهور حبوب صديدية وبثور بيضاء وحساسية جلدية بسبب اللصقات العادية الرديئة المكتومة",
@@ -959,8 +959,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "أهمية دعامة الأنف السيليكون في تماثل الفتحات ومنع التليف بعد التجميل",
             "كيفية تنظيف واختيار مقاس دعامة الأنف السيليكونية بعد العملية"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding a crystal-clear sterile case with a symmetrical transparent medical-grade Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "قلق المريض من وجود فتحة أنف أكبر من الأخرى أو انكماش فتحة بعد العملية",
             "صعوبة التنفس أو تضيق مجرى الهواء أثناء نوم المريض في الأسابيع الأولى",
@@ -1004,8 +1004,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "طريقة استخدام سبراي أوبسايت على ثقوب منظار التكميم والاستحمام الفوري",
             "علاج تحسس والتهاب جلد البطن من بلاستر ثقوب المنظار بعد جراحة السمنة"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "المعاناة من ألم نزع البلاستر المتكرر من جلد البطن الحساس والتهابه بعد التكميم",
             "الخوف من التهاب ثقوب المنظار أو تلوثها بمياه الاستحمام",
@@ -1046,8 +1046,8 @@ PRODUCT_PROMPT_CONFIGS = {
             "Comparative efficacy of modern silicone dressings vs traditional wound dressings",
             "Best clinical practices for outpatient surgical recovery in warm climates"
         ],
-        "pomelli_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, presenting the authentic Healing Touch Egypt post-operative care collection neatly arranged on a warm marble consultation desk in sharp foreground focus (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
-        "pomelli_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, presenting the authentic Healing Touch Egypt post-operative care collection neatly arranged on a warm marble consultation desk in sharp foreground focus (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+        "visual_prompt_1_1": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, presenting the authentic Healing Touch Egypt post-operative care collection neatly arranged on a warm marble consultation desk in sharp foreground focus (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+        "visual_prompt_9_16": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, presenting the authentic Healing Touch Egypt post-operative care collection neatly arranged on a warm marble consultation desk in sharp foreground focus (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background, zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
         "patient_anxieties": [
             "الحيرة والتشتت في اختيار المستلزمات الطبية الأصلية بعد الخروج من المستشفى",
             "الخوف من حدوث مضاعفات أو تلوث الجرح بسبب سوء العناية في المنزل",
@@ -1073,6 +1073,7 @@ def prompt_user_for_product_selection() -> str:
     print("  [5] سبراي أوبسايت العازل للجروح (Smith & Nephew Opsite Post-Op Spray)")
     print("      • المحور: عزل ثقوب مناظير التكميم والسمنة، حاجز ميكروبي فوري شفاف")
     print("  [6] إعداد حزمة شاملة لجميع المنتجات الخمسة معاً")
+    print("  [+] إضافة منتج طبي جديد إلى الكتالوج الموحد (Add New Product to Catalog)")
     print("=" * 68)
     
     choice = ""
@@ -1081,6 +1082,19 @@ def prompt_user_for_product_selection() -> str:
     except Exception:
         choice = "1"
         
+    if choice == "+":
+        try:
+            import canva_design_engine as cde
+            n_ar = input("• اسم المنتج بالعربية: ").strip() or "منتج عناية جراحية جديد"
+            b_en = input("• الاسم العلمي/التجاري بالإنجليزية: ").strip() or "Medical Post-Op Care Product"
+            niche = input("• النيتش الطبي والغرض الجراحي: ").strip() or "رعاية الجروح والتعافي بعد العمليات"
+            cat = input("• التخصص الأقرب (c-section / thyroid / rhinoplasty / bariatric) [افتراضياً c-section]: ").strip() or "c-section"
+            new_p = cde.add_new_product_to_catalog(name_ar=n_ar, brand_en=b_en, niche_ar=niche, category=cat)
+            print(f"[+] ✅ تم حفظ المنتج الجديد في الكتالوج برقم [{new_p['product_id']}]!")
+            return "1"
+        except Exception as e:
+            print(f"[!] تنبيه إضافة منتج: {e}")
+            return "1"
     if choice not in ("1", "2", "3", "4", "5", "6"):
         choice = "1"
     return choice
@@ -1231,16 +1245,16 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
         "```",
         "",
         "=====================================================================",
-        "2️⃣ برومبتات توليد الصور الطبية في Google Pomelli (صور واقعية سريرية 4K):",
+        "2️⃣ برومبتات توليد الصور الطبية الخاطفة للعين (NotebookLM / Gemini Visual Studio 8K):",
         "=====================================================================",
         "📌 [أولاً: مقاس البوست المربع 1:1 - مخصص للموقع وفيسبوك وإنستجرام Feed]:",
         "```text",
-        selected_cfg["pomelli_prompt_1_1"],
+        selected_cfg["visual_prompt_1_1"],
         "```",
         "",
         "📌 [ثانياً: مقاس الستوري والريلز العمودي 9:16 - مخصص لإنستجرام وتيك توك وستوري]:",
         "```text",
-        selected_cfg["pomelli_prompt_9_16"],
+        selected_cfg["visual_prompt_9_16"],
         "```",
         "",
         "=====================================================================",
@@ -1410,6 +1424,29 @@ def export_notebooklm_master_source(product_choice: str = None, interactive: boo
         "=====================================================================",
     ])
 
+    try:
+        import canva_design_engine as cde
+        canva_tpl_pack = cde.build_canva_platform_template_pack(product_choice)
+        canva_info = cde.get_canva_design_info(product_choice)
+        prompts_pack_lines.extend([
+            "=====================================================================",
+            "11️⃣ قوالب استوديو كانفا المخصصة لنيتش المنتج (Canva Niche Templates):",
+            "=====================================================================",
+            f"📁 مجلد منتجات هيلينج تاتش على Canva: {canva_info.get('folder_url')}",
+            f"🖼️ معرف أصل صورة المنتج (Canva Asset ID): {canva_info.get('asset_id')}",
+            "",
+            canva_tpl_pack["feed_post_1x1"],
+            "",
+            canva_tpl_pack["story_reel_9x16"],
+            "",
+            canva_tpl_pack["carousel_7slides"],
+            "",
+            canva_tpl_pack["widescreen_16x9"],
+            "",
+        ])
+    except Exception as _ce:
+        pass
+
     prompts_pack_txt = "\n".join(prompts_pack_lines)
 
     # حفظ في manual_inbox بصيغتي TXT و MD
@@ -1491,17 +1528,14 @@ def copy_to_windows_clipboard(text: str):
         pass
 
 
-def open_url_in_default_browser(url: str):
+def open_url_in_default_browser(url: str) -> bool:
     if not url:
-        return
+        return False
     try:
-        if hasattr(os, "startfile"):
-            os.startfile(url)
-        else:
-            webbrowser.open_new_tab(url)
-    except Exception:
-        webbrowser.open_new_tab(url)
-    time.sleep(0.45)
+        from scripts.safe_launcher import safe_open_url_in_browser
+    except ImportError:
+        from safe_launcher import safe_open_url_in_browser
+    return safe_open_url_in_browser(url)
 
 
 def fetch_sheet_tab(tab_name: str) -> pd.DataFrame:
@@ -2132,9 +2166,9 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     notebook_file = str(NOTEBOOKLM_DIR / "Healing_Touch_NotebookLM_Source.md")
 
     # 5. ملفات HTML مخصصة
-    custom_stitch_html = ""
+    custom_inbox_html = ""
     if inbox_htmls:
-        custom_stitch_html = inbox_htmls[0].read_text(encoding="utf-8")
+        custom_inbox_html = inbox_htmls[0].read_text(encoding="utf-8")
         used_inbox_files.append(inbox_htmls[0])
 
     # توليد وتحديث كافة صفحات الهبوط متعددة الزوايا للمنتجات الطبية
@@ -2155,7 +2189,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
             "video_vertical": str(dest_v_vid) if chosen_v_vid else "",
             "audio_path": str(dest_docs_aud) if dest_docs_aud else ""
         },
-        custom_stitch_html=custom_stitch_html
+        custom_template_html=custom_inbox_html
     )
     lp_url = lp_res["public_url"]
 
@@ -2387,9 +2421,7 @@ def main():
         print("🧠 [خطوات بسيطة للحصول على الفيديو والصوت والنصوص والمقالات كاملة]:")
         print("=" * 65)
         print(f"1. تم إنشاء وتحديث الملف المرجعي الحامل للبرومبت والتعليمات الصارمة:\n   👉 {src_path}")
-        print("2. 🌐 جاري فتح منصات وأدوات الذكاء الاصطناعي الأربعة (Pomelli + Stitch + Deep Research + NotebookLM)...")
-        open_url_in_default_browser("https://labs.google.com/pomelli/campaigns")
-        open_url_in_default_browser("https://stitch.withgoogle.com/")
+        print("2. 🌐 جاري تنظيف التبويبات القديمة وفتح منصتي الذكاء الاصطناعي المعتمدتين (Gemini Deep Research + Google NotebookLM)...")
         open_url_in_default_browser("https://gemini.google.com/")
         open_url_in_default_browser("https://notebooklm.google.com/")
         print("3. جاري فتح مجلد الحزمة ومجلد الصور الطبية pic وصندوق الاستقبال manual_inbox...")

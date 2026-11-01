@@ -4,8 +4,8 @@ with open('c:/followUPSHEET/healing_touch/antigravity_social_automation.py', 'r'
 
 # Fix cat_matched
 text = text.replace(
-    'if cat_matched.get("htmls"):\n        custom_stitch_html = cat_matched["htmls"][0].read_text(encoding="utf-8")\n        used_inbox_files.append(cat_matched["htmls"][0])',
-    'if inbox_htmls:\n        custom_stitch_html = inbox_htmls[0].read_text(encoding="utf-8")\n        used_inbox_files.append(inbox_htmls[0])'
+    'if cat_matched.get("htmls"):\n        custom_inbox_html = cat_matched["htmls"][0].read_text(encoding="utf-8")\n        used_inbox_files.append(cat_matched["htmls"][0])',
+    'if inbox_htmls:\n        custom_inbox_html = inbox_htmls[0].read_text(encoding="utf-8")\n        used_inbox_files.append(inbox_htmls[0])'
 )
 
 # Fix reddit_text

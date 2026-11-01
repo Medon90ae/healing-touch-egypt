@@ -3,7 +3,7 @@
 Fix antigravity_social_automation.py:
 1. Prevent export_notebooklm_master_source from blocking Option 1 (auto-daily).
 2. Move manual_inbox intake to the very top of run_unified_studio_and_publish.
-3. Support Arabic-named MP4 videos, M4A audios, Pomelli images, and clinical text files.
+3. Support Arabic-named MP4 videos, M4A audios, Clinical images, and clinical text files.
 4. Ensure Facebook and Instagram receive the full caption containing landing page and WhatsApp links.
 5. Archive ALL processed files in manual_inbox so it becomes 100% clean.
 """
@@ -22,7 +22,7 @@ content = SOCIAL_FILE.read_text(encoding="utf-8")
 # Only prompt user for selection if explicitly called or when interactive flag is set,
 # NEVER prompt when running in automated batch mode or when called without product_choice
 old_export_head = '''def export_notebooklm_master_source(product_choice: str = None) -> str:
-    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Pomelli و Deep Research."""
+    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Clinical و Deep Research."""
     if product_choice is None:
         # إذا كنا في طرفية تفاعلية، نطلب الاختيار من المستخدم
         if sys.stdin and sys.stdin.isatty():
@@ -31,7 +31,7 @@ old_export_head = '''def export_notebooklm_master_source(product_choice: str = N
             product_choice = "1"'''
 
 new_export_head = '''def export_notebooklm_master_source(product_choice: str = None, interactive: bool = False) -> str:
-    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Pomelli و Deep Research."""
+    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Clinical و Deep Research."""
     if product_choice is None:
         if interactive and sys.stdin and sys.stdin.isatty():
             product_choice = prompt_user_for_product_selection()
@@ -183,7 +183,7 @@ new_intake_start = '''    # 📥 فحص واستيعاب كافة ملفات man
                     tmpl["story_text"] = "\\n\\n".join(top_paragraphs)
             print(f"[+] 📝 تم استيعاب وصياغة التقرير السريري المرفوع ({chosen_txt.name})!")
 
-    # 4. معالجة الصور المرفوعة من Pomelli
+    # 4. معالجة الصور المرفوعة من Clinical
     if inbox_images:
         # تفضيل الصور ذات الحجم الأنسب للويب (مثل 1-2 ميجابايت بدلاً من 20 ميجابايت)
         sorted_imgs = sorted(inbox_images, key=lambda x: (abs(x.stat().st_size - 1.5 * 1024 * 1024)))
@@ -196,7 +196,7 @@ new_intake_start = '''    # 📥 فحص واستيعاب كافة ملفات man
             shutil.copy2(str(chosen_img), str(dest_hero_img))
             square_img_path = str(dest_hero_img)
             story_img_path = str(dest_hero_img)
-            print(f"[+] 🎨 تم اعتماد صور Pomelli السريرية المرفوعة ({chosen_img.name})!")
+            print(f"[+] 🎨 تم اعتماد صور Clinical السريرية المرفوعة ({chosen_img.name})!")
         except Exception:
             square_img_path = str(chosen_img)
             story_img_path = str(chosen_img)

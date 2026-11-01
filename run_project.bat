@@ -8,7 +8,7 @@ echo              Healing Touch Egypt - Master Control Center
 echo ======================================================================
 echo.
 echo   [1] التشغيل الشامل بضغطة واحدة (Single-Click Master Pipeline)
-echo   [2] اختيار منتج وتجهيز برومبتات ومصادر الأبحاث (PubMed + NotebookLM + Pomelli)
+echo   [2] اختيار منتج وتجهيز برومبتات ومصادر الأبحاث (PubMed + NotebookLM + Gemini Deep Research)
 echo   [3] معاينة وتجهيز الأصول واللاندنج بيدج بدون نشر (Dry Run)
 echo   [4] فحص حالة خدمة n8n الخلفية الدائمة (n8n Service Status)
 echo   [5] فحص وتشغيل مركز القيادة على تيليجرام (Telegram Bot Service)
@@ -49,7 +49,7 @@ goto end
 
 :opt2
 echo.
-echo [*] اختيار منتج وتجهيز برومبتات اليوم ومصادر الأبحاث الطبية المعتمدة (PubMed + NotebookLM + Pomelli)...
+echo [*] اختيار منتج وتجهيز برومبتات اليوم ومصادر الأبحاث الطبية المعتمدة (PubMed + NotebookLM + Gemini Deep Research)...
 ".venv\Scripts\python.exe" antigravity_social_automation.py --mode notebooklm
 if exist "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt" (
     start notepad "media_assets\manual_inbox\PROMPTS_PACK_TODAY.txt"

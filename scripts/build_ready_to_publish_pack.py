@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_DIR = BASE_DIR / "media_assets"
 READY_BASE_DIR = MEDIA_DIR / "ready_to_publish"
 MANUAL_INBOX_DIR = MEDIA_DIR / "manual_inbox"
-POMELLI_LIB_DIR = MEDIA_DIR / "pomelli_library"
+CLINICAL_LIB_DIR = MEDIA_DIR / "clinical_library"
 DOCS_DIR = BASE_DIR / "docs"
 
 # استيراد محرك الفيديو والفرز الذكي
@@ -522,7 +522,12 @@ def deploy_landing_page_assets(pack_dir: Path, cat: str, lp_url: str, wa_url: st
 
 
 def sanitize_text_file_phone_numbers(pack_dir: Path):
-    """تطهير حزم النشر من أي أرقام هواتف صريحة في أقواس (01155803307) واستبدالها برابط الواتساب المعتمد بكود HT10."""
+    """تطهير حزم النشر من أي أرقام هواتف صريحة أو ألقاب غير معتمدة واستبدالها برابط الواتساب المعتمد بكود HT10."""
+    try:
+        from compliance_validator import sanitize_directory_files
+        sanitize_directory_files(pack_dir)
+    except Exception:
+        pass
     clean_cta_parens = "https://wa.me/201155803307?text=استشارة%20سريرية%20بكود%20HT10"
     for tf in pack_dir.rglob("*.txt"):
         try:
@@ -588,10 +593,10 @@ def get_active_assets(category: str = None) -> dict:
     if audios and category == detected:
         assets["audio"] = audios[0]
 
-    # 3. صور Pomelli والأصول المرئية
+    # 3. الصور السريرية المعتمدة والأصول المرئية
     imgs = [f for f in active_files if f.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"]] if category == detected else []
-    if not imgs and category == detected and POMELLI_LIB_DIR.exists():
-        imgs = list(POMELLI_LIB_DIR.glob("*.png"))
+    if not imgs and category == detected and CLINICAL_LIB_DIR.exists():
+        imgs = list(CLINICAL_LIB_DIR.glob("*.png"))
 
     if imgs:
         square_cand = next((im for im in imgs if "1_1" in im.name or "photoshoot-1" in im.name), imgs[0])
@@ -781,7 +786,8 @@ def generate_pack(category: str = None) -> Path:
 
 💬 استشارة سريرية مجانية وتوجيه مخصص لحالتك مع أخصائية التعافي عبر واتساب:
 👉 رابط المحادثة المباشر: {wa_url}
-📱 أو عبر واتساب الرسمي: 201155803307
+📱 للاستشارة المجانية وتفعيل كود HT10 عبر واتساب الرسمي:
+https://wa.me/201155803307?text=%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9_%D8%A8%D9%83%D9%88%D8%AF_HT10
 
 🎁 كود الأولوية السريرية (HT10):
 📦 يمنحك شحن مجاني فوري + حق فتح ومعاينة الشحنة والتأكد من المنتج الأصلي قبل الاستلام والدفع!
@@ -896,7 +902,30 @@ def generate_pack(category: str = None) -> Path:
     # =========================================================================
     deploy_landing_page_assets(pack_dir, cat, lp_url, wa_url)
 
-    # تطهير كافة أرقام الهواتف الصريحة من جميع ملفات النصوص داخل الحزمة
+    # توليد وحفظ برومبتات Gemini Deep Research وأصول NotebookLM المتعددة الوسائط داخل الحزمة
+    try:
+        import json as _json
+        from gemini_deep_research_engine import run_clinical_deep_research
+        from format_prompt_synthesizer import synthesize_format_prompts
+        from notebooklm_automation_engine import generate_notebooklm_multimodal_assets
+        dossier = run_clinical_deep_research(cat, use_live_api=False)
+        manifest = synthesize_format_prompts(dossier)
+        nlm_assets = generate_notebooklm_multimodal_assets(dossier, manifest, output_dir=pack_dir / "00_NotebookLM_Multimodal")
+        (pack_dir / "00_Gemini_Deep_Research_Prompts.json").write_text(
+            _json.dumps(manifest.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        if not (ig_dir / "فيديو_ريلز_Reels_9x16.mp4").exists() and Path(nlm_assets.video_vertical_path).exists():
+            shutil.copy2(nlm_assets.video_vertical_path, str(ig_dir / "فيديو_ريلز_Reels_9x16.mp4"))
+        if not (fb_dir / "فيديو_ريلز_Reels_9x16.mp4").exists() and Path(nlm_assets.video_vertical_path).exists():
+            shutil.copy2(nlm_assets.video_vertical_path, str(fb_dir / "فيديو_ريلز_Reels_9x16.mp4"))
+        if not (tiktok_dir / "فيديو_تيكتوك_رأسي_9x16.mp4").exists() and Path(nlm_assets.video_vertical_path).exists():
+            shutil.copy2(nlm_assets.video_vertical_path, str(tiktok_dir / "فيديو_تيكتوك_رأسي_9x16.mp4"))
+        if not (yt_dir / "فيديو_يوتيوب_كامل_16x9.mp4").exists() and Path(nlm_assets.video_overview_path).exists():
+            shutil.copy2(nlm_assets.video_overview_path, str(yt_dir / "فيديو_يوتيوب_كامل_16x9.mp4"))
+    except Exception:
+        pass
+
+    # تطهير كافة أرقام الهواتف الصريحة والألقاب من جميع ملفات النصوص داخل الحزمة
     sanitize_text_file_phone_numbers(pack_dir)
 
     # =========================================================================
@@ -919,7 +948,7 @@ def generate_pack(category: str = None) -> Path:
 
 📁 03_إنستجرام_Instagram:
    - فيديو ريلز 9x16 (MP4)
-   - صور البوست والستوري (Pomelli 4K)
+   - صور البوست والستوري (Clinical 8K)
    - كابشن وهاشتاجات إنستجرام ودليل الكاروسيل السريري (7 شرائح) وسكريبت الريلز
 
 📁 04_بلوجر_Blogger:

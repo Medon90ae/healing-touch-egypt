@@ -467,7 +467,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"post_info\": {\n    \"title\": $('Validate & Format Payloads').first().json.tiktok_caption,\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"disable_duet\": false,\n    \"disable_stitch\": false,\n    \"disable_comment\": false,\n    \"video_cover_timestamp_ms\": 1000\n  },\n  \"source_info\": {\n    \"source\": \"PULL_FROM_URL\",\n    \"video_url\": $('Validate & Format Payloads').first().json.media_video_url\n  }\n}",
+        "jsonBody": "={\n  \"post_info\": {\n    \"title\": $('Validate & Format Payloads').first().json.tiktok_caption,\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"disable_duet\": false,\n    \"disable_comment\": false,\n    \"video_cover_timestamp_ms\": 1000\n  },\n  \"source_info\": {\n    \"source\": \"PULL_FROM_URL\",\n    \"video_url\": $('Validate & Format Payloads').first().json.media_video_url\n  }\n}",
         "options": {}
       },
       "id": "wf1-node-27",

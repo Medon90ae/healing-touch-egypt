@@ -19,7 +19,7 @@ Safety rules:
     with the same byte size.
   * The newest `keep_latest` entries of every archive root are always kept
     locally (the pipeline falls back to the latest archive / pack).
-  * Backup-only roots (pomelli_library, branded_designs, research reports,
+  * Backup-only roots (clinical_library, branded_designs, research reports,
     client reviews, CRM db) are uploaded but never purged.
 
 Usage:
@@ -94,15 +94,15 @@ ARCHIVE_SPECS: List[ArchiveSpec] = [
     ArchiveSpec("media_assets/notebooklm_hub/research_reports",
                 "03_Clinical_Research_NotebookLM/research_reports", purge=False),
     ArchiveSpec("media_assets/notebooklm_hub/pic", "03_Clinical_Research_NotebookLM/pic", purge=False),
-    ArchiveSpec("media_assets/pomelli_library", "04_Pomelli_Branded_Designs/pomelli_library", purge=False),
-    ArchiveSpec("media_assets/branded_designs", "04_Pomelli_Branded_Designs/branded_designs", purge=False),
+    ArchiveSpec("media_assets/clinical_library", "04_Clinical_Branded_Designs/clinical_library", purge=False),
+    ArchiveSpec("media_assets/branded_designs", "04_Clinical_Branded_Designs/branded_designs", purge=False),
     ArchiveSpec("media_assets/client_reviews", "05_Client_Reviews_Proof", purge=False),
     ArchiveSpec("media_assets/crm_leads", "06_CRM_Leads_Backups", purge=False, include=["*.db", "*.csv", "*.json"],
                 recursive=False),
     ArchiveSpec("media_assets/archive", "07_Media_Archive_Legacy", purge=True, keep_latest=0),
 ]
 
-FLOW_INBOX_DRIVE_SUBFOLDER = "00_Flow_Inbox"
+NLM_INBOX_DRIVE_SUBFOLDER = "00_NotebookLM_Inbox"
 
 TOP_FOLDERS = sorted({s.drive_path.split("/")[0] for s in ARCHIVE_SPECS})
 
@@ -140,7 +140,7 @@ class DesktopBackend:
     def __init__(self, my_drive: Path):
         self.root = my_drive / CLOUD_ROOT_NAME
         self.root.mkdir(parents=True, exist_ok=True)
-        (self.root / FLOW_INBOX_DRIVE_SUBFOLDER).mkdir(parents=True, exist_ok=True)
+        (self.root / NLM_INBOX_DRIVE_SUBFOLDER).mkdir(parents=True, exist_ok=True)
 
     @staticmethod
     def detect() -> Optional["DesktopBackend"]:

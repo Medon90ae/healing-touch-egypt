@@ -73,10 +73,8 @@ PRODUCT_SLUGS = {
 }
 
 # Verified Platform Endpoints
-POMELLI_BRAND_BOOK_URL = "https://labs.google.com/pomelli/brand_book/am6H88zhmUadtfPiiAmOnW"
 NOTEBOOKLM_URL = "https://notebooklm.google.com/"
 GEMINI_URL = "https://gemini.google.com/"
-GOOGLE_FLOW_URL = "https://flow.google.com/project/942f62cb-f0e4-4860-bfce-2ba75998cfc7"
 
 CHOICE_TO_CATEGORY = {
     "1": "c-section",
@@ -683,11 +681,11 @@ def get_main_menu_text() -> str:
 def get_products_menu_text() -> str:
     return (
         "🩺 <b>قائمة المنتجات السريرية المعتمدة (Clinical Products Suite):</b>\n\n"
-        "اختر المنتج ليكون محور أبحاث ومحتوى اليوم، وسيقوم المحرك فوراً بـ:\n"
-        "1. سحب أحدث أوراق <b>PubMed</b> وترندات جوجل مصر الصاعدة.\n"
-        "2. توليد حزمة برومبتات اليوم المجهزة للمنصات وإرسالها لك كمستند.\n"
-        "3. تجهيز روابط Pomelli و NotebookLM بنقرة واحدة.\n\n"
-        "👇 <b>اختر المنتج الطبي المطلوب:</b>"
+        "اختر المنتج لبدء مسار الإنتاج المتسلسل خطوة بخطوة:\n"
+        "1️⃣ <b>المرحلة 1 (أولاً):</b> سحب أحدث أوراق <b>PubMed</b> وترندات جوجل مصر وتوليد <b>برومبت البحث السريري المعمق (Gemini Deep Research)</b>.\n"
+        "2️⃣ <b>المرحلة 2 (بعد البحث):</b> ترسل نتيجة البحث العميق هنا في البوت، فيقوم المحرك بتحليلها وتوليد <b>كافة البرومبتات الجراحية</b> (الصور الخاطفة للجمهور + الصوت + الفيديو لـ <b>Google NotebookLM</b> + محتوى كل منصة وصيغة) بناءً على نتيجة البحث.\n"
+        "3️⃣ <b>المرحلة 3 و 4:</b> إنتاج المحتوى على <b>NotebookLM</b> ثم النشر الآلي الكامل (صفحات الهبوط + 6 صيغ فيسبوك وإنستجرام).\n\n"
+        "👇 <b>اختر المنتج الطبي المطلوب للبدء ببرومبت البحث العميق:</b>"
     )
 
 
@@ -715,9 +713,9 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
 
         status_msg = bot.send_message(
             chat_id,
-            "⏳ <b>[1/4] جاري تشغيل المسار الشامل الموحد (Google Flow + Drive + Auto-Publish)...</b>\n"
+            "⏳ <b>[1/4] جاري تشغيل المسار الشامل الموحد (Gemini Deep Research + NotebookLM + Auto-Publish)...</b>\n"
             f"• 🎯 المنتج المستهدف: <b>{html.escape(prod_label)}</b>\n"
-            "• ☁️ سحب وسائط <code>00_Flow_Inbox</code> و <code>manual_inbox</code>\n"
+            "• ☁️ سحب وسائط <code>00_NotebookLM_Inbox</code> و <code>manual_inbox</code>\n"
             "• 🌐 بناء وتحديث صفحات الهبوط على GitHub Pages\n"
             "• 📱 النشر التلقائي على فيسبوك وإنستجرام وتجهيز يوتيوب وتيكتوك...",
         )
@@ -744,14 +742,42 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
                 except Exception:
                     rep = {}
 
-            lp_url = rep.get("landing_page_url") or "https://medon90ae.github.io/healing-touch-egypt/"
-            fb_photo_url = rep.get("facebook_photo_url") or "https://www.facebook.com/1371809382684781"
+            lp_url = rep.get("landing_url") or rep.get("landing_page_url") or "https://medon90ae.github.io/healing-touch-egypt/"
+            fb_fmts = (rep.get("facebook_all_formats") or {}).get("formats") or {}
+            ig_fmts = (rep.get("instagram_all_formats") or {}).get("formats") or {}
+            fb_article_url = (fb_fmts.get("article") or {}).get("url") or ""
+            fb_story_url = (fb_fmts.get("story") or {}).get("url") or ""
+            fb_video_url = (fb_fmts.get("video") or {}).get("url") or ""
+            ig_reel_url = (ig_fmts.get("reel") or {}).get("url") or ""
+            ig_story_url = (ig_fmts.get("story") or {}).get("url") or ""
+            ig_article_url = (ig_fmts.get("article") or {}).get("url") or ""
+            ig_highlight_ref = (ig_fmts.get("highlight") or {}).get("story_ref") or ig_story_url or "https://www.instagram.com/mohamedahmedalahmady/"
+            fb_photo_url = rep.get("facebook_url") or rep.get("facebook_photo_url") or (fb_fmts.get("pic") or {}).get("url") or "https://www.facebook.com/1371809382684781"
             fb_reel_url = rep.get("facebook_reel_url")
-            ig_post_url = rep.get("instagram_post_url") or "https://www.instagram.com/mohamedahmedalahmady/"
+            ig_post_url = rep.get("instagram_url") or rep.get("instagram_post_url") or (ig_fmts.get("pic") or {}).get("url") or "https://www.instagram.com/mohamedahmedalahmady/"
             yt_dir = rep.get("youtube_manual_dir") or r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\02_Ready_To_Publish_Packs"
             tt_dir = rep.get("tiktok_manual_dir") or r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\02_Ready_To_Publish_Packs"
 
-            fb_reel_line = f"🎬 <b>ريلز فيسبوك (نُشر تلقائياً):</b>\n👉 {fb_reel_url}\n\n" if fb_reel_url else ""
+            fb_reel_url = rep.get("facebook_reel_url") or (fb_fmts.get("reel") or {}).get("url") or ""
+            fb_extra = ""
+            if fb_article_url:
+                fb_extra += f"📄 <b>بوست مقال صفحة الهبوط بالصورة (فيسبوك):</b>\n👉 {fb_article_url}\n"
+            if fb_reel_url:
+                fb_extra += f"🎬 <b>ريلز فيسبوك (Reels):</b>\n👉 {fb_reel_url}\n"
+            if fb_video_url:
+                fb_extra += f"🎥 <b>فيديو فيسبوك الكامل (16:9):</b>\n👉 {fb_video_url}\n"
+            if fb_story_url:
+                fb_extra += f"📱 <b>ستوري فيسبوك (Story):</b>\n👉 {fb_story_url}\n"
+            fb_reel_line = (fb_extra + "\n") if fb_extra else ""
+            ig_extra = ""
+            if ig_reel_url:
+                ig_extra += f"\n🎬 <b>ريلز إنستجرام (Reels):</b>\n👉 {ig_reel_url}"
+            if ig_story_url:
+                ig_extra += f"\n📱 <b>ستوري إنستجرام (Story):</b>\n👉 {ig_story_url}"
+            if ig_article_url:
+                ig_extra += f"\n🎠 <b>كاروسيل المقال السريري (إنستجرام):</b>\n👉 {ig_article_url}"
+            if ig_highlight_ref:
+                ig_extra += f"\n⭐ <b>هايلايت إنستجرام (Highlight Story):</b>\n👉 {ig_highlight_ref}"
 
             success_text = (
                 "✅ <b>اكتمل النشر التلقائي وتحديث صفحات الهبوط والأرشفة السحابية بنجاح!</b>\n\n"
@@ -761,7 +787,7 @@ def handle_master_pipeline_execution(chat_id: str, message_id: Optional[int] = N
                 f"👉 {fb_photo_url}\n\n"
                 f"{fb_reel_line}"
                 "📸 <b>منشور إنستجرام (نُشر تلقائياً):</b>\n"
-                f"👉 {ig_post_url}\n\n"
+                f"👉 {ig_post_url}{ig_extra}\n\n"
                 "🎥 <b>جاهز للرفع اليدوي (يوتيوب + تيكتوك بصيغة JPG/MP4):</b>\n"
                 f"• يوتيوب: <code>{yt_dir}</code>\n"
                 f"• تيكتوك: <code>{tt_dir}</code>\n"
@@ -943,17 +969,13 @@ def build_stage1_deep_research_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🌐 فتح Gemini Deep Research مباشرة", "url": GEMINI_URL},
+                {"text": "🌐 1. فتح Gemini Deep Research ولصق البرومبت", "url": GEMINI_URL},
             ],
             [
-                {"text": "🎨 برومبت الصور الخاطفة للعين (Pomelli 8K)", "callback_data": f"prompt_pomelli_{choice}"},
-                {"text": "🎙️ برومبت استوديو NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+                {"text": "⚡ تخطي البحث وتوليد برومبتات NotebookLM الافتراضية", "callback_data": f"hub_prod_{choice}"},
             ],
             [
-                {"text": "📋 خيارات وبرومبتات إضافية للمنتج", "callback_data": f"hub_prod_{choice}"},
                 {"text": "🩺 اختيار منتج آخر", "callback_data": "menu_products"},
-            ],
-            [
                 {"text": "🏠 القائمة الرئيسية", "callback_data": "menu_main"},
             ],
         ]
@@ -971,7 +993,7 @@ SCROLL_STOPPING_HERO_HOOKS = {
 }
 
 
-def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+def build_synthesized_visual_card(choice: str, analysis: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
     d = get_product_data(choice)
     name_ar = html.escape(d["name_ar"])
     brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
@@ -980,7 +1002,7 @@ def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tup
     findings_context = " - ".join(findings_sample[:2]) if findings_sample else d["focus"]
     hero_action = SCROLL_STOPPING_HERO_HOOKS.get(str(choice).strip(), SCROLL_STOPPING_HERO_HOOKS["1"])
 
-    pomelli_1_1 = (
+    visual_1_1 = (
         f"Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, "
         f"following the Healing Touch Egypt Brand Book aesthetic: "
         f"Brand Colors: `#064E3B` (Clinical Forest Green), `#10B981` (Medical Mint), `#0F172A` (Slate Navy Charcoal), `#FFFFFF` (Sterile White). "
@@ -992,7 +1014,7 @@ def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tup
         f"NO generic brown medicine bottles, NO text distortion overlays."
     )
 
-    pomelli_9_16 = (
+    visual_9_16 = (
         f"Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book guidelines: "
         f"Palette accents: `#064E3B` Forest Green, `#10B981` Mint, `#0F172A` Slate Navy, `#FFFFFF` Sterile White. "
         f"A warm Egyptian female recovery care specialist in a tailored `#10B981` mint tunic and neat beige hijab looks DIRECTLY into the camera lens "
@@ -1001,25 +1023,28 @@ def build_synthesized_pomelli_card(choice: str, analysis: Dict[str, Any]) -> Tup
     )
 
     msg = (
-        f"🎨 <b>[المرحلة 2 من 4] برومبتات Google Pomelli Brand Book (إعلانية خاطفة للعين 8K)</b>\n\n"
+        f"🎨 <b>[المرحلة 2 من 4] برومبتات NotebookLM & Gemini Visual Studio (إعلانية خاطفة للعين 8K)</b>\n\n"
         f"🎯 <b>المنتج:</b> {name_ar}\n"
         f"🏷️ <b>العلامة:</b> {brand}\n"
         f"✨ <b>تعليمات الجذب المدمجة تلقائياً:</b> نظر مباشر للكاميرا + رفع المنتج في مقدمة الكادر (Hero Hold) + منع صينية الستانلس وأجهزة المستشفى والزجاجات العشوائية.\n\n"
         f"📐 <b>1️⃣ برومبت الصورة المربعة 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
-        f"<pre><code>{html.escape(pomelli_1_1)}</code></pre>\n\n"
+        f"<pre><code>{html.escape(visual_1_1)}</code></pre>\n\n"
         f"📱 <b>2️⃣ برومبت الستوري والريلز العمودي 9:16 (إنستجرام وتيك توك):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
-        f"<pre><code>{html.escape(pomelli_9_16)}</code></pre>"
+        f"<pre><code>{html.escape(visual_9_16)}</code></pre>"
     )
 
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🎨 فتح Google Pomelli Brand Book مباشرة", "url": POMELLI_BRAND_BOOK_URL},
+                {"text": "🎨 فتح NotebookLM & Gemini Visual Studio مباشرة", "url": NOTEBOOKLM_URL},
             ],
             [
                 {"text": "🎙️ برومبت Google NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+            ],
+            [
+                {"text": "🖌️ فتح مجلد وتصميمات المنتج على Canva (مجاني)", "url": "https://www.canva.com/folder/FAHZleEahgA"},
                 {"text": "🚀 تشغيل المسار الشامل", "callback_data": "act_master"},
             ],
             [
@@ -1071,7 +1096,7 @@ def build_synthesized_notebooklm_card(choice: str, analysis: Dict[str, Any]) -> 
                 {"text": "🌐 فتح Google NotebookLM مباشرة", "url": NOTEBOOKLM_URL},
             ],
             [
-                {"text": "🎨 برومبت Pomelli Brand Book", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎨 برومبت NotebookLM Visual Studio", "callback_data": f"prompt_visual_{choice}"},
                 {"text": "🚀 تشغيل المسار الشامل", "callback_data": "act_master"},
             ],
             [
@@ -1141,9 +1166,45 @@ def handle_research_report_received(
     )
     bot.send_message(chat_id, ack_text)
 
-    # Send Pomelli Brand Book Card
-    pomelli_text, pomelli_kb = build_synthesized_pomelli_card(choice, analysis)
-    bot.send_message(chat_id, pomelli_text, reply_markup=pomelli_kb)
+    # Synthesize full surgical platform & NotebookLM prompts driven by Deep Research report
+    try:
+        from gemini_deep_research_engine import run_clinical_deep_research
+        from format_prompt_synthesizer import synthesize_format_prompts
+        dossier = run_clinical_deep_research(choice, use_live_api=False)
+        if analysis.get("findings"):
+            dossier.summary = "\n".join(analysis["findings"]) + "\n\n" + clean_text[:2500]
+        if analysis.get("anxieties"):
+            dossier.patient_anxieties = analysis["anxieties"]
+        manifest = synthesize_format_prompts(dossier)
+        nlm_source_dir = MEDIA_DIR / "notebooklm_hub"
+        nlm_source_dir.mkdir(parents=True, exist_ok=True)
+        nlm_source_file = nlm_source_dir / f"NotebookLM_Source_&_Surgical_Prompts_Prod_{choice}.md"
+        source_md = (
+            f"# 🌿 المصدر المعرفي الشامل لـ Google NotebookLM + برومبتات المنصات ({prod_info['name']})\n\n"
+            f"## 1. التقرير الكامل المستخرج من Gemini Deep Research\n{clean_text}\n\n"
+            f"---\n## 2. برومبتات إنتاج الوسائط على Google NotebookLM (صورة + صوت + فيديو)\n"
+            f"### 🎨 برومبت الصورة التجارية 1:1 (بالقواعد الـ 7 الخاطفة للجمهور):\n```text\n{manifest.notebooklm['image_prompt_1_1']}\n```\n\n"
+            f"### 📱 برومبت صورة الستوري والريلز 9:16:\n```text\n{manifest.notebooklm['image_prompt_9_16']}\n```\n\n"
+            f"### 🎧 برومبت البودكاست الصوتي (Audio Overview):\n```text\n{manifest.notebooklm['audio_overview_prompt']}\n```\n\n"
+            f"### 🎬 برومبت الفيديو التوضيحي (Video Overview):\n```text\n{manifest.notebooklm['video_overview_prompt']}\n```\n\n"
+            f"---\n## 3. المحتوى والبرومبتات الجراحية المشتقة للمنصات (فيسبوك 6 صيغ + إنستجرام 6 صيغ + صفحة الهبوط)\n"
+            f"### 📘 فيسبوك (مقال وبوست):\n{manifest.facebook['article']}\n\n"
+            f"### 🎬 سكريبت ريلز فيسبوك وإنستجرام وتيك توك:\n{manifest.facebook['reel']}\n\n"
+            f"### 📸 إنستجرام (كاروسيل 7 شرائح + كابشن):\n{manifest.instagram['article']}\n"
+        )
+        nlm_source_file.write_text(source_md, encoding="utf-8")
+        (nlm_source_dir / "Healing_Touch_NotebookLM_Source.md").write_text(source_md, encoding="utf-8")
+        bot.send_document(
+            chat_id,
+            nlm_source_file,
+            caption="📄 <b>ملف المصدر المعرفي والبرومبتات الجراحية الشاملة</b> (ارفع هذا الملف كمصدر Source داخل Google NotebookLM!)",
+        )
+    except Exception as _synth_err:
+        logger.warning("Could not build synthesized NotebookLM source doc: %s", _synth_err)
+
+    # Send NotebookLM Visual Studio Card
+    visual_text, visual_kb = build_synthesized_visual_card(choice, analysis)
+    bot.send_message(chat_id, visual_text, reply_markup=visual_kb)
 
     # Send NotebookLM Studio Card
     nlm_text, nlm_kb = build_synthesized_notebooklm_card(choice, analysis)
@@ -1152,15 +1213,16 @@ def handle_research_report_received(
     # Final guidance message for Stage 3 Media Ingestion
     guidance_text = (
         "💡 <b>الخطوة التالية (المرحلة 3 من 4 - توليد ورفع الوسائط):</b>\n\n"
-        "1️⃣ افتح <b>Google Pomelli Brand Book</b> وأنتج الصور الإعلانية الخاطفة للعين (8K).\n"
+        "1️⃣ افتح <b>NotebookLM & Gemini Visual Studio</b> وأنتج الصور الإعلانية الخاطفة للعين (8K).\n"
         "2️⃣ افتح <b>Google NotebookLM</b> وأنتج البودكاست الصوتي والفيديو التوضيحي.\n"
-        "3️⃣ <b>ضع المخرجات في مجلد درايف <code>00_Flow_Inbox</code> أو أرسلها هنا في شات تيليجرام مباشرة</b> ثم اضغط <b>🚀 تشغيل المسار الشامل</b>!"
+        "3️⃣ <b>ضع المخرجات في مجلد درايف <code>00_NotebookLM_Inbox</code> أو أرسلها هنا في شات تيليجرام مباشرة</b> ثم اضغط <b>🚀 تشغيل المسار الشامل</b>!"
     )
     guidance_kb = {
         "inline_keyboard": [
             [
-                {"text": "🎨 فتح Pomelli Brand Book", "url": POMELLI_BRAND_BOOK_URL},
+                {"text": "🎨 فتح NotebookLM Visual Studio", "url": NOTEBOOKLM_URL},
                 {"text": "🎙️ فتح NotebookLM", "url": NOTEBOOKLM_URL},
+                {"text": "🖌️ تعديل على Canva", "url": "https://www.canva.com/folder/FAHZleEahgA"},
             ],
             [
                 {"text": "🚀 تشغيل المسار الشامل (إذا رفعت الميديا)", "callback_data": "act_master"},
@@ -1202,8 +1264,8 @@ def get_product_data(choice: str) -> Dict[str, Any]:
         "hashtags": cfg.get("egypt_hashtags", []),
         "queries": cfg.get("gemini_research_queries", []),
         "anxieties": cfg.get("patient_anxieties", []),
-        "pomelli_1_1": cfg.get("pomelli_prompt_1_1", ""),
-        "pomelli_9_16": cfg.get("pomelli_prompt_9_16", ""),
+        "visual_1_1": cfg.get("visual_prompt_1_1", ""),
+        "visual_9_16": cfg.get("visual_prompt_9_16", ""),
         "trends": trends,
         "studies": studies,
     }
@@ -1229,8 +1291,11 @@ def build_product_hub_card(choice: str) -> Tuple[str, Dict[str, Any]]:
                 {"text": "🔬 برومبت Gemini Deep Research", "callback_data": f"prompt_gemini_{choice}"},
             ],
             [
-                {"text": "🎨 برومبت الصور الخاطفة للعين (Pomelli 8K)", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎨 برومبت الصور الخاطفة للعين (NotebookLM 8K)", "callback_data": f"prompt_visual_{choice}"},
                 {"text": "🎙️ برومبت Google NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
+            ],
+            [
+                {"text": "🖌️ فتح مجلد وتصميمات المنتج على Canva (مجاني)", "url": "https://www.canva.com/folder/FAHZleEahgA"},
             ],
             [
                 {"text": "📱 برومبتات السوشيال (ريلز / تيك توك / يوتيوب)", "callback_data": f"prompt_social_menu_{choice}"},
@@ -1312,7 +1377,7 @@ def build_gemini_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
             ],
             [
                 {"text": "🎙️ برومبت NotebookLM", "callback_data": f"prompt_nlm_{choice}"},
-                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎨 برومبت NotebookLM", "callback_data": f"prompt_visual_{choice}"},
             ],
             [
                 {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
@@ -1361,7 +1426,7 @@ def build_notebooklm_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
             ],
             [
                 {"text": "🔬 برومبت Gemini", "callback_data": f"prompt_gemini_{choice}"},
-                {"text": "🎨 برومبت Pomelli", "callback_data": f"prompt_pomelli_{choice}"},
+                {"text": "🎨 برومبت NotebookLM", "callback_data": f"prompt_visual_{choice}"},
             ],
             [
                 {"text": "🔙 رجوع لخيارات المنتج", "callback_data": f"hub_prod_{choice}"},
@@ -1372,7 +1437,7 @@ def build_notebooklm_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     return msg, keyboard
 
 
-def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
+def build_visual_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     d = get_product_data(choice)
     name_ar = html.escape(d["name_ar"])
     brand = html.escape(d["cfg"].get("brand", PRODUCTS_CATALOG.get(choice, {}).get("brand", "")))
@@ -1394,7 +1459,7 @@ def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
     )
 
     msg = (
-        f"🎨 <b>برومبتات توليد الصور الإعلانية الخاطفة للعين في Google Pomelli (8K Scroll-Stopping)</b>\n\n"
+        f"🎨 <b>برومبتات توليد الصور الإعلانية الخاطفة للعين في NotebookLM Visual Studio (8K Scroll-Stopping)</b>\n\n"
         f"🎯 <b>المنتج:</b> {name_ar}\n"
         f"✨ <b>تعليمات الجذب المدمجة تلقائياً:</b> نظر مباشر للكاميرا + رفع المنتج في مقدمة الكادر (Hero Hold) + منع صينية الستانلس وأجهزة المستشفى والزجاجات العشوائية.\n\n"
         f"📐 <b>1️⃣ برومبت البوست المربع 1:1 (للموقع وفيسبوك وإنستجرام Feed):</b>\n"
@@ -1403,13 +1468,13 @@ def build_pomelli_prompt_card(choice: str) -> Tuple[str, Dict[str, Any]]:
         f"📱 <b>2️⃣ برومبت الستوري والريلز العمودي 9:16 (إنستجرام وتيك توك):</b>\n"
         f"<i>(اضغط داخل المربع للنسخ الفوري بلمسة واحدة 👇)</i>\n"
         f"<pre><code>{html.escape(p9)}</code></pre>\n\n"
-        f"💡 <i>تذكير: أي صورة تحفظها من Pomelli، أرسلها هنا في الشات (أو ضعها في درايف) لتدخل مسار النشر التلقائي فوراً!</i>"
+        f"💡 <i>تذكير: أي صورة تحفظها من NotebookLM، أرسلها هنا في الشات (أو ضعها في درايف) لتدخل مسار النشر التلقائي فوراً!</i>"
     )
 
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "🎨 فتح Google Pomelli Brand Book مباشرة", "url": POMELLI_BRAND_BOOK_URL},
+                {"text": "🎨 فتح NotebookLM & Gemini Visual Studio مباشرة", "url": NOTEBOOKLM_URL},
             ],
             [
                 {"text": "🔬 برومبت Gemini", "callback_data": f"prompt_gemini_{choice}"},
@@ -1555,15 +1620,6 @@ def handle_show_product_hub(chat_id: str, choice: str):
     bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
 
 
-def handle_show_google_flow_prompt(chat_id: str, choice: str):
-    sess = get_session(chat_id)
-    analysis = {
-        "findings": sess.get("findings") or [],
-        "anxieties": sess.get("anxieties") or [],
-    }
-    card_text, card_keyboard = build_unified_google_flow_card(choice, analysis)
-    bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
-
 
 def handle_show_gemini_prompt(chat_id: str, choice: str):
     card_text, card_keyboard = build_gemini_prompt_card(choice)
@@ -1575,8 +1631,8 @@ def handle_show_notebooklm_prompt(chat_id: str, choice: str):
     bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
 
 
-def handle_show_pomelli_prompt(chat_id: str, choice: str):
-    card_text, card_keyboard = build_pomelli_prompt_card(choice)
+def handle_show_visual_prompt(chat_id: str, choice: str):
+    card_text, card_keyboard = build_visual_prompt_card(choice)
     bot.send_message(chat_id, card_text, reply_markup=card_keyboard)
 
 
@@ -2018,8 +2074,8 @@ def process_callback_query(cq: Dict[str, Any]):
         toast_msg = "🔬 جاري عرض برومبت Gemini ومصادر PubMed..."
     elif data.startswith("prompt_nlm_"):
         toast_msg = "🎙️ جاري عرض برومبتات استوديو NotebookLM..."
-    elif data.startswith("prompt_pomelli_"):
-        toast_msg = "🎨 جاري عرض برومبتات Google Pomelli..."
+    elif data.startswith("prompt_visual_"):
+        toast_msg = "🎨 جاري عرض برومبتات NotebookLM Visual Studio..."
     elif data.startswith("prompt_social_menu_"):
         toast_msg = "📱 قائمة برومبتات السوشيال ميديا"
     elif data.startswith("prompt_yt_"):
@@ -2136,10 +2192,6 @@ def process_callback_query(cq: Dict[str, Any]):
         choice = data.split("_")[2]
         handle_show_product_hub(chat_id, choice)
 
-    elif data.startswith("prompt_flow_"):
-        choice = data.split("_")[2]
-        handle_show_google_flow_prompt(chat_id, choice)
-
     elif data.startswith("prompt_gemini_"):
         choice = data.split("_")[2]
         handle_show_gemini_prompt(chat_id, choice)
@@ -2148,9 +2200,9 @@ def process_callback_query(cq: Dict[str, Any]):
         choice = data.split("_")[2]
         handle_show_notebooklm_prompt(chat_id, choice)
 
-    elif data.startswith("prompt_pomelli_"):
+    elif data.startswith("prompt_visual_"):
         choice = data.split("_")[2]
-        handle_show_pomelli_prompt(chat_id, choice)
+        handle_show_visual_prompt(chat_id, choice)
 
     elif data.startswith("prompt_social_menu_"):
         choice = data.split("_")[3]

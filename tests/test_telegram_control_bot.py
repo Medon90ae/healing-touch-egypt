@@ -37,15 +37,14 @@ from telegram_control_bot import (
     STATE_STAGE_1_RESEARCH,
     STATE_STAGE_2_PROMPTS,
     STATE_STAGE_3_MEDIA,
-    POMELLI_BRAND_BOOK_URL,
-    NOTEBOOKLM_URL,
+        NOTEBOOKLM_URL,
     GEMINI_URL,
     get_session,
     update_session,
     reset_session,
     analyze_clinical_research,
     build_stage1_deep_research_card,
-    build_synthesized_pomelli_card,
+    build_synthesized_visual_card,
     build_synthesized_notebooklm_card,
     extract_text_from_file,
 )
@@ -175,15 +174,15 @@ class TestTelegramControlBot(unittest.TestCase):
         urls = [btn["url"] for row in kb["inline_keyboard"] for btn in row if "url" in btn]
         self.assertIn(GEMINI_URL, urls)
 
-    def test_10_synthesized_pomelli_brand_book_card(self):
-        """Verify Pomelli card adheres to exact Brand Book URL and color palette."""
+    def test_10_synthesized_visual_studio_card(self):
+        """Verify Visual Studio card adheres to exact Brand Book URL and color palette."""
         mock_analysis = {
             "findings": ["تسطيح ندبات القيصرية وترطيب الأنسجة"],
             "anxieties": ["الخوف من الكيلويد وتغير لون الجلد"],
         }
-        text, kb = build_synthesized_pomelli_card("2", mock_analysis)
+        text, kb = build_synthesized_visual_card("2", mock_analysis)
         self.assertIn("المرحلة 2 من 4", text)
-        self.assertIn("Pomelli Brand Book", text)
+        self.assertIn("NotebookLM & Gemini Visual Studio", text)
         self.assertIn("#064E3B", text)  # Clinical Forest
         self.assertIn("#10B981", text)  # Medical Mint
         self.assertIn("#0F172A", text)  # Slate Navy Charcoal
@@ -191,8 +190,8 @@ class TestTelegramControlBot(unittest.TestCase):
 
         # Exact Brand Book URL verification
         urls = [btn["url"] for row in kb["inline_keyboard"] for btn in row if "url" in btn]
-        self.assertIn(POMELLI_BRAND_BOOK_URL, urls)
-        self.assertEqual(POMELLI_BRAND_BOOK_URL, "https://labs.google.com/pomelli/brand_book/am6H88zhmUadtfPiiAmOnW")
+        self.assertIn(NOTEBOOKLM_URL, urls)
+        self.assertEqual(NOTEBOOKLM_URL, "https://notebooklm.google.com/")
 
     def test_11_synthesized_notebooklm_card(self):
         """Verify NotebookLM prompts integrate research findings, Egyptian dialect, and clinical CTA."""

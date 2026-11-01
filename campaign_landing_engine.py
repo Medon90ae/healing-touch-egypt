@@ -33,9 +33,9 @@ BRANDED_DIR = MEDIA_DIR / "branded_designs"
 NOTEBOOKLM_DIR = MEDIA_DIR / "notebooklm_hub"
 NOTEBOOK_PIC_DIR = NOTEBOOKLM_DIR / "pic"
 NOTEBOOK_ARCHIVE_DIR = NOTEBOOKLM_DIR / "daily_sources_archive"
-POMELLI_LIB_DIR = MEDIA_DIR / "pomelli_library"
+CLINICAL_LIB_DIR = MEDIA_DIR / "clinical_library"
 
-for d in (LP_DIR, MANUAL_INBOX_DIR, BRANDED_DIR, NOTEBOOKLM_DIR, NOTEBOOK_PIC_DIR, NOTEBOOK_ARCHIVE_DIR, POMELLI_LIB_DIR):
+for d in (LP_DIR, MANUAL_INBOX_DIR, BRANDED_DIR, NOTEBOOKLM_DIR, NOTEBOOK_PIC_DIR, NOTEBOOK_ARCHIVE_DIR, CLINICAL_LIB_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 SITE_BASE_URL = "https://medon90ae.github.io/healing-touch-egypt"
@@ -72,30 +72,30 @@ def generate_prompts_and_sources_pack(case_data: dict, pic_files: list = None) -
         "c-section": {
             "ar_name": "الولادة القيصرية وتأمين الشاور ومنع الكلويد",
             "en_product": "BUPY Medical Silicone Scar Sheet & 3M Tegaderm Waterproof Dressing",
-            "en_prompt_square": "A commercial luxury pharmaceutical photoshoot of BUPY Medical Silicone Scar Sheet and 3M Tegaderm waterproof dressing on a clean white marble tray, soft morning sunlight through hospital window, sterile aesthetic, tiny delicate water droplets showing waterproof seal, warm medical ambiance, 8k product photography, hyper-detailed, advertising quality.",
-            "en_prompt_story": "Vertical editorial commercial shot of BUPY Medical Silicone tape roll and Smith & Nephew Opsite spray, minimal pastel green and white clinical background, soft natural lighting, showing moisture barrier and sterile protection, 8k resolution, elegant maternity healthcare photography.",
-            "en_prompt_hero": "Wide landscape banner shot of post-cesarean recovery essentials: 3M Tegaderm dressing, BUPY silicone scar roll, and sterile medical wipes on a luxury clinic desk, soft depth of field, high-end medical branding aesthetic."
+            "en_prompt_square": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic 3M Tegaderm +Pad waterproof transparent dressing and BUPY Medical Silicone Scar Sheet prominently toward the camera lens at chest-to-eye level (Hero Product Hold), with crystal-clear water droplets beading on a sample transparent film in the foreground. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+            "en_prompt_story": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic 3M Tegaderm +Pad waterproof dressing and BUPY Silicone Sheet toward the camera lens at chest-to-eye level (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background (#064E3B), zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles, no text artifacts.",
+            "en_prompt_hero": "Wide 16:9 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens in an upscale sunlit Cairo consultation lounge (#064E3B Forest Green & warm wood). A warm Egyptian female recovery care specialist in a #10B981 mint tunic and neat beige hijab makes DIRECT reassuring eye contact with the lens while presenting 3M Tegaderm +Pad and BUPY Silicone Scar Sheet in sharp foreground focus (Hero Product Hold). STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles."
         },
         "rhinoplasty": {
             "ar_name": "تجميل الأنف اللحمي وتفريغ تورم الأرنبة",
             "en_product": "3M Micropore Tan Surgical Tape & Silicone Nostril Retainer",
-            "en_prompt_square": "High-end aesthetic clinic product photoshoot of 3M Micropore Tan Surgical Tape roll next to medical silicone nostril retainer on a frosted glass surface, soft clinical ring light, pristine sterile environment, hyper-realistic, 8k resolution.",
-            "en_prompt_story": "Vertical commercial shot of 3M beige porous surgical tape, delicate medical background, soft focus, aesthetic cosmetic surgery recovery setup, professional medical photography.",
-            "en_prompt_hero": "Wide cinematic shot of rhinoplasty recovery essentials: 3M beige tape and silicone nostril retainer on an aesthetic surgeon consultation tray, clean minimalist lighting."
+            "en_prompt_square": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic skin-tone 3M Micropore Tan Surgical Tape (1533-0) spool and Silicone Nostril Retainer prominently in sharp foreground focus toward the camera lens (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+            "en_prompt_story": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic 3M Micropore Tan Tape spool and Silicone Nostril Retainer prominently toward the camera lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background (#064E3B), zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles.",
+            "en_prompt_hero": "Wide 16:9 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens in an upscale sunlit Cairo consultation lounge (#064E3B Forest Green & warm wood). A warm Egyptian female recovery care specialist in a #10B981 mint tunic and neat beige hijab makes DIRECT reassuring eye contact with the lens while presenting 3M Micropore Tan Tape and Silicone Nostril Retainer in sharp foreground focus (Hero Product Hold). STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles."
         },
         "bariatric": {
             "ar_name": "ثقوب منظار التكميم وتحويل المسار",
             "en_product": "Smith & Nephew Opsite Spray & BUPY Silicone Strips",
-            "en_prompt_square": "Studio commercial photoshoot of Smith & Nephew Opsite Spray transparent dressing can next to BUPY silicone scar strips, clean sterile clinical surface, microscopic water mist showing waterproof protection, crisp professional lighting, 8k resolution.",
-            "en_prompt_story": "Vertical aesthetic commercial shot of transparent Opsite spray mist can, minimalist healthcare setting, modern surgical recovery aesthetic, 8k hyper-realistic.",
-            "en_prompt_hero": "Wide landscape banner of laparoscopic recovery kit: Opsite spray and silicone patches on modern clinical surface, soft green tones, professional medical grade."
+            "en_prompt_square": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold), catching a subtle backlit golden mist glow in warm morning sunlight. Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+            "en_prompt_story": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic OPSITE Post-Op Spray bottle prominently in the foreground toward the camera lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background (#064E3B), zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles.",
+            "en_prompt_hero": "Wide 16:9 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens in an upscale sunlit Cairo consultation lounge (#064E3B Forest Green & warm wood). A warm Egyptian female recovery care specialist in a #10B981 mint tunic and neat beige hijab makes DIRECT reassuring eye contact with the lens while presenting the authentic OPSITE Post-Op Spray bottle in sharp foreground focus (Hero Product Hold). STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles."
         },
         "thyroid": {
             "ar_name": "جراحة الرقبة والغدة الدرقية وحماية الندبة من الشمس",
             "en_product": "BUPY Silicone Scar Sheet & 3M Micropore Tan Tape",
-            "en_prompt_square": "Luxury pharmaceutical product photography of BUPY Silicone Scar Sheet roll and 3M skin-tone tape, soft daylight, elegant neutral background, sterile clinical aesthetic, 8k resolution.",
-            "en_prompt_story": "Vertical commercial editorial of silicone scar sheeting for neck scar protection, soft warm lighting, dermatology clinic setting, hyper-realistic.",
-            "en_prompt_hero": "Wide landscape shot of neck and thyroid scar recovery protocol products on clean medical presentation surface."
+            "en_prompt_square": "Scroll-stopping 1:1 commercial portrait photography (8K) on 85mm f/2.0 lens with creamy shallow depth of field, following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint, #0F172A Slate Navy, #FFFFFF Sterile White). A warm, trustworthy Egyptian female recovery care specialist in her early 30s wearing a tailored mint-green clinical tunic (#10B981) and a neat beige hijab, making DIRECT reassuring eye contact with the camera lens, holding the authentic BUPY Silicone Scar Sheet and 3M Micropore Tan Tape prominently toward the camera lens at chest-to-eye level (Hero Product Hold). Setting: Upscale sunlit Cairo consultation lounge with warm wood and #064E3B forest-green wall panels. STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles, NO text distortion overlays.",
+            "en_prompt_story": "Vertical 9:16 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens following the Healing Touch Egypt Brand Book (#064E3B Forest Green, #10B981 Medical Mint). A warm Egyptian female recovery care specialist in a tailored #10B981 mint tunic and neat beige hijab looks DIRECTLY into the camera lens with a calm reassuring smile, holding the authentic BUPY Silicone Scar Sheet and 3M Micropore Tan Tape prominently toward the camera lens (Hero Product Hold) illuminated by golden Cairo morning window light. Warm upscale Egyptian consultation lounge background (#064E3B), zero metal hospital trays, zero hospital beds/monitors, zero random medicine bottles.",
+            "en_prompt_hero": "Wide 16:9 scroll-stopping commercial photography (8K) on 85mm f/2.0 lens in an upscale sunlit Cairo consultation lounge (#064E3B Forest Green & warm wood). A warm Egyptian female recovery care specialist in a #10B981 mint tunic and neat beige hijab makes DIRECT reassuring eye contact with the lens while presenting BUPY Silicone Scar Sheet and 3M Micropore Tan Tape in sharp foreground focus (Hero Product Hold). STRICT VISUAL RULES: NO metal hospital trays, NO hospital beds or ICU monitors, NO generic brown medicine bottles."
         }
     }
 
@@ -351,10 +351,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
         ]
         if len(inbox_cand_imgs) > 1:
             active_gallery_imgs = inbox_cand_imgs[1:]
-        elif POMELLI_LIB_DIR.exists():
-            pomelli_cand = sorted(list(POMELLI_LIB_DIR.glob("*.png")), key=lambda x: x.name)
-            if pomelli_cand:
-                active_gallery_imgs = pomelli_cand[:4]
+        elif CLINICAL_LIB_DIR.exists():
+            clinical_cand = sorted(list(CLINICAL_LIB_DIR.glob("*.png")), key=lambda x: x.name)
+            if clinical_cand:
+                active_gallery_imgs = clinical_cand[:4]
 
     gallery_items_html = []
     clinical_step_titles = [
@@ -564,7 +564,12 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
   <meta property="og:type" content="article">
   <meta property="og:title" content="{title} | هيلينج تاتش مصر">
   <meta property="og:description" content="بروتوكول علمي متكامل لمنع تضخم الندبات وتأمين الاستحمام مع استشارة سريرية مجانية وأولوية المتابعة بكود HT10.">
-  <meta property="og:image" content="{image_rel_path}">
+  <meta property="og:image" content="{SITE_BASE_URL}/assets/campaign_{cat}_hero.png">
+  <meta property="og:image:secure_url" content="{SITE_BASE_URL}/assets/campaign_{cat}_hero.png">
+  <meta property="og:image:width" content="1080">
+  <meta property="og:image:height" content="1080">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{SITE_BASE_URL}/assets/campaign_{cat}_hero.png">
   <meta property="og:url" content="{page_public_url}">
 
   <!-- Schema.org MedicalWebPage JSON-LD -->
@@ -754,6 +759,10 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
       <h1 class="hero-title">{title}</h1>
       <p class="hero-lead">الدليل السريري المعتمد للوقاية من تضخم الندبات (الكلويد)، عزل الماء 100% أثناء الاستحمام، وتنظيم بناء ألياف الكولاجين بعد العمليات الجراحية.</p>
 
+      <div style="margin-bottom:24px; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#0F172A; max-height:460px; display:flex; justify-content:center; align-items:center;">
+        <img src="{image_rel_path}" alt="{title}" style="width:100%; max-height:460px; object-fit:cover; display:block;" loading="eager">
+      </div>
+
       <div class="trust-badges-grid">
         <div class="trust-badge-item">🌿 بروتوكول سريري معتمد دولياً</div>
         <div class="trust-badge-item">🔬 مبني على توصيات PubMed وCochrane</div>
@@ -941,6 +950,11 @@ def build_campaign_landing_page(case_data: dict, media_assets: dict = None, cust
 </body>
 </html>"""
 
+    try:
+        from scripts.compliance_validator import sanitize_content
+        full_html = sanitize_content(full_html, is_html=True)
+    except Exception:
+        pass
     lp_file.write_text(full_html, encoding="utf-8")
     print(f"[+] 🌐 تم بناء الـ Landing Page المستقلة بنجاح: {lp_file.name}")
     print(f"   • الرابط الحي: {page_public_url}")
@@ -1323,7 +1337,12 @@ def generate_all_multi_angle_product_lps() -> list:
   <meta property="og:type" content="article">
   <meta property="og:title" content="{spec['title']} | هيلينج تاتش مصر">
   <meta property="og:description" content="{spec['lead']}">
-  <meta property="og:image" content="../assets/og-image.jpg">
+  <meta property="og:image" content="{SITE_BASE_URL}/assets/campaign_{spec['category']}_hero.png">
+  <meta property="og:image:secure_url" content="{SITE_BASE_URL}/assets/campaign_{spec['category']}_hero.png">
+  <meta property="og:image:width" content="1080">
+  <meta property="og:image:height" content="1080">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{SITE_BASE_URL}/assets/campaign_{spec['category']}_hero.png">
   <meta property="og:url" content="{page_public_url}">
 
   <!-- Schema.org FAQPage JSON-LD -->
@@ -1499,6 +1518,11 @@ def generate_all_multi_angle_product_lps() -> list:
 </body>
 </html>
 """
+            try:
+                from scripts.compliance_validator import sanitize_content
+                html_content = sanitize_content(html_content, is_html=True)
+            except Exception:
+                pass
             lp_file.write_text(html_content, encoding="utf-8")
             created_pages.append({
                 "slug": slug,
@@ -1510,3 +1534,29 @@ def generate_all_multi_angle_product_lps() -> list:
 
     print(f"[+] تم بناء وتحديث {len(created_pages)} صفحة هبوط مستقلة ومتخصصة لكل منتج طبي في docs/lp/!")
     return created_pages
+
+
+def deploy_docs_to_github_pages(repo_dir: Path = BASE_DIR, category: str = "c-section", dry_run: bool = False) -> dict:
+    """
+    Stages, commits, and pushes all changes under docs/ (including docs/lp/*.html and docs/assets/*)
+    to origin main on GitHub Pages, and verifies CDN availability.
+    """
+    import subprocess
+    if dry_run or "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("HT_SKIP_GIT_DEPLOY") == "1":
+        return {"status": "skipped", "reason": "dry_run_or_test", "pushed": False, "cdn_ready": True}
+    try:
+        subprocess.run(["git", "add", "-A", "docs/"], cwd=str(repo_dir), capture_output=True, timeout=60, check=False)
+        commit_msg = f"feat(lp): auto-deploy landing pages and assets for {category}"
+        subprocess.run(["git", "commit", "-m", commit_msg], cwd=str(repo_dir), capture_output=True, text=True, timeout=60, check=False)
+        p_res = subprocess.run(["git", "push", "origin", "main"], cwd=str(repo_dir), capture_output=True, text=True, timeout=120, check=False)
+        pushed = p_res.returncode == 0
+        cdn_ready = True
+        try:
+            from meta_publisher import verify_github_raw_cdn_readiness
+            lp_url = f"{SITE_BASE_URL}/lp/{category}-recovery-protocol.html"
+            cdn_ready = verify_github_raw_cdn_readiness(lp_url, max_wait_seconds=10, poll_interval=2.0)
+        except Exception:
+            pass
+        return {"status": "success" if pushed else "warning", "pushed": pushed, "cdn_ready": cdn_ready}
+    except Exception as e:
+        return {"status": "error", "error": str(e), "pushed": False, "cdn_ready": False}

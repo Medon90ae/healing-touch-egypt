@@ -71,3 +71,54 @@
 [2026-10-30 19:44:02] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
 [2026-10-30 19:44:17] [INFO] Button clicked: data='act_dry_run', from_user=7692685242, chat_id=7692685242
 [2026-10-30 19:44:17] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 07:50:11] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 15012]
+[2026-10-31 07:50:11] [INFO] Target Chat ID: 7692685242
+[2026-10-31 11:07:48] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 11:07:58] [INFO] Button clicked: data='prod_3', from_user=7692685242, chat_id=7692685242
+[2026-10-31 11:10:01] [INFO] Button clicked: data='prompt_flow_3', from_user=7692685242, chat_id=7692685242
+[2026-10-31 11:16:44] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 15688]
+[2026-10-31 11:16:44] [INFO] Target Chat ID: 7692685242
+[2026-10-31 11:16:49] [ERROR] sendMessage failed [400]: {"ok":false,"error_code":400,"description":"Bad Request: message is too long"}
+[2026-10-31 11:17:23] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 18184]
+[2026-10-31 11:17:23] [INFO] Target Chat ID: 7692685242
+[2026-10-31 11:43:52] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 16468]
+[2026-10-31 11:43:52] [INFO] Target Chat ID: 7692685242
+[2026-10-31 11:59:33] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 2044]
+[2026-10-31 11:59:33] [INFO] Target Chat ID: 7692685242
+[2026-10-31 12:00:55] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 12:01:07] [INFO] Button clicked: data='prod_3', from_user=7692685242, chat_id=7692685242
+[2026-10-31 12:37:57] [INFO] Button clicked: data='act_inbox_status', from_user=7692685242, chat_id=7692685242
+[2026-10-31 12:38:01] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-31 12:38:01] [WARNING] getUpdates network warning: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 14:32:57] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:33:00] [INFO] Button clicked: data='act_inbox_status', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:33:04] [INFO] Button clicked: data='menu_main', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:33:07] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:33:10] [INFO] Button clicked: data='prod_4', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:33:11] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 14:38:10] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 12680]
+[2026-10-31 14:38:10] [INFO] Target Chat ID: 7692685242
+[2026-10-31 14:39:00] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 14:39:03] [INFO] Button clicked: data='prod_4', from_user=7692685242, chat_id=7692685242
+[2026-10-31 15:18:39] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 19156]
+[2026-10-31 15:18:39] [INFO] Target Chat ID: 7692685242
+[2026-10-31 16:16:42] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 16:17:00] [INFO] Button clicked: data='prod_4', from_user=7692685242, chat_id=7692685242
+[2026-10-31 16:56:12] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-31 16:56:12] [WARNING] getUpdates network warning: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 18:00:06] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 8784]
+[2026-10-31 18:00:06] [INFO] Target Chat ID: 7692685242
+[2026-10-31 19:00:10] [INFO] Button clicked: data='act_cloud_archive', from_user=7692685242, chat_id=7692685242
+[2026-10-31 19:00:12] [INFO] ☁️ [google_drive_desktop] ملفات جديدة للرفع: 0 | مرفوعة سابقاً: 490
+[2026-10-31 19:00:12] [INFO] ☁️ اكتملت الأرشفة: رفع 0 | حذف محلي 0 (0.0 MB) | فشل 0 | المساحة الحرة الآن 8.23 GB
+[2026-10-31 21:33:11] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 21:33:28] [INFO] Button clicked: data='prod_6', from_user=7692685242, chat_id=7692685242
+[2026-10-31 21:33:30] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 21:40:57] [INFO] Button clicked: data='prod_1', from_user=7692685242, chat_id=7692685242
+[2026-10-31 21:45:38] [INFO] 🌿 Healing Touch Telegram Control Bot started [PID: 9940]
+[2026-10-31 21:45:38] [INFO] Target Chat ID: 7692685242
+[2026-10-31 21:47:14] [INFO] Button clicked: data='menu_products', from_user=7692685242, chat_id=7692685242
+[2026-10-31 21:47:19] [INFO] Button clicked: data='prod_1', from_user=7692685242, chat_id=7692685242
+[2026-10-31 22:22:34] [INFO] Button clicked: data='act_master', from_user=7692685242, chat_id=7692685242
+[2026-10-31 22:22:35] [ERROR] sendMessage exception: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-10-31 22:58:52] [INFO] Button clicked: data='act_latest_pack', from_user=7692685242, chat_id=7692685242

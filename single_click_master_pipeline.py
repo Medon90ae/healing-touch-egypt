@@ -106,21 +106,21 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
     logger.info("━" * 60)
     logger.info("🔍 [الخطوة 1/6]: فحص وتصنيف وسائط manual_inbox ومطابقتها مع الأبحاث السريرية...")
 
-    # استيعاب تلقائي لأي مخرجات وضعها المستخدم في 00_Flow_Inbox على Google Drive
+    # استيعاب تلقائي لأي مخرجات وضعها المستخدم في 00_NotebookLM_Inbox على Google Drive
     if "PYTEST_CURRENT_TEST" not in os.environ:
         try:
-            flow_inbox = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\00_Flow_Inbox")
-            flow_archive = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\01_Processed_Inbox_Archive")
-            if flow_inbox.exists():
-                flow_files = [f for f in flow_inbox.iterdir() if f.is_file() and not f.name.startswith(".")]
-                if flow_files:
-                    flow_archive.mkdir(parents=True, exist_ok=True)
-                    for ff in flow_files:
+            nlm_inbox = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\00_NotebookLM_Inbox")
+            nlm_archive = Path(r"G:\My Drive\Healing_Touch_Egypt_Cloud_Archive\01_Processed_Inbox_Archive")
+            if nlm_inbox.exists():
+                nlm_files = [f for f in nlm_inbox.iterdir() if f.is_file() and not f.name.startswith(".")]
+                if nlm_files:
+                    nlm_archive.mkdir(parents=True, exist_ok=True)
+                    for ff in nlm_files:
                         shutil.copy2(str(ff), str(MANUAL_INBOX_DIR / ff.name))
-                        shutil.move(str(ff), str(flow_archive / f"flow_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{ff.name}"))
-                    logger.info(f"☁️ تم سحب {len(flow_files)} ملف تلقائياً من مجلد Google Drive (00_Flow_Inbox) إلى manual_inbox!")
+                        shutil.move(str(ff), str(nlm_archive / f"flow_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{ff.name}"))
+                    logger.info(f"☁️ تم سحب {len(nlm_files)} ملف تلقائياً من مجلد Google Drive (00_NotebookLM_Inbox) إلى manual_inbox!")
         except Exception as e:
-            logger.warning(f"⚠️ تنبيه أثناء فحص مجلد 00_Flow_Inbox على Google Drive: {e}")
+            logger.warning(f"⚠️ تنبيه أثناء فحص مجلد 00_NotebookLM_Inbox على Google Drive: {e}")
 
     triage = scan_and_triage_manual_inbox(MANUAL_INBOX_DIR)
     
@@ -286,7 +286,7 @@ def step_1_scan_and_classify_media(category: Optional[str] = None) -> Dict[str, 
                 step_images[s] = cand_og
 
     if not hero_image:
-        logger.info("ℹ️ لم يتم العثور على صورة غلاف في manual_inbox (أو الصندوق فارغ) — تفعيل المسار الاحتياطي عبر الأبحاث السريرية ومكتبة Pomelli.")
+        logger.info("ℹ️ لم يتم العثور على صورة غلاف في manual_inbox (أو الصندوق فارغ) — تفعيل المسار الاحتياطي عبر الأبحاث السريرية والمكتبة السريرية المعتمدة.")
         photo_info = asa.get_clinical_case_photo(tmpl["title"], final_category)
         raw_img = photo_info.get("local_path", "")
         if raw_img and Path(raw_img).exists():
@@ -455,6 +455,20 @@ def step_3_generate_creatives_and_packages(step1_data: Dict[str, Any], step2_dat
     square_card = cards.get("square_path") or (str(hero_img) if hero_img else "")
     story_card = cards.get("story_path") or square_card
 
+    # ربط استوديو Canva المتصل رسمياً (Mohamed Alahmady) لجلب التصميمات المصدرة وروابط التعديل
+    canva_studio_info: Dict[str, Any] = {}
+    try:
+        import canva_design_engine as cde
+        canva_studio_info = cde.resolve_canva_creatives_for_pipeline(
+            category=cat,
+            fallback_square=str(square_card),
+            fallback_story=str(story_card)
+        )
+        if canva_studio_info.get("has_canva_export"):
+            logger.info(f"🎨 [Canva Studio]: تم ربط تصميمات Canva المعتمدة لتخصص ({cat}) — مجلد: {canva_studio_info.get('folder_url')}")
+    except Exception as e:
+        logger.warning(f"تنبيه ربط Canva Studio: {e}")
+
     # إذا لم يكن هناك فيديو، ننشئ فيديو ريلز من بطاقة الستوري
     video_p = step1_data.get("video_vertical") or step1_data.get("video_horizontal")
     if not video_p and story_card:
@@ -564,7 +578,8 @@ def step_3_generate_creatives_and_packages(step1_data: Dict[str, Any], step2_dat
             "blogger_title": blogger_title,
             "blogger_html": blogger_html
         },
-        "wa_direct_url": wa_direct_url
+        "wa_direct_url": wa_direct_url,
+        "canva_studio": canva_studio_info
     }
 
 
@@ -687,6 +702,13 @@ def step_5_execute_or_stage_parallel_publishing(
             "published": False
         }
 
+    # رفع وتحديث صفحات الهبوط والأصول إلى GitHub Pages قبل النشر على فيسبوك وإنستجرام
+    try:
+        deploy_info = cle.deploy_docs_to_github_pages(category=cat, dry_run=dry_run)
+        logger.info(f"[+] 🌐 [GitHub Pages CDN]: حالة رفع صفحة الهبوط والأصول: {deploy_info.get('status')}")
+    except Exception as _dep_err:
+        logger.warning(f"تنبيه رفع GitHub Pages: {_dep_err}")
+
     # النشر الحي المباشر على فيسبوك وإنستجرام عبر Meta Graph API
     post_data = {
         "day": f"دراسة حالة سريرية ({chosen_idx + 1}) - {tmpl['title']}",
@@ -705,6 +727,26 @@ def step_5_execute_or_stage_parallel_publishing(
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{cat}_hero.png"
     ig_ok, ig_url = asa.publish_instagram_graph_api_with_url(copy["instagram"], image_url=ig_image_url)
 
+    # نشر كافة الصيغ الـ 6 تلقائياً على فيسبوك وإنستجرام (pic, story, reel, video, article, highlight)
+    fb_all_formats = {}
+    ig_all_formats = {}
+    try:
+        import meta_publisher as mp
+        fb_all_formats = mp.publish_facebook_all_formats(
+            pack_dir=pack_dir,
+            category=cat,
+            landing_url=step2_data.get("public_url", ""),
+            dry_run=dry_run,
+        )
+        ig_all_formats = mp.publish_instagram_all_formats(
+            pack_dir=pack_dir,
+            category=cat,
+            landing_url=step2_data.get("public_url", ""),
+            dry_run=dry_run,
+        )
+    except Exception as _mp_err:
+        logger.warning(f"تنبيه نشر الصيغ الـ 6 الإضافية: {_mp_err}")
+
     # حفظ ملخص النشر الحي ليقرأه بوت تيليجرام ويعرض الروابط المباشرة للمستخدم
     live_report = {
         "timestamp": dt.datetime.now().isoformat(timespec="seconds"),
@@ -716,8 +758,10 @@ def step_5_execute_or_stage_parallel_publishing(
         "facebook_url": fb_url,
         "facebook_reel_ok": fb_reel_ok,
         "facebook_reel_url": fb_reel_url,
+        "facebook_all_formats": fb_all_formats,
         "instagram_ok": ig_ok,
         "instagram_url": ig_url,
+        "instagram_all_formats": ig_all_formats,
     }
     try:
         (MEDIA_DIR / "latest_live_publish_report.json").write_text(
@@ -893,7 +937,7 @@ def deploy_docs_to_github_pages(category: str, dry_run: bool = False) -> Dict[st
             check=False,
         )
         # 2. إضافة التعديلات في docs/ ودفعها إلى GitHub Pages
-        subprocess.run(["git", "add", "docs/"], cwd=str(BASE_DIR), capture_output=True, timeout=60, check=False)
+        subprocess.run(["git", "add", "-A", "docs/"], cwd=str(BASE_DIR), capture_output=True, timeout=60, check=False)
         commit_msg = f"feat(lp): auto-update landing pages, portal, and assets for {category}"
         c_res = subprocess.run(
             ["git", "commit", "-m", commit_msg],
@@ -934,6 +978,14 @@ def run_single_click_master_pipeline(
     robust error-handling, and clean exit codes.
     """
     start_time = dt.datetime.now()
+    # إغلاق أي نوافذ متصفح قديمة وتطهير جلسات كروم لمنع فتح الأدوات الملغاة
+    try:
+        from scripts.browser_tab_manager import close_deprecated_browser_tabs, sanitize_all_project_profiles
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            close_deprecated_browser_tabs()
+        sanitize_all_project_profiles()
+    except Exception:
+        pass
     print("=" * 75)
     print("        🌿 هيلينج تاتش مصر | محرك النشر والتشغيل الموحد بضغطة زر واحدة (2026)")
     print("             Single-Click Master Pipeline & Omnichannel Engine")
@@ -971,7 +1023,8 @@ def run_single_click_master_pipeline(
     # فتح المتصفح إذا تم طلب ذلك
     if open_browser:
         try:
-            asa.open_url_in_default_browser(step2["public_url"])
+            from scripts.safe_launcher import safe_open_url_in_browser
+            safe_open_url_in_browser(step2["public_url"])
         except Exception:
             pass
 

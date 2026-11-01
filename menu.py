@@ -41,7 +41,7 @@ def run_option_1():
     manual_inbox = BASE_DIR / "media_assets" / "manual_inbox"
     user_files = [f for f in manual_inbox.iterdir() if f.is_file() and not f.name.startswith(".") and f.name not in ["PROMPTS_PACK_TODAY.txt", "PROMPTS_PACK_TODAY.md"]]
     if not user_files:
-        print("[*] ℹ️ صندوق manual_inbox نظيف وفارغ — استمرار المسار السريري التلقائي عبر الأبحاث ومكتبة Pomelli.")
+        print("[*] ℹ️ صندوق manual_inbox نظيف وفارغ — استمرار المسار السريري التلقائي عبر الأبحاث والمكتبة السريرية.")
 
     subprocess.run([VENV_PYTHON, "single_click_master_pipeline.py"], cwd=str(BASE_DIR))
 

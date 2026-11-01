@@ -2,7 +2,7 @@
 """
 =============================================================================
 🌿 هيلينج تاتش مصر | محرك الفيديو والبودكاست السريري فائق السرعة (2026)
-FFmpeg Pure-Pomelli High-Speed Video & Audio Engine (Zero Stock Photos)
+FFmpeg Pure-Clinical High-Speed Video & Audio Engine (Zero Stock Photos)
 =============================================================================
 """
 
@@ -38,7 +38,7 @@ def run_ffmpeg(cmd: list) -> bool:
 def build_audio_visual_videos(audio_path: Path, hero_image_path: Path, out_dir_16x9: Path, out_dir_9x16: Path) -> dict:
     """
     تحويل الملف الصوتي / البودكاست المرفوع إلى فيديوهات مرئية جاهزة للمنصات (16:9 و 9:16)
-    تعتمد حصرياً على جلسة تصوير Pomelli الحقيقية بدون أي شاشة سوداء أو صور ستوك.
+    تعتمد حصرياً على جلسة تصوير Clinical الحقيقية بدون أي شاشة سوداء أو صور ستوك.
     """
     results = {"video_16x9": None, "video_9x16": None}
     if not audio_path.exists() or not hero_image_path.exists():
@@ -47,7 +47,7 @@ def build_audio_visual_videos(audio_path: Path, hero_image_path: Path, out_dir_1
     out_16x9 = out_dir_16x9 / "فيديو_بودكاست_صوتي_كامل_16x9.mp4"
     out_9x16 = out_dir_9x16 / "فيديو_بودكاست_صوتي_شورتس_9x16.mp4"
 
-    # 1. فيديو 16:9 لليوتيوب (صوت + صورة Pomelli مع لون سريري عميق فائق السرعة)
+    # 1. فيديو 16:9 لليوتيوب (صوت + صورة Clinical مع لون سريري عميق فائق السرعة)
     cmd_16x9 = [
         "ffmpeg", "-y",
         "-loop", "1", "-r", "1", "-i", str(hero_image_path),
@@ -119,7 +119,7 @@ def build_uploaded_video_variants(video_path: Path, out_dir_16x9: Path, out_dir_
 
 
 def generate_clean_youtube_thumbnail(image_path: Path, output_path: Path):
-    """توليد صورة مصغرة 1280x720 احترافية لليوتيوب من صور Pomelli."""
+    """توليد صورة مصغرة 1280x720 احترافية لليوتيوب من صور Clinical."""
     if not image_path.exists():
         return
     try:

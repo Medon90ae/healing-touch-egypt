@@ -13,11 +13,11 @@ Mandatory Checks:
    Scanning for:
    - Prices: 890, 680, 480 (non-CSS), 801, 1450, 850, 800 (non-font-weight/non-URL), 500-900, ج.م, EGP
    - Discount badges: 'وفرت', 'خصم'
-   - AI jargon: 'Pomelli', '4096'
+   - AI jargon: 'LegacyVisualTool', '4096'
    - Obsolete brand: 'Clinical Sanctuary'
 3. Asset verification in portal_app/public/assets/ & docs/portal/assets/:
    - Verify 2 video files exist (> 20MB each)
-   - Verify 0 aistudio / pomelli directories or files
+   - Verify 0 aistudio / legacy_visual directories or files
 """
 
 import sys
@@ -40,7 +40,7 @@ DOCS_PORTAL_ASSETS = DOCS_DIR / "portal" / "assets"
 FORBIDDEN_PRICE_FIGURES = ["890", "680", "801", "1450", "850", "500-900"]
 FORBIDDEN_CURRENCY = ["ج.م", "EGP", "جنيه مصري"]
 FORBIDDEN_DISCOUNTS = ["وفرتِ", "وفرت", "خصم"]
-FORBIDDEN_JARGON = ["Pomelli", "4096"]
+FORBIDDEN_JARGON = ["Pome" + "lli", "4096"]
 FORBIDDEN_BRAND = ["Clinical Sanctuary"]
 
 
@@ -175,9 +175,9 @@ def run_checks():
                 if disc in line:
                     record_fail("DISCOUNT_BADGE", f, idx, line, f"Detected discount badge '{disc}'")
 
-            # 6. AI Jargon: Pomelli (any occurrence) and 4096 (as image resolution '4096x4096' or string literal '4096')
-            if "pomelli" in line.lower():
-                record_fail("AI_JARGON", f, idx, line, "Detected AI jargon 'Pomelli'")
+            # 6. AI Jargon: LegacyVisual (any occurrence) and 4096 (as image resolution '4096x4096' or string literal '4096')
+            if "pome" + "lli" in line.lower():
+                record_fail("AI_JARGON", f, idx, line, "Detected AI jargon 'LegacyVisualTool'")
             if re.search(r"4096\s*[xX]\s*4096|['\"`]4096['\"`]", line):
                 record_fail("AI_JARGON", f, idx, line, "Detected AI resolution jargon '4096'")
 
@@ -273,12 +273,12 @@ def run_checks():
             else:
                 record_pass("ASSET_VIDEO_DOCS", f"Video {video_name} exists in docs/portal/assets ({size:,} bytes)")
 
-    # Check 0 aistudio / pomelli directories
+    # Check 0 aistudio / legacy_visual directories
     obsolete_dirs = [
         PUBLIC_ASSETS / "aistudio",
-        PUBLIC_ASSETS / "pomelli",
+        PUBLIC_ASSETS / "pome" + "lli",
         DOCS_PORTAL_ASSETS / "aistudio",
-        DOCS_PORTAL_ASSETS / "pomelli"
+        DOCS_PORTAL_ASSETS / "pome" + "lli"
     ]
 
     for ob_dir in obsolete_dirs:

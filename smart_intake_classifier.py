@@ -410,6 +410,12 @@ def extract_clean_content(file_path_or_text, platform: str = "facebook", landing
     if not raw_text:
         return {"caption": "", "body": "", "hashtags": "", "title": ""}
 
+    try:
+        from scripts.compliance_validator import sanitize_content
+        raw_text = sanitize_content(raw_text, is_html=False)
+    except Exception:
+        pass
+
     platform_lower = platform.lower()
 
     if platform_lower == "facebook":
@@ -550,7 +556,7 @@ def _extract_clean_facebook(raw_text: str, landing_url: str = "", whatsapp_url: 
     if whatsapp_url and whatsapp_url not in body_text:
         footer_parts.append(f"💬 للتوجيه السريري المجاني والاستشارة المباشرة وتفعيل كود (HT10):\n👉 {whatsapp_url}")
     elif "01155803307" not in body_text:
-        footer_parts.append("📱 للتواصل والاستشارة السريرية المجانية عبر واتساب: 01155803307 (كود المعاينة HT10)")
+        footer_parts.append("📱 للتواصل والاستشارة السريرية المجانية عبر واتساب: https://wa.me/201155803307?text=%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9_%D8%B3%D8%B1%D9%8A%D8%B1%D9%8A%D8%A9_%D8%A8%D9%83%D9%88%D8%AF_HT10")
 
     footer_text = "\n\n".join(footer_parts)
     if footer_text:

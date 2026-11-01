@@ -3,7 +3,7 @@
 Apply comprehensive overhaul to antigravity_social_automation.py:
 - Sanitizes all remaining discount / price strings.
 - Implements interactive product selection for prompt generation (Option 2).
-- Generates dedicated Pomelli, Deep Research, and NotebookLM prompts per product.
+- Generates dedicated Clinical, Deep Research, and NotebookLM prompts per product.
 - Integrates multi-angle LP building and media routing in auto-daily mode.
 """
 
@@ -36,8 +36,8 @@ replacement_export = '''PRODUCT_PROMPT_CONFIGS = {
             "توقيت الاستحمام الآمن بعد الولادة القيصرية واستخدام الضمادات المقاومة للماء",
             "الفرق بين الشاش التقليدي وضمادات الفيلم الشفاف شبه المنفذة في منع التهاب الجروح"
         ],
-        "pomelli_prompt_1_1": "Hyper-realistic clinical studio shot of genuine 3M Tegaderm +Pad sterile waterproof transparent film dressing resting on a pristine white medical tray, subtle sterile water droplets beading on the transparent surface demonstrating total water resistance, soft indirect natural lighting, modern high-end surgical suite aesthetic, 8k resolution, documentary medical photography, zero text clutter, authentic healthcare guidance.",
-        "pomelli_prompt_9_16": "Vertical 9:16 aesthetic healthcare photography of 3M Tegaderm transparent waterproof dressing applied neatly over a simulated clean post-surgical dressing model, soft clinical morning light, clean teal and mint green background tones, ultra-realistic texture of breathable semi-permeable film, professional surgical recovery guide, 8k resolution.",
+        "visual_prompt_1_1": "Hyper-realistic clinical studio shot of genuine 3M Tegaderm +Pad sterile waterproof transparent film dressing resting on a pristine white medical tray, subtle sterile water droplets beading on the transparent surface demonstrating total water resistance, soft indirect natural lighting, modern high-end surgical suite aesthetic, 8k resolution, documentary medical photography, zero text clutter, authentic healthcare guidance.",
+        "visual_prompt_9_16": "Vertical 9:16 aesthetic healthcare photography of 3M Tegaderm transparent waterproof dressing applied neatly over a simulated clean post-surgical dressing model, soft clinical morning light, clean teal and mint green background tones, ultra-realistic texture of breathable semi-permeable film, professional surgical recovery guide, 8k resolution.",
         "patient_anxieties": [
             "خوف المريضة من دخول الماء أو الصابون لخط الجرح أثناء الاستحمام وتسببه في التهاب أو صديد",
             "قلق المريضة من كتمة الجرح والتعرق تحت اللصقة إذا كانت غير مسامية",
@@ -57,8 +57,8 @@ replacement_export = '''PRODUCT_PROMPT_CONFIGS = {
             "بروتوكول تسطيح ندبة القيصرية بشيت السيليكون الطبي ومدة الاستخدام اليومي",
             "علاج الكلويد والندبات المتضخمة بعد العمليات الجراحية بدون تدخل جراحي"
         ],
-        "pomelli_prompt_1_1": "Commercial clinical aesthetic photography of BUPY Medical Silicone Scar Sheet roll partially unrolled on a clean neutral stone surface, ultra-soft flexible medical-grade silicone texture catching gentle diffuse lighting, elegant minimalist dermatology clinic setting, 8k resolution, authentic medical realism, zero commercial graphics, calm reassuring healthcare visual.",
-        "pomelli_prompt_9_16": "Vertical 9:16 editorial dermatology photograph showing translucent BUPY silicone scar sheet being gently held with medical tweezers above a clean clinical sterile field, soft green and neutral tones, demonstrating smooth flexible elasticity, professional scar therapy guidance aesthetic, 8k hyper-realistic.",
+        "visual_prompt_1_1": "Commercial clinical aesthetic photography of BUPY Medical Silicone Scar Sheet roll partially unrolled on a clean neutral stone surface, ultra-soft flexible medical-grade silicone texture catching gentle diffuse lighting, elegant minimalist dermatology clinic setting, 8k resolution, authentic medical realism, zero commercial graphics, calm reassuring healthcare visual.",
+        "visual_prompt_9_16": "Vertical 9:16 editorial dermatology photograph showing translucent BUPY silicone scar sheet being gently held with medical tweezers above a clean clinical sterile field, soft green and neutral tones, demonstrating smooth flexible elasticity, professional scar therapy guidance aesthetic, 8k hyper-realistic.",
         "patient_anxieties": [
             "خوف المريضة من تحول خط الجرح إلى حبل بارز أحمر أو كلويد دائم يشوه المظهر",
             "الحكة الشديدة والنغزات المزعجة في مكان الندبة التي تجعل لمس الملابس مؤلماً",
@@ -78,8 +78,8 @@ replacement_export = '''PRODUCT_PROMPT_CONFIGS = {
             "طريقة لصق بلاستر 3M البيج لتصريف تورم أرنبة الأنف بعد إزالة الجبيرة",
             "حماية جرح استئصال الغدة الدرقية في الرقبة من أشعة الشمس والتصبغ"
         ],
-        "pomelli_prompt_1_1": "Macro clinical studio photograph of authentic 3M Micropore Tan surgical tape rolls with textured breathable rayon weave, positioned on a frosted glass surface next to a surgical caliper, soft clinical ring light, pristine sterile atmosphere, 8k resolution, realistic medical photography.",
-        "pomelli_prompt_9_16": "Vertical 9:16 aesthetic medical visual of 3M beige micropore tape strips arranged neatly on a surgical tray, subtle shadows, calm aesthetic surgery clinic ambiance, demonstrating fine porosity and skin-tone blend, professional medical guidance realism, 8k.",
+        "visual_prompt_1_1": "Macro clinical studio photograph of authentic 3M Micropore Tan surgical tape rolls with textured breathable rayon weave, positioned on a frosted glass surface next to a surgical caliper, soft clinical ring light, pristine sterile atmosphere, 8k resolution, realistic medical photography.",
+        "visual_prompt_9_16": "Vertical 9:16 aesthetic medical visual of 3M beige micropore tape strips arranged neatly on a surgical tray, subtle shadows, calm aesthetic surgery clinic ambiance, demonstrating fine porosity and skin-tone blend, professional medical guidance realism, 8k.",
         "patient_anxieties": [
             "الذعر من تورم أرنبة الأنف أو عدم تناسق النزول بعد فك الجبيرة",
             "ظهور حبوب صديدية وبثور بيضاء وحساسية جلدية بسبب اللصقات العادية الرديئة المكتومة",
@@ -99,8 +99,8 @@ replacement_export = '''PRODUCT_PROMPT_CONFIGS = {
             "أهمية دعامة الأنف السيليكون في تماثل الفتحات ومنع التليف بعد التجميل",
             "كيفية تنظيف واختيار مقاس دعامة الأنف السيليكونية بعد العملية"
         ],
-        "pomelli_prompt_1_1": "Ultra-clean clinical macro photography of medical-grade transparent silicone nostril retainers resting in a sterile petri dish on a white examination surface, gentle diffuse LED lighting, crystal-clear anatomical curved contours, surgical precision, 8k resolution, authoritative clinical clarity.",
-        "pomelli_prompt_9_16": "Vertical 9:16 high-end surgical photography of medical silicone nostril retainer held delicately in sterile gloved fingers, soft clinical background, showcasing flexible medical silicone softness and ergonomic contouring, reassuring medical educational aesthetic, 8k.",
+        "visual_prompt_1_1": "Ultra-clean clinical macro photography of medical-grade transparent silicone nostril retainers resting in a sterile petri dish on a white examination surface, gentle diffuse LED lighting, crystal-clear anatomical curved contours, surgical precision, 8k resolution, authoritative clinical clarity.",
+        "visual_prompt_9_16": "Vertical 9:16 high-end surgical photography of medical silicone nostril retainer held delicately in sterile gloved fingers, soft clinical background, showcasing flexible medical silicone softness and ergonomic contouring, reassuring medical educational aesthetic, 8k.",
         "patient_anxieties": [
             "قلق المريض من وجود فتحة أنف أكبر من الأخرى أو انكماش فتحة بعد العملية",
             "صعوبة التنفس أو تضيق مجرى الهواء أثناء نوم المريض في الأسابيع الأولى",
@@ -120,8 +120,8 @@ replacement_export = '''PRODUCT_PROMPT_CONFIGS = {
             "طريقة استخدام سبراي أوبسايت على ثقوب منظار التكميم والاستحمام الفوري",
             "علاج تحسس والتهاب جلد البطن من بلاستر ثقوب المنظار بعد جراحة السمنة"
         ],
-        "pomelli_prompt_1_1": "Crisp pharmaceutical studio photograph of Smith & Nephew Opsite Post-Op Spray canister on a clean surgical steel surface, fine transparent micro-mist droplets catching soft edge lighting, modern laparoscopic surgery clinic context, 8k resolution, authentic medical realism.",
-        "pomelli_prompt_9_16": "Vertical 9:16 healthcare commercial photograph showing transparent Opsite aerosol spray canister next to clean sterile gauze on a minimalist teal clinical background, soft natural lighting, highlighting waterproof breathable barrier concept, professional surgical recovery guide, 8k.",
+        "visual_prompt_1_1": "Crisp pharmaceutical studio photograph of Smith & Nephew Opsite Post-Op Spray canister on a clean surgical steel surface, fine transparent micro-mist droplets catching soft edge lighting, modern laparoscopic surgery clinic context, 8k resolution, authentic medical realism.",
+        "visual_prompt_9_16": "Vertical 9:16 healthcare commercial photograph showing transparent Opsite aerosol spray canister next to clean sterile gauze on a minimalist teal clinical background, soft natural lighting, highlighting waterproof breathable barrier concept, professional surgical recovery guide, 8k.",
         "patient_anxieties": [
             "المعاناة من ألم نزع البلاستر المتكرر من جلد البطن الحساس والتهابه بعد التكميم",
             "الخوف من التهاب ثقوب المنظار أو تلوثها بمياه الاستحمام",
@@ -161,7 +161,7 @@ def prompt_user_for_product_selection() -> str:
 
 
 def export_notebooklm_master_source(product_choice: str = None) -> str:
-    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Pomelli و Deep Research."""
+    """تجهيز ملف المعرفة والبرومبت الموحد الشامل الجاهز للرفع المباشر في Google NotebookLM مع برومبتات Clinical و Deep Research."""
     if product_choice is None:
         # إذا كنا في طرفية تفاعلية، نطلب الاختيار من المستخدم
         if sys.stdin and sys.stdin.isatty():
@@ -234,16 +234,16 @@ def export_notebooklm_master_source(product_choice: str = None) -> str:
         "```",
         "",
         "---------------------------------------------------------------------",
-        "2️⃣ برومبتات توليد الصور الطبية في Google Pomelli (صور واقعية سريرية جاهزة للموقع):",
+        "2️⃣ برومبتات توليد الصور الطبية في NotebookLM Visual Studio (صور واقعية سريرية جاهزة للموقع):",
         "---------------------------------------------------------------------",
         "📌 [أولاً: مقاس البوست المربع 1:1 - مخصص للموقع وفيسبوك وإنستجرام Feed]:",
         "```text",
-        selected_cfg["pomelli_prompt_1_1"],
+        selected_cfg["visual_prompt_1_1"],
         "```",
         "",
         "📌 [ثانياً: مقاس الستوري والريلز العمودي 9:16 - مخصص لإنستجرام وتيك توك وستوري]:",
         "```text",
-        selected_cfg["pomelli_prompt_9_16"],
+        selected_cfg["visual_prompt_9_16"],
         "```",
         "",
         "---------------------------------------------------------------------",
