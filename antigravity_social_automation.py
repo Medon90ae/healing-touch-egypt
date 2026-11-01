@@ -1681,7 +1681,7 @@ INSTAGRAM_ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN", "IGAAT1F8BF5HBBZAGE
 
 
 def publish_instagram_graph_api_with_url(caption: str, image_url: str = "") -> tuple[bool, str]:
-    """??? ?????? ?????? ??? ???? Instagram Business ??????? ??? Meta Graph API ?????? ?????? ???????."""
+    """نشر تلقائي للمنشور على حساب Instagram Business مع استرجاع الرابط."""
     user_id = os.getenv("IG_USER_ID", IG_USER_ID).strip("'\" ")
     token = os.getenv("INSTAGRAM_ACCESS_TOKEN", INSTAGRAM_ACCESS_TOKEN).strip("'\" ")
     if not token or not user_id:
@@ -1693,12 +1693,12 @@ def publish_instagram_graph_api_with_url(caption: str, image_url: str = "") -> t
             try:
                 head_r = requests.head(media_url, timeout=8)
                 if head_r.status_code != 200:
-                    print(f"[Instagram API] ?????: ?????? ({media_url}) ??? ??????? ({head_r.status_code})? ??????? ?????? ????????.")
+                    print(f"[Instagram API] تنبيه: الصورة ({media_url}) غير متاحة ({head_r.status_code})، استخدام الصورة البديلة.")
                     media_url = fallback_url
             except Exception:
                 media_url = fallback_url
 
-        print(f"[Instagram API] ???? ????? ???????? ??????? ??? ???????? (@mohamedahmedalahmady)...")
+        print(f"[Instagram API] جاري النشر والربط التلقائي عبر إنستجرام (@mohamedahmedalahmady)...")
         create_res = requests.post(
             f"https://graph.instagram.com/v21.0/{user_id}/media",
             data={"image_url": media_url, "caption": caption[:2100], "access_token": token},
@@ -1718,7 +1718,7 @@ def publish_instagram_graph_api_with_url(caption: str, image_url: str = "") -> t
                     if st_code == "FINISHED":
                         break
                     if st_code == "ERROR":
-                        print(f"[!] ??? ?????? ????? ????????: {st_res}")
+                        print(f"[!] خطأ معالجة وسائط إنستجرام: {st_res}")
                         break
                 except Exception:
                     pass
@@ -1736,31 +1736,31 @@ def publish_instagram_graph_api_with_url(caption: str, image_url: str = "") -> t
                     ig_permalink = p_info.get("permalink", "https://www.instagram.com/mohamedahmedalahmady/")
                 except Exception:
                     ig_permalink = "https://www.instagram.com/mohamedahmedalahmady/"
-                print(f"[+] ?? ?? ????? ???????? ????? ??? ???????? ?????!\n   ? ?????? ??????? ???????: {ig_permalink}")
+                print(f"[+] 🎉 تم نشر المنشور بنجاح على إنستجرام!\n   👉 الرابط المباشر للمنشور: {ig_permalink}")
                 return True, ig_permalink
             else:
-                print(f"[!] ??? ??? ???????? ?? ????? ?????: {publish_res}")
+                print(f"[!] خطأ نشر إنستجرام في خطوة النشر: {publish_res}")
         else:
-            print(f"[!] ??? ??? ???????? ?? ????? ????? ???????: {create_res}")
+            print(f"[!] خطأ نشر إنستجرام في إنشاء الحاوية: {create_res}")
     except Exception as e:
-        print(f"[!] ??????? ??? ????????: {e}")
+        print(f"[!] استثناء نشر إنستجرام: {e}")
     return False, ""
 
 
 def publish_instagram_graph_api(caption: str, image_url: str = "") -> bool:
-    """??? ?????? ?????? ??? ???? Instagram Business ??????? ??? Meta Graph API."""
+    """نشر تلقائي للمنشور على حساب Instagram Business عبر Meta Graph API."""
     ok, _ = publish_instagram_graph_api_with_url(caption, image_url=image_url)
     return ok
 
 
 def publish_facebook_reel_graph_api(video_path: str, description: str) -> tuple[bool, str]:
-    """??? ???? ????? Reels ????? (9:16) ???????? ??? ???? ?????? ??? Graph API."""
+    """نشر مقطع ريلز فيسبوك عمودي (9:16) تلقائياً عبر Graph API."""
     token = META_PERMANENT_PAGE_TOKEN.strip("'\" ") if META_PERMANENT_PAGE_TOKEN else ""
     page_id = FB_PAGE_ID.strip("'\" ") if FB_PAGE_ID else ""
     if not token or not video_path or not os.path.isfile(video_path):
         return False, ""
     try:
-        print(f"[Meta Reels API] ???? ??? ???? ???? ?????? ???????? ({os.path.basename(video_path)})...")
+        print(f"[Meta Reels API] جاري رفع مقطع ريلز لفيسبوك ({os.path.basename(video_path)})...")
         init_url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{page_id}/video_reels"
         init_res = requests.post(
             init_url,
@@ -1795,10 +1795,9 @@ def publish_facebook_reel_graph_api(video_path: str, description: str) -> tuple[
             ).json()
             if fin_res.get("success") or "id" in fin_res:
                 reel_url = f"https://www.facebook.com/reel/{video_id}/"
-                print(f"[+] ?? ?? ??? ???? ?????? ?????: {reel_url}")
+                print(f"[+] تم نشر ريلز فيسبوك بنجاح: {reel_url}")
                 return True, reel_url
 
-        # ???? ???? ????? ??? /videos ??? ???? ???? video_reels
         with open(video_path, "rb") as vf:
             v_res = requests.post(
                 f"https://graph.facebook.com/{GRAPH_API_VERSION}/{page_id}/videos",
@@ -1808,10 +1807,10 @@ def publish_facebook_reel_graph_api(video_path: str, description: str) -> tuple[
             ).json()
         if "id" in v_res:
             vid_url = f"https://www.facebook.com/reel/{v_res['id']}/"
-            print(f"[+] ?? ?? ??? ???????/?????? ??? ?????? ?????: {vid_url}")
+            print(f"[+] تم نشر الفيديو/الريلز على فيسبوك بنجاح: {vid_url}")
             return True, vid_url
     except Exception as e:
-        print(f"[!] ????? ???? ??????: {e}")
+        print(f"[!] تنبيه ريلز فيسبوك: {e}")
     return False, ""
 
 
@@ -2282,6 +2281,67 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     else:
         tiktok_caption = facebook_caption
 
+    # استراتيجية يوتيوب المعتمدة (العناوين والخطاف والـ CTA)
+    try:
+        from scripts.build_ready_to_publish_pack import CATEGORY_DEFAULTS
+    except Exception:
+        CATEGORY_DEFAULTS = {}
+
+    current_cat = tmpl.get("category", "c-section")
+    yt_cat_meta = CATEGORY_DEFAULTS.get(current_cat, {
+        "title": f"بروتوكول تعافي {tmpl.get('title', 'الجروح الجراحية')} وتأمين الاستحمام ومنع الندبات",
+        "shorts_title": f"خايف على جرح عمليتك؟ 3 خطوات سريرية هتفرق 180 درجة #Shorts #{current_cat}",
+        "topic_ar": tmpl.get("title", "العناية بالتعافي الجراحي"),
+        "tags": tmpl.get("hashtags", "#هيلينج_تاتش_مصر #تعافي_الجروح #كود_HT10")
+    })
+
+    yt_file = platform_routed.get("youtube")
+    if yt_file:
+        yt_res = extract_clean_content(yt_file, "youtube", landing_url=lp_url, whatsapp_url=wa_direct_url)
+        youtube_title = yt_res.get("title") or yt_cat_meta.get("title") or tmpl["title"]
+        youtube_desc = yt_res.get("description") or f"""🌿 {yt_cat_meta.get('topic_ar', tmpl['title'])} (2026)
+دليل علمي سريري شامل يقدم إرشادات التعافي والآلية الفسيولوجية المعتمدة لحماية الأنسجة.
+
+[00:00] المقدمة والافتتاحية السريرية (Hook)
+[00:30] التحدي السريري ومخاطر إهمال المرحلة الأولى
+[01:15] الآلية الفسيولوجية لالتئام الأنسجة وتنظيم الكولاجين
+[02:30] البروتوكول العملي خطوة بخطوة
+[03:45] الأخطاء الشائعة والتحذيرات السريرية
+[04:30] الخلاصة والاستشارة السريرية المجانية وتفعيل كود HT10
+
+🔗 روابط الدليل وحاسبة التعافي السريرية:
+🌐 دليل التعافي التفاعلي:
+{lp_url}
+
+💬 للتوجيه السريري المجاني وتفعيل كود (HT10) للشحن المجاني والمعاينة قبل الاستلام:
+👉 {wa_direct_url}
+
+⚠️ تنويه طبي: المحتوى للتوعية السريرية المعتمدة ولا يُغني عن استشارة طبيبك المعالج.
+
+{yt_cat_meta.get('tags', tmpl.get('hashtags', ''))}"""
+    else:
+        youtube_title = yt_cat_meta.get("title") or tmpl["title"]
+        youtube_desc = f"""🌿 {yt_cat_meta.get('topic_ar', tmpl['title'])} (2026)
+دليل علمي سريري شامل يقدم إرشادات التعافي والآلية الفسيولوجية المعتمدة لحماية الأنسجة وتبديد المخاوف بعد العمليات.
+
+[00:00] الافتتاحية والخطاف السريري (Clinical Empathy Hook)
+[00:30] التحدي السريري ومخاطر وصول الماء غير المعقم
+[01:15] الآلية الفسيولوجية لتنظيم ألياف الكولاجين ومنع الكيلويد
+[02:30] خطوات تطبيق المستلزمات الطبية الأصلية بأمان
+[03:45] أخطاء شائعة تؤخر التئام الجرح
+[04:30] كود الأولوية السريرية HT10 والاستشارة المجانية
+
+🔗 روابط الدليل التفاعلي والاستشارة:
+🌐 دليل التعافي السريري المباشر:
+{lp_url}
+
+💬 استشارة سريرية مجانية وتفعيل كود (HT10) للشحن المجاني وحق المعاينة قبل الاستلام عبر واتساب:
+👉 {wa_direct_url}
+
+⚠️ تنويه طبي: المحتوى للتوعية السريرية المعتمدة ولا يُغني عن استشارة طبيبك المعالج.
+
+{yt_cat_meta.get('tags', tmpl.get('hashtags', ''))}"""
+
     # مقال بلوجر المخصص
     bl_file = platform_routed.get("blogger")
     if bl_file:
@@ -2308,12 +2368,14 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     (BRANDED_DIR / f"{date_str}_[نص_منشور_فيسبوك].txt").write_text(facebook_caption, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[مقال_مدونة_جوجل_Blogger].txt").write_text(blogger_text, encoding="utf-8")
     (BRANDED_DIR / f"{date_str}_[منشور_ومقال_Reddit].txt").write_text(reddit_text, encoding="utf-8")
+    (BRANDED_DIR / f"{date_str}_[سيو_وبيانات_يوتيوب].txt").write_text(f"العنوان:\n{youtube_title}\n\nالوصف والخطاف والـ CTA:\n{youtube_desc}", encoding="utf-8")
     
     copy_to_windows_clipboard(facebook_caption)
     print(f"\n📄 [تم إنشاء ملفات النصوص المستقلة لكل منصة بتاريخ اليوم في مجلد branded_designs]:")
     print(f"   • {date_str}_[نص_منشور_فيسبوك].txt")
     print(f"   • {date_str}_[نص_بوست_وستوري_إنستجرام].txt")
     print(f"   • {date_str}_[نص_كابشن_وهاشتاجات_تيكتوك].txt")
+    print(f"   • {date_str}_[سيو_وبيانات_يوتيوب].txt")
     print(f"   • {date_str}_[مقال_مدونة_جوجل_Blogger].txt")
     print(f"   • {date_str}_[منشور_ومقال_Reddit].txt")
 
@@ -2332,7 +2394,7 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
         "row_index": -1,
     }
 
-    # تجهيز حزمة النشر الآلي الشامل لـ 6 منصات لمحرك n8n
+    # تجهيز حزمة النشر الآلي الشامل لـ 6 منصات لمحرك n8n مع تطبيق استراتيجية يوتيوب المحدثة
     n8n_payload = build_omnichannel_payload(
         campaign_id=tmpl.get("category", "post_op_care"),
         theme="surgical_wound_and_scar_care",
@@ -2349,8 +2411,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
             "facebook": facebook_caption,
             "instagram": instagram_caption,
             "tiktok": tiktok_caption,
-            "youtube_title": f"{tmpl['title']} | هيلينج تاتش مصر #Shorts",
-            "youtube_description": f"الدليل الطبي المعتمد لتعافي الجروح والندبات الجراحية في المنزل بدون مضاعفات\n\n🎁 كود الخصم: HT10 (شحن مجاني + حق فتح ومعاينة الشحنة قبل الدفع)\n🩺 استشارة مجانية مع أخصائية العناية بالتعافي: {wa_direct_url}\n\n{tmpl['hashtags']}",
+            "youtube_title": youtube_title,
+            "youtube_description": youtube_desc,
             "reddit_title": blogger_post.get("title", tmpl["title"]),
             "reddit_markdown": reddit_text,
             "blogger_title": blogger_post.get("title", tmpl["title"]),
@@ -2399,8 +2461,8 @@ def run_unified_studio_and_publish(template_idx: int = None, dry_run: bool = Fal
     ok, permalink = publish_facebook_graph_api(post_data, square_img_path)
     ig_image_url = f"https://raw.githubusercontent.com/Medon90ae/healing-touch-egypt/main/docs/assets/campaign_{tmpl['category']}_hero.png"
     publish_instagram_graph_api(instagram_caption, image_url=ig_image_url)
-    # publish_to_blogger_webhook(blogger_post)  # ????
-    # publish_to_reddit_api(...)  # ????
+    # publish_to_blogger_webhook(blogger_post)  # معطل
+    # publish_to_reddit_api(...)  # معطل
     if ok:
         record_post_history(chosen_idx, tmpl["title"])
 
